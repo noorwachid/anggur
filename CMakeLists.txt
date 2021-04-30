@@ -42,7 +42,7 @@ add_subdirectory(Vendor/Stb)
 find_package(SDL2)
 
 target_include_directories(Anggur PUBLIC Source)
-target_include_directories(Anggur PRIVATE ${SDL2_INCLUDE_DIRS})
+target_include_directories(Anggur PUBLIC ${SDL2_INCLUDE_DIRS})
 target_link_libraries(Anggur
 
 	Glad
