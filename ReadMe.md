@@ -2,8 +2,7 @@
 
 Another day of new C++ game engine.
 
-[WORK_IN_PROGRESS]
+> {NOTE} 
+> Do not use for serious project unless you know what are you doing.
 
 #### Screenshot
-
-![2020](Resources/AnggurEditor2020.png)
