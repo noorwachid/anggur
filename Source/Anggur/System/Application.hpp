@@ -1,0 +1,42 @@
+#pragma once
+
+#include <vector>
+#include "Window.hpp"
+#include "Event/Event.hpp"
+
+namespace Anggur {
+
+class Application
+{
+protected:
+    
+    virtual void OnConfigure(WindowConfig& config);
+    virtual void OnAttach();
+    virtual void OnUpdate(float deltaTime);
+    virtual void OnEvent(Event& event);
+    virtual void OnDetach();
+
+public:
+
+    static Application& Get();
+
+    void Initialize();
+    void Run();
+    void Terminate();
+
+    Application();
+
+    Window& GetWindow();
+
+private:
+    void ProcessEvent(SDL_Event& event);
+
+protected:
+    Window* mWindow;
+
+private:
+    static Application* mInstance;
+};
+
+}
+
