@@ -22,6 +22,8 @@ uint* Renderer::mIndexData;
 size_t Renderer::mVertexCounter;
 size_t Renderer::mIndexCounter;
 
+size_t Renderer::mMaxQuad = 2048;
+
 size_t Renderer::mMaxVertices;
 size_t Renderer::mMaxIndices;
 
@@ -127,11 +129,8 @@ void Renderer::Initialize()
 
     CreateBatchShader();
 
-    // The number of approximation maximum triangle per batch
-    float apxMaxTriangle = 1000;
-
-    mMaxVertices = apxMaxTriangle * 3;
-    mMaxIndices  = apxMaxTriangle * 3;
+    mMaxVertices = mMaxQuad * 4;
+    mMaxIndices  = mMaxQuad * 6;
 
     mVertexArray.Create();
     mVertexArray.Bind();
@@ -170,6 +169,12 @@ void Renderer::Terminate()
     mVertexBuffer.Destroy();
     mVertexArray.Destroy();
     mBatchShader.Destroy();
+}
+
+void Renderer::SetMaxQuad(size_t max)
+{
+    if (max < 32) max = 32;
+    mMaxQuad = max;
 }
 
 void Renderer::ClearBackground(const Color& color)

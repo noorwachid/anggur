@@ -79,6 +79,7 @@ public:
     static void Terminate();
 
     static void SetViewport(uint width, uint height);
+    static void SetMaxQuad(size_t max = 2048);
 
     static void CheckLimit(size_t vertexOffset = 0, size_t indexOffset = 0, size_t textureOffset = 0);
     static void Render();
@@ -132,6 +133,8 @@ private:
 
     static size_t mVertexCounter;
     static size_t mIndexCounter;
+
+    static size_t mMaxQuad;
 
     static size_t mMaxVertices;
     static size_t mMaxIndices;
