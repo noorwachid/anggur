@@ -1,4 +1,4 @@
-# Anggur: 2D C++ Game Engine
+# Anggur: 2D Rendering Library
 
 Another day of new C++ game engine.
 
