@@ -1,5 +1,4 @@
 #include <Anggur/Helper/Log.hpp>
-#include <Anggur/Renderer/Renderer.hpp>
 #include "Core.hpp"
 #include "Application.hpp"
 #include "Input.hpp"
@@ -36,7 +35,7 @@ void Application::OnConfigure(WindowConfig& config) {}
 void Application::OnAttach() {}
 void Application::OnUpdate(float deltaTime) {}
 void Application::OnDetach() {}
-void Application::OnEvent(Event& event) {}
+void Application::OnEvent(Event* event) {}
 
 Application& Application::Get()
 {
@@ -56,9 +55,10 @@ void Application::Run()
 {
     Initialize();
     Renderer::Initialize();
+    Input::Initialize();
     OnAttach();
 
-    Uint64 prevTimePoint = 0;
+    Uint64 prevTimePoint = SDL_GetPerformanceCounter();
 
     while (mWindow->IsOpen())
     {
@@ -66,8 +66,6 @@ void Application::Run()
         while (SDL_PollEvent(&event))
         {
             ProcessEvent(event);
-	    // TODO: wrapper event
-            //OnEvent(event);
         }
 
         Uint64 currTimePoint = SDL_GetPerformanceCounter();
@@ -75,6 +73,7 @@ void Application::Run()
         prevTimePoint = currTimePoint;
 
         OnUpdate(deltaTime);
+        Input::Update();
 
         mWindow->SwapBuffers();
     }

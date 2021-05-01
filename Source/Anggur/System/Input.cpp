@@ -1,44 +1,56 @@
+#include <string.h>
+#include <Anggur/Helper/Log.hpp>
 #include "Input.hpp"
 
 namespace Anggur {
 
+const Uint8* Input::mCurrKeyState = nullptr;
+Uint8 Input::mPrevKeyState[SDL_NUM_SCANCODES];
+
 void Input::Initialize()
 {
+    mCurrKeyState = SDL_GetKeyboardState(nullptr);
+    memset(mPrevKeyState, 0, SDL_NUM_SCANCODES);
 }
 
 void Input::Update()
 {
+    memcpy(mPrevKeyState, mCurrKeyState, SDL_NUM_SCANCODES);
 }
 
-bool Input::IsPressed(Key key)
+bool Input::IsKeyPressed(Key key)
 {
-    return false;
+    int i = SDL_GetScancodeFromKey((int) key);
+    return mCurrKeyState[i] == 1 && mPrevKeyState[i] == 0;
 }
 
-bool Input::IsHeld(Key key)
+bool Input::IsKeyHeld(Key key)
 {
-    return false;
+    int i = SDL_GetScancodeFromKey((int) key);
+    return mCurrKeyState[i] && mPrevKeyState[i];
 }
 
-bool Input::IsReleased(Key key)
+bool Input::IsKeyReleased(Key key)
 {
-    return false;
+    int i = SDL_GetScancodeFromKey((int) key);
+    return !mCurrKeyState[i] && mPrevKeyState[i];
 }
 
-bool Input::IsPressed(Mouse button)
+bool Input::IsScancodePressed(int i)
 {
-    return false;
+    return mCurrKeyState[i] && !mPrevKeyState[i];
 }
 
-bool Input::IsHeld(Mouse button)
+bool Input::IsScancodeHeld(int i)
 {
-    return false;
+    return mCurrKeyState[i] && mPrevKeyState[i];
 }
 
-bool Input::IsReleased(Mouse button)
+bool Input::IsScancodeReleased(int i)
 {
-    return false;
+    return !mCurrKeyState[i] && mPrevKeyState[i];
 }
+
 
 }
 

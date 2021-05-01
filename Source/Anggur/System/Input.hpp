@@ -12,21 +12,23 @@ public:
     static void Initialize();
     static void Update();
 
-    static bool IsPressed(Key key);
-    static bool IsHeld(Key key);
-    static bool IsReleased(Key key);
+    static bool IsKeyPressed(Key key);
+    static bool IsKeyHeld(Key key);
+    static bool IsKeyReleased(Key key);
 
-    static bool IsPressed(Mouse button);
-    static bool IsHeld(Mouse button);
-    static bool IsReleased(Mouse button);
+    static bool IsScancodePressed(int i);
+    static bool IsScancodeHeld(int i);
+    static bool IsScancodeReleased(int i);
 
-    static void SetCursorPos(const Vector& pos);
+    static void SetMousePos(const Vector& pos);
     static const Vector GetMousePos();
     static const Vector GetMouseWheel();
 
     friend class Application;
 
 private:
+    static const Uint8* mCurrKeyState;
+    static Uint8 mPrevKeyState[SDL_NUM_SCANCODES];
 };
 
 }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <Anggur/Renderer/Renderer.hpp>
 #include "Window.hpp"
-#include "Event/Event.hpp"
+#include "Input.hpp"
 
 namespace Anggur {
 
@@ -13,7 +14,7 @@ protected:
     virtual void OnConfigure(WindowConfig& config);
     virtual void OnAttach();
     virtual void OnUpdate(float deltaTime);
-    virtual void OnEvent(Event& event);
+    virtual void OnEvent(Event* event);
     virtual void OnDetach();
 
 public:

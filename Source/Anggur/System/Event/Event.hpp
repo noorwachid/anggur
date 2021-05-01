@@ -54,21 +54,18 @@ struct WindowEvent : public Event
     Vector size;
 };
 
-/*
 struct KeyEvent : public Event
 {
-    Scancode scancode;
+    int scancode;
     Key key;
-    KeyState state;
     KeyMod mod;
 
-    KeyEvent(EventType t, Scancode sc, Key k, KeyState st, KeyMod m): 
+    KeyEvent(EventType t, int sc, Key k, KeyMod m):
         Event(t, EventGroup::Key), 
 	scancode(sc), 
 	key(k), 
 	mod(m) {}
 };
-*/
 
 /*
 struct MouseEvent : public Event

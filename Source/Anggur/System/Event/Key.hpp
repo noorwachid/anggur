@@ -5,10 +5,6 @@
 
 namespace Anggur {
 
-enum class Scancode : int
-{
-};
-
 enum class Key : int
 {
     Unknown           = -1,
