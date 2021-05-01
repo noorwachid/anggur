@@ -9,7 +9,6 @@ Another day of new C++ game engine.
 ``` cxx
 #include <Anggur/System/Application.hpp>
 #include <Anggur/Helper/Log.hpp>
-#include <array>
 
 using namespace Anggur;
 using R = Renderer;
