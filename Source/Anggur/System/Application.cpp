@@ -31,7 +31,7 @@ void Application::ProcessEvent(SDL_Event& event)
     }
 }
 
-void Application::OnConfigure(WindowConfig& config) {}
+void Application::OnInitialize() {}
 void Application::OnAttach() {}
 void Application::OnUpdate(float deltaTime) {}
 void Application::OnDetach() {}
@@ -44,9 +44,8 @@ Application& Application::Get()
 
 void Application::Initialize()
 {
-    WindowConfig config;
-    OnConfigure(config);
-    mWindow = Window::Create(config);
+    OnInitialize();
+    mWindow = Window::Create(mWindowConfig);
 
     Anggur_Log("[Core.Application] Initialized\n");
 }
@@ -69,10 +68,10 @@ void Application::Run()
         }
 
         Uint64 currTimePoint = SDL_GetPerformanceCounter();
-        float deltaTime = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
+        float dx = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
         prevTimePoint = currTimePoint;
 
-        OnUpdate(deltaTime);
+        OnUpdate(dx);
         Input::Update();
 
         mWindow->SwapBuffers();

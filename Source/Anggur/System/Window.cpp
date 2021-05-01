@@ -18,14 +18,12 @@ Window::Window(const WindowConfig& config)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-    int flags = SDL_WINDOW_OPENGL;
-    flags |= SDL_WINDOW_RESIZABLE;
-    //flags |= SDL_WINDOW_MAXIMIZED;
+    int flag = SDL_WINDOW_OPENGL | static_cast<int>(config.flag);
 
     mRawWindow  = SDL_CreateWindow(config.title.c_str(),
                                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                 config.width, config.height,
-                                flags);
+                                flag);
     mContext = SDL_GL_CreateContext(mRawWindow);
     mRatio   = config.width / static_cast<float>(config.height);
     mOpen    = true;
@@ -44,11 +42,18 @@ float Window::GetRatio()
     return mRatio;
 }
 
-WindowSize Window::GetSize()
+Vector Window::GetPos()
+{
+    int x, y;
+    SDL_GetWindowPosition(mRawWindow, &x, &y);
+    return Vector(x, y);
+}
+
+Vector Window::GetSize()
 {
     int w, h;
     SDL_GetWindowSize(mRawWindow, &w, &h);
-    return WindowSize(w, h);
+    return Vector(w, h);
 }
 
 bool Window::IsOpen()

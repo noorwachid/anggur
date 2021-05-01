@@ -11,7 +11,7 @@ class Application
 {
 protected:
     
-    virtual void OnConfigure(WindowConfig& config);
+    virtual void OnInitialize();
     virtual void OnAttach();
     virtual void OnUpdate(float deltaTime);
     virtual void OnEvent(Event* event);
@@ -34,6 +34,7 @@ private:
 
 protected:
     Window* mWindow;
+    WindowConfig mWindowConfig;
 
 private:
     static Application* mInstance;
