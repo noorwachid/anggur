@@ -23,6 +23,7 @@ size_t Renderer::mVertexCounter;
 size_t Renderer::mIndexCounter;
 
 size_t Renderer::mMaxQuad = 2048;
+size_t Renderer::mCircleSegment = 32;
 
 size_t Renderer::mMaxVertices;
 size_t Renderer::mMaxIndices;
@@ -173,8 +174,15 @@ void Renderer::Terminate()
 
 void Renderer::SetMaxQuad(size_t max)
 {
-    if (max < 32) max = 32;
+    if (max < mCircleSegment) max = mCircleSegment;
     mMaxQuad = max;
+}
+
+void Renderer::SetCircleSegment(size_t segment)
+{
+    if (segment < 3) segment = 3;
+    if (mMaxQuad < segment) mMaxQuad = segment;
+    mCircleSegment = segment;
 }
 
 void Renderer::ClearBackground(const Color& color)
@@ -464,7 +472,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
 
 void Renderer::AddCircle(const Vector& p0, float r, const Color& c)
 {
-    AddPolygon(p0, r, 32, c);
+    AddPolygon(p0, r, mCircleSegment, c);
 }
 
 
