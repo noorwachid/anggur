@@ -5,6 +5,7 @@
 
 ## Brief Preview
 ``` cxx
+
 #include <Anggur/System/Application.hpp>
 #include <Anggur/Helper/Log.hpp>
 
@@ -15,32 +16,29 @@ class App: public Application
 {
     Camera camera;
 
-    void OnConfigure(WindowConfig& config) override
+    void OnAttach() override
     {
-        config.width = 1000;
-        config.height = 500;
-
-        camera.SetRatio((float) config.width / (float) config.height);
-        camera.Scale(Vector(0.05, 0.05));
-        camera.Translate(Vector(0, 0.7));
+        camera.SetRatio(mWindow->GetSize());
+        camera.Zoom(Vector(0.0125));
+        camera.Move(Vector(0.0, 0.125));
     }
 
     void OnUpdate(float dx) override
     {
         R::ClearBackground();
         R::BeginScene(camera);
-        
-        R::AddBox(Vector(0, 0), 1);
+
+        R::AddCircle(Vector(0, 12), 10, Color::purple);
+        R::AddCircle(Vector(-12, -9), 10, Color::purple);
+        R::AddCircle(Vector(12, -9), 10, Color::purple);
+
+        R::AddPolyring({Vector(0, 40), Vector(-35, -22), Vector(35, -22)}, 1);
 
         R::EndScene();
     }
 };
 
-int main() 
-{
-	App app;
-	app.Run();
-}
+Anggur_EntryPoint(App);
 
 
 ```
@@ -66,11 +64,11 @@ class Player
 public:
     Vector GetPos() 
     {
-        return pos;
+        return mPos;
     }
 
 private:
-    Vector pos;
+    Vector mPos;
 };
 
 enum class PlayerState
