@@ -35,19 +35,24 @@ public:
         mProjection[4] = ratio;
     }
 
-    void Scale(const Vector& v)
+    // TODO: Make inverse function
+    // - Zoom
+    // - Move
+    // - Tilt
+
+    void Zoom(const Vector& v)
     {
         mView.Scale(v);
     }
 
-    void Translate(const Vector& v)
+    void Move(const Vector& v)
     {
-        mView.Translate(v);
+        mView.Translate(-v);
     }
 
-    void Rotate(const float theta)
+    void Tilt(const float angle)
     {
-        mView.Rotate(theta);
+        mView.Rotate(-angle);
     }
 
 private:
