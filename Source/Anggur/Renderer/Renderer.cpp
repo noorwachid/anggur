@@ -326,24 +326,15 @@ void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2,
     AddData(vertices, 3, indices, 3);
 }
 
-void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& transform, const Color& c)
+void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c)
 {
     CheckLimit(4, 6);
 
-    Matrix model = Matrix::CreateScale(transform.scale);
-    model.Rotate(transform.rotation);
-    model.Translate(transform.translation);
-
-    Vector b0 = p0 * model;
-    Vector b1 = p1 * model;
-    Vector b2 = p2 * model;
-    Vector b3 = p3 * model;
-
     float vertices[] = {
-        b0.x, b0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        b1.x, b1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        b2.x, b2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        b3.x, b3.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p3.x, p3.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
     };
 
     uint indices[] = {
@@ -357,23 +348,21 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
 void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 {
     AddQuad(
-        {p0.x,     p0.y},
-        {p0.x + w, p0.y},
-        {p0.x + w, p0.y + h},
-        {p0.x,     p0.y + h},
-        Transform(),
+        p0,
+        Vector(p0.x + w, p0.y),
+        Vector(p0.x + w, p0.y + h),
+        Vector(p0.x,     p0.y + h),
         c
     );
 }
 
-void Renderer::AddBox(const Vector& position, const Vector& radii, const Transform& transform, const Color& c)
+void Renderer::AddBox(const Vector& position, const Vector& radii, const Color& c)
 {
     AddQuad(
-        {position.x - radii.x, position.y - radii.y},
-        {position.x + radii.x, position.y - radii.y},
-        {position.x + radii.x, position.y + radii.y},
-        {position.x - radii.x, position.y + radii.y},
-        transform,
+        Vector(position.x - radii.x, position.y - radii.y),
+        Vector(position.x + radii.x, position.y - radii.y),
+        Vector(position.x + radii.x, position.y + radii.y),
+        Vector(position.x - radii.x, position.y + radii.y),
         c
     );
 }
@@ -475,6 +464,52 @@ void Renderer::AddCircle(const Vector& p0, float r, const Color& c)
     AddPolygon(p0, r, mCircleSegment, c);
 }
 
+void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddTriangle(p0 * m, p1 * m, p2 * m, c);
+}
+
+void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddQuad(p0 * m, p1 * m, p2 * m, p3 * m, c);
+}
+
+void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddQuad(
+        p0 * m,
+        Vector(p0.x + w, p0.y) * m,
+        Vector(p0.x + w, p0.y + h) * m,
+        Vector(p0.x,     p0.y + h) * m,
+        c
+    );
+}
+
+void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddQuad(
+        Vector(p0.x - r.x, p0.y - r.y) * m,
+        Vector(p0.x + r.x, p0.y - r.y) * m,
+        Vector(p0.x + r.x, p0.y + r.y) * m,
+        Vector(p0.x - r.x, p0.y + r.y) * m,
+        c
+    );
+}
+
+void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c)
+{
+    AddPolygon(p0 * f.ToMatrix(), r, segments, c);
+}
+
+void Renderer::AddCircle(const Vector& p0, float r, const Transform& f, const Color& c)
+{
+    AddCircle(p0 * f.ToMatrix(), r, c);
+}
+
 
 void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Color& c)
 {
@@ -535,12 +570,49 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
     );
 }
 
+void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c)
+{
+    AddQuadx(
+        {position.x - radii.x, position.y - radii.y},
+        {position.x + radii.x, position.y - radii.y},
+        {position.x + radii.x, position.y + radii.y},
+        {position.x - radii.x, position.y + radii.y},
+        {0, 0},
+        {1, 0},
+        {1, 1},
+        {0, 1},
+        t,
+        c
+    );
+}
+
+void Renderer::Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c)
+{
+    Addx(p0 * f.ToMatrix(), t, c);;
+}
+
+void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddQuadx(p0 * m, p1 * m, p2 * m, p3 * m, t0, t1, t2, t3, t, c);
+}
+
+void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c)
+{
+    AddRectx(p0 * f.ToMatrix(), w, h, t, c);
+}
+
+void Renderer::AddBoxx(const Vector& p0, const Vector& radii, const Texture& t, const Transform& f, const Color& c)
+{
+    AddBoxx(p0 * f.ToMatrix(), radii, t, c);
+}
+
 void Renderer::AddTerminator(const Vector& p0, const Vector& p1, float weight, const Color& c)
 {
     Vector p3 = (p0 - p1).Normalize() * weight;
     Vector t0 = (p1 - p0).GetPerpendicular().Normalize() * weight;
 
-    AddQuad(p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, Transform(), c);
+    AddQuad(p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
 }
 
 void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w0, const Color& c)

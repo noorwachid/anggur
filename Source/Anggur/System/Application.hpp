@@ -42,3 +42,11 @@ private:
 
 }
 
+#ifndef Anggur_EntryPoint
+#define Anggur_EntryPoint(applicationInstanceName) \
+    int main() { \
+        applicationInstanceName applicationInstance; \
+        applicationInstance.Run(); \
+        return 0; \
+    }
+#endif

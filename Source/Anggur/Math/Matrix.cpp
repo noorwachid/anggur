@@ -114,10 +114,15 @@ Matrix& Matrix::Scale(const Vector& v)
 
 Matrix& Matrix::Rotate(float theta)
 {
-    mData[0] *= Math::Cos(theta);
-    mData[1] *= Math::Sin(theta);
-    mData[3] *= -Math::Sin(theta);
-    mData[4] *= Math::Cos(theta);
+    Matrix right = Matrix::CreateRotation(theta);
+    Matrix result;
+
+    result[0] = mData[0] * right[0] + mData[3] * right[1] + mData[6] * right[2];
+    result[1] = mData[1] * right[0] + mData[4] * right[1] + mData[7] * right[2];
+    result[3] = mData[0] * right[3] + mData[3] * right[4] + mData[6] * right[5];
+    result[4] = mData[1] * right[3] + mData[4] * right[4] + mData[7] * right[5];
+
+    *this = result;
 
     return *this;
 }
