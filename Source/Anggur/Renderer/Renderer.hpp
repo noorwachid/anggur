@@ -30,9 +30,19 @@ public:
         return (mView[0] + mView[4]) * 0.5f;
     }
 
+    void SetRatio(const Vector& size)
+    {
+        mView[4] *= size.x / size.y;
+    }
+
     void SetRatio(float ratio)
     {
-        mProjection[4] = ratio;
+        mView[4] *= ratio;
+    }
+
+    void SetOffset(const Vector& v)
+    {
+        mOffset = v;
     }
 
     // TODO: Make inverse function
@@ -56,6 +66,7 @@ public:
     }
 
 private:
+    Vector mOffset;
     Matrix mView;
     Matrix mProjection;
 

@@ -53,11 +53,6 @@ struct WindowConfig
         height(360),
         title("Untitled")
     {}
-
-    float GetRatio()
-    {
-        return width / static_cast<float>(height);
-    }
 };
 
 class Window
