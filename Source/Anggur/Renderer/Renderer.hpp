@@ -62,13 +62,13 @@ struct Transform
     float rotation;
     Vector scale;
 
-    Transform():
-        translation(0, 0),
-        rotation(0),
-        scale(1, 1)
+    Transform(Vector t = Vector(), float r = 0, Vector s = Vector()):
+        translation(t),
+        rotation(r),
+        scale(s)
     {}
 
-    Matrix ToMatrix()
+    Matrix ToMatrix() const
     {
         Matrix mt = Matrix::CreateScale(scale);
         mt.Rotate(rotation);
@@ -114,12 +114,27 @@ public:
     static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::white);
     static void AddCircle(const Vector& p0, float r, const Color& c = Color::white);
 
+    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c = Color::white);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c = Color::white);
+    static void AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c = Color::white);
+    static void AddBox(const Vector& position, const Vector& radii, const Transform& f, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c = Color::white);
+    static void AddCircle(const Vector& p0, float r, const Transform& f, const Color& c = Color::white);
+
     // -- Textures
     static void Addx(const Vector& p0, const Texture& t, const Color& c = Color::white);
     static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
                          const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
                          const Texture& t, const Color& c = Color::white);
     static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c = Color::white);
+    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c = Color::white);
+
+    static void Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
+                         const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
+                         const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Transform& f, const Color& c = Color::white);
 
     // -- Weirds
     // TODO DrawArc

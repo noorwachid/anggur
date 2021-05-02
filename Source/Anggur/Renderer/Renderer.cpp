@@ -456,6 +456,38 @@ void Renderer::AddCircle(const Vector& p0, float r, const Color& c)
     AddPolygon(p0, r, 32, c);
 }
 
+void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddTriangle(p0 * m, p1 * m, p2 * m, c);
+}
+
+void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddQuad(p0 * m, p1 * m, p2 * m, p3 * m, c);
+}
+
+void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c)
+{
+    AddRect(p0 * f.ToMatrix(), w, h, c);
+}
+
+void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, const Color& c)
+{
+    AddBox(p0 * f.ToMatrix(), r, c);
+}
+
+void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c)
+{
+    AddPolygon(p0 * f.ToMatrix(), r, segments, c);
+}
+
+void Renderer::AddCircle(const Vector& p0, float r, const Transform& f, const Color& c)
+{
+    AddCircle(p0 * f.ToMatrix(), r, c);
+}
+
 
 void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Color& c)
 {
@@ -514,6 +546,43 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
         t,
         c
     );
+}
+
+void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c)
+{
+    AddQuadx(
+        {position.x - radii.x, position.y - radii.y},
+        {position.x + radii.x, position.y - radii.y},
+        {position.x + radii.x, position.y + radii.y},
+        {position.x - radii.x, position.y + radii.y},
+        {0, 0},
+        {1, 0},
+        {1, 1},
+        {0, 1},
+        t,
+        c
+    );
+}
+
+void Renderer::Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c)
+{
+    Addx(p0 * f.ToMatrix(), t, c);;
+}
+
+void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Transform& f, const Color& c)
+{
+    Matrix m = f.ToMatrix();
+    AddQuadx(p0 * m, p1 * m, p2 * m, p3 * m, t0, t1, t2, t3, t, c);
+}
+
+void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c)
+{
+    AddRectx(p0 * f.ToMatrix(), w, h, t, c);
+}
+
+void Renderer::AddBoxx(const Vector& p0, const Vector& radii, const Texture& t, const Transform& f, const Color& c)
+{
+    AddBoxx(p0 * f.ToMatrix(), radii, t, c);
 }
 
 void Renderer::AddTerminator(const Vector& p0, const Vector& p1, float weight, const Color& c)
