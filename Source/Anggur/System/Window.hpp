@@ -78,6 +78,8 @@ public:
     SDL_Window* GetRawWindow();
     SDL_GLContext GetContext();
 
+    friend class Application;
+
 private:
     SDL_Window* mRawWindow;
     SDL_GLContext mContext;

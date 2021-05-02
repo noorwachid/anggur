@@ -10,6 +10,7 @@ class Input
 {
 public:
     static void Initialize();
+    static void PreUpdate();
     static void Update();
 
     static bool IsKeyPressed(Key key);
@@ -20,15 +21,26 @@ public:
     static bool IsScancodeHeld(int i);
     static bool IsScancodeReleased(int i);
 
+    static bool IsMousePressed(Mouse button);
+    static bool IsMouseHeld(Mouse button);
+    static bool IsMouseReleased(Mouse button);
+
     static void SetMousePos(const Vector& pos);
-    static const Vector GetMousePos();
-    static const Vector GetMouseWheel();
+    static Vector GetMousePos();
+    static Vector GetMouseWheel();
 
     friend class Application;
 
 private:
-    static const Uint8* mCurrKeyState;
-    static Uint8 mPrevKeyState[SDL_NUM_SCANCODES];
+    static SDL_Window* mRawWindow;
+
+    static const Uint8* mKeyCurrState;
+    static Uint8 mKeyPrevState[SDL_NUM_SCANCODES];
+
+    static Uint32 mMouseCurrState;
+    static Uint32 mMousePrevState;
+    static Vector mMousePos;
+    static Vector mMouseWheel;
 };
 
 }

@@ -4,51 +4,103 @@
 
 namespace Anggur {
 
-const Uint8* Input::mCurrKeyState = nullptr;
-Uint8 Input::mPrevKeyState[SDL_NUM_SCANCODES];
+SDL_Window* Input::mRawWindow = nullptr;
+
+const Uint8* Input::mKeyCurrState = nullptr;
+Uint8 Input::mKeyPrevState[SDL_NUM_SCANCODES];
+
+Uint32 Input::mMouseCurrState = 0;
+Uint32 Input::mMousePrevState = 0;
+Vector Input::mMousePos;
+Vector Input::mMouseWheel;
 
 void Input::Initialize()
 {
-    mCurrKeyState = SDL_GetKeyboardState(nullptr);
-    memset(mPrevKeyState, 0, SDL_NUM_SCANCODES);
+    mKeyCurrState = SDL_GetKeyboardState(nullptr);
+    memset(mKeyPrevState, 0, SDL_NUM_SCANCODES);
+}
+
+void Input::PreUpdate()
+{
+    memcpy(mKeyPrevState, mKeyCurrState, SDL_NUM_SCANCODES);
+
+    mMousePrevState = mMouseCurrState;
+    mMouseWheel.Set(0, 0);
 }
 
 void Input::Update()
 {
-    memcpy(mPrevKeyState, mCurrKeyState, SDL_NUM_SCANCODES);
+    int x, y;
+    mMouseCurrState = SDL_GetMouseState(&x, &y);
+    mMousePos = Vector(x, y);
 }
 
 bool Input::IsKeyPressed(Key key)
 {
     int i = SDL_GetScancodeFromKey((int) key);
-    return mCurrKeyState[i] == 1 && mPrevKeyState[i] == 0;
+    return mKeyCurrState[i] == 1 && mKeyPrevState[i] == 0;
 }
 
 bool Input::IsKeyHeld(Key key)
 {
     int i = SDL_GetScancodeFromKey((int) key);
-    return mCurrKeyState[i] && mPrevKeyState[i];
+    return mKeyCurrState[i] && mKeyPrevState[i];
 }
 
 bool Input::IsKeyReleased(Key key)
 {
     int i = SDL_GetScancodeFromKey((int) key);
-    return !mCurrKeyState[i] && mPrevKeyState[i];
+    return !mKeyCurrState[i] && mKeyPrevState[i];
 }
 
 bool Input::IsScancodePressed(int i)
 {
-    return mCurrKeyState[i] && !mPrevKeyState[i];
+    return mKeyCurrState[i] && !mKeyPrevState[i];
 }
 
 bool Input::IsScancodeHeld(int i)
 {
-    return mCurrKeyState[i] && mPrevKeyState[i];
+    return mKeyCurrState[i] && mKeyPrevState[i];
 }
 
 bool Input::IsScancodeReleased(int i)
 {
-    return !mCurrKeyState[i] && mPrevKeyState[i];
+    return !mKeyCurrState[i] && mKeyPrevState[i];
+}
+
+bool Input::IsMousePressed(Mouse button)
+{
+    Uint32 btn = static_cast<Uint32>(button);
+    return !(mMousePrevState & btn) && (mMouseCurrState & btn);
+}
+
+bool Input::IsMouseHeld(Mouse button)
+{
+    Uint32 btn = static_cast<Uint32>(button);
+    return (mMousePrevState & btn) && (mMouseCurrState & btn);
+}
+
+bool Input::IsMouseReleased(Mouse button)
+{
+    Uint32 btn = static_cast<Uint32>(button);
+    return (mMousePrevState & btn) && !(mMouseCurrState & btn);
+}
+
+void Input::SetMousePos(const Vector& pos)
+{
+    int x = pos.x;
+    int y = pos.y;
+    SDL_WarpMouseInWindow(mRawWindow, x, y);
+}
+
+Vector Input::GetMousePos()
+{
+    return mMousePos;
+}
+
+Vector Input::GetMouseWheel()
+{
+    return mMouseWheel;
 }
 
 

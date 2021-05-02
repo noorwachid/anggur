@@ -26,6 +26,11 @@ void Application::ProcessEvent(SDL_Event& event)
             mWindow->Close();
             break;
         }
+        case SDL_MOUSEWHEEL:
+        {
+            Input::mMouseWheel.Set(event.wheel.x, event.wheel.y);
+            break;
+        }
 
         default: break;
     }
@@ -46,6 +51,7 @@ void Application::Initialize()
 {
     OnInitialize();
     mWindow = Window::Create(mWindowConfig);
+    Input::mRawWindow = mWindow->mRawWindow;
 
     Anggur_Log("[Core.Application] Initialized\n");
 }
@@ -62,6 +68,9 @@ void Application::Run()
     while (mWindow->IsOpen())
     {
         SDL_Event event;
+
+        Input::PreUpdate();
+
         while (SDL_PollEvent(&event))
         {
             ProcessEvent(event);
@@ -71,8 +80,8 @@ void Application::Run()
         float dx = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
         prevTimePoint = currTimePoint;
 
-        OnUpdate(dx);
         Input::Update();
+        OnUpdate(dx);
 
         mWindow->SwapBuffers();
     }
