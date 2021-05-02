@@ -340,10 +340,10 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
 void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 {
     AddQuad(
-        {p0.x,     p0.y},
-        {p0.x + w, p0.y},
-        {p0.x + w, p0.y + h},
-        {p0.x,     p0.y + h},
+        p0,
+        Vector(p0.x + w, p0.y),
+        Vector(p0.x + w, p0.y + h),
+        Vector(p0.x,     p0.y + h),
         c
     );
 }
@@ -351,10 +351,10 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 void Renderer::AddBox(const Vector& position, const Vector& radii, const Color& c)
 {
     AddQuad(
-        {position.x - radii.x, position.y - radii.y},
-        {position.x + radii.x, position.y - radii.y},
-        {position.x + radii.x, position.y + radii.y},
-        {position.x - radii.x, position.y + radii.y},
+        Vector(position.x - radii.x, position.y - radii.y),
+        Vector(position.x + radii.x, position.y - radii.y),
+        Vector(position.x + radii.x, position.y + radii.y),
+        Vector(position.x - radii.x, position.y + radii.y),
         c
     );
 }
@@ -470,7 +470,14 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
 
 void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c)
 {
-    AddRect(p0 * f.ToMatrix(), w, h, c);
+    Matrix m = f.ToMatrix();
+    AddQuad(
+        p0 * m,
+        Vector(p0.x + w, p0.y) * m,
+        Vector(p0.x + w, p0.y + h) * m,
+        Vector(p0.x,     p0.y + h) * m,
+        c
+    );
 }
 
 void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, const Color& c)
