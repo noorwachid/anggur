@@ -27,28 +27,23 @@ public:
 
     float GetApproxScale() const
     {
-        return (mView[0] + mView[4]) * 0.5f;
+        return (mProjection[0] + mProjection[4]) * 0.5f;
     }
 
     void SetRatio(const Vector& size)
     {
-        mView[4] *= size.x / size.y;
+        mProjection[4] *= size.x / size.y;
     }
 
     void SetRatio(float ratio)
     {
-        mView[4] *= ratio;
+        mProjection[4] *= ratio;
     }
 
     void SetOffset(const Vector& v)
     {
-        mOffset = v;
+        mProjection.Translate(v);
     }
-
-    // TODO: Make inverse function
-    // - Zoom
-    // - Move
-    // - Tilt
 
     void Zoom(const Vector& v)
     {
@@ -66,7 +61,6 @@ public:
     }
 
 private:
-    Vector mOffset;
     Matrix mView;
     Matrix mProjection;
 

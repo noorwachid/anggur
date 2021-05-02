@@ -29,7 +29,6 @@ void Application::ProcessEvent(SDL_Event& event)
         case SDL_MOUSEWHEEL:
         {
             Input::mMouseWheel.Set(event.wheel.x, event.wheel.y);
-            break;
         }
 
         default: break;
@@ -72,9 +71,7 @@ void Application::Run()
         Input::PreUpdate();
 
         while (SDL_PollEvent(&event))
-        {
             ProcessEvent(event);
-        }
 
         Uint64 currTimePoint = SDL_GetPerformanceCounter();
         float dx = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
