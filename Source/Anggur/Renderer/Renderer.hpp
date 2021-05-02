@@ -40,14 +40,21 @@ public:
         mProjection[4] *= ratio;
     }
 
+    void SetDistance(float d)
+    {
+        mProjection[0] *= Math::Max(Math::epsilon, d);
+        mProjection[4] *= Math::Max(Math::epsilon, d);
+    }
+
     void SetOffset(const Vector& v)
     {
         mProjection.Translate(v);
     }
 
-    void Zoom(const Vector& v)
+    void Zoom(float d)
     {
-        mView.Scale(v);
+        mView[0] = Math::Max(Math::epsilon, mView[0] + d);
+        mView[4] = Math::Max(Math::epsilon, mView[4] + d);
     }
 
     void Move(const Vector& v)

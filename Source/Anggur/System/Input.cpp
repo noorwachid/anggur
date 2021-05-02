@@ -86,6 +86,11 @@ bool Input::IsMouseReleased(Mouse button)
     return (mMousePrevState & btn) && !(mMouseCurrState & btn);
 }
 
+bool Input::IsMouseScrolled()
+{
+    return mMouseWheel.y != 0.0f || mMouseWheel.x != 0.0f;
+}
+
 void Input::SetMousePos(const Vector& pos)
 {
     int x = pos.x;

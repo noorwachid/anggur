@@ -24,6 +24,7 @@ public:
     static bool IsMousePressed(Mouse button);
     static bool IsMouseHeld(Mouse button);
     static bool IsMouseReleased(Mouse button);
+    static bool IsMouseScrolled();
 
     static void SetMousePos(const Vector& pos);
     static Vector GetMousePos();
