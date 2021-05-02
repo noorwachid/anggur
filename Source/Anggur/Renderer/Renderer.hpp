@@ -62,11 +62,11 @@ struct Transform
     float rotation;
     Vector scale;
 
-    Transform(Vector t = Vector(), float r = 0, Vector s = Vector()):
+    Transform(Vector t = Vector(), float r = 0, Vector s = Vector::one):
         translation(t),
         rotation(r),
         scale(s)
-    {}
+    {}    
 
     Matrix ToMatrix() const
     {
@@ -103,8 +103,6 @@ public:
     static void SetDrawMode(DrawMode mode);
 
     static void ClearBackground(const Color& color = Color::charcoal);
-
-    // TODO: Create overloading for Transform parameter before color's so we don't have to calculate it when we're not using it.
 
     // -- Primitives
     static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::white);

@@ -475,7 +475,14 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, c
 
 void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, const Color& c)
 {
-    AddBox(p0 * f.ToMatrix(), r, c);
+    Matrix m = f.ToMatrix();
+    AddQuad(
+        Vector(p0.x - r.x, p0.y - r.y) * m,
+        Vector(p0.x + r.x, p0.y - r.y) * m,
+        Vector(p0.x + r.x, p0.y + r.y) * m,
+        Vector(p0.x - r.x, p0.y + r.y) * m,
+        c
+    );
 }
 
 void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c)
