@@ -96,19 +96,21 @@ public:
 
     static void ClearBackground(const Color& color = Color::charcoal);
 
+    // TODO: Create overloading for Transform parameter before color's so we don't have to calculate it when we're not using it.
+
     static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::white);
-    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& transform = Transform(), const Color& c = Color::white);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c = Color::white);
     static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::white);
-    static void AddBox(const Vector& position, const Vector& radii, const Transform& transform = Transform(), const Color& c = Color::white);
+    static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::white);
     static void AddConvex(const std::vector<Vector>& ps, const Color& c = Color::white);
     static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::white);
     static void AddCircle(const Vector& p0, float r, const Color& c = Color::white);
     // TODO DrawArc
 
     static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
-                          const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
-                          const Texture& t,
-                          const Color& c = Color::white);;
+                         const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
+                         const Texture& t,
+                         const Color& c = Color::white);
     static void Addx(const Vector& p0, const Texture& t, const Color& c = Color::white);
     static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c = Color::white);
 
