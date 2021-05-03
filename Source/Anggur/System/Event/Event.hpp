@@ -52,6 +52,10 @@ struct WindowEvent : public Event
 {
     Vector pos;
     Vector size;
+
+    WindowEvent(EventType t):
+        Event(t, EventGroup::Window)
+    {}
 };
 
 struct KeyEvent : public Event
@@ -67,21 +71,17 @@ struct KeyEvent : public Event
 	mod(m) {}
 };
 
-/*
 struct MouseEvent : public Event
 {
+    Vector wheel;
     Vector pos;
-    MouseButton button;
-    MouseState state;
-    KeyMod mod;
+    Vector dx;
+    Mouse button;
 
-    MouseEvent(EventType t, MouseButton b, MouseState st, KeyMod m): 
-	Event(t, EventGroup::Mouse),
-	scancode(sc), 
-	key(k), 
-	mod(m) {}
+    MouseEvent(EventType t):
+        Event(t, EventGroup::Mouse)
+    {}
 };
-*/
 
 // struct GamepadEvent : public Event
 // {

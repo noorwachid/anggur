@@ -26,11 +26,76 @@ void Application::ProcessEvent(SDL_Event& event)
             mWindow->Close();
             break;
         }
+        case SDL_WINDOWEVENT:
+        {
+            switch (event.window.type)
+            {
+                case SDL_WINDOWEVENT_MOVED:
+                {
+                    WindowEvent e(EventType::WindowMoved);
+                    e.pos.Set(event.window.data1, event.window.data2);
+                    OnEvent(e);
+                    Anggur_Log("Moved!\n");
+                    break;
+                }
+                case SDL_WINDOWEVENT_RESIZED:
+                    WindowEvent e(EventType::WindowResized);
+                    e.size.Set(event.window.data1, event.window.data2);
+                    OnEvent(e);
+                    break;
+            }
+            break;
+        }
+        case SDL_KEYDOWN:
+        {
+            KeyEvent e(EventType::KeyPressed,
+                       event.key.keysym.scancode,
+                       static_cast<Key>(event.key.keysym.sym),
+                       static_cast<KeyMod>(event.key.keysym.mod));
+            OnEvent(e);
+            break;
+        }
+        case SDL_KEYUP:
+        {
+            KeyEvent e(EventType::KeyReleased,
+                       event.key.keysym.scancode,
+                       static_cast<Key>(event.key.keysym.sym),
+                       static_cast<KeyMod>(event.key.keysym.mod));
+            OnEvent(e);
+            break;
+        }
         case SDL_MOUSEWHEEL:
         {
             Input::mMouseWheel.Set(event.wheel.x, event.wheel.y);
+            MouseEvent e(EventType::MouseScrolled);
+            e.wheel.Set(event.wheel.x, event.wheel.y);
+            OnEvent(e);
+            break;
         }
-
+        case SDL_MOUSEMOTION:
+        {
+            MouseEvent e(EventType::MouseMoved);
+            e.pos.Set(event.motion.x, event.motion.y);
+            e.dx.Set(event.motion.xrel, event.motion.yrel);
+            OnEvent(e);
+            break;
+        }
+        case SDL_MOUSEBUTTONDOWN:
+        {
+            MouseEvent e(EventType::MousePressed);
+            e.pos.Set(event.button.x, event.button.y);
+            e.button = static_cast<Mouse>(event.button.button);
+            OnEvent(e);
+            break;
+        }
+        case SDL_MOUSEBUTTONUP:
+        {
+            MouseEvent e(EventType::MouseReleased);
+            e.pos.Set(event.button.x, event.button.y);
+            e.button = static_cast<Mouse>(event.button.button);
+            OnEvent(e);
+            break;
+        }
         default: break;
     }
 }
@@ -39,7 +104,7 @@ void Application::OnInitialize() {}
 void Application::OnAttach() {}
 void Application::OnUpdate(float deltaTime) {}
 void Application::OnDetach() {}
-void Application::OnEvent(Event* event) {}
+void Application::OnEvent(Event& event) {}
 
 Application& Application::Get()
 {
