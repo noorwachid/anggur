@@ -35,12 +35,16 @@ add_library(Anggur STATIC
 	${Anggur_System}
 )
 
+# Local libraries
 add_subdirectory(Vendor/Glad)
 add_subdirectory(Vendor/Stb)
-# add_subdirectory(Vendor/SDL2)
 
+# SDL2
+# Swap these two line to switch from system installed library to local library
+# add_subdirectory(Vendor/SDL2)
 find_package(SDL2)
-find_package(dl)
+
+# Posix thread
 find_package(pthread)
 
 target_include_directories(Anggur PUBLIC Source)
@@ -51,6 +55,6 @@ target_link_libraries(Anggur
 	Stb
 	SDL2
 
-	dl
 	pthread
+        ${CMAKE_DL_LIBS}
 )

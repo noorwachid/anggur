@@ -152,8 +152,6 @@ void Renderer::Initialize()
     mIndexBuffer.SetCapacity(sizeof(uint) * mMaxIndices);
 
     FlushData();
-
-    Anggur_Log("[R.MaxQuad] %i\n", mMaxQuad);
 }
 
 void Renderer::Terminate()
