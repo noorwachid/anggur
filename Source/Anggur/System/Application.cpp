@@ -35,7 +35,6 @@ void Application::ProcessEvent(SDL_Event& event)
                     WindowEvent e(EventType::WindowMoved);
                     e.pos.Set(event.window.data1, event.window.data2);
                     OnEvent(e);
-                    Anggur_Log("Moved!\n");
                     break;
                 }
                 case SDL_WINDOWEVENT_RESIZED:
