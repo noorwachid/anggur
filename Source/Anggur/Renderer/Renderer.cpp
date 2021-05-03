@@ -152,6 +152,8 @@ void Renderer::Initialize()
     mIndexBuffer.SetCapacity(sizeof(uint) * mMaxIndices);
 
     FlushData();
+
+    Anggur_Log("[R.MaxQuad] %i\n", mMaxQuad);
 }
 
 void Renderer::Terminate()
@@ -228,7 +230,6 @@ void Renderer::EndScene()
 
 void Renderer::FlushData()
 {
-    mViewProjection = Matrix::identity;
     mVertexCounter = 0;
     mIndexCounter = 0;
     mTextureCounter = 0;
@@ -236,12 +237,9 @@ void Renderer::FlushData()
 
 void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textureOffset)
 {
-    if (mVertexCounter + vertexOffset >= mMaxVertices)
-        return Render();
-    if (mIndexCounter + indexOffset >= mMaxIndices)
-        return Render();
-    if (mTextureCounter + textureOffset >= mMaxTextureUnits)
-        return Render();
+    if (mVertexCounter + vertexOffset > mMaxVertices) return Render();
+    if (mIndexCounter + indexOffset > mMaxIndices) return Render();
+    if (mTextureCounter + textureOffset > mMaxTextureUnits) return Render();
 }
 
 void Renderer::AddText(Font& font, const std::string& text, const Vector& position, int size, int characterSpacing, int wordSpacing, const Color& color)
