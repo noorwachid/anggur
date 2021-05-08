@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <SDL.h>
 #include <Anggur/Helper/Log.hpp>
 #include "Core.hpp"

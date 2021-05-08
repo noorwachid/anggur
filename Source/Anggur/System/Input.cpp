@@ -1,4 +1,5 @@
 #include <string.h>
+#include <SDL_events.h>
 #include <Anggur/Helper/Log.hpp>
 #include "Input.hpp"
 
@@ -6,23 +7,23 @@ namespace Anggur {
 
 SDL_Window* Input::mRawWindow = nullptr;
 
-const Uint8* Input::mKeyCurrState = nullptr;
-Uint8 Input::mKeyPrevState[SDL_NUM_SCANCODES];
+const uchar* Input::mKeyCurrState = nullptr;
+uchar Input::mKeyPrevState[Anggur_ScancodeLength];
 
-Uint32 Input::mMouseCurrState = 0;
-Uint32 Input::mMousePrevState = 0;
+uint Input::mMouseCurrState = 0;
+uint Input::mMousePrevState = 0;
 Vector Input::mMousePos;
 Vector Input::mMouseWheel;
 
 void Input::Initialize()
 {
     mKeyCurrState = SDL_GetKeyboardState(nullptr);
-    memset(mKeyPrevState, 0, SDL_NUM_SCANCODES);
+    memset(mKeyPrevState, 0, Anggur_ScancodeLength);
 }
 
 void Input::PreUpdate()
 {
-    memcpy(mKeyPrevState, mKeyCurrState, SDL_NUM_SCANCODES);
+    memcpy(mKeyPrevState, mKeyCurrState, Anggur_ScancodeLength);
 
     mMousePrevState = mMouseCurrState;
     mMouseWheel.Set(0, 0);
@@ -37,19 +38,19 @@ void Input::Update()
 
 bool Input::IsKeyPressed(Key key)
 {
-    int i = SDL_GetScancodeFromKey((int) key);
+    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
     return mKeyCurrState[i] == 1 && mKeyPrevState[i] == 0;
 }
 
 bool Input::IsKeyHeld(Key key)
 {
-    int i = SDL_GetScancodeFromKey((int) key);
+    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
     return mKeyCurrState[i] && mKeyPrevState[i];
 }
 
 bool Input::IsKeyReleased(Key key)
 {
-    int i = SDL_GetScancodeFromKey((int) key);
+    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
     return !mKeyCurrState[i] && mKeyPrevState[i];
 }
 

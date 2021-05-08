@@ -5,6 +5,8 @@
 #include "Window.hpp"
 #include "Input.hpp"
 
+union SDL_Event;
+
 namespace Anggur {
 
 class Application
@@ -30,7 +32,7 @@ public:
     Window& GetWindow();
 
 private:
-    void ProcessEvent(SDL_Event& event);
+    void ProcessEvent(SDL_Event* event);
 
 protected:
     Window* mWindow;

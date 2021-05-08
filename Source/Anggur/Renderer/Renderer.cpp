@@ -223,7 +223,7 @@ void Renderer::BeginScene(const Camera& camera)
 void Renderer::EndScene()
 {
     Render();
-    mViewProjection = Matrix::identity;
+    mViewProjection = Matrix::Identity;
 }
 
 void Renderer::FlushData()
@@ -407,7 +407,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
 
     CheckLimit(segments, triangles * 3);
 
-    float theta           = Math::pi2 / segments;
+    float theta           = Math::TwoPi / segments;
     float tangetialFactor = Math::Tan(theta);
     float radialFactor    = Math::Cos(theta);
 
@@ -606,15 +606,15 @@ void Renderer::AddBoxx(const Vector& p0, const Vector& radii, const Texture& t, 
 void Renderer::AddTerminator(const Vector& p0, const Vector& p1, float weight, const Color& c)
 {
     Vector p3 = (p0 - p1).Normalize() * weight;
-    Vector t0 = (p1 - p0).GetPerpendicular().Normalize() * weight;
+    Vector t0 = (p1 - p0).GetPerpen().Normalize() * weight;
 
     AddQuad(p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
 }
 
 void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w0, const Color& c)
 {
-    Vector t0 = (p1 - p0).GetPerpendicular();
-    Vector t2 = (p2 - p1).GetPerpendicular();
+    Vector t0 = (p1 - p0).GetPerpen();
+    Vector t2 = (p2 - p1).GetPerpen();
 
     if (0 < ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)))
     {
@@ -652,13 +652,13 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
         float numeaAbs = Math::Abs(numea);
         float numebAbs = Math::Abs(numeb);
 
-        if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
+        if (numeaAbs < Math::Epsilon && numebAbs < Math::Epsilon && denomAbs < Math::Epsilon)
         {
             p4 = Vector::Lerp(p0, p1, 0.5);
             return true;
         }
 
-        if (denomAbs < Math::epsilon)
+        if (denomAbs < Math::Epsilon)
             return false;
 
         float mua = numea / denom;

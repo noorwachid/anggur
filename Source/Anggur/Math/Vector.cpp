@@ -3,8 +3,8 @@
 
 namespace Anggur {
 
-Vector Vector::zero(0, 0);
-Vector Vector::one(1, 1);
+Vector Vector::Zero(0, 0);
+Vector Vector::One(1, 1);
 
 Vector::Vector()
 {
@@ -145,14 +145,14 @@ Vector& Vector::operator*=(const Matrix& m)
     return *this;
 }
 
-float Vector::GetLengthSquared() const
+float Vector::GetLengthSq() const
 {
     return (x*x + y*y);
 }
 
 float Vector::GetLength() const
 {
-    return Math::Sqrt(GetLengthSquared());
+    return Math::Sqrt(GetLengthSq());
 }
 
 Vector& Vector::SetLength(float x)
@@ -173,9 +173,16 @@ Vector& Vector::SetAngle(float theta)
     return *this;
 }
 
-Vector Vector::GetPerpendicular() const
+Vector Vector::GetPerpen() const
 {
     return Vector(-y, x);
+}
+
+Vector& Vector::SetLengthLimit(float x)
+{
+    if (GetLengthSq() > (x * x))
+        return SetLength(x);
+    return *this;
 }
 
 Vector& Vector::Normalize()
@@ -211,10 +218,10 @@ Vector Vector::Lerp(const Vector& a, const Vector& b, float amount)
 
 float Vector::GetLength(const Vector& a, const Vector& b)
 {
-    return Math::Sqrt(GetLengthSquared(a, b));
+    return Math::Sqrt(GetLengthSq(a, b));
 }
 
-float Vector::GetLengthSquared(const Vector& a, const Vector& b)
+float Vector::GetLengthSq(const Vector& a, const Vector& b)
 {
     float pa =  a.x - b.x;
     float pb =  a.y - b.y;
@@ -225,6 +232,17 @@ float Vector::GetLengthSquared(const Vector& a, const Vector& b)
 float Vector::GetAngle(const Vector& a, const Vector& b)
 {
     return Math::Acos(Vector::Dot(a, b));
+}
+
+float Vector::GetDist(const Vector& a, const Vector& b)
+{
+    return Math::Sqrt(GetDistSq(a, b));
+}
+
+float Vector::GetDistSq(const Vector& a, const Vector& b)
+{
+    Vector c = a - b;
+    return (c.x * c.x) + (c.y * c.y);
 }
 
 Vector Vector::CreatePolar(float angle, float length)

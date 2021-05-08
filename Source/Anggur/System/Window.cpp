@@ -1,3 +1,4 @@
+#include <SDL.h>
 #include <Anggur/Math/Vector.hpp>
 #include <Anggur/Renderer/Image.hpp>
 #include <Anggur/Helper/Io.hpp>
@@ -71,7 +72,7 @@ SDL_Window* Window::GetRawWindow()
     return mRawWindow;
 }
 
-SDL_GLContext Window::GetContext()
+void* Window::GetContext()
 {
     return mContext;
 }

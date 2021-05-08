@@ -1,8 +1,5 @@
 #pragma once
 
-#include "glad/glad.h"
-#include "SDL.h"
-
 namespace Anggur {
 
 class Core

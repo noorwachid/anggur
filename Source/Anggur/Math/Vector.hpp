@@ -42,12 +42,13 @@ struct Vector
     Vector& operator-=(const Vector& v);
     Vector& operator*=(const Matrix& m);
 
-    float GetLengthSquared() const;
+    float GetLengthSq() const;
     float GetLength() const;
     float GetAngle() const;
 
-    Vector GetPerpendicular() const;
+    Vector GetPerpen() const;
 
+    Vector& SetLengthLimit(float x);
     Vector& SetLength(float x);
     Vector& SetAngle(float theta);
     Vector& Normalize();
@@ -60,13 +61,16 @@ struct Vector
 
 
     static float GetLength(const Vector& a, const Vector& b);
-    static float GetLengthSquared(const Vector& a, const Vector& b);
+    static float GetLengthSq(const Vector& a, const Vector& b);
     static float GetAngle(const Vector& a, const Vector& b);
+
+    static float GetDist(const Vector& a, const Vector& b);
+    static float GetDistSq(const Vector& a, const Vector& b);
 
     static Vector CreatePolar(float angle, float length);
 
-    static Vector zero;
-    static Vector one;
+    static Vector Zero;
+    static Vector One;
 };
 
 }

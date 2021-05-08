@@ -4,6 +4,8 @@
 #include <Anggur/Helper/Enum.hpp>
 #include "Core.hpp"
 
+struct SDL_Window;
+
 namespace Anggur {
 
 class Event;
@@ -71,13 +73,13 @@ public:
     void SwapBuffers();
 
     SDL_Window* GetRawWindow();
-    SDL_GLContext GetContext();
+    void* GetContext();
 
     friend class Application;
 
 private:
     SDL_Window* mRawWindow;
-    SDL_GLContext mContext;
+    void* mContext;
 
     float mRatio;
     bool mOpen;

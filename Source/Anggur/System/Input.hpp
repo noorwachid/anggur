@@ -4,6 +4,8 @@
 #include "Event/Event.hpp"
 #include "Core.hpp"
 
+struct SDL_Window;
+
 namespace Anggur {
 
 class Input
@@ -35,11 +37,11 @@ public:
 private:
     static SDL_Window* mRawWindow;
 
-    static const Uint8* mKeyCurrState;
-    static Uint8 mKeyPrevState[SDL_NUM_SCANCODES];
+    static const uchar* mKeyCurrState;
+    static uchar mKeyPrevState[Anggur_ScancodeLength];
 
-    static Uint32 mMouseCurrState;
-    static Uint32 mMousePrevState;
+    static uint mMouseCurrState;
+    static uint mMousePrevState;
     static Vector mMousePos;
     static Vector mMouseWheel;
 };

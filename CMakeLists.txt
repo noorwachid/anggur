@@ -27,12 +27,19 @@ file(GLOB Anggur_System
 	"Source/Anggur/System/*.hpp"
 )
 
+file(GLOB Anggur_SystemEvent
+
+        "Source/Anggur/System/Event/*.cpp"
+        "Source/Anggur/System/Event/*.hpp"
+)
+
 add_library(Anggur STATIC 
 
 	${Anggur_Helper}
 	${Anggur_Math}
-	${Anggur_Renderer}
-	${Anggur_System}
+        ${Anggur_Renderer}
+        ${Anggur_System}
+        ${Anggur_SystemEvent}
 )
 
 # Local libraries
@@ -48,7 +55,7 @@ find_package(SDL2)
 find_package(pthread)
 
 target_include_directories(Anggur PUBLIC Source)
-target_include_directories(Anggur PUBLIC ${SDL2_INCLUDE_DIRS})
+target_include_directories(Anggur PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(Anggur
 
 	Glad

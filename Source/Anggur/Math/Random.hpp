@@ -58,9 +58,9 @@ public:
         return mGenerator.Range(-1.f, 1.f);
     }
 
-    static float GetRotation()
+    static float GetAngle()
     {
-        return mGenerator.Range(0.f, Math::pi2);
+        return mGenerator.Range(0.f, Math::TwoPi);
     }
 
 

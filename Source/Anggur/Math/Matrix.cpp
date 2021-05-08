@@ -3,15 +3,21 @@
 
 namespace Anggur {
 
-const Matrix Matrix::identity({
+const Matrix Matrix::Identity({
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f,
 });
 
+const Matrix Matrix::Zero({
+    0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f,
+});
+
 Matrix::Matrix()
 {
-    *this = Matrix::identity;
+    *this = Matrix::Identity;
 }
 
 Matrix::Matrix(const std::initializer_list<float>& list)
@@ -154,4 +160,43 @@ Matrix Matrix::CreateRotation(float theta)
     });
 }
 
+static float Det(float a, float b, float c, float d)
+{
+    return (a * d) - (b * c);
 }
+
+static float Det(const Matrix& m)
+{
+    return
+        ((m[0] * m[4] * m[8]) + (m[3] * m[7] * m[2]) + (m[6] * m[1] * m[5]))
+       -((m[6] * m[4] * m[2]) + (m[0] * m[7] * m[5]) + (m[3] * m[1] * m[8]));
+}
+
+Matrix Matrix::CreateInverse(const Matrix& m)
+{
+    float determinant = Det(m);
+
+    if (determinant == 0.0)
+        return Matrix::Zero;
+
+    float oo = 1 / determinant;
+
+    // 1/det(M) * (coef(m))^-T // in one take
+    return Matrix({
+        oo *  Det(m[4], m[7], m[5], m[8]), // 0
+        oo * -Det(m[3], m[6], m[5], m[8]), // 3
+        oo *  Det(m[3], m[6], m[4], m[7]), // 6
+
+        oo * -Det(m[1], m[7], m[2], m[8]), // 1
+        oo *  Det(m[0], m[6], m[2], m[8]), // 4
+        oo * -Det(m[0], m[6], m[1], m[7]), // 7
+
+        oo *  Det(m[1], m[4], m[2], m[5]), // 2
+        oo * -Det(m[0], m[3], m[2], m[5]), // 5
+        oo *  Det(m[0], m[3], m[1], m[4])  // 8
+    });
+}
+
+}
+
+
