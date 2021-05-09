@@ -22,75 +22,44 @@ struct Camera
 public:
     Camera()
     {
-        mClipSize = Vector::One;
+        viewport = Vector::One;
+        distance = 1.0;
+        rotation = 0.0;
     }
 
-    Matrix GetViewProjection() const
+    Matrix ToMatrix() const
     {
-        return mView * mProjection;
-    }
+        float distanceY = distance * (viewport.x / viewport.y);
 
-    float GetApproxScale() const
-    {
-        return (mProjection[0] + mProjection[4]) * 0.5f;
+        return Matrix({
+            distance, 0, 0,
+            0, distanceY, 0,
+            (-origin.x + offset.x) * distance, (-origin.y + offset.y) * distanceY, 1,
+        });
     }
 
     Vector ToWorldCoord(const Vector& screenCoord)
     {
+        float distanceY = distance * (viewport.x / viewport.y);
         Vector result(
-            (2.0 * screenCoord.x) / mClipSize.x - 1.0,
-           -(2.0 * screenCoord.y) / mClipSize.y + 1.0
+            (2.0 * screenCoord.x) / viewport.x - 1.0,
+           -(2.0 * screenCoord.y) / viewport.y + 1.0
         );
-        return result * Matrix::CreateInverse(GetViewProjection());
-    }
 
-    void SetClipSize(const Vector& size)
-    {
-        mClipSize = size;
-        SetRatio(size);
-    }
-
-    void SetRatio(const Vector& size)
-    {
-        mProjection[4] *= size.x / size.y;
+        return result * Matrix::CreateInverse(ToMatrix());
     }
 
     void SetRatio(float ratio)
     {
-        mProjection[4] *= ratio;
+        viewport.y = viewport.x * ratio;
     }
 
-    void SetDistance(float d)
-    {
-        mProjection[0] *= Math::Max(Math::Epsilon, d);
-        mProjection[4] *= Math::Max(Math::Epsilon, d);
-    }
+    float distance;
+    float rotation;
 
-    void SetOffset(const Vector& v)
-    {
-        mProjection.Translate(v);
-    }
-
-    void Zoom(float d)
-    {
-        mView[0] = Math::Max(Math::Epsilon, mView[0] + d);
-        mView[4] = Math::Max(Math::Epsilon, mView[4] + d);
-    }
-
-    void Move(const Vector& v)
-    {
-        mView.Translate(-v);
-    }
-
-    void Tilt(const float angle)
-    {
-        mView.Rotate(-angle);
-    }
-
-private:
-    Vector mClipSize;
-    Matrix mView;
-    Matrix mProjection;
+    Vector origin;
+    Vector offset;
+    Vector viewport;
 
 };
 
@@ -124,7 +93,7 @@ public:
     static void Initialize();
     static void Terminate();
 
-    static void SetViewport(uint width, uint height);
+    static void SetViewport(Vector size);
     static void SetMaxQuad(size_t max = 2048);
     static void SetCircleSegment(size_t segment);
 

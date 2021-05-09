@@ -172,6 +172,11 @@ void Renderer::Terminate()
     mBatchShader.Destroy();
 }
 
+void Renderer::SetViewport(Vector size)
+{
+    glViewport(0, 0, size.x, size.y);
+}
+
 void Renderer::SetMaxQuad(size_t max)
 {
     if (max < mCircleSegment) max = mCircleSegment;
@@ -217,7 +222,7 @@ void Renderer::Render()
 
 void Renderer::BeginScene(const Camera& camera)
 {
-   mViewProjection = camera.GetViewProjection();
+   mViewProjection = camera.ToMatrix();
 }
 
 void Renderer::EndScene()

@@ -30,7 +30,7 @@ void Application::ProcessEvent(SDL_Event* event)
         }
         case SDL_WINDOWEVENT:
         {
-            switch (event->window.type)
+            switch (event->window.event)
             {
                 case SDL_WINDOWEVENT_MOVED:
                 {
@@ -40,10 +40,13 @@ void Application::ProcessEvent(SDL_Event* event)
                     break;
                 }
                 case SDL_WINDOWEVENT_RESIZED:
+                {
+                    Renderer::SetViewport(Vector(event->window.data1, event->window.data2));
                     WindowEvent e(EventType::WindowResized);
                     e.size.Set(event->window.data1, event->window.data2);
                     OnEvent(e);
                     break;
+                }
             }
             break;
         }

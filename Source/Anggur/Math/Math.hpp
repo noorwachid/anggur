@@ -9,25 +9,9 @@ struct Math
     static const float Infinity;
     static const float Epsilon;
 
-    template <typename T>
-    static T Max(const T& a, const T& b)
-    {
-        return (a < b ? b : a);
-    }
-
-    template <typename T>
-    static T Min(const T& a, const T& b)
-    {
-        return (a < b ? a : b);
-    }
-
-    template <typename T>
-    static T Clamp(const T& x, const T& lower, const T& upper)
-    {
-        return Min(upper, Max(lower, x));
-    }
-
-    static float Clamp(float x);
+    static float Max(float a, float b);
+    static float Min(float a, float b);
+    static float Clamp(float x, float lower = -1, float upper = 1);
 
     static float Abs(float x);
     static float Cos(float x);
@@ -54,7 +38,7 @@ struct Math
     static float ToRadian(float degree);
     static float ToDegree(float radian);
 
-    static float IsNearZero(float x, float Epsilon = Math::Epsilon);
+    static float IsNearZero(float x, float epsilon = Math::Epsilon);
 };
 
 struct Vector;

@@ -4,13 +4,23 @@
 namespace Anggur {
 
 const float Math::Pi        = 3.1415926535f;
-const float Math::TwoPi       = Math::Pi * 2;
+const float Math::TwoPi     = Math::Pi * 2;
 const float Math::Infinity  = INFINITY;
 const float Math::Epsilon   = 0.0001f;
 
-float Math::Clamp(float x)
+float Math::Max(float a, float b)
 {
-    return x > 1 ? 1 : (x < 0 ? 0 : x);
+    return fmaxf(a, b);
+}
+
+float Math::Min(float a, float b)
+{
+    return fminf(a, b);
+}
+
+float Math::Clamp(float x, float lower, float upper)
+{
+    return Min(upper, Max(lower, x));
 }
 
 float Math::Abs(float x)
