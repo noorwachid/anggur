@@ -23,8 +23,8 @@ file(GLOB Anggur_Renderer
 
 file(GLOB Anggur_System   
 
-	"Source/Anggur/System/*.cpp"
-	"Source/Anggur/System/*.hpp"
+        "Source/Anggur/System/*.cpp"
+        "Source/Anggur/System/*.hpp"
 )
 
 file(GLOB Anggur_SystemEvent

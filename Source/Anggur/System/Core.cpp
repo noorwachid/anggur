@@ -40,7 +40,7 @@ void Core::LoadGlFunctions()
         isInitialized = true;
     }
 
-    Anggur_Log("[Core] Loaded OpenGl functions\n");
+    // Anggur_Log("[Core] Loaded OpenGl functions\n");
 }
 
 }

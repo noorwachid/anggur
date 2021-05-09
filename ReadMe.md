@@ -17,18 +17,15 @@ class App: public Application
 
     void OnAttach() override
     {
-        camera.SetClipSize(mWindow->GetSize());
-        camera.SetDistance(0.0125);
-        camera.SetOffset(Vector(0.0, -0.125));
+        camera.viewport = mWindow->GetSize();
+        camera.distance = 0.0125;
+        camera.offset.Set(0.0, -10);
     }
 
     void OnUpdate(float dx) override
     {        
         R::ClearBackground();
         R::BeginScene(camera);
-
-        if (Input::IsMouseScrolled())
-            camera.Zoom(Input::GetMouseWheel().y * 0.1);
 
         R::AddCircle(Vector(0, 12), 10, Color::Purple);
         R::AddCircle(Vector(-12, -9), 10, Color::Purple);

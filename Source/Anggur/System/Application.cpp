@@ -121,7 +121,7 @@ void Application::Initialize()
     mWindow = Window::Create(mWindowConfig);
     Input::mRawWindow = mWindow->mRawWindow;
 
-    Anggur_Log("[Core.Application] Initialized\n");
+    // Anggur_Log("[Core.Application] Initialized\n");
 }
 
 void Application::Run()
@@ -129,14 +129,16 @@ void Application::Run()
     Initialize();
     Renderer::Initialize();
     Input::Initialize();
-    OnAttach();
 
     SDL_Event event;
     Uint64 prevTimePoint = SDL_GetPerformanceCounter();
+    Timer::mElapsed = 0;
+
+    OnAttach();
+
 
     while (mWindow->IsOpen())
     {
-
         Input::PreUpdate();
 
         while (SDL_PollEvent(&event))
@@ -145,6 +147,8 @@ void Application::Run()
         Uint64 currTimePoint = SDL_GetPerformanceCounter();
         float dx = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
         prevTimePoint = currTimePoint;
+        Timer::mDx = dx;
+        Timer::mElapsed += dx;
 
         Input::Update();
         OnUpdate(dx);
@@ -155,7 +159,7 @@ void Application::Run()
     Renderer::Terminate();
     Terminate();
 
-    Anggur_Log("[Core.Application] Terminated\n");
+    // Anggur_Log("[Core.Application] Terminated\n");
 }
 
 void Application::Terminate()

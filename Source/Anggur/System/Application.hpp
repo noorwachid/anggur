@@ -4,6 +4,7 @@
 #include <Anggur/Renderer/Renderer.hpp>
 #include "Window.hpp"
 #include "Input.hpp"
+#include "Timer.hpp"
 
 union SDL_Event;
 
