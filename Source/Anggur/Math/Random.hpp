@@ -63,6 +63,11 @@ public:
         return mGenerator.Range(0.f, Math::TwoPi);
     }
 
+    static float GetBool()
+    {
+        return GetNormal() > 0.5;
+    }
+
 
 private:
     static RandomGenerator mGenerator;

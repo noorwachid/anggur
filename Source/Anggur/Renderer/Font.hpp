@@ -22,7 +22,7 @@ public:
     ~Font();
 
     void initialize();
-    void load(const std::string& path, int height = 100);
+    void Load(const std::string& path, int height = 100);
 
     inline CharRect& GetCharRect(int c)
     {

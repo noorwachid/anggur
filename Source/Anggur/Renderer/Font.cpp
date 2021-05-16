@@ -29,7 +29,7 @@ void Font::initialize()
     mEmptyCharRect.height = 0;
 }
 
-void Font::load(const std::string& path, int height)
+void Font::Load(const std::string& path, int height)
 {
     mBuffer = Io::Load(path, mBufferSize);
 

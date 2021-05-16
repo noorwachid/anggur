@@ -128,6 +128,7 @@ void Application::Run()
 {
     Initialize();
     Renderer::Initialize();
+    Audio::Initialize();
     Input::Initialize();
 
     SDL_Event event;
@@ -156,6 +157,7 @@ void Application::Run()
         mWindow->SwapBuffers();
     }
     OnDetach();
+    Audio::Terminate();
     Renderer::Terminate();
     Terminate();
 

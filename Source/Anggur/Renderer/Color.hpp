@@ -54,8 +54,12 @@ struct Color
     static const Color Seafoam;
     static const Color Aquamarine;
     static const Color Cyan;
+    static const Color SkyBlue;
     static const Color Blue;
+    static const Color Violet;
     static const Color Purple;
+    static const Color Fuchsia;
+    static const Color Pink;
 
     static const Color Beige;
     static const Color Ivory;

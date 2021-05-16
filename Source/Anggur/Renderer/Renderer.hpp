@@ -110,7 +110,7 @@ public:
 
     static void SetDrawMode(DrawMode mode);
 
-    static void ClearBackground(const Color& color = Color::Charcoal);
+    static void ClearBackground(const Color& color = Color::Black);
 
     // -- Primitives
     static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::White);

@@ -110,7 +110,7 @@ float Math::RoundNearest(float x, float step)
 
 float Math::Normalize(float x, float lower, float upper)
 {
-    return (upper - x) / (upper - lower);
+    return (x - lower) / (upper - lower);
 }
 
 float Math::Lerp(float lower, float upper, float amount)

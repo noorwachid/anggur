@@ -21,8 +21,12 @@ const Color Color::Green = Color::CreateHex(0x10DA14);
 const Color Color::Seafoam = Color::CreateHex(0x3CEC97);
 const Color Color::Aquamarine = Color::CreateHex(0x7FFFD4);
 const Color Color::Cyan = Color::CreateHex(0x00FFFF);
+const Color Color::SkyBlue = Color::CreateHex(0x2081F4);
 const Color Color::Blue = Color::CreateHex(0x2424FF);
-const Color Color::Purple = Color::CreateHex(0x7321FA);
+const Color Color::Violet = Color::CreateHex(0x7D0CE2);
+const Color Color::Purple = Color::CreateHex(0xD351FA);
+const Color Color::Fuchsia = Color::CreateHex(0xF81895);
+const Color Color::Pink = Color::CreateHex(0xFFB1DD);
 
 const Color Color::Beige = Color::CreateHex(0xF5F5DC);
 const Color Color::Ivory = Color::CreateHex(0xFFFFF0);
