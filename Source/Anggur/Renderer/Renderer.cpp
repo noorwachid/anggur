@@ -245,32 +245,29 @@ void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textur
     if (mTextureCounter + textureOffset > mMaxTextureUnits) return Render();
 }
 
-void Renderer::AddText(Font& font, const std::string& text, const Vector& position, int size, int characterSpacing, int wordSpacing, const Color& color)
+void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, float size, float charSpacing, float wordSpacing, const Color& color)
 {
-    float height = font.GetTexture().GetHeight();
     float x = 0;
 
     for (auto c: text)
     {
-        if (c == 32) x += wordSpacing;
+        if (c == 32)
+            x += wordSpacing;
 
-        CharRect ci = font.GetCharRect(c);
+        const CharRect& cr = font.GetCharRect(c);
+        Vector p1(p0.x + x, p0.y);
+        float x1 = cr.ratio * size;
 
-        float scaledWidth = (size / height) * ci.width;
+        AddQuadx(p1,
+                 {p1.x + x1, p1.y},
+                 {p1.x + x1, p1.y + size},
+                 {p1.x, p1.y + size},
+                 {cr.texOffsetX, 0},
+                 {cr.texOffsetX + cr.texClipX, 0},
+                 {cr.texOffsetX + cr.texClipX, 1},
+                 {cr.texOffsetX, 1}, font.GetTexture());
 
-        /*
-        drawRectxc(
-            {position.x + x, position.y},
-            scaledWidth,
-            size,
-            {ci.x * 1.f, 0},
-            ci.width, height,
-            font.texture(),
-            color
-        );
-        */
-
-        x += scaledWidth + characterSpacing;
+        x += x1 + charSpacing;
     }
 }
 

@@ -11,7 +11,7 @@ class Audio
 {
 public:
     static void SetBuffer(int frequency = 44100, int bufferSize = 128);
-    static void SetChannelAllocation(int size);
+    static void SetPollSize(int size);
 
     static void Initialize();
     static void Terminate();
@@ -19,7 +19,7 @@ public:
 private:
     static int mFrequency;
     static int mBufferSize;
-    static int mChannelAllocationSize;
+    static int mPollSize;
 };
 
 class SoundFx

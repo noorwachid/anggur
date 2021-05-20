@@ -30,12 +30,12 @@ void Image::Load(const std::string& path)
     int channels;
 
     stbi_set_flip_vertically_on_load(1);
-    mData = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    mData = stbi_load(path.c_str(), &width, &height, &channels, 4);
     Anggur_Assert(mData, "[Renderer.Image] failed to load image\n");
 
-    width = width;
-    height = height;
-    channels = channels;
+    mWidth = width;
+    mHeight = height;
+    mChannels = channels;
 }
 
 void Image::Unload()

@@ -13,9 +13,9 @@ Texture::Texture()
 
 Texture::Texture(uint id, uint width, uint height)
 {
-    id = id;
-    width = width;
-    height = height;
+    mId = id;
+    mWidth = width;
+    mHeight = height;
 }
 
 Texture::Texture(const std::string& path, SamplerFilter filter)
@@ -35,9 +35,9 @@ void Texture::LoadBitmap(uchar* data, uint width, uint height, uint channels, Sa
     glEnable(GL_TEXTURE_2D);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    width = width;
-    height = height;
-    channels = channels;
+    mWidth = width;
+    mHeight = height;
+    mChannels = channels;
 
     glGenTextures(1, &mId);
     glBindTexture(GL_TEXTURE_2D, mId);
@@ -61,6 +61,7 @@ void Texture::LoadBitmap(uchar* data, uint width, uint height, uint channels, Sa
             iformat = GL_RGBA8;
             format = GL_RGBA;
             break;
+        case 8:
         default:
             iformat = GL_RGB8;
             format = GL_RGB;

@@ -4,9 +4,11 @@
 
 namespace Anggur {
 
+CharRect CharRect::Empty = { 0, 0, 0, 0 };
+
 Font::Font()
 {
-    initialize();
+    Initialize();
 }
 
 Font::~Font()
@@ -18,15 +20,10 @@ Font::~Font()
     }
 }
 
-void Font::initialize()
+void Font::Initialize()
 {
     mFirstChar = 33;
     mLastChar = 126;
-
-    mEmptyCharRect.x = 0;
-    mEmptyCharRect.y = 0;
-    mEmptyCharRect.width = 0;
-    mEmptyCharRect.height = 0;
 }
 
 void Font::Load(const std::string& path, int height)
@@ -34,7 +31,7 @@ void Font::Load(const std::string& path, int height)
     mBuffer = Io::Load(path, mBufferSize);
 
     int result = stbtt_InitFont(&mInfoData, mBuffer, stbtt_GetFontOffsetForIndex(mBuffer, 0));
-    Anggur_Assert(result, "[Renderer.Font] failed to load font");
+    Anggur_Assert(result, "[Renederer.Font] failed to load font");
 
     float scale = stbtt_ScaleForPixelHeight(&mInfoData, height);
     int ascent, decent;
@@ -44,7 +41,7 @@ void Font::Load(const std::string& path, int height)
     decent *= scale;
     height = (ascent - decent);
 
-    //Io::WriteLine("Font.Load :: ascent: %d, decent: %d, height: %d", ascent, decent, height);
+    Anggur_Log("Font.Load :: ascent: %d, decent: %d, height: %d", ascent, decent, height);
 
     int bitmapWidth  = 0;
     int bitmapHeight = height;
@@ -66,32 +63,52 @@ void Font::Load(const std::string& path, int height)
 
         y = ascent + y0;
 
-        GetCharRect(c).x = x0 + x;
-        GetCharRect(c).y = y;
-        GetCharRect(c).width  = w;
-        GetCharRect(c).height = h;
+        CharRect& cr = GetCharRect(c);
+        cr.x = x0 + x;
+        cr.y = y;
+        cr.w = w;
+        cr.h = h;
 
         x += ax + 10;
         bitmapWidth += ax + 10;
     }
 
+    mNormalized.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
     int bitmapSize = bitmapWidth * bitmapHeight;
     uchar bitmap[bitmapSize];
+    uchar bitmapFlipped[bitmapSize];
 
-    for (int i = 0; i < bitmapSize; ++i)
+    for (int i = 0; i < bitmapSize; ++i) // avoid undefined behaviour
+    {
         bitmap[i] = 0;
+        bitmapFlipped[i] = 0;
+    }
 
     for (int c = mFirstChar; c <= mLastChar; ++c)
     {
-        CharRect ci = GetCharRect(c);
-        int byteOffset = ci.x + (ci.y * bitmapWidth);
+        CharRect& cr = GetCharRect(c);
+        cr.texOffsetX = cr.x * mNormalized.x;
+        cr.texClipX = cr.w * mNormalized.x;
+        cr.ratio = cr.w * mNormalized.y;
+
+        int byteOffset = cr.x + (cr.y * bitmapWidth);
 
         stbtt_MakeCodepointBitmap(&mInfoData, bitmap + byteOffset,
-                                  ci.width, ci.height,
+                                  cr.w, cr.h,
                                   bitmapWidth, scale, scale, c);
     }
 
-    mTexture.LoadBitmap(bitmap, bitmapWidth, bitmapHeight, 1);
+    // flip bitmap vertically
+    for (int i = 0, ii = bitmapHeight - 1; i < bitmapHeight; ++i, --ii)
+    {
+        for (int j = 0; j < bitmapWidth; ++j)
+        {
+            int k = bitmapWidth * i + j;
+            int l = bitmapWidth * ii + j;
+            bitmapFlipped[l] = bitmap[k];
+        }
+    }
+    mTexture.LoadBitmap(bitmapFlipped, bitmapWidth, bitmapHeight, 1);
 }
 
 }

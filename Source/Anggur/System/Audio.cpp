@@ -6,7 +6,7 @@ namespace Anggur {
 
 int Audio::mFrequency = 44100;
 int Audio::mBufferSize = 128;
-int Audio::mChannelAllocationSize = 16;
+int Audio::mPollSize = 16;
 
 void Audio::SetBuffer(int frequency, int bufferSize)
 {
@@ -14,9 +14,9 @@ void Audio::SetBuffer(int frequency, int bufferSize)
     mBufferSize = bufferSize;
 }
 
-void Audio::SetChannelAllocation(int size)
+void Audio::SetPollSize(int size)
 {
-    mChannelAllocationSize = size;
+    mPollSize = size;
 }
 
 void Audio::Initialize()
@@ -24,7 +24,7 @@ void Audio::Initialize()
     int mixAudio = Mix_OpenAudio(mFrequency, MIX_DEFAULT_FORMAT, 2, mBufferSize);
     Anggur_Assert(mixAudio == 0, "[Core] Failed to open audio device: %i\n", mixAudio);
 
-    Mix_AllocateChannels(mChannelAllocationSize);
+    Mix_AllocateChannels(mPollSize);
 }
 
 void Audio::Terminate()

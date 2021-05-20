@@ -54,6 +54,11 @@ public:
         viewport.y = viewport.x * ratio;
     }
 
+    float GetRatio()
+    {
+        return viewport.x / viewport.y;
+    }
+
     float distance;
     float rotation;
 
@@ -159,7 +164,7 @@ public:
     static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::White);
 
     // -- Texts
-    static void AddText(Font& font, const std::string& text, const Vector& position, int size = 50, int chararacterSpacing = 2, int wordSpacing = 5, const Color& c = Color::White);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, float charSpacing = 0.1, float wordSpacing = 0.1, const Color& c = Color::White);
 
 private:
     static Shader mBatchShader;
