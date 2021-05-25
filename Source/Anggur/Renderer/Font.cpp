@@ -41,8 +41,6 @@ void Font::Load(const std::string& path, int height)
     decent *= scale;
     height = (ascent - decent);
 
-    Anggur_Log("Font.Load :: ascent: %d, decent: %d, height: %d", ascent, decent, height);
-
     int bitmapWidth  = 0;
     int bitmapHeight = height;
 

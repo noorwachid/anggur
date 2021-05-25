@@ -36,6 +36,8 @@ struct Color
 
     static Color Lerp(const Color& a, const Color& b, float amount);
 
+    static const Color Transparent;
+
     static const Color White;
     static const Color Smoke;
     static const Color Gray;

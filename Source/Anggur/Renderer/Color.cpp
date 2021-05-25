@@ -3,6 +3,8 @@
 
 namespace Anggur {
 
+const Color Color::Transparent(0, 0, 0, 0);
+
 const Color Color::White = Color::CreateHex(0xFFFFFF);
 const Color Color::Smoke = Color::CreateHex(0xFAFAFA);
 const Color Color::Gray = Color::CreateHex(0x848484);

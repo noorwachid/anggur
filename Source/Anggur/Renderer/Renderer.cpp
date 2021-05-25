@@ -245,16 +245,18 @@ void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textur
     if (mTextureCounter + textureOffset > mMaxTextureUnits) return Render();
 }
 
-void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, float size, float charSpacing, float wordSpacing, const Color& color)
+void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, float size, const Color& c)
 {
     float x = 0;
+    float charSpacing = size * 0.05;
+    float wordSpacing = size * 0.1;
 
-    for (auto c: text)
+    for (auto ch: text)
     {
-        if (c == 32)
+        if (ch == 32)
             x += wordSpacing;
 
-        const CharRect& cr = font.GetCharRect(c);
+        const CharRect& cr = font.GetCharRect(ch);
         Vector p1(p0.x + x, p0.y);
         float x1 = cr.ratio * size;
 
@@ -265,10 +267,26 @@ void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, fl
                  {cr.texOffsetX, 0},
                  {cr.texOffsetX + cr.texClipX, 0},
                  {cr.texOffsetX + cr.texClipX, 1},
-                 {cr.texOffsetX, 1}, font.GetTexture());
+                 {cr.texOffsetX, 1}, font.GetTexture(), c);
 
         x += x1 + charSpacing;
     }
+}
+
+void Renderer::AddText(Font& font, int ch, const Vector& p0, float size, const Color& c)
+{
+    const CharRect& cr = font.GetCharRect(ch);
+    float x1 = cr.ratio * size;
+
+    AddQuadx(p0,
+             {p0.x + x1, p0.y},
+             {p0.x + x1, p0.y + size},
+             {p0.x, p0.y + size},
+             {cr.texOffsetX, 0},
+             {cr.texOffsetX + cr.texClipX, 0},
+             {cr.texOffsetX + cr.texClipX, 1},
+             {cr.texOffsetX, 1}, font.GetTexture(), c);
+
 }
 
 void Renderer::AddData(const float* vetices, size_t vertexLength,
@@ -333,6 +351,25 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
         p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
         p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
         p3.x, p3.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+    };
+
+    uint indices[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    AddData(vertices, 4, indices, 6);
+}
+
+void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c0, const Color& c1, const Color& c2, const Color& c3)
+{
+    CheckLimit(4, 6);
+
+    float vertices[] = {
+        p0.x, p0.y, c0.r, c0.g, c0.b, c0.a, 0.f, 0.f, -1,
+        p1.x, p1.y, c1.r, c1.g, c1.b, c1.a, 0.f, 0.f, -1,
+        p2.x, p2.y, c2.r, c2.g, c2.b, c2.a, 0.f, 0.f, -1,
+        p3.x, p3.y, c3.r, c3.g, c3.b, c3.a, 0.f, 0.f, -1,
     };
 
     uint indices[] = {

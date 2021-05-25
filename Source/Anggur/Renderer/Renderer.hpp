@@ -59,6 +59,16 @@ public:
         return viewport.x / viewport.y;
     }
 
+    Vector GetVisibleTopLeftWorldCoord()
+    {
+        return ToWorldCoord(Vector::Zero);
+    }
+
+    Vector GetVisibleBottomRightWorldCoord()
+    {
+        return ToWorldCoord(viewport);
+    }
+
     float distance;
     float rotation;
 
@@ -87,6 +97,13 @@ struct Transform
         mt.Translate(translation);
         return mt;
     }
+};
+
+struct TextOption
+{
+    float size;
+    bool xCentering;
+    bool yCentering;
 };
 
 class Renderer
@@ -120,6 +137,7 @@ public:
     // -- Primitives
     static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::White);
     static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c = Color::White);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c0, const Color& c1, const Color& c2, const Color& c3);
     static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::White);
     static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::White);
     static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::White);
@@ -164,7 +182,9 @@ public:
     static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::White);
 
     // -- Texts
-    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, float charSpacing = 0.1, float wordSpacing = 0.1, const Color& c = Color::White);
+    static void AddText(Font& font, int ch, const Vector& p0, float size = 1, const Color& c = Color::White);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, const Color& c = Color::White);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, const TextOption& o, const Color& c = Color::White);
 
 private:
     static Shader mBatchShader;

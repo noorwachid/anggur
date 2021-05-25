@@ -42,9 +42,11 @@ SoundFx::~SoundFx()
     Unload();
 }
 
-void SoundFx::Load(const std::string& path)
+void SoundFx::Load(const std::string& path, int slot, int volume)
 {
     Unload();
+    mSlot = slot;
+    mVolume = volume;
     mChunkData = Mix_LoadWAV(path.c_str());
     Anggur_Assert(mChunkData, "[Core.Audio] failed to load sound fx %s: %s\n", path.c_str(), Mix_GetError());
 }
@@ -58,9 +60,36 @@ void SoundFx::Unload()
     mChunkData = nullptr;
 }
 
+void SoundFx::SetSlot(int slot)
+{
+    mSlot = slot;
+}
+
+void SoundFx::SetVolume(int volume)
+{
+    mVolume = volume;
+    Mix_Volume(mSlot, mVolume);
+}
+
 void SoundFx::Play()
 {
-    Mix_PlayChannel(-1, mChunkData, 0);
+    Mix_Volume(mSlot, mVolume);
+    Mix_PlayChannel(mSlot, mChunkData, 0);
+}
+
+void SoundFx::Pause()
+{
+    Mix_HaltChannel(mSlot);
+}
+
+void SoundFx::FadeIn(float time)
+{
+    Mix_FadeInChannel(mSlot, mChunkData, 0, time * 1000);
+}
+
+void SoundFx::FadeOut(float time)
+{
+    Mix_FadeOutChannel(mSlot, time * 1000);
 }
 
 Music::Music()
