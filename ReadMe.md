@@ -42,10 +42,12 @@ Anggur_EntryPoint(App);
 
 ## Contribute
 ### Coding Style
+I use Unity coding convention
+
 ``` cxx
 #define Namespace_ThingYouWantTodo 0
 
-int gMagicNumber = 8;
+int magicNumber = 8;
 
 // use verb like word for functions
 int AddTwoNumber(int a, int b);
@@ -61,11 +63,11 @@ class Player
 public:
     Vector GetPos() 
     {
-        return mPos;
+        return pos;
     }
 
 private:
-    Vector mPos;
+    Vector pos;
 };
 
 enum class PlayerState
