@@ -4,7 +4,7 @@
 
 namespace Anggur {
 
-CharRect CharRect::Empty = { 0, 0, 0, 0 };
+CharRect CharRect::empty = { 0, 0, 0, 0 };
 
 Font::Font()
 {
@@ -13,30 +13,30 @@ Font::Font()
 
 Font::~Font()
 {
-    if (mBuffer != nullptr)
+    if (buffer != nullptr)
     {
-        delete[] mBuffer;
-        mBuffer = nullptr;
+        delete[] buffer;
+        buffer = nullptr;
     }
 }
 
 void Font::Initialize()
 {
-    mFirstChar = 33;
-    mLastChar = 126;
+    firstChar = 33;
+    lastChar = 126;
 }
 
 void Font::Load(const std::string& path, int height)
 {
-    mBuffer = Io::Load(path, mBufferSize);
+    buffer = Io::Load(path, bufferSize);
 
-    int result = stbtt_InitFont(&mInfoData, mBuffer, stbtt_GetFontOffsetForIndex(mBuffer, 0));
+    int result = stbtt_InitFont(&infoData, buffer, stbtt_GetFontOffsetForIndex(buffer, 0));
     Anggur_Assert(result, "[Renederer.Font] failed to load font");
 
-    float scale = stbtt_ScaleForPixelHeight(&mInfoData, height);
+    float scale = stbtt_ScaleForPixelHeight(&infoData, height);
     int ascent, decent;
 
-    stbtt_GetFontVMetrics(&mInfoData, &ascent, &decent, 0);
+    stbtt_GetFontVMetrics(&infoData, &ascent, &decent, 0);
     ascent *= scale;
     decent *= scale;
     height = (ascent - decent);
@@ -47,12 +47,12 @@ void Font::Load(const std::string& path, int height)
     int x = 0;
     int y = 0;
 
-    for (int c = mFirstChar; c <= mLastChar; ++c)
+    for (int c = firstChar; c <= lastChar; ++c)
     {
         int ax, lsb;
         int x0, y0, x1, y1;
-        stbtt_GetCodepointHMetrics(&mInfoData, c, &ax, &lsb);
-        stbtt_GetCodepointBitmapBox(&mInfoData, c, scale, scale, &x0, &y0, &x1, &y1);
+        stbtt_GetCodepointHMetrics(&infoData, c, &ax, &lsb);
+        stbtt_GetCodepointBitmapBox(&infoData, c, scale, scale, &x0, &y0, &x1, &y1);
 
         ax *= scale;
 
@@ -71,7 +71,7 @@ void Font::Load(const std::string& path, int height)
         bitmapWidth += ax + 10;
     }
 
-    mNormalized.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
+    normalized.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
     int bitmapSize = bitmapWidth * bitmapHeight;
     uchar bitmap[bitmapSize];
     uchar bitmapFlipped[bitmapSize];
@@ -82,16 +82,16 @@ void Font::Load(const std::string& path, int height)
         bitmapFlipped[i] = 0;
     }
 
-    for (int c = mFirstChar; c <= mLastChar; ++c)
+    for (int c = firstChar; c <= lastChar; ++c)
     {
         CharRect& cr = GetCharRect(c);
-        cr.texOffsetX = cr.x * mNormalized.x;
-        cr.texClipX = cr.w * mNormalized.x;
-        cr.ratio = cr.w * mNormalized.y;
+        cr.texOffsetX = cr.x * normalized.x;
+        cr.texClipX = cr.w * normalized.x;
+        cr.ratio = cr.w * normalized.y;
 
         int byteOffset = cr.x + (cr.y * bitmapWidth);
 
-        stbtt_MakeCodepointBitmap(&mInfoData, bitmap + byteOffset,
+        stbtt_MakeCodepointBitmap(&infoData, bitmap + byteOffset,
                                   cr.w, cr.h,
                                   bitmapWidth, scale, scale, c);
     }
@@ -106,7 +106,7 @@ void Font::Load(const std::string& path, int height)
             bitmapFlipped[l] = bitmap[k];
         }
     }
-    mTexture.LoadBitmap(bitmapFlipped, bitmapWidth, bitmapHeight, 1);
+    texture.LoadBitmap(bitmapFlipped, bitmapWidth, bitmapHeight, 1);
 }
 
 }

@@ -69,8 +69,8 @@ struct Vector
 
     static Vector CreatePolar(float angle, float length);
 
-    static Vector Zero;
-    static Vector One;
+    static Vector zero;
+    static Vector one;
 };
 
 }

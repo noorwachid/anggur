@@ -3,38 +3,38 @@
 
 namespace Anggur {
 
-const Color Color::Transparent(0, 0, 0, 0);
+const Color Color::transparent(0, 0, 0, 0);
 
-const Color Color::White = Color::CreateHex(0xFFFFFF);
-const Color Color::Smoke = Color::CreateHex(0xFAFAFA);
-const Color Color::Gray = Color::CreateHex(0x848484);
-const Color Color::Charcoal = Color::CreateHex(0x232323);
-const Color Color::Black = Color::CreateHex(0x000000);
+const Color Color::white = Color::CreateHex(0xFFFFFF);
+const Color Color::smoke = Color::CreateHex(0xFAFAFA);
+const Color Color::gray = Color::CreateHex(0x848484);
+const Color Color::charcoal = Color::CreateHex(0x232323);
+const Color Color::black = Color::CreateHex(0x000000);
 
-const Color Color::Red = Color::CreateHex(0xFF2020);
-const Color Color::Crimson = Color::CreateHex(0xDC143C);
-const Color Color::Salmon = Color::CreateHex(0xFA8072);
-const Color Color::Orange = Color::CreateHex(0xFF8301);
-const Color Color::Yellow = Color::CreateHex(0xFFFF01);
-const Color Color::Chartreuse = Color::CreateHex(0xADFC3C);
-const Color Color::Lime = Color::CreateHex(0x12FF12);
-const Color Color::Olive = Color::CreateHex(0x98BF64);
-const Color Color::Green = Color::CreateHex(0x10DA14);
-const Color Color::Seafoam = Color::CreateHex(0x3CEC97);
-const Color Color::Aquamarine = Color::CreateHex(0x7FFFD4);
-const Color Color::Cyan = Color::CreateHex(0x00FFFF);
-const Color Color::SkyBlue = Color::CreateHex(0x2081F4);
-const Color Color::Blue = Color::CreateHex(0x2424FF);
-const Color Color::Violet = Color::CreateHex(0x7D0CE2);
-const Color Color::Purple = Color::CreateHex(0xD351FA);
-const Color Color::Fuchsia = Color::CreateHex(0xF81895);
-const Color Color::Pink = Color::CreateHex(0xFFB1DD);
+const Color Color::red = Color::CreateHex(0xFF2020);
+const Color Color::crimson = Color::CreateHex(0xDC143C);
+const Color Color::salmon = Color::CreateHex(0xFA8072);
+const Color Color::orange = Color::CreateHex(0xFF8301);
+const Color Color::yellow = Color::CreateHex(0xFFFF01);
+const Color Color::chartreuse = Color::CreateHex(0xADFC3C);
+const Color Color::lime = Color::CreateHex(0x12FF12);
+const Color Color::olive = Color::CreateHex(0x98BF64);
+const Color Color::green = Color::CreateHex(0x10DA14);
+const Color Color::seafoam = Color::CreateHex(0x3CEC97);
+const Color Color::aquamarine = Color::CreateHex(0x7FFFD4);
+const Color Color::cyan = Color::CreateHex(0x00FFFF);
+const Color Color::sky = Color::CreateHex(0x2081F4);
+const Color Color::blue = Color::CreateHex(0x2424FF);
+const Color Color::violet = Color::CreateHex(0x7D0CE2);
+const Color Color::purple = Color::CreateHex(0xD351FA);
+const Color Color::fuchsia = Color::CreateHex(0xF81895);
+const Color Color::pink = Color::CreateHex(0xFFB1DD);
 
-const Color Color::Beige = Color::CreateHex(0xF5F5DC);
-const Color Color::Ivory = Color::CreateHex(0xFFFFF0);
-const Color Color::Brown = Color::CreateHex(0xA52A2A);
-const Color Color::Chocolate = Color::CreateHex(0xD2691E);
-const Color Color::Sandy = Color::CreateHex(0xF4A460);
+const Color Color::beige = Color::CreateHex(0xF5F5DC);
+const Color Color::ivory = Color::CreateHex(0xFFFFF0);
+const Color Color::brown = Color::CreateHex(0xA52A2A);
+const Color Color::chocolate = Color::CreateHex(0xD2691E);
+const Color Color::sandy = Color::CreateHex(0xF4A460);
 
 Color::Color()
 {

@@ -17,9 +17,9 @@ public:
     static void Terminate();
 
 private:
-    static int mFrequency;
-    static int mBufferSize;
-    static int mPollSize;
+    static int frequency;
+    static int bufferSize;
+    static int pollSize;
 };
 
 class SoundFx
@@ -58,7 +58,7 @@ public:
     void Pause();
 
 private:
-    _Mix_Music* mMusicData;
+    _Mix_Music* musicData;
 };
 
 }

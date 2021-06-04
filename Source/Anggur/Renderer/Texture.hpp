@@ -17,10 +17,10 @@ public:
     Texture(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
     ~Texture();
 
-    inline uint GetId() const { return mId; }
-    inline uint GetWidth() const { return mWidth; }
-    inline uint GetHeight() const { return mHeight; }
-    inline uint GetChannels() const { return mChannels; }
+    inline uint GetId() const { return id; }
+    inline uint GetWidth() const { return width; }
+    inline uint GetHeight() const { return height; }
+    inline uint GetChannels() const { return channels; }
 
     void LoadBitmap(uchar* data, uint width, uint height, uint channels = 8, SamplerFilter filter = SamplerFilter::Linear);
     void Load(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
@@ -32,10 +32,10 @@ public:
     friend bool operator==(const Texture& a, const Texture& b);
 
 private:
-    uint mId;
-    uint mWidth;
-    uint mHeight;
-    uint mChannels;
+    uint id;
+    uint width;
+    uint height;
+    uint channels;
 
 };
 

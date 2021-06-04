@@ -15,7 +15,7 @@ public:
     void SetData(size_t size, uint* data);
 
 private:
-    unsigned int mId;
+    uint id;
 };
 
 class VertexBuffer
@@ -29,7 +29,7 @@ public:
     void SetData(size_t size, float* data);
 
 private:
-    uint mId;
+    uint id;
 };
 
 class VertexArray
@@ -43,7 +43,7 @@ public:
     void SetAttributePtr(size_t index, size_t size, size_t stride, void* offset);
 
 private:
-    uint mId;
+    uint id;
 };
 
 }

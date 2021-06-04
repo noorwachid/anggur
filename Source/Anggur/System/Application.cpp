@@ -7,16 +7,16 @@
 
 namespace Anggur {
 
-Application* Application::mInstance = nullptr;
+Application* Application::instance = nullptr;
 
 Application::Application()
 {
-    mInstance = this;
+    instance = this;
 }
 
 Window& Application::GetWindow()
 {
-    return *mWindow;
+    return *window;
 }
 
 void Application::ProcessEvent(SDL_Event* event)
@@ -25,7 +25,7 @@ void Application::ProcessEvent(SDL_Event* event)
     {
         case SDL_QUIT:
         {
-            mWindow->Close();
+            window->Close();
             break;
         }
         case SDL_WINDOWEVENT:
@@ -70,7 +70,7 @@ void Application::ProcessEvent(SDL_Event* event)
         }
         case SDL_MOUSEWHEEL:
         {
-            Input::mMouseWheel.Set(event->wheel.x, event->wheel.y);
+            Input::mouseWheel.Set(event->wheel.x, event->wheel.y);
             MouseEvent e(EventType::MouseScrolled);
             e.wheel.Set(event->wheel.x, event->wheel.y);
             OnEvent(e);
@@ -104,22 +104,23 @@ void Application::ProcessEvent(SDL_Event* event)
     }
 }
 
-void Application::OnInitialize() {}
-void Application::OnAttach() {}
-void Application::OnUpdate(float dx) {}
-void Application::OnDetach() {}
+void Application::OnCreate() {}
+void Application::OnStart() {}
+void Application::OnUpdate() {}
+void Application::OnDestroy() {}
+
 void Application::OnEvent(Event& event) {}
 
 Application& Application::Get()
 {
-    return *mInstance;
+    return *instance;
 }
 
 void Application::Initialize()
 {
-    OnInitialize();
-    mWindow = Window::Create(mWindowConfig);
-    Input::mRawWindow = mWindow->mRawWindow;
+    OnCreate();
+    window = new Window(windowConfig);
+    Input::windowHandler = window->handler;
 
     // Anggur_Log("[Core.Application] Initialized\n");
 }
@@ -133,12 +134,11 @@ void Application::Run()
 
     SDL_Event event;
     Uint64 prevTimePoint = SDL_GetPerformanceCounter();
-    Timer::mElapsed = 0;
+    Timer::elapsed = 0;
 
-    OnAttach();
+    OnStart();
 
-
-    while (mWindow->IsOpen())
+    while (window->IsOpen())
     {
         Input::PreUpdate();
 
@@ -146,27 +146,27 @@ void Application::Run()
             ProcessEvent(&event);
 
         Uint64 currTimePoint = SDL_GetPerformanceCounter();
-        float dx = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
+        Timer::delta = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
+        Timer::elapsed += Timer::delta;
         prevTimePoint = currTimePoint;
-        Timer::mDx = dx;
-        Timer::mElapsed += dx;
 
         Input::Update();
-        OnUpdate(dx);
+        OnUpdate();
 
-        mWindow->SwapBuffers();
+        window->SwapBuffers();
     }
-    OnDetach();
-    Audio::Terminate();
-    Renderer::Terminate();
-    Terminate();
 
-    // Anggur_Log("[Core.Application] Terminated\n");
+    Terminate();
 }
 
 void Application::Terminate()
 {
+    OnDestroy();
+    Audio::Terminate();
+    Renderer::Terminate();
     Core::Terminate();
+
+    // Anggur_Log("[Core.Application] Terminated\n");
 }
 
 }

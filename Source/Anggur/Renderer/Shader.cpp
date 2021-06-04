@@ -9,23 +9,23 @@ namespace Anggur {
 
 uint Shader::GetId()
 {
-    return mId;
+    return id;
 }
 
 void Shader::SetVertexSource(const std::string& source)
 {
-    mVertexSource = source;
+    vertexSource = source;
 }
 
 void Shader::SetFragmentSource(const std::string& source)
 {
-    mFragmentSource = source;
+    fragmentSource = source;
 }
 
 void Shader::Compile()
 {
-    const char* cVertexSource   = mVertexSource.c_str();
-    const char* cFragmentSource = mFragmentSource.c_str();
+    const char* cVertexSource   = vertexSource.c_str();
+    const char* cFragmentSource = fragmentSource.c_str();
     int isSucceed;
     char message[512];
 
@@ -51,14 +51,14 @@ void Shader::Compile()
         Anggur_Log("[Renderer.Shader] failed to compile fragment shader\n%s", message);
     }
 
-    mId = glCreateProgram();
-    glAttachShader(mId, vertexId);
-    glAttachShader(mId, fragmentId);
-    glLinkProgram(mId);
+    id = glCreateProgram();
+    glAttachShader(id, vertexId);
+    glAttachShader(id, fragmentId);
+    glLinkProgram(id);
 
-    glGetProgramiv(mId, GL_LINK_STATUS, &isSucceed);
+    glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
     if (!isSucceed) {
-        glGetProgramInfoLog(mId, 512, NULL, message);
+        glGetProgramInfoLog(id, 512, NULL, message);
         Anggur_Log("[Renderer.Shader] failed to link shader program\n%s", message);
     }
     glDeleteShader(vertexId);
@@ -67,54 +67,54 @@ void Shader::Compile()
 
 void Shader::Bind()
 {
-    glUseProgram(mId);
+    glUseProgram(id);
 }
 
 void Shader::Destroy()
 {
-    glDeleteProgram(mId);
+    glDeleteProgram(id);
 }
 
 
 int Shader::GetLocation(const std::string& name)
 {
-    return glGetUniformLocation(mId, name.c_str());
+    return glGetUniformLocation(id, name.c_str());
 }
 
 void Shader::SetMatrix(const std::string& name, const Matrix& matrix)
 {
-    int id = GetLocation(name);
-    glUniformMatrix3fv(id, 1, GL_FALSE, matrix.ToFloatPtr());
+    int locId = GetLocation(name);
+    glUniformMatrix3fv(locId, 1, GL_FALSE, matrix.ToFloatPtr());
 }
 
 void Shader::SetVector(const std::string& name, const Vector& vec)
 {
-    int id = GetLocation(name);
-    glUniform2f(id, vec.x, vec.y);
+    int locId = GetLocation(name);
+    glUniform2f(locId, vec.x, vec.y);
 }
 
 void Shader::SetInt(const std::string& name, int value)
 {
-    int id = GetLocation(name);
-    glUniform1i(id, value);
+    int locId = GetLocation(name);
+    glUniform1i(locId, value);
 }
 
 void Shader::SetInt(const std::string& name, size_t size, int* values)
 {
-    int id = GetLocation(name);
-    glUniform1iv(id, size, values);
+    int locId = GetLocation(name);
+    glUniform1iv(locId, size, values);
 }
 
 void Shader::SetFloat(const std::string& name, float value)
 {
-    int id = GetLocation(name);
-    glUniform1f(id, value);
+    int locId = GetLocation(name);
+    glUniform1f(locId, value);
 }
 
 void Shader::SetFloat(const std::string& name, size_t size, float* values)
 {
-    int id = GetLocation(name);
-    glUniform1fv(id, size, values);
+    int locId = GetLocation(name);
+    glUniform1fv(locId, size, values);
 }
 
 }

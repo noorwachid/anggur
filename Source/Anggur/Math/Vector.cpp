@@ -3,8 +3,8 @@
 
 namespace Anggur {
 
-Vector Vector::Zero(0, 0);
-Vector Vector::One(1, 1);
+Vector Vector::zero(0, 0);
+Vector Vector::one(1, 1);
 
 Vector::Vector()
 {

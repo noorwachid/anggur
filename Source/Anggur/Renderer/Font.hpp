@@ -20,7 +20,7 @@ struct CharRect
     float texOffsetX;
     float texClipX;
 
-    static CharRect Empty;
+    static CharRect empty;
 };
 
 class Font
@@ -34,44 +34,44 @@ public:
 
     inline CharRect& GetCharRect(int c)
     {
-        if (c >= mFirstChar && c <= mLastChar)
-            return mCharRects[c - 32];
-        return CharRect::Empty;
+        if (c >= firstChar && c <= lastChar)
+            return charRects[c - 32];
+        return CharRect::empty;
     }
 
     inline CharRect GetCharRect(int c) const
     {
-        if (c >= mFirstChar && c <= mLastChar)
-            return mCharRects[c - 32];
-        return CharRect::Empty;
+        if (c >= firstChar && c <= lastChar)
+            return charRects[c - 32];
+        return CharRect::empty;
     }
 
     inline Texture& GetTexture()
     {
-        return mTexture;
+        return texture;
     }
 
     inline Texture GetTexture() const
     {
-        return mTexture;
+        return texture;
     }
 
     inline Vector GetNormalized() const
     {
-        return mNormalized;
+        return normalized;
     }
 
 private:
-    stbtt_fontinfo mInfoData;
-    uchar* mBuffer;
-    size_t mBufferSize;
-    CharRect mCharRects[96];
+    stbtt_fontinfo infoData;
+    uchar* buffer;
+    size_t bufferSize;
+    CharRect charRects[96];
 
-    Texture mTexture;
-    int mFirstChar;
-    int mLastChar;
+    Texture texture;
+    int firstChar;
+    int lastChar;
 
-    Vector mNormalized;
+    Vector normalized;
 };
 
 }

@@ -12,19 +12,19 @@ public:
     Image(const std::string& path);
     ~Image();
 
-    inline uint GetWidth() const { return mWidth; }
-    inline uint GetHeight() const { return mHeight; }
-    inline uint GetChannels() const { return mChannels; }
-    inline uchar* GetData() const { return mData; }
+    inline uint GetWidth() const { return width; }
+    inline uint GetHeight() const { return height; }
+    inline uint GetChannels() const { return channels; }
+    inline uchar* GetData() const { return data; }
 
     void Load(const std::string& path);
     void Unload();
 
 private:
-    uint mWidth;
-    uint mHeight;
-    uint mChannels;
-    uchar* mData;
+    uint width;
+    uint height;
+    uint channels;
+    uchar* data;
 
 };
 

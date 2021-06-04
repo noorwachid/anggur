@@ -24,9 +24,9 @@ public:
     void SetFloat(const std::string& name, size_t size, float* values);
 
 private:
-    uint mId;
-    std::string mVertexSource;
-    std::string mFragmentSource;
+    uint id;
+    std::string vertexSource;
+    std::string fragmentSource;
 
 };
 

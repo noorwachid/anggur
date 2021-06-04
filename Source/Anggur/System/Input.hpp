@@ -35,15 +35,15 @@ public:
     friend class Application;
 
 private:
-    static SDL_Window* mRawWindow;
+    static SDL_Window* windowHandler;
 
-    static const uchar* mKeyCurrState;
-    static uchar mKeyPrevState[Anggur_ScancodeLength];
+    static const uchar* keyCurrState;
+    static uchar keyPrevState[Anggur_ScancodeLength];
 
-    static uint mMouseCurrState;
-    static uint mMousePrevState;
-    static Vector mMousePos;
-    static Vector mMouseWheel;
+    static uint mouseCurrState;
+    static uint mousePrevState;
+    static Vector mousePos;
+    static Vector mouseWheel;
 };
 
 }

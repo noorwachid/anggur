@@ -15,11 +15,12 @@ class Application
 {
 protected:
     
-    virtual void OnInitialize();
-    virtual void OnAttach();
-    virtual void OnUpdate(float deltaTime);
+    virtual void OnCreate();
+    virtual void OnStart();
+    virtual void OnUpdate();
+    virtual void OnDestroy();
+
     virtual void OnEvent(Event& event);
-    virtual void OnDetach();
 
 public:
 
@@ -37,11 +38,11 @@ private:
     void ProcessEvent(SDL_Event* event);
 
 protected:
-    Window* mWindow;
-    WindowConfig mWindowConfig;
+    WindowConfig windowConfig;
+    Window* window;
 
 private:
-    static Application* mInstance;
+    static Application* instance;
 };
 
 }

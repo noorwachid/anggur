@@ -4,27 +4,27 @@
 
 namespace Anggur {
 
-int Audio::mFrequency = 44100;
-int Audio::mBufferSize = 128;
-int Audio::mPollSize = 16;
+int Audio::frequency = 44100;
+int Audio::bufferSize = 128;
+int Audio::pollSize = 16;
 
 void Audio::SetBuffer(int frequency, int bufferSize)
 {
-    mFrequency = frequency;
-    mBufferSize = bufferSize;
+    Audio::frequency = frequency;
+    Audio::bufferSize = bufferSize;
 }
 
 void Audio::SetPollSize(int size)
 {
-    mPollSize = size;
+    pollSize = size;
 }
 
 void Audio::Initialize()
 {
-    int mixAudio = Mix_OpenAudio(mFrequency, MIX_DEFAULT_FORMAT, 2, mBufferSize);
+    int mixAudio = Mix_OpenAudio(frequency, MIX_DEFAULT_FORMAT, 2, bufferSize);
     Anggur_Assert(mixAudio == 0, "[Core] Failed to open audio device: %i\n", mixAudio);
 
-    Mix_AllocateChannels(mPollSize);
+    Mix_AllocateChannels(pollSize);
 }
 
 void Audio::Terminate()
@@ -94,7 +94,7 @@ void SoundFx::FadeOut(float time)
 
 Music::Music()
 {
-    mMusicData = nullptr;
+    musicData = nullptr;
 }
 
 Music::~Music()
@@ -105,22 +105,22 @@ Music::~Music()
 void Music::Load(const std::string& path)
 {
     Unload();
-    mMusicData = Mix_LoadMUS(path.c_str());
-    Anggur_Assert(mMusicData, "[Core.Audio] failed to load music %s: %s\n", path.c_str(), Mix_GetError());
+    musicData = Mix_LoadMUS(path.c_str());
+    Anggur_Assert(musicData, "[Core.Audio] failed to load music %s: %s\n", path.c_str(), Mix_GetError());
 }
 
 void Music::Unload()
 {
-    if (!mMusicData)
+    if (!musicData)
         return;
 
-    Mix_FreeMusic(mMusicData);
-    mMusicData = nullptr;
+    Mix_FreeMusic(musicData);
+    musicData = nullptr;
 }
 
 void Music::Play()
 {
-    Mix_PlayMusic(mMusicData, 0);
+    Mix_PlayMusic(musicData, 0);
 }
 
 void Music::Pause()

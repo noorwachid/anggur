@@ -5,108 +5,108 @@
 
 namespace Anggur {
 
-SDL_Window* Input::mRawWindow = nullptr;
+SDL_Window* Input::windowHandler = nullptr;
 
-const uchar* Input::mKeyCurrState = nullptr;
-uchar Input::mKeyPrevState[Anggur_ScancodeLength];
+const uchar* Input::keyCurrState = nullptr;
+uchar Input::keyPrevState[Anggur_ScancodeLength];
 
-uint Input::mMouseCurrState = 0;
-uint Input::mMousePrevState = 0;
-Vector Input::mMousePos;
-Vector Input::mMouseWheel;
+uint Input::mouseCurrState = 0;
+uint Input::mousePrevState = 0;
+Vector Input::mousePos;
+Vector Input::mouseWheel;
 
 void Input::Initialize()
 {
-    mKeyCurrState = SDL_GetKeyboardState(nullptr);
-    memset(mKeyPrevState, 0, Anggur_ScancodeLength);
+    keyCurrState = SDL_GetKeyboardState(nullptr);
+    memset(keyPrevState, 0, Anggur_ScancodeLength);
 }
 
 void Input::PreUpdate()
 {
-    memcpy(mKeyPrevState, mKeyCurrState, Anggur_ScancodeLength);
+    memcpy(keyPrevState, keyCurrState, Anggur_ScancodeLength);
 
-    mMousePrevState = mMouseCurrState;
-    mMouseWheel.Set(0, 0);
+    mousePrevState = mouseCurrState;
+    mouseWheel.Set(0, 0);
 }
 
 void Input::Update()
 {
     int x, y;
-    mMouseCurrState = SDL_GetMouseState(&x, &y);
-    mMousePos = Vector(x, y);
+    mouseCurrState = SDL_GetMouseState(&x, &y);
+    mousePos = Vector(x, y);
 }
 
 bool Input::IsKeyPressed(Key key)
 {
     int i = SDL_GetScancodeFromKey(static_cast<int>(key));
-    return mKeyCurrState[i] == 1 && mKeyPrevState[i] == 0;
+    return keyCurrState[i] == 1 && keyPrevState[i] == 0;
 }
 
 bool Input::IsKeyHeld(Key key)
 {
     int i = SDL_GetScancodeFromKey(static_cast<int>(key));
-    return mKeyCurrState[i] && mKeyPrevState[i];
+    return keyCurrState[i] && keyPrevState[i];
 }
 
 bool Input::IsKeyReleased(Key key)
 {
     int i = SDL_GetScancodeFromKey(static_cast<int>(key));
-    return !mKeyCurrState[i] && mKeyPrevState[i];
+    return !keyCurrState[i] && keyPrevState[i];
 }
 
 bool Input::IsScancodePressed(int i)
 {
-    return mKeyCurrState[i] && !mKeyPrevState[i];
+    return keyCurrState[i] && !keyPrevState[i];
 }
 
 bool Input::IsScancodeHeld(int i)
 {
-    return mKeyCurrState[i] && mKeyPrevState[i];
+    return keyCurrState[i] && keyPrevState[i];
 }
 
 bool Input::IsScancodeReleased(int i)
 {
-    return !mKeyCurrState[i] && mKeyPrevState[i];
+    return !keyCurrState[i] && keyPrevState[i];
 }
 
 bool Input::IsMousePressed(Mouse button)
 {
     Uint32 btn = static_cast<Uint32>(button);
-    return !(mMousePrevState & btn) && (mMouseCurrState & btn);
+    return !(mousePrevState & btn) && (mouseCurrState & btn);
 }
 
 bool Input::IsMouseHeld(Mouse button)
 {
     Uint32 btn = static_cast<Uint32>(button);
-    return (mMousePrevState & btn) && (mMouseCurrState & btn);
+    return (mousePrevState & btn) && (mouseCurrState & btn);
 }
 
 bool Input::IsMouseReleased(Mouse button)
 {
     Uint32 btn = static_cast<Uint32>(button);
-    return (mMousePrevState & btn) && !(mMouseCurrState & btn);
+    return (mousePrevState & btn) && !(mouseCurrState & btn);
 }
 
 bool Input::IsMouseScrolled()
 {
-    return mMouseWheel.y != 0.0f || mMouseWheel.x != 0.0f;
+    return mouseWheel.y != 0.0f || mouseWheel.x != 0.0f;
 }
 
 void Input::SetMousePos(const Vector& pos)
 {
     int x = pos.x;
     int y = pos.y;
-    SDL_WarpMouseInWindow(mRawWindow, x, y);
+    SDL_WarpMouseInWindow(windowHandler, x, y);
 }
 
 Vector Input::GetMousePos()
 {
-    return mMousePos;
+    return mousePos;
 }
 
 Vector Input::GetMouseWheel()
 {
-    return mMouseWheel;
+    return mouseWheel;
 }
 
 

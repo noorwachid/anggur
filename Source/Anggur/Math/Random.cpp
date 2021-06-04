@@ -2,6 +2,6 @@
 
 namespace Anggur {
 
-RandomGenerator Random::mGenerator;
+RandomGenerator Random::generator;
 
 }

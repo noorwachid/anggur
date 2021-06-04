@@ -4,10 +4,10 @@ namespace Anggur {
 
 struct Math
 {
-    static const float Pi;
-    static const float TwoPi;
-    static const float Infinity;
-    static const float Epsilon;
+    static const float pi;
+    static const float twoPi;
+    static const float infinity;
+    static const float epsilon;
 
     static float Max(float a, float b);
     static float Min(float a, float b);
@@ -38,7 +38,7 @@ struct Math
     static float ToRadian(float degree);
     static float ToDegree(float radian);
 
-    static float IsNearZero(float x, float epsilon = Math::Epsilon);
+    static float IsNearZero(float x, float epsilon = Math::epsilon);
 };
 
 struct Vector;

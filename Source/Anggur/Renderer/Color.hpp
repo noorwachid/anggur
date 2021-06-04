@@ -36,38 +36,38 @@ struct Color
 
     static Color Lerp(const Color& a, const Color& b, float amount);
 
-    static const Color Transparent;
+    static const Color transparent;
 
-    static const Color White;
-    static const Color Smoke;
-    static const Color Gray;
-    static const Color Charcoal;
-    static const Color Black;
+    static const Color white;
+    static const Color smoke;
+    static const Color gray;
+    static const Color charcoal;
+    static const Color black;
 
-    static const Color Red;
-    static const Color Crimson;
-    static const Color Salmon;
-    static const Color Orange;
-    static const Color Yellow;
-    static const Color Chartreuse;
-    static const Color Lime;
-    static const Color Olive;
-    static const Color Green;
-    static const Color Seafoam;
-    static const Color Aquamarine;
-    static const Color Cyan;
-    static const Color SkyBlue;
-    static const Color Blue;
-    static const Color Violet;
-    static const Color Purple;
-    static const Color Fuchsia;
-    static const Color Pink;
+    static const Color red;
+    static const Color crimson;
+    static const Color salmon;
+    static const Color orange;
+    static const Color yellow;
+    static const Color chartreuse;
+    static const Color lime;
+    static const Color olive;
+    static const Color green;
+    static const Color seafoam;
+    static const Color aquamarine;
+    static const Color cyan;
+    static const Color sky;
+    static const Color blue;
+    static const Color violet;
+    static const Color purple;
+    static const Color fuchsia;
+    static const Color pink;
 
-    static const Color Beige;
-    static const Color Ivory;
-    static const Color Brown;
-    static const Color Chocolate;
-    static const Color Sandy;
+    static const Color beige;
+    static const Color ivory;
+    static const Color brown;
+    static const Color chocolate;
+    static const Color sandy;
 };
 
 }

@@ -62,11 +62,16 @@ class Window
     // TODO: Implement subwindow
 
 public:
-    static Window* Create(const WindowConfig& config = WindowConfig()); // only can make one 'main' window
+    Window(const WindowConfig& config = WindowConfig());
+
+    void SetPos(const Vector& pos);
+    void SetSize(const Vector& size);
+    void SetTitle(const std::string& title);
 
     float GetRatio();
     Vector GetPos();
     Vector GetSize();
+    const std::string& GetTitle();
 
     bool IsOpen();
     void Close();
@@ -78,13 +83,11 @@ public:
     friend class Application;
 
 private:
-    SDL_Window* mRawWindow;
-    void* mContext;
-
-    float mRatio;
-    bool mOpen;
-
-    Window(const WindowConfig& config = WindowConfig());
+    SDL_Window* handler;
+    void* context;
+    float ratio;
+    bool open;
+    std::string title;
 };
 
 }

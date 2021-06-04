@@ -8,19 +8,19 @@ namespace Anggur {
 
 Texture::Texture()
 {
-    mId = 0;
+    id = 0;
 }
 
 Texture::Texture(uint id, uint width, uint height)
 {
-    mId = id;
-    mWidth = width;
-    mHeight = height;
+    this->id = id;
+    this->width = width;
+    this->height = height;
 }
 
 Texture::Texture(const std::string& path, SamplerFilter filter)
 {
-    mId = 0;
+    id = 0;
     Load(path, filter);
 }
 
@@ -35,12 +35,12 @@ void Texture::LoadBitmap(uchar* data, uint width, uint height, uint channels, Sa
     glEnable(GL_TEXTURE_2D);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    mWidth = width;
-    mHeight = height;
-    mChannels = channels;
+    this->width = width;
+    this->height = height;
+    this->channels = channels;
 
-    glGenTextures(1, &mId);
-    glBindTexture(GL_TEXTURE_2D, mId);
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(filter));
@@ -79,10 +79,10 @@ void Texture::LoadBitmap(uchar* data, uint width, uint height, uint channels, Sa
 
 void Texture::Load(const Image& image, SamplerFilter filter)
 {
-    mWidth = image.GetWidth();
-    mHeight = image.GetHeight();
-    mChannels = image.GetChannels();
-    LoadBitmap(image.GetData(), mWidth, mHeight, mChannels, filter);
+    width = image.GetWidth();
+    height = image.GetHeight();
+    channels = image.GetChannels();
+    LoadBitmap(image.GetData(), width, height, channels, filter);
 }
 
 void Texture::Load(const std::string& path, SamplerFilter filter)
@@ -93,14 +93,14 @@ void Texture::Load(const std::string& path, SamplerFilter filter)
 
 void Texture::Unload()
 {
-    if (mId != 0)
-        glDeleteTextures(1, &mId);
+    if (id != 0)
+        glDeleteTextures(1, &id);
 }
 
 void Texture::Bind(uint slot)
 {
     glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_2D, mId);
+    glBindTexture(GL_TEXTURE_2D, id);
 }
 
 bool operator==(const Texture& a, const Texture& b)

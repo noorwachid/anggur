@@ -14,40 +14,40 @@ struct Vertex
     static const size_t length = 9;
 };
 
-Shader Renderer::mBatchShader;
+Shader Renderer::batchShader;
 
-float* Renderer::mVertexData;
-uint* Renderer::mIndexData;
+float* Renderer::vertexData;
+uint* Renderer::indexData;
 
-size_t Renderer::mVertexCounter;
-size_t Renderer::mIndexCounter;
+size_t Renderer::vertexCounter;
+size_t Renderer::indexCounter;
 
-size_t Renderer::mMaxQuad = 2048;
-size_t Renderer::mCircleSegment = 32;
+size_t Renderer::maxQuad = 2048;
+size_t Renderer::circleSegment = 32;
 
-size_t Renderer::mMaxVertices;
-size_t Renderer::mMaxIndices;
+size_t Renderer::maxVertices;
+size_t Renderer::maxIndices;
 
-size_t Renderer::mMaxTextureUnits;
-size_t Renderer::mTextureCounter;
-float Renderer::mTextureIndex;
-int* Renderer::mTextureIndices;
-Texture* Renderer::mTextureData;
+size_t Renderer::maxTextureUnits;
+size_t Renderer::textureCounter;
+float Renderer::textureIndex;
+int* Renderer::textureIndices;
+Texture* Renderer::textureData;
 
-Matrix Renderer::mViewProjection;
+Matrix Renderer::viewProjectionMatrix;
 
-VertexArray Renderer::mVertexArray;
-VertexBuffer Renderer::mVertexBuffer;
-IndexBuffer Renderer::mIndexBuffer;
+VertexArray Renderer::vertexArray;
+VertexBuffer Renderer::vertexBuffer;
+IndexBuffer Renderer::indexBuffer;
 
 Shader& Renderer::GetBatchShader()
 {
-    return mBatchShader;
+    return batchShader;
 }
 
 void Renderer::CreateBatchShader()
 {
-    mBatchShader.SetVertexSource(R"(
+    batchShader.SetVertexSource(R"(
         #version 330 core
         layout (location = 0) in vec2  aPosition;
         layout (location = 1) in vec4  aColor;
@@ -94,20 +94,20 @@ void Renderer::CreateBatchShader()
 
     int maxUnit;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnit);
-    mMaxTextureUnits = maxUnit;
+    maxTextureUnits = maxUnit;
 
-    mTextureData = new Texture[mMaxTextureUnits];
-    mTextureIndices = new int[mMaxTextureUnits];
+    textureData = new Texture[maxTextureUnits];
+    textureIndices = new int[maxTextureUnits];
 
-    for (size_t i = 0; i < mMaxTextureUnits; ++i)
+    for (size_t i = 0; i < maxTextureUnits; ++i)
     {
-        mTextureIndices[i] = i;
+        textureIndices[i] = i;
 
         fragmentSource += "case " + std::to_string(i) + ":\n";
         fragmentSource += "aColor = texture(uTex[" + std::to_string(i) + "], vTexCoord) * vColor;\n";
         fragmentSource += "break;\n";
 
-        fragmentSource += "case " + std::to_string(i + mMaxTextureUnits) + ":\n";
+        fragmentSource += "case " + std::to_string(i + maxTextureUnits) + ":\n";
         fragmentSource += "aColor = vec4(1.f, 1.f, 1.f, texture(uTex[" + std::to_string(i) + "], vTexCoord)) * vColor;\n";
         fragmentSource += "break;\n";
     }
@@ -117,8 +117,8 @@ void Renderer::CreateBatchShader()
         }
     )";
 
-    mBatchShader.SetFragmentSource(fragmentSource);
-    mBatchShader.Compile();
+    batchShader.SetFragmentSource(fragmentSource);
+    batchShader.Compile();
 
 }
 
@@ -130,46 +130,46 @@ void Renderer::Initialize()
 
     CreateBatchShader();
 
-    mMaxVertices = mMaxQuad * 4;
-    mMaxIndices  = mMaxQuad * 6;
+    maxVertices = maxQuad * 4;
+    maxIndices  = maxQuad * 6;
 
-    mVertexArray.Create();
-    mVertexArray.Bind();
-    mVertexData = new float[mMaxVertices * Vertex::length];
-    mIndexData = new uint[mMaxIndices];
+    vertexArray.Create();
+    vertexArray.Bind();
+    vertexData = new float[maxVertices * Vertex::length];
+    indexData = new uint[maxIndices];
 
-    mVertexBuffer.Create();
-    mVertexBuffer.Bind();
-    mVertexBuffer.SetCapacity(sizeof(float) * mMaxVertices * Vertex::length);
+    vertexBuffer.Create();
+    vertexBuffer.Bind();
+    vertexBuffer.SetCapacity(sizeof(float) * maxVertices * Vertex::length);
 
-    mVertexArray.SetAttributePtr(0, 2, sizeof(Vertex), (void*) offsetof(Vertex, position));
-    mVertexArray.SetAttributePtr(1, 4, sizeof(Vertex), (void*) offsetof(Vertex, color));
-    mVertexArray.SetAttributePtr(2, 2, sizeof(Vertex), (void*) offsetof(Vertex, texCoord));
-    mVertexArray.SetAttributePtr(3, 1, sizeof(Vertex), (void*) offsetof(Vertex, texIndex));
+    vertexArray.SetAttributePtr(0, 2, sizeof(Vertex), (void*) offsetof(Vertex, position));
+    vertexArray.SetAttributePtr(1, 4, sizeof(Vertex), (void*) offsetof(Vertex, color));
+    vertexArray.SetAttributePtr(2, 2, sizeof(Vertex), (void*) offsetof(Vertex, texCoord));
+    vertexArray.SetAttributePtr(3, 1, sizeof(Vertex), (void*) offsetof(Vertex, texIndex));
 
-    mIndexBuffer.Create();
-    mIndexBuffer.Bind();
-    mIndexBuffer.SetCapacity(sizeof(uint) * mMaxIndices);
+    indexBuffer.Create();
+    indexBuffer.Bind();
+    indexBuffer.SetCapacity(sizeof(uint) * maxIndices);
 
     FlushData();
 }
 
 void Renderer::Terminate()
 {
-    delete[] mVertexData;
-    delete[] mIndexData;
-    delete[] mTextureIndices;
-    delete[] mTextureData;
+    delete[] vertexData;
+    delete[] indexData;
+    delete[] textureData;
+    delete[] textureIndices;
 
-    mVertexData = nullptr;
-    mIndexData = nullptr;
-    mTextureIndices = nullptr;
-    mTextureData = nullptr;
+    vertexData     = nullptr;
+    indexData      = nullptr;
+    textureData    = nullptr;
+    textureIndices = nullptr;
 
-    mIndexBuffer.Destroy();
-    mVertexBuffer.Destroy();
-    mVertexArray.Destroy();
-    mBatchShader.Destroy();
+    indexBuffer.Destroy();
+    vertexBuffer.Destroy();
+    vertexArray.Destroy();
+    batchShader.Destroy();
 }
 
 void Renderer::SetViewport(Vector size)
@@ -179,15 +179,15 @@ void Renderer::SetViewport(Vector size)
 
 void Renderer::SetMaxQuad(size_t max)
 {
-    if (max < mCircleSegment) max = mCircleSegment;
-    mMaxQuad = max;
+    if (max < circleSegment) max = circleSegment;
+    maxQuad = max;
 }
 
 void Renderer::SetCircleSegment(size_t segment)
 {
     if (segment < 3) segment = 3;
-    if (mMaxQuad < segment) mMaxQuad = segment;
-    mCircleSegment = segment;
+    if (maxQuad < segment) maxQuad = segment;
+    circleSegment = segment;
 }
 
 void Renderer::ClearBackground(const Color& color)
@@ -198,51 +198,51 @@ void Renderer::ClearBackground(const Color& color)
 
 void Renderer::Render()
 {
-    if (mVertexCounter == 0)
+    if (vertexCounter == 0)
         return;
 
-    mBatchShader.Bind();
-    mBatchShader.SetMatrix("uViewProjection", mViewProjection);
-    mBatchShader.SetInt("uTex", mMaxTextureUnits, mTextureIndices);
+    batchShader.Bind();
+    batchShader.SetMatrix("uViewProjection", viewProjectionMatrix);
+    batchShader.SetInt("uTex", maxTextureUnits, textureIndices);
 
-    for (size_t i = 0; i < mTextureCounter; ++i)
-        mTextureData[i].Bind(i);
+    for (size_t i = 0; i < textureCounter; ++i)
+        textureData[i].Bind(i);
 
-    mVertexBuffer.Bind();
-    mVertexBuffer.SetData(sizeof(float) * mMaxVertices * Vertex::length, mVertexData);
+    vertexBuffer.Bind();
+    vertexBuffer.SetData(sizeof(float) * maxVertices * Vertex::length, vertexData);
 
-    mIndexBuffer.Bind();
-    mIndexBuffer.SetData(sizeof(uint) * mMaxIndices, mIndexData);
+    indexBuffer.Bind();
+    indexBuffer.SetData(sizeof(uint) * maxIndices, indexData);
 
-    mVertexArray.Bind();
-    glDrawElements(GL_TRIANGLES, mIndexCounter, GL_UNSIGNED_INT, nullptr);
+    vertexArray.Bind();
+    glDrawElements(GL_TRIANGLES, indexCounter, GL_UNSIGNED_INT, nullptr);
 
     FlushData();
 }
 
 void Renderer::BeginScene(const Camera& camera)
 {
-   mViewProjection = camera.ToMatrix();
+   viewProjectionMatrix = camera.ToMatrix();
 }
 
 void Renderer::EndScene()
 {
     Render();
-    mViewProjection = Matrix::Identity;
+    viewProjectionMatrix = Matrix::identity;
 }
 
 void Renderer::FlushData()
 {
-    mVertexCounter = 0;
-    mIndexCounter = 0;
-    mTextureCounter = 0;
+    vertexCounter  = 0;
+    indexCounter   = 0;
+    textureCounter = 0;
 }
 
 void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textureOffset)
 {
-    if (mVertexCounter + vertexOffset > mMaxVertices) return Render();
-    if (mIndexCounter + indexOffset > mMaxIndices) return Render();
-    if (mTextureCounter + textureOffset > mMaxTextureUnits) return Render();
+    if (vertexCounter + vertexOffset > maxVertices) return Render();
+    if (indexCounter + indexOffset > maxIndices) return Render();
+    if (textureCounter + textureOffset > maxTextureUnits) return Render();
 }
 
 void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, float size, const Color& c)
@@ -289,36 +289,35 @@ void Renderer::AddText(Font& font, int ch, const Vector& p0, float size, const C
 
 }
 
-void Renderer::AddData(const float* vetices, size_t vertexLength,
-                          const uint* indices, size_t indexLength)
+void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* indices, size_t indexLength)
 {
-    size_t vertexOffset = mVertexCounter * Vertex::length;
+    size_t vertexOffset = vertexCounter * Vertex::length;
     size_t vertexSize   = vertexLength * Vertex::length;
 
     for (size_t i = 0; i < vertexSize; ++i)
-        mVertexData[vertexOffset + i] = vetices[i];
+        vertexData[vertexOffset + i] = vetices[i];
 
     for (size_t i = 0; i < indexLength; ++i)
-        mIndexData[mIndexCounter + i] = mVertexCounter + indices[i];
+        indexData[indexCounter + i] = vertexCounter + indices[i];
 
-    mVertexCounter += vertexLength;
-    mIndexCounter += indexLength;
+    vertexCounter += vertexLength;
+    indexCounter += indexLength;
 }
 
 void Renderer::AddDatax(const Texture& texture)
 {
-    for (size_t i = 0; i < mTextureCounter; ++i)
+    for (size_t i = 0; i < textureCounter; ++i)
     {
-        if (mTextureData[i].GetId() == texture.GetId())
+        if (textureData[i].GetId() == texture.GetId())
         {
-            mTextureIndex = i;
+            textureIndex = i;
             return;
         }
     }
 
-    mTextureData[mTextureCounter] = texture;
-    mTextureIndex = mTextureCounter;
-    mTextureCounter++;
+    textureData[textureCounter] = texture;
+    textureIndex = textureCounter;
+    textureCounter++;
 }
 
 
@@ -446,7 +445,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
 
     CheckLimit(segments, triangles * 3);
 
-    float theta           = Math::TwoPi / segments;
+    float theta           = Math::twoPi / segments;
     float tangetialFactor = Math::Tan(theta);
     float radialFactor    = Math::Cos(theta);
 
@@ -496,7 +495,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
 
 void Renderer::AddCircle(const Vector& p0, float r, const Color& c)
 {
-    AddPolygon(p0, r, mCircleSegment, c);
+    AddPolygon(p0, r, circleSegment, c);
 }
 
 void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c)
@@ -551,9 +550,9 @@ void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, co
     CheckLimit(4, 6, 1);
 
     AddDatax(t);
-    float ti = mTextureIndex;
+    float ti = textureIndex;
     if (t.GetChannels() == 1)
-        ti += mMaxTextureUnits;
+        ti += maxTextureUnits;
 
     float vertices[] = {
         p0.x, p0.y, c.r, c.g, c.b, c.a, t0.x, t0.y, ti,
@@ -691,13 +690,13 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
         float numeaAbs = Math::Abs(numea);
         float numebAbs = Math::Abs(numeb);
 
-        if (numeaAbs < Math::Epsilon && numebAbs < Math::Epsilon && denomAbs < Math::Epsilon)
+        if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
         {
             p4 = Vector::Lerp(p0, p1, 0.5);
             return true;
         }
 
-        if (denomAbs < Math::Epsilon)
+        if (denomAbs < Math::epsilon)
             return false;
 
         float mua = numea / denom;

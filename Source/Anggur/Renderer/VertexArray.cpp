@@ -5,18 +5,18 @@ namespace Anggur {
 
 void VertexBuffer::Create()
 {
-    glGenBuffers(1, &mId);
+    glGenBuffers(1, &id);
 }
 
 void VertexBuffer::Destroy()
 {
-    glDeleteBuffers(1, &mId);
+    glDeleteBuffers(1, &id);
 }
 
 
 void VertexBuffer::Bind()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, mId);
+    glBindBuffer(GL_ARRAY_BUFFER, id);
 }
 
 void VertexBuffer::Unbind()
@@ -37,17 +37,17 @@ void VertexBuffer::SetData(size_t size, float* data)
 
 void IndexBuffer::Create()
 {
-    glGenBuffers(1, &mId);
+    glGenBuffers(1, &id);
 }
 
 void IndexBuffer::Destroy()
 {
-    glDeleteBuffers(1, &mId);
+    glDeleteBuffers(1, &id);
 }
 
 void IndexBuffer::Bind()
 {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mId);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
 
 void IndexBuffer::Unbind()
@@ -67,17 +67,17 @@ void IndexBuffer::SetData(size_t size, uint* data)
 
 void VertexArray::Create()
 {
-    glGenVertexArrays(1, &mId);
+    glGenVertexArrays(1, &id);
 }
 
 void VertexArray::Destroy()
 {
-    glDeleteVertexArrays(1, &mId);
+    glDeleteVertexArrays(1, &id);
 }
 
 void VertexArray::Bind()
 {
-    glBindVertexArray(mId);
+    glBindVertexArray(id);
 }
 
 void VertexArray::Unbind()

@@ -9,29 +9,29 @@ class RandomGenerator
 {
 public:
     RandomGenerator():
-        mGenerator(mDevice())
+        generator(device())
     {
     }
 
     void SetSeed(float n)
     {
-        mGenerator.seed(n);
+        generator.seed(n);
     }
 
     float Generate()
     {
-        return mGenerator();
+        return generator();
     }
 
     float Range(float lower, float upper)
     {
         std::uniform_real_distribution<float> distribution(lower, upper);
-        return distribution(mGenerator);
+        return distribution(generator);
     }
 
 private:
-    std::random_device mDevice;
-    std::mt19937 mGenerator;
+    std::random_device device;
+    std::mt19937 generator;
 
 };
 
@@ -40,27 +40,27 @@ class Random
 public:
     static float Generate()
     {
-        return mGenerator.Generate();
+        return generator.Generate();
     }
 
     static float Range(float lower, float upper)
     {
-        return mGenerator.Range(lower, upper);
+        return generator.Range(lower, upper);
     }
 
     static float GetNormal()
     {
-        return mGenerator.Range(0.f, 1.f);
+        return generator.Range(0.f, 1.f);
     }
 
     static float GetSigned()
     {
-        return mGenerator.Range(-1.f, 1.f);
+        return generator.Range(-1.f, 1.f);
     }
 
     static float GetAngle()
     {
-        return mGenerator.Range(0.f, Math::TwoPi);
+        return generator.Range(0.f, Math::twoPi);
     }
 
     static float GetBool()
@@ -70,7 +70,7 @@ public:
 
 
 private:
-    static RandomGenerator mGenerator;
+    static RandomGenerator generator;
 
 };
 

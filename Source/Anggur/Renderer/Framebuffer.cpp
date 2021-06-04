@@ -11,31 +11,31 @@ Framebuffer::Framebuffer(uint width, uint height)
 
 Framebuffer::~Framebuffer()
 {
-    glDeleteFramebuffers(1, &mId);
-    glDeleteTextures(1, &mColorAttachment);
+    glDeleteFramebuffers(1, &id);
+    glDeleteTextures(1, &colorAttachment);
 }
 
 void Framebuffer::Recreate(uint width, uint height)
 {
-    this->mWidth = width;
-    this->mHeight = height;
+    this->width = width;
+    this->height = height;
 
-    if (mId)
+    if (id)
     {
-        glDeleteFramebuffers(1, &mId);
-        glDeleteTextures(1, &mColorAttachment);
+        glDeleteFramebuffers(1, &id);
+        glDeleteTextures(1, &colorAttachment);
     }
 
-    glGenFramebuffers(1, &mId);
-    glBindFramebuffer(GL_FRAMEBUFFER, mId);
+    glGenFramebuffers(1, &id);
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
 
-    glGenTextures(1, &mColorAttachment);
-    glBindTexture(GL_TEXTURE_2D, mColorAttachment);
+    glGenTextures(1, &colorAttachment);
+    glBindTexture(GL_TEXTURE_2D, colorAttachment);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorAttachment, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
 
     Anggur_Assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
@@ -45,7 +45,7 @@ void Framebuffer::Recreate(uint width, uint height)
 
 Texture Framebuffer::ToTexture()
 {
-    return Texture(mColorAttachment, mWidth, mHeight);
+    return Texture(colorAttachment, width, height);
 }
 
 void Framebuffer::BindDefault()
@@ -55,7 +55,7 @@ void Framebuffer::BindDefault()
 
 void Framebuffer::Bind()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, mId);
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
 }
 
 void Framebuffer::Unbind()

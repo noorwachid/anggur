@@ -22,7 +22,7 @@ struct Camera
 public:
     Camera()
     {
-        viewport = Vector::One;
+        viewport = Vector::one;
         distance = 1.0;
         rotation = 0.0;
     }
@@ -61,7 +61,7 @@ public:
 
     Vector GetVisibleTopLeftWorldCoord()
     {
-        return ToWorldCoord(Vector::Zero);
+        return ToWorldCoord(Vector::zero);
     }
 
     Vector GetVisibleBottomRightWorldCoord()
@@ -84,7 +84,7 @@ struct Transform
     float rotation;
     Vector scale;
 
-    Transform(Vector t = Vector(), float r = 0, Vector s = Vector::One):
+    Transform(Vector t = Vector(), float r = 0, Vector s = Vector::one):
         translation(t),
         rotation(r),
         scale(s)
@@ -132,86 +132,86 @@ public:
 
     static void SetDrawMode(DrawMode mode);
 
-    static void ClearBackground(const Color& color = Color::Black);
+    static void ClearBackground(const Color& color = Color::black);
 
     // -- Primitives
-    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::White);
-    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c = Color::White);
+    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::white);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c = Color::white);
     static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c0, const Color& c1, const Color& c2, const Color& c3);
-    static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::White);
-    static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::White);
-    static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::White);
-    static void AddCircle(const Vector& p0, float r, const Color& c = Color::White);
+    static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::white);
+    static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::white);
+    static void AddCircle(const Vector& p0, float r, const Color& c = Color::white);
 
-    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c = Color::White);
-    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c = Color::White);
-    static void AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c = Color::White);
-    static void AddBox(const Vector& position, const Vector& radii, const Transform& f, const Color& c = Color::White);
-    static void AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c = Color::White);
-    static void AddCircle(const Vector& p0, float r, const Transform& f, const Color& c = Color::White);
+    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c = Color::white);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c = Color::white);
+    static void AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c = Color::white);
+    static void AddBox(const Vector& position, const Vector& radii, const Transform& f, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c = Color::white);
+    static void AddCircle(const Vector& p0, float r, const Transform& f, const Color& c = Color::white);
 
     // -- Textures
-    static void Addx(const Vector& p0, const Texture& t, const Color& c = Color::White);
+    static void Addx(const Vector& p0, const Texture& t, const Color& c = Color::white);
     static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
                          const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
-                         const Texture& t, const Color& c = Color::White);
-    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c = Color::White);
-    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c = Color::White);
+                         const Texture& t, const Color& c = Color::white);
+    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c = Color::white);
+    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c = Color::white);
 
-    static void Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c = Color::White);
+    static void Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c = Color::white);
     static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
                          const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
-                         const Texture& t, const Transform& f, const Color& c = Color::White);
-    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c = Color::White);
-    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Transform& f, const Color& c = Color::White);
+                         const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Transform& f, const Color& c = Color::white);
 
     // -- Weirds
     // TODO DrawArc
-    static void AddConvex(const std::vector<Vector>& ps, const Color& c = Color::White);
+    static void AddConvex(const std::vector<Vector>& ps, const Color& c = Color::white);
 
     // -- Lines
-    static void AddTerminator(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::White);
-    static void AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::White);
-    static void AddLine(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::White);
-    static void AddPolyline(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::White);
-    static void AddPolyring(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::White);
+    static void AddTerminator(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::white);
+    static void AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::white);
+    static void AddLine(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::white);
+    static void AddPolyline(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::white);
+    static void AddPolyring(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::white);
 
     // -- Curves
-    static void AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::White);
-    static void AddQuadraticBzi(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::White);
-    static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::White);
+    static void AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::white);
+    static void AddQuadraticBzi(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::white);
+    static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::white);
 
     // -- Texts
-    static void AddText(Font& font, int ch, const Vector& p0, float size = 1, const Color& c = Color::White);
-    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, const Color& c = Color::White);
-    static void AddText(Font& font, const std::string& text, const Vector& p0, const TextOption& o, const Color& c = Color::White);
+    static void AddText(Font& font, int ch, const Vector& p0, float size = 1, const Color& c = Color::white);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, const Color& c = Color::white);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, const TextOption& o, const Color& c = Color::white);
 
 private:
-    static Shader mBatchShader;
+    static Shader batchShader;
 
-    static float* mVertexData;
-    static uint* mIndexData;
+    static float* vertexData;
+    static uint* indexData;
 
-    static size_t mVertexCounter;
-    static size_t mIndexCounter;
+    static size_t vertexCounter;
+    static size_t indexCounter;
 
-    static size_t mMaxQuad;
-    static size_t mCircleSegment;
+    static size_t maxQuad;
+    static size_t circleSegment;
 
-    static size_t mMaxVertices;
-    static size_t mMaxIndices;
+    static size_t maxVertices;
+    static size_t maxIndices;
 
-    static size_t mMaxTextureUnits;
-    static size_t mTextureCounter;
-    static float mTextureIndex;
-    static int* mTextureIndices;
-    static Texture* mTextureData;
+    static size_t maxTextureUnits;
+    static size_t textureCounter;
+    static float textureIndex;
+    static int* textureIndices;
+    static Texture* textureData;
 
-    static Matrix mViewProjection;
+    static Matrix viewProjectionMatrix;
 
-    static VertexArray mVertexArray;
-    static VertexBuffer mVertexBuffer;
-    static IndexBuffer mIndexBuffer;
+    static VertexArray vertexArray;
+    static VertexBuffer vertexBuffer;
+    static IndexBuffer indexBuffer;
 
 };
 

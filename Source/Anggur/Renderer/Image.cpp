@@ -7,12 +7,12 @@ namespace Anggur {
 
 Image::Image()
 {
-    mData = nullptr;
+    data = nullptr;
 }
 
 Image::Image(const std::string& path)
 {
-    mData = nullptr;
+    data = nullptr;
     Load(path);
 }
 
@@ -30,18 +30,18 @@ void Image::Load(const std::string& path)
     int channels;
 
     stbi_set_flip_vertically_on_load(1);
-    mData = stbi_load(path.c_str(), &width, &height, &channels, 4);
-    Anggur_Assert(mData, "[Renderer.Image] failed to load image\n");
+    data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+    Anggur_Assert(data, "[Renderer.Image] failed to load image\n");
 
-    mWidth = width;
-    mHeight = height;
-    mChannels = channels;
+    this->width = width;
+    this->height = height;
+    this->channels = channels;
 }
 
 void Image::Unload()
 {
-    if (mData)
-        stbi_image_free(mData);
+    if (data)
+        stbi_image_free(data);
 }
 
 

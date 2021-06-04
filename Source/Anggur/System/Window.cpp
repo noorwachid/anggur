@@ -21,65 +21,81 @@ Window::Window(const WindowConfig& config)
 
     int flag = SDL_WINDOW_OPENGL | static_cast<int>(config.flag);
 
-    mRawWindow  = SDL_CreateWindow(config.title.c_str(),
+    handler  = SDL_CreateWindow(config.title.c_str(),
                                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                 config.width, config.height,
                                 flag);
-    mContext = SDL_GL_CreateContext(mRawWindow);
-    mRatio   = config.width / static_cast<float>(config.height);
-    mOpen    = true;
-    SDL_GL_MakeCurrent(mRawWindow, mContext);
+    context = SDL_GL_CreateContext(handler);
+    ratio   = config.width / static_cast<float>(config.height);
+    open    = true;
+    SDL_GL_MakeCurrent(handler, context);
 
     Core::LoadGlFunctions();
 }
 
-Window* Window::Create(const WindowConfig& config)
+void Window::SetPos(const Vector& pos)
 {
-    return new Window(config);
+    SDL_SetWindowPosition(handler, pos.x, pos.y);
+}
+
+void Window::SetSize(const Vector& size)
+{
+    SDL_SetWindowSize(handler, size.x, size.y);
+}
+
+void Window::SetTitle(const std::string& title)
+{
+    SDL_SetWindowTitle(handler, title.c_str());
 }
 
 float Window::GetRatio()
 {
-    return mRatio;
+    return ratio;
 }
 
 Vector Window::GetPos()
 {
     int x, y;
-    SDL_GetWindowPosition(mRawWindow, &x, &y);
+    SDL_GetWindowPosition(handler, &x, &y);
     return Vector(x, y);
 }
 
 Vector Window::GetSize()
 {
     int w, h;
-    SDL_GetWindowSize(mRawWindow, &w, &h);
+    SDL_GetWindowSize(handler, &w, &h);
     return Vector(w, h);
+}
+
+const std::string& Window::GetTitle()
+{
+    title = SDL_GetWindowTitle(handler);
+    return title;
 }
 
 bool Window::IsOpen()
 {
-    return mOpen;
+    return open;
 }
 
 void Window::SwapBuffers()
 {
-    SDL_GL_SwapWindow(mRawWindow);
+    SDL_GL_SwapWindow(handler);
 }
 
 SDL_Window* Window::GetRawWindow()
 {
-    return mRawWindow;
+    return handler;
 }
 
 void* Window::GetContext()
 {
-    return mContext;
+    return context;
 }
 
 void Window::Close()
 {
-    mOpen = false;
+    open = false;
 }
 
 }

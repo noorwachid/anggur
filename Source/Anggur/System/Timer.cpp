@@ -2,17 +2,7 @@
 
 namespace Anggur {
 
-float Timer::mDx = 0;
-float Timer::mElapsed = 0;
-
-float Timer::GetDx()
-{
-    return mDx;
-}
-
-float Timer::GetElapsed()
-{
-    return mElapsed;
-}
+float Timer::delta = 0;
+float Timer::elapsed = 0;
 
 }

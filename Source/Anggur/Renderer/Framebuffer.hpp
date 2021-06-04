@@ -10,10 +10,10 @@ public:
     Framebuffer(uint width, uint height);
     ~Framebuffer();
 
-    inline uint GetId() const { return mId; }
-    inline uint GetColorAttachment() const { return mColorAttachment; }
-    inline uint GetWidth() const { return mWidth; }
-    inline uint GetHeight() const { return mHeight; }
+    inline uint GetId() const { return id; }
+    inline uint GetColorAttachment() const { return colorAttachment; }
+    inline uint GetWidth() const { return width; }
+    inline uint GetHeight() const { return height; }
 
     void Bind();
     void Unbind();
@@ -24,10 +24,10 @@ public:
     static void BindDefault();
 
 private:
-    uint mId;
-    uint mColorAttachment;
-    uint mWidth;
-    uint mHeight;
+    uint id;
+    uint colorAttachment;
+    uint width;
+    uint height;
 };
 
 }

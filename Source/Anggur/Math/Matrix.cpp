@@ -3,13 +3,13 @@
 
 namespace Anggur {
 
-const Matrix Matrix::Identity({
+const Matrix Matrix::identity({
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f,
 });
 
-const Matrix Matrix::Zero({
+const Matrix Matrix::zero({
     0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
@@ -17,7 +17,7 @@ const Matrix Matrix::Zero({
 
 Matrix::Matrix()
 {
-    *this = Matrix::Identity;
+    *this = Matrix::identity;
 }
 
 Matrix::Matrix(const std::initializer_list<float>& list)
@@ -29,44 +29,44 @@ void Matrix::Set(const std::initializer_list<float>& list)
 {
     size_t i = 0;
     for (auto it = list.begin(); it != list.end(); ++it, ++i)
-        mData[i] = *it;
+        data[i] = *it;
 }
 
 const float* Matrix::ToFloatPtr() const
 {
-    return mData;
+    return data;
 }
 
 float* Matrix::ToFloatPtr()
 {
-    return mData;
+    return data;
 }
 
 float& Matrix::operator[](size_t index)
 {
-    return mData[index];
+    return data[index];
 }
 
 float Matrix::operator[](size_t index) const
 {
-    return mData[index];
+    return data[index];
 }
 
 Matrix Matrix::operator*(const Matrix& right) const
 {
     Matrix result;
 
-    result[0] = mData[0] * right[0] + mData[3] * right[1] + mData[6] * right[2];
-    result[1] = mData[1] * right[0] + mData[4] * right[1] + mData[7] * right[2];
-    result[2] = mData[2] * right[0] + mData[5] * right[1] + mData[8] * right[2];
+    result[0] = data[0] * right[0] + data[3] * right[1] + data[6] * right[2];
+    result[1] = data[1] * right[0] + data[4] * right[1] + data[7] * right[2];
+    result[2] = data[2] * right[0] + data[5] * right[1] + data[8] * right[2];
 
-    result[3] = mData[0] * right[3] + mData[3] * right[4] + mData[6] * right[5];
-    result[4] = mData[1] * right[3] + mData[4] * right[4] + mData[7] * right[5];
-    result[5] = mData[2] * right[3] + mData[5] * right[4] + mData[8] * right[5];
+    result[3] = data[0] * right[3] + data[3] * right[4] + data[6] * right[5];
+    result[4] = data[1] * right[3] + data[4] * right[4] + data[7] * right[5];
+    result[5] = data[2] * right[3] + data[5] * right[4] + data[8] * right[5];
 
-    result[6] = mData[0] * right[6] + mData[3] * right[7] + mData[6] * right[8];
-    result[7] = mData[1] * right[6] + mData[4] * right[7] + mData[7] * right[8];
-    result[8] = mData[2] * right[6] + mData[5] * right[7] + mData[8] * right[8];
+    result[6] = data[0] * right[6] + data[3] * right[7] + data[6] * right[8];
+    result[7] = data[1] * right[6] + data[4] * right[7] + data[7] * right[8];
+    result[8] = data[2] * right[6] + data[5] * right[7] + data[8] * right[8];
 
     return result;
 }
@@ -75,17 +75,17 @@ Matrix Matrix::operator+(const Matrix& right) const
 {
     Matrix result;
 
-    result[0] = mData[0] + right[0];
-    result[1] = mData[1] + right[1];
-    result[2] = mData[2] + right[2];
+    result[0] = data[0] + right[0];
+    result[1] = data[1] + right[1];
+    result[2] = data[2] + right[2];
 
-    result[3] = mData[3] + right[3];
-    result[4] = mData[4] + right[4];
-    result[5] = mData[5] + right[5];
+    result[3] = data[3] + right[3];
+    result[4] = data[4] + right[4];
+    result[5] = data[5] + right[5];
 
-    result[6] = mData[6] + right[6];
-    result[7] = mData[7] + right[7];
-    result[8] = mData[8] + right[8];
+    result[6] = data[6] + right[6];
+    result[7] = data[7] + right[7];
+    result[8] = data[8] + right[8];
 
     return result;
 }
@@ -104,16 +104,16 @@ Matrix& Matrix::operator+=(const Matrix& right)
 
 Matrix& Matrix::Translate(const Vector& v)
 {
-    mData[6] += v.x;
-    mData[7] += v.y;
+    data[6] += v.x;
+    data[7] += v.y;
 
     return *this;
 }
 
 Matrix& Matrix::Scale(const Vector& v)
 {
-    mData[0] *= v.x;
-    mData[4] *= v.y;
+    data[0] *= v.x;
+    data[4] *= v.y;
 
     return *this;
 }
@@ -123,10 +123,10 @@ Matrix& Matrix::Rotate(float theta)
     Matrix right = Matrix::CreateRotation(theta);
     Matrix result;
 
-    result[0] = mData[0] * right[0] + mData[3] * right[1] + mData[6] * right[2];
-    result[1] = mData[1] * right[0] + mData[4] * right[1] + mData[7] * right[2];
-    result[3] = mData[0] * right[3] + mData[3] * right[4] + mData[6] * right[5];
-    result[4] = mData[1] * right[3] + mData[4] * right[4] + mData[7] * right[5];
+    result[0] = data[0] * right[0] + data[3] * right[1] + data[6] * right[2];
+    result[1] = data[1] * right[0] + data[4] * right[1] + data[7] * right[2];
+    result[3] = data[0] * right[3] + data[3] * right[4] + data[6] * right[5];
+    result[4] = data[1] * right[3] + data[4] * right[4] + data[7] * right[5];
 
     *this = result;
 
@@ -177,7 +177,7 @@ Matrix Matrix::CreateInverse(const Matrix& m)
     float determinant = Det(m);
 
     if (determinant == 0.0)
-        return Matrix::Zero;
+        return Matrix::zero;
 
     float oo = 1 / determinant;
 

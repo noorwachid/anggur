@@ -3,10 +3,10 @@
 
 namespace Anggur {
 
-const float Math::Pi        = 3.1415926535f;
-const float Math::TwoPi     = Math::Pi * 2;
-const float Math::Infinity  = INFINITY;
-const float Math::Epsilon   = 0.0001f;
+const float Math::pi        = 3.1415926535f;
+const float Math::twoPi     = Math::pi * 2;
+const float Math::infinity  = INFINITY;
+const float Math::epsilon   = 0.0001f;
 
 float Math::Max(float a, float b)
 {
@@ -125,12 +125,12 @@ float Math::Remap(float x, float lowerA, float upperA, float lowerB, float upper
 
 float Math::ToRadian(float degree)
 {
-    return degree * Pi / 180.0f;
+    return degree * pi / 180.0f;
 }
 
 float Math::ToDegree(float radian)
 {
-    return radian * 180.0f / Pi;
+    return radian * 180.0f / pi;
 }
 
 float Math::IsNearZero(float x, float epsilon)
