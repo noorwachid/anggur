@@ -60,6 +60,7 @@ struct Color
     static const Color blue;
     static const Color violet;
     static const Color purple;
+    static const Color grape;
     static const Color fuchsia;
     static const Color pink;
 
