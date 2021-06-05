@@ -6,6 +6,7 @@
 #include "Window.hpp"
 #include "Input.hpp"
 #include "Timer.hpp"
+#include "Scene.hpp"
 
 union SDL_Event;
 
@@ -13,45 +14,20 @@ namespace Anggur {
 
 class Application
 {
-protected:
-    
-    virtual void OnCreate();
-    virtual void OnStart();
-    virtual void OnUpdate();
-    virtual void OnDestroy();
-
-    virtual void OnEvent(Event& event);
-
 public:
-
-    static Application& Get();
-
-    void Initialize();
-    void Run();
-    void Terminate();
-
     Application();
 
-    Window& GetWindow();
+    static Window* GetWindow();
+    static void Run(Scene* mainScene = nullptr);
+    static void SetWindowConfig(const WindowConfig& config);
+    static void SetScene(Scene* activeScene);
 
 private:
-    void ProcessEvent(SDL_Event* event);
+    static void ProcessEvent(SDL_Event* event);
 
-protected:
-    WindowConfig windowConfig;
-    Window* window;
-
-private:
-    static Application* instance;
+    static WindowConfig windowConfig;
+    static Window* window;
+    static Scene* scene;
 };
 
 }
-
-#ifndef Anggur_EntryPoint
-#define Anggur_EntryPoint(applicationInstanceName) \
-    int main() { \
-        applicationInstanceName applicationInstance; \
-        applicationInstance.Run(); \
-        return 0; \
-    }
-#endif

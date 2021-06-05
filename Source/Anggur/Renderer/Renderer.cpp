@@ -151,6 +151,8 @@ void Renderer::Initialize()
     indexBuffer.Bind();
     indexBuffer.SetCapacity(sizeof(uint) * maxIndices);
 
+    viewProjectionMatrix = Matrix::identity;
+
     FlushData();
 }
 
@@ -220,15 +222,9 @@ void Renderer::Render()
     FlushData();
 }
 
-void Renderer::BeginScene(const Camera& camera)
+void Renderer::SetCamera(const Camera& camera)
 {
    viewProjectionMatrix = camera.ToMatrix();
-}
-
-void Renderer::EndScene()
-{
-    Render();
-    viewProjectionMatrix = Matrix::identity;
 }
 
 void Renderer::FlushData()

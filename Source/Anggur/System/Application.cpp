@@ -7,16 +7,28 @@
 
 namespace Anggur {
 
-Application* Application::instance = nullptr;
+WindowConfig Application::windowConfig;
+Window* Application::window = nullptr;
+Scene* Application::scene = nullptr;
 
 Application::Application()
 {
-    instance = this;
 }
 
-Window& Application::GetWindow()
+Window* Application::GetWindow()
 {
-    return *window;
+    return window;
+}
+
+void Application::SetScene(Scene* activeScene)
+{
+    if (scene)
+    {
+        delete scene;
+        scene = nullptr;
+    }
+    scene = activeScene;
+    if (scene) scene->OnStart();
 }
 
 void Application::ProcessEvent(SDL_Event* event)
@@ -36,7 +48,7 @@ void Application::ProcessEvent(SDL_Event* event)
                 {
                     WindowEvent e(EventType::WindowMoved);
                     e.pos.Set(event->window.data1, event->window.data2);
-                    OnEvent(e);
+                    if (scene) scene->OnEvent(e);
                     break;
                 }
                 case SDL_WINDOWEVENT_RESIZED:
@@ -44,7 +56,7 @@ void Application::ProcessEvent(SDL_Event* event)
                     Renderer::SetViewport(Vector(event->window.data1, event->window.data2));
                     WindowEvent e(EventType::WindowResized);
                     e.size.Set(event->window.data1, event->window.data2);
-                    OnEvent(e);
+                    if (scene) scene->OnEvent(e);
                     break;
                 }
             }
@@ -56,7 +68,7 @@ void Application::ProcessEvent(SDL_Event* event)
                        event->key.keysym.scancode,
                        static_cast<Key>(event->key.keysym.sym),
                        static_cast<KeyMod>(event->key.keysym.mod));
-            OnEvent(e);
+            if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_KEYUP:
@@ -65,7 +77,7 @@ void Application::ProcessEvent(SDL_Event* event)
                        event->key.keysym.scancode,
                        static_cast<Key>(event->key.keysym.sym),
                        static_cast<KeyMod>(event->key.keysym.mod));
-            OnEvent(e);
+            if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEWHEEL:
@@ -73,7 +85,7 @@ void Application::ProcessEvent(SDL_Event* event)
             Input::mouseWheel.Set(event->wheel.x, event->wheel.y);
             MouseEvent e(EventType::MouseScrolled);
             e.wheel.Set(event->wheel.x, event->wheel.y);
-            OnEvent(e);
+            if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEMOTION:
@@ -81,7 +93,7 @@ void Application::ProcessEvent(SDL_Event* event)
             MouseEvent e(EventType::MouseMoved);
             e.pos.Set(event->motion.x, event->motion.y);
             e.dx.Set(event->motion.xrel, event->motion.yrel);
-            OnEvent(e);
+            if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEBUTTONDOWN:
@@ -89,7 +101,7 @@ void Application::ProcessEvent(SDL_Event* event)
             MouseEvent e(EventType::MousePressed);
             e.pos.Set(event->button.x, event->button.y);
             e.button = static_cast<Mouse>(event->button.button);
-            OnEvent(e);
+            if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEBUTTONUP:
@@ -97,37 +109,18 @@ void Application::ProcessEvent(SDL_Event* event)
             MouseEvent e(EventType::MouseReleased);
             e.pos.Set(event->button.x, event->button.y);
             e.button = static_cast<Mouse>(event->button.button);
-            OnEvent(e);
+            if (scene) scene->OnEvent(e);
             break;
         }
         default: break;
     }
 }
 
-void Application::OnCreate() {}
-void Application::OnStart() {}
-void Application::OnUpdate() {}
-void Application::OnDestroy() {}
-
-void Application::OnEvent(Event& event) {}
-
-Application& Application::Get()
+void Application::Run(Scene* mainScene)
 {
-    return *instance;
-}
-
-void Application::Initialize()
-{
-    OnCreate();
     window = new Window(windowConfig);
     Input::windowHandler = window->handler;
 
-    // Anggur_Log("[Core.Application] Initialized\n");
-}
-
-void Application::Run()
-{
-    Initialize();
     Renderer::Initialize();
     Audio::Initialize();
     Input::Initialize();
@@ -136,7 +129,8 @@ void Application::Run()
     Uint64 prevTimePoint = SDL_GetPerformanceCounter();
     Timer::elapsed = 0;
 
-    OnStart();
+    scene = mainScene;
+    if (scene) scene->OnStart();
 
     while (window->IsOpen())
     {
@@ -151,22 +145,27 @@ void Application::Run()
         prevTimePoint = currTimePoint;
 
         Input::Update();
-        OnUpdate();
+        if (scene) scene->OnUpdate();
 
         window->SwapBuffers();
     }
 
-    Terminate();
-}
 
-void Application::Terminate()
-{
-    OnDestroy();
+    if (scene)
+    {
+        delete scene;
+        scene = nullptr;
+    }
+
     Audio::Terminate();
     Renderer::Terminate();
     Core::Terminate();
 
-    // Anggur_Log("[Core.Application] Terminated\n");
+}
+
+void Application::SetWindowConfig(const WindowConfig& config)
+{
+    windowConfig = config;
 }
 
 }

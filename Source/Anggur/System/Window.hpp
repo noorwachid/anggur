@@ -72,6 +72,7 @@ public:
     Vector GetPos();
     Vector GetSize();
     const std::string& GetTitle();
+    WindowFlag GetFlag();
 
     bool IsOpen();
     void Close();

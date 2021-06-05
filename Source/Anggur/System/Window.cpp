@@ -73,6 +73,11 @@ const std::string& Window::GetTitle()
     return title;
 }
 
+Anggur::WindowFlag Window::GetFlag()
+{
+    return static_cast<WindowFlag>(SDL_GetWindowFlags(handler));
+}
+
 bool Window::IsOpen()
 {
     return open;

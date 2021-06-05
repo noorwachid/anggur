@@ -122,8 +122,7 @@ public:
     static void CheckLimit(size_t vertexOffset = 0, size_t indexOffset = 0, size_t textureOffset = 0);
     static void Render();
 
-    static void BeginScene(const Camera& camera);
-    static void EndScene();
+    static void SetCamera(const Camera& camera);
 
     // NEW API
     static void AddData(const float* vertexData, size_t vertexLength, const uint* indexData, size_t indexLength);
