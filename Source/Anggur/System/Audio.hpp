@@ -41,9 +41,9 @@ public:
     void FadeOut(float time = 0.5);
 
 private:
-    Mix_Chunk* mChunkData;
-    int mVolume;
-    int mSlot;
+    Mix_Chunk* chuckData;
+    int volume;
+    int slot;
 };
 
 class Music

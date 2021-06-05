@@ -24,11 +24,12 @@ void Application::SetScene(Scene* activeScene)
 {
     if (scene)
     {
+        scene->OnDetach();
         delete scene;
         scene = nullptr;
     }
     scene = activeScene;
-    if (scene) scene->OnStart();
+    if (scene) scene->OnAttach();
 }
 
 void Application::ProcessEvent(SDL_Event* event)
@@ -130,7 +131,7 @@ void Application::Run(Scene* mainScene)
     Timer::elapsed = 0;
 
     scene = mainScene;
-    if (scene) scene->OnStart();
+    if (scene) scene->OnAttach();
 
     while (window->IsOpen())
     {
@@ -153,6 +154,7 @@ void Application::Run(Scene* mainScene)
 
     if (scene)
     {
+        scene->OnDetach();
         delete scene;
         scene = nullptr;
     }

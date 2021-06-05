@@ -2,19 +2,9 @@
 
 namespace Anggur {
 
-void Scene::Restart()
+void Scene::Reattach()
 {
-    OnStart();
-}
-
-Scene::Scene()
-{
-    OnCreate();
-}
-
-Scene::~Scene()
-{
-    OnDestroy();
+    OnAttach();
 }
 
 }
