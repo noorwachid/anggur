@@ -61,10 +61,10 @@ struct WindowEvent : public Event
 struct KeyEvent : public Event
 {
     Key key;
-    KeyVir vir;
-    KeyMod mod;
+    VirKey vir;
+    ModKey mod;
 
-    KeyEvent(EventType t, Key k, KeyVir v, KeyMod m):
+    KeyEvent(EventType t, Key k, VirKey v, ModKey m):
         Event(t, EventGroup::Key), 
         key(k),
         vir(v),

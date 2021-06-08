@@ -259,7 +259,7 @@ enum class Key : int
     App2  = 284,
 };
 
-enum class KeyVir: int
+enum class VirKey: int
 {
     Unknown = 0,
 
@@ -528,7 +528,7 @@ enum class KeyVir: int
     App2  = (Anggur_ScancodeMask|284),
 };
 
-enum class KeyMod : unsigned int
+enum class ModKey : unsigned int
 {
     None     = 0x0000,
     LShift   = 0x0001,
@@ -549,6 +549,6 @@ enum class KeyMod : unsigned int
     Reseved  = 0x8000
 };
 
-Anggur_EnumOverloads(KeyMod);
+Anggur_EnumOverloads(ModKey);
 
 }

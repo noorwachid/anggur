@@ -67,8 +67,8 @@ void Application::ProcessEvent(SDL_Event* event)
         {
             KeyEvent e(EventType::KeyPressed,
                        static_cast<Key>(event->key.keysym.scancode),
-                       static_cast<KeyVir>(event->key.keysym.sym),
-                       static_cast<KeyMod>(event->key.keysym.mod));
+                       static_cast<VirKey>(event->key.keysym.sym),
+                       static_cast<ModKey>(event->key.keysym.mod));
             if (scene) scene->OnEvent(e);
             break;
         }
@@ -76,8 +76,8 @@ void Application::ProcessEvent(SDL_Event* event)
         {
             KeyEvent e(EventType::KeyReleased,
                        static_cast<Key>(event->key.keysym.scancode),
-                       static_cast<KeyVir>(event->key.keysym.sym),
-                       static_cast<KeyMod>(event->key.keysym.mod));
+                       static_cast<VirKey>(event->key.keysym.sym),
+                       static_cast<ModKey>(event->key.keysym.mod));
             if (scene) scene->OnEvent(e);
             break;
         }
