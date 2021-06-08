@@ -19,9 +19,9 @@ public:
     static bool IsKeyHeld(Key key);
     static bool IsKeyReleased(Key key);
 
-    static bool IsScancodePressed(int i);
-    static bool IsScancodeHeld(int i);
-    static bool IsScancodeReleased(int i);
+    static bool IsKeyPressed(KeyVir vir);
+    static bool IsKeyHeld(KeyVir vir);
+    static bool IsKeyReleased(KeyVir vir);
 
     static bool IsMousePressed(Mouse button);
     static bool IsMouseHeld(Mouse button);

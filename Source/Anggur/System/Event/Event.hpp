@@ -60,15 +60,15 @@ struct WindowEvent : public Event
 
 struct KeyEvent : public Event
 {
-    int scancode;
     Key key;
+    KeyVir vir;
     KeyMod mod;
 
-    KeyEvent(EventType t, int sc, Key k, KeyMod m):
+    KeyEvent(EventType t, Key k, KeyVir v, KeyMod m):
         Event(t, EventGroup::Key), 
-	scancode(sc), 
-	key(k), 
-	mod(m) {}
+        key(k),
+        vir(v),
+        mod(m) {}
 };
 
 struct MouseEvent : public Event

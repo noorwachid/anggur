@@ -38,34 +38,37 @@ void Input::Update()
 
 bool Input::IsKeyPressed(Key key)
 {
-    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
+    int i = static_cast<int>(key);
     return keyCurrState[i] == 1 && keyPrevState[i] == 0;
 }
 
 bool Input::IsKeyHeld(Key key)
 {
-    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
+    int i = static_cast<int>(key);
     return keyCurrState[i] && keyPrevState[i];
 }
 
 bool Input::IsKeyReleased(Key key)
 {
-    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
+    int i = static_cast<int>(key);
     return !keyCurrState[i] && keyPrevState[i];
 }
 
-bool Input::IsScancodePressed(int i)
+bool Input::IsKeyPressed(KeyVir vir)
 {
-    return keyCurrState[i] && !keyPrevState[i];
+    int i = SDL_GetScancodeFromKey(static_cast<int>(vir));
+    return keyCurrState[i] == 1 && keyPrevState[i] == 0;
 }
 
-bool Input::IsScancodeHeld(int i)
+bool Input::IsKeyHeld(KeyVir vir)
 {
+    int i = SDL_GetScancodeFromKey(static_cast<int>(vir));
     return keyCurrState[i] && keyPrevState[i];
 }
 
-bool Input::IsScancodeReleased(int i)
+bool Input::IsKeyReleased(KeyVir vir)
 {
+    int i = SDL_GetScancodeFromKey(static_cast<int>(vir));
     return !keyCurrState[i] && keyPrevState[i];
 }
 

@@ -66,8 +66,8 @@ void Application::ProcessEvent(SDL_Event* event)
         case SDL_KEYDOWN:
         {
             KeyEvent e(EventType::KeyPressed,
-                       event->key.keysym.scancode,
-                       static_cast<Key>(event->key.keysym.sym),
+                       static_cast<Key>(event->key.keysym.scancode),
+                       static_cast<KeyVir>(event->key.keysym.sym),
                        static_cast<KeyMod>(event->key.keysym.mod));
             if (scene) scene->OnEvent(e);
             break;
@@ -75,8 +75,8 @@ void Application::ProcessEvent(SDL_Event* event)
         case SDL_KEYUP:
         {
             KeyEvent e(EventType::KeyReleased,
-                       event->key.keysym.scancode,
-                       static_cast<Key>(event->key.keysym.sym),
+                       static_cast<Key>(event->key.keysym.scancode),
+                       static_cast<KeyVir>(event->key.keysym.sym),
                        static_cast<KeyMod>(event->key.keysym.mod));
             if (scene) scene->OnEvent(e);
             break;
