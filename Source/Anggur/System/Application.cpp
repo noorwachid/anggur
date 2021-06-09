@@ -170,4 +170,9 @@ void Application::SetWindowConfig(const WindowConfig& config)
     windowConfig = config;
 }
 
+void Application::SetVsync(bool enable)
+{
+    SDL_GL_SetSwapInterval(enable);
+}
+
 }

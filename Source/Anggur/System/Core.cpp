@@ -25,11 +25,6 @@ void Core::Terminate()
     SDL_Quit();
 }
 
-void Core::SetVsync(bool enable)
-{
-    SDL_GL_SetSwapInterval(enable);
-}
-
 void Core::LoadGlFunctions()
 {
     static bool isInitialized = false;

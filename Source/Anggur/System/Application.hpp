@@ -20,6 +20,7 @@ public:
     static Window* GetWindow();
     static void Run(Scene* mainScene = nullptr);
     static void SetWindowConfig(const WindowConfig& config);
+    static void SetVsync(bool enable = true);
     static void SetScene(Scene* activeScene);
 
 private:
