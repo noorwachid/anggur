@@ -53,8 +53,26 @@ struct WindowConfig
         flag(WindowFlag::None),
         width(480),
         height(360),
-        title("Untitled")
-    {}
+        title("Untitled") {}
+
+    WindowConfig(int width, int height, WindowFlag flag = WindowFlag::None):
+        flag(flag),
+        width(width),
+        height(height),
+        title("Untitled") {}
+
+    WindowConfig(int width, int height, const std::string& title, WindowFlag flag = WindowFlag::None):
+        flag(flag),
+        width(width),
+        height(height),
+        title(title) {}
+
+    WindowConfig(int width, int height, const std::string& title, const std::string& icon, WindowFlag flag = WindowFlag::None):
+        flag(flag),
+        width(width),
+        height(height),
+        title(title),
+        icon(icon) {}
 };
 
 class Window
