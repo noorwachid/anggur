@@ -7,6 +7,7 @@ namespace Anggur {
 class Framebuffer
 {
 public:
+    Framebuffer();
     Framebuffer(uint width, uint height);
     ~Framebuffer();
 

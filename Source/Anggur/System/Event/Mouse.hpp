@@ -2,18 +2,18 @@
 
 namespace Anggur {
 
-enum class Mouse
+enum class MouseButton
 {
     F1 = 0x001,
     F2 = 0x002,
     F3 = 0x004,
     F4 = 0x008,
     F5 = 0x010,
-    
+
     // Aliases
-    Left   = Mouse::F1,
-    Middle = Mouse::F2,
-    Right  = Mouse::F3,
+    Left   = MouseButton::F1,
+    Middle = MouseButton::F2,
+    Right  = MouseButton::F3,
 };
 
 }

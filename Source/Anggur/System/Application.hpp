@@ -5,7 +5,7 @@
 #include "Audio.hpp"
 #include "Window.hpp"
 #include "Input.hpp"
-#include "Timer.hpp"
+#include "Time.hpp"
 #include "Scene.hpp"
 
 union SDL_Event;

@@ -24,12 +24,16 @@ void Application::SetScene(Scene* activeScene)
 {
     if (scene)
     {
-        scene->OnDetach();
+        scene->Destroy();
         delete scene;
         scene = nullptr;
     }
     scene = activeScene;
-    if (scene) scene->OnAttach();
+    if (scene)
+    {
+        scene->Create();
+        scene->Start();
+    }
 }
 
 void Application::ProcessEvent(SDL_Event* event)
@@ -65,18 +69,18 @@ void Application::ProcessEvent(SDL_Event* event)
         }
         case SDL_KEYDOWN:
         {
-            KeyEvent e(EventType::KeyPressed,
+            KeyboardEvent e(EventType::KeyPressed,
                        static_cast<Key>(event->key.keysym.scancode),
-                       static_cast<VirKey>(event->key.keysym.sym),
+                       static_cast<VirtKey>(event->key.keysym.sym),
                        static_cast<ModKey>(event->key.keysym.mod));
             if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_KEYUP:
         {
-            KeyEvent e(EventType::KeyReleased,
+            KeyboardEvent e(EventType::KeyReleased,
                        static_cast<Key>(event->key.keysym.scancode),
-                       static_cast<VirKey>(event->key.keysym.sym),
+                       static_cast<VirtKey>(event->key.keysym.sym),
                        static_cast<ModKey>(event->key.keysym.mod));
             if (scene) scene->OnEvent(e);
             break;
@@ -101,7 +105,7 @@ void Application::ProcessEvent(SDL_Event* event)
         {
             MouseEvent e(EventType::MousePressed);
             e.pos.Set(event->button.x, event->button.y);
-            e.button = static_cast<Mouse>(event->button.button);
+            e.button = static_cast<MouseButton>(event->button.button);
             if (scene) scene->OnEvent(e);
             break;
         }
@@ -109,7 +113,7 @@ void Application::ProcessEvent(SDL_Event* event)
         {
             MouseEvent e(EventType::MouseReleased);
             e.pos.Set(event->button.x, event->button.y);
-            e.button = static_cast<Mouse>(event->button.button);
+            e.button = static_cast<MouseButton>(event->button.button);
             if (scene) scene->OnEvent(e);
             break;
         }
@@ -128,10 +132,14 @@ void Application::Run(Scene* mainScene)
 
     SDL_Event event;
     Uint64 prevTimePoint = SDL_GetPerformanceCounter();
-    Timer::elapsed = 0;
+    Time::elapsed = 0;
 
     scene = mainScene;
-    if (scene) scene->OnAttach();
+    if (scene)
+    {
+        scene->Create();
+        scene->Start();
+    }
 
     while (window->IsOpen())
     {
@@ -141,12 +149,12 @@ void Application::Run(Scene* mainScene)
             ProcessEvent(&event);
 
         Uint64 currTimePoint = SDL_GetPerformanceCounter();
-        Timer::delta = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
-        Timer::elapsed += Timer::delta;
+        Time::delta = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
+        Time::elapsed += Time::delta;
         prevTimePoint = currTimePoint;
 
         Input::Update();
-        if (scene) scene->OnUpdate();
+        if (scene) scene->Update();
 
         window->SwapBuffers();
     }
@@ -154,7 +162,7 @@ void Application::Run(Scene* mainScene)
 
     if (scene)
     {
-        scene->OnDetach();
+        scene->Destroy();
         delete scene;
         scene = nullptr;
     }

@@ -4,6 +4,10 @@
 
 namespace Anggur {
 
+Framebuffer::Framebuffer()
+{
+}
+
 Framebuffer::Framebuffer(uint width, uint height)
 {
     Recreate(width, height);

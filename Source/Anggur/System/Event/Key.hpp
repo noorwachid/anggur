@@ -259,7 +259,7 @@ enum class Key : int
     App2  = 284,
 };
 
-enum class VirKey: int
+enum class VirtKey : int
 {
     Unknown = 0,
 

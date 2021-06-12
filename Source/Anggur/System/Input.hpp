@@ -15,22 +15,23 @@ public:
     static void PreUpdate();
     static void Update();
 
-    static bool IsKeyPressed(Key key);
-    static bool IsKeyHeld(Key key);
-    static bool IsKeyReleased(Key key);
+    static bool IsPressed(Key key);
+    static bool IsHeld(Key key);
+    static bool IsReleased(Key key);
 
-    static bool IsKeyPressed(VirKey vir);
-    static bool IsKeyHeld(VirKey vir);
-    static bool IsKeyReleased(VirKey vir);
+    static bool IsPressed(VirtKey vir);
+    static bool IsHeld(VirtKey vir);
+    static bool IsReleased(VirtKey vir);
 
-    static bool IsMousePressed(Mouse button);
-    static bool IsMouseHeld(Mouse button);
-    static bool IsMouseReleased(Mouse button);
-    static bool IsMouseScrolled();
+    static bool IsPressed(MouseButton button);
+    static bool IsHeld(MouseButton button);
+    static bool IsReleased(MouseButton button);
 
-    static void SetMousePos(const Vector& pos);
-    static Vector GetMousePos();
-    static Vector GetMouseWheel();
+    static bool IsWheelScrolled();
+
+    static void SetCursorPos(const Vector& pos);
+    static Vector GetCursorPos();
+    static Vector GetWheel();
 
     friend class Application;
 

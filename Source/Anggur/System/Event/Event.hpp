@@ -58,16 +58,16 @@ struct WindowEvent : public Event
     {}
 };
 
-struct KeyEvent : public Event
+struct KeyboardEvent : public Event
 {
     Key key;
-    VirKey vir;
+    VirtKey virt;
     ModKey mod;
 
-    KeyEvent(EventType t, Key k, VirKey v, ModKey m):
+    KeyboardEvent(EventType t, Key k, VirtKey v, ModKey m):
         Event(t, EventGroup::Key), 
         key(k),
-        vir(v),
+        virt(v),
         mod(m) {}
 };
 
@@ -76,7 +76,7 @@ struct MouseEvent : public Event
     Vector wheel;
     Vector pos;
     Vector dx;
-    Mouse button;
+    MouseButton button;
 
     MouseEvent(EventType t):
         Event(t, EventGroup::Mouse)

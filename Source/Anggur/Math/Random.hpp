@@ -63,7 +63,7 @@ public:
         return generator.Range(0.f, Math::twoPi);
     }
 
-    static float GetBool()
+    static bool GetBool()
     {
         return GetNormal() > 0.5;
     }

@@ -8,11 +8,13 @@ namespace Anggur {
 class Scene
 {
 public:
-    void Reattach();
+    void Restart();
 
-    virtual void OnAttach() {}
-    virtual void OnUpdate() {}
-    virtual void OnDetach() {}
+    virtual void Create() {}
+    virtual void Start() {}
+    virtual void Update() {}
+    virtual void Destroy() {}
+
     virtual void OnEvent(Event& event) {}
 
     virtual ~Scene() {}

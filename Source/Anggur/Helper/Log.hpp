@@ -10,5 +10,6 @@
     #define Anggur_Assert(x, ...) \
         if (!(x)) { \
             ::printf(__VA_ARGS__); \
+            ::exit(1); \
         }
 #endif

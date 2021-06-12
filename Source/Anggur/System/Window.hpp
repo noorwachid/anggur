@@ -49,17 +49,15 @@ struct WindowConfig
     std::string title;
     std::string icon;
 
-    WindowConfig():
-        flag(WindowFlag::None),
+    WindowConfig(WindowFlag flag = WindowFlag::None):
+        flag(flag),
         width(480),
-        height(360),
-        title("Untitled") {}
+        height(360) {}
 
     WindowConfig(int width, int height, WindowFlag flag = WindowFlag::None):
         flag(flag),
         width(width),
-        height(height),
-        title("Untitled") {}
+        height(height) {}
 
     WindowConfig(int width, int height, const std::string& title, WindowFlag flag = WindowFlag::None):
         flag(flag),

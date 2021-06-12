@@ -2,7 +2,7 @@
 
 namespace Anggur {
 
-class Timer
+class Time
 {
 public:
     static float delta;
