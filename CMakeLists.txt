@@ -3,43 +3,43 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(Anggur)
 
+file(GLOB Anggur_Math
+
+        "Source/Anggur/Math/*.cpp"
+        "Source/Anggur/Math/*.hpp"
+)
+
 file(GLOB Anggur_Helper   
 
 	"Source/Anggur/Helper/*.cpp"
 	"Source/Anggur/Helper/*.hpp"
 )
 
-file(GLOB Anggur_Math     
+file(GLOB Anggur_Core
 
-	"Source/Anggur/Math/*.cpp"
-	"Source/Anggur/Math/*.hpp"
+        "Source/Anggur/Core/*.cpp"
+        "Source/Anggur/Core/*.hpp"
 )
 
-file(GLOB Anggur_Renderer 
+file(GLOB Anggur_CoreEvent
 
-	"Source/Anggur/Renderer/*.cpp"
-	"Source/Anggur/Renderer/*.hpp"
+        "Source/Anggur/Core/Event/*.cpp"
+        "Source/Anggur/Core/Event/*.hpp"
 )
 
-file(GLOB Anggur_System   
+file(GLOB Anggur_Renderer
 
-        "Source/Anggur/System/*.cpp"
-        "Source/Anggur/System/*.hpp"
-)
-
-file(GLOB Anggur_SystemEvent
-
-        "Source/Anggur/System/Event/*.cpp"
-        "Source/Anggur/System/Event/*.hpp"
+        "Source/Anggur/Renderer/*.cpp"
+        "Source/Anggur/Renderer/*.hpp"
 )
 
 add_library(Anggur STATIC 
 
-	${Anggur_Helper}
-	${Anggur_Math}
+        ${Anggur_Math}
+        ${Anggur_Helper}
+        ${Anggur_Core}
+        ${Anggur_CoreEvent}
         ${Anggur_Renderer}
-        ${Anggur_System}
-        ${Anggur_SystemEvent}
 )
 
 # Local libraries
