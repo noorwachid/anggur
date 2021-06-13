@@ -3,43 +3,28 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(Anggur)
 
-file(GLOB Anggur_Math
+file(GLOB Anggur_Header
+
+        "Source/Anggur/Math/*.hpp"
+	"Source/Anggur/Helper/*.hpp"
+        "Source/Anggur/Core/*.hpp"
+        "Source/Anggur/Core/Event/*.hpp"
+        "Source/Anggur/Renderer/*.hpp"
+)
+
+file(GLOB Anggur_Source
 
         "Source/Anggur/Math/*.cpp"
-        "Source/Anggur/Math/*.hpp"
-)
-
-file(GLOB Anggur_Helper   
-
 	"Source/Anggur/Helper/*.cpp"
-	"Source/Anggur/Helper/*.hpp"
-)
-
-file(GLOB Anggur_Core
-
         "Source/Anggur/Core/*.cpp"
-        "Source/Anggur/Core/*.hpp"
-)
-
-file(GLOB Anggur_CoreEvent
-
         "Source/Anggur/Core/Event/*.cpp"
-        "Source/Anggur/Core/Event/*.hpp"
-)
-
-file(GLOB Anggur_Renderer
-
         "Source/Anggur/Renderer/*.cpp"
-        "Source/Anggur/Renderer/*.hpp"
 )
 
 add_library(Anggur STATIC 
 
-        ${Anggur_Math}
-        ${Anggur_Helper}
-        ${Anggur_Core}
-        ${Anggur_CoreEvent}
-        ${Anggur_Renderer}
+	${Anggur_Header}
+	${Anggur_Source}
 )
 
 # Local libraries
@@ -47,11 +32,7 @@ add_subdirectory(Vendor/Glad)
 add_subdirectory(Vendor/Stb)
 
 # SDL2
-#add_subdirectory(Vendor/SDL2)
 find_package(SDL2)
-
-# SDL2_mixer
-#add_subdirectory(Vendor/SDL2_mixer)
 find_package(SDL2_mixer)
 
 target_include_directories(Anggur PUBLIC Source)
@@ -66,3 +47,4 @@ target_link_libraries(Anggur
 	pthread
         ${CMAKE_DL_LIBS}
 )
+

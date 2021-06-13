@@ -30,12 +30,13 @@ public:
     Matrix ToMatrix() const
     {
         float distanceY = distance * (viewport.x / viewport.y);
-
-        return Matrix({
+        Matrix matrix({
             distance, 0, 0,
             0, distanceY, 0,
             (-origin.x + offset.x) * distance, (-origin.y + offset.y) * distanceY, 1,
         });
+        matrix.Rotate(rotation);
+        return matrix;
     }
 
     Vector ToWorldCoord(const Vector& screenCoord)
