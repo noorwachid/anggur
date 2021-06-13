@@ -7,109 +7,104 @@ namespace Anggur {
 
 SDL_Window* Input::windowHandler = nullptr;
 
-const uchar* Input::keyCurrState = nullptr;
-uchar Input::keyPrevState[Anggur_ScancodeLength];
+const uchar* Input::currScancodeMap = nullptr;
+uchar Input::prevScancodeMap[Anggur_ScancodeLength];
 
-uint Input::mouseCurrState = 0;
-uint Input::mousePrevState = 0;
-Vector Input::mousePos;
-Vector Input::mouseWheel;
+uint Input::currButtonMap = 0;
+uint Input::prevButtonMap = 0;
+Vector Input::cursor;
+Vector Input::wheel;
 
 void Input::Initialize()
 {
-    keyCurrState = SDL_GetKeyboardState(nullptr);
-    memset(keyPrevState, 0, Anggur_ScancodeLength);
+    currScancodeMap = SDL_GetKeyboardState(nullptr);
+    memset(prevScancodeMap, 0, Anggur_ScancodeLength);
 }
 
 void Input::PreUpdate()
 {
-    memcpy(keyPrevState, keyCurrState, Anggur_ScancodeLength);
+    memcpy(prevScancodeMap, currScancodeMap, Anggur_ScancodeLength);
 
-    mousePrevState = mouseCurrState;
-    mouseWheel.Set(0, 0);
+    prevButtonMap = currButtonMap;
+    wheel.Set(0, 0);
 }
 
 void Input::Update()
 {
     int x, y;
-    mouseCurrState = SDL_GetMouseState(&x, &y);
-    mousePos = Vector(x, y);
+    currButtonMap = SDL_GetMouseState(&x, &y);
+    cursor = Vector(x, y);
 }
 
-bool Input::IsPressed(Key key)
+bool Input::IsKeyPressed(Scancode scancode)
 {
-    int i = static_cast<int>(key);
-    return keyCurrState[i] == 1 && keyPrevState[i] == 0;
+    int i = static_cast<int>(scancode);
+    return currScancodeMap[i] == 1 && prevScancodeMap[i] == 0;
 }
 
-bool Input::IsHeld(Key key)
+bool Input::IsKeyHeld(Scancode scancode)
 {
-    int i = static_cast<int>(key);
-    return keyCurrState[i] && keyPrevState[i];
+    int i = static_cast<int>(scancode);
+    return currScancodeMap[i] && prevScancodeMap[i];
 }
 
-bool Input::IsReleased(Key key)
+bool Input::IsKeyReleased(Scancode scancode)
 {
-    int i = static_cast<int>(key);
-    return !keyCurrState[i] && keyPrevState[i];
+    int i = static_cast<int>(scancode);
+    return !currScancodeMap[i] && prevScancodeMap[i];
 }
 
-bool Input::IsPressed(VirtKey vir)
+bool Input::IsKeyPressed(Key key)
 {
-    int i = SDL_GetScancodeFromKey(static_cast<int>(vir));
-    return keyCurrState[i] == 1 && keyPrevState[i] == 0;
+    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
+    return currScancodeMap[i] == 1 && prevScancodeMap[i] == 0;
 }
 
-bool Input::IsHeld(VirtKey vir)
+bool Input::IsKeyHeld(Key key)
 {
-    int i = SDL_GetScancodeFromKey(static_cast<int>(vir));
-    return keyCurrState[i] && keyPrevState[i];
+    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
+    return currScancodeMap[i] && prevScancodeMap[i];
 }
 
-bool Input::IsReleased(VirtKey vir)
+bool Input::IsKeyReleased(Key key)
 {
-    int i = SDL_GetScancodeFromKey(static_cast<int>(vir));
-    return !keyCurrState[i] && keyPrevState[i];
+    int i = SDL_GetScancodeFromKey(static_cast<int>(key));
+    return !currScancodeMap[i] && prevScancodeMap[i];
 }
 
-bool Input::IsPressed(MouseButton button)
-{
-    Uint32 btn = static_cast<Uint32>(button);
-    return !(mousePrevState & btn) && (mouseCurrState & btn);
-}
-
-bool Input::IsHeld(MouseButton button)
+bool Input::IsButtonPressed(Button button)
 {
     Uint32 btn = static_cast<Uint32>(button);
-    return (mousePrevState & btn) && (mouseCurrState & btn);
+    return !(prevButtonMap & btn) && (currButtonMap & btn);
 }
 
-bool Input::IsReleased(MouseButton button)
+bool Input::IsButtonHeld(Button button)
 {
     Uint32 btn = static_cast<Uint32>(button);
-    return (mousePrevState & btn) && !(mouseCurrState & btn);
+    return (prevButtonMap & btn) && (currButtonMap & btn);
 }
 
-bool Input::IsWheelScrolled()
+bool Input::IsButtonReleased(Button button)
 {
-    return mouseWheel.y != 0.0f || mouseWheel.x != 0.0f;
+    Uint32 btn = static_cast<Uint32>(button);
+    return (prevButtonMap & btn) && !(currButtonMap & btn);
 }
 
-void Input::SetCursorPos(const Vector& pos)
+void Input::SetCursor(const Vector& pos)
 {
     int x = pos.x;
     int y = pos.y;
     SDL_WarpMouseInWindow(windowHandler, x, y);
 }
 
-Vector Input::GetCursorPos()
+Vector Input::GetCursor()
 {
-    return mousePos;
+    return cursor;
 }
 
 Vector Input::GetWheel()
 {
-    return mouseWheel;
+    return wheel;
 }
 
 

@@ -80,12 +80,12 @@ class Window
 public:
     Window(const WindowConfig& config = WindowConfig());
 
-    void SetPos(const Vector& pos);
+    void SetPosition(const Vector& pos);
     void SetSize(const Vector& size);
     void SetTitle(const std::string& title);
 
     float GetRatio();
-    Vector GetPos();
+    Vector GetPosition();
     Vector GetSize();
     const std::string& GetTitle();
     WindowFlag GetFlag();
@@ -94,7 +94,7 @@ public:
     void Close();
     void SwapBuffers();
 
-    SDL_Window* GetRawWindow();
+    SDL_Window* GetHandler();
     void* GetContext();
 
     friend class Application;

@@ -8,7 +8,7 @@ namespace Anggur {
 #define Anggur_ScancodeMask (1 << 30)
 #define Anggur_ScancodeLength 512
 
-enum class Key : int
+enum class Scancode : int
 {
     Unknown = 0,
 
@@ -259,7 +259,7 @@ enum class Key : int
     App2  = 284,
 };
 
-enum class VirtKey : int
+enum class Key : int
 {
     Unknown = 0,
 
@@ -528,7 +528,7 @@ enum class VirtKey : int
     App2  = (Anggur_ScancodeMask|284),
 };
 
-enum class ModKey : unsigned int
+enum class Modifier : unsigned int
 {
     None     = 0x0000,
     LShift   = 0x0001,
@@ -549,6 +549,6 @@ enum class ModKey : unsigned int
     Reseved  = 0x8000
 };
 
-Anggur_EnumOverloads(ModKey);
+Anggur_EnumOverloads(Modifier);
 
 }

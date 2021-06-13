@@ -33,7 +33,7 @@ Window::Window(const WindowConfig& config)
     Core::LoadGlFunctions();
 }
 
-void Window::SetPos(const Vector& pos)
+void Window::SetPosition(const Vector& pos)
 {
     SDL_SetWindowPosition(handler, pos.x, pos.y);
 }
@@ -53,7 +53,7 @@ float Window::GetRatio()
     return ratio;
 }
 
-Vector Window::GetPos()
+Vector Window::GetPosition()
 {
     int x, y;
     SDL_GetWindowPosition(handler, &x, &y);
@@ -88,7 +88,7 @@ void Window::SwapBuffers()
     SDL_GL_SwapWindow(handler);
 }
 
-SDL_Window* Window::GetRawWindow()
+SDL_Window* Window::GetHandler()
 {
     return handler;
 }

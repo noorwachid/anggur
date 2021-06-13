@@ -15,22 +15,21 @@ public:
     static void PreUpdate();
     static void Update();
 
-    static bool IsPressed(Key key);
-    static bool IsHeld(Key key);
-    static bool IsReleased(Key key);
+    static bool IsKeyPressed(Scancode scancode);
+    static bool IsKeyHeld(Scancode scancode);
+    static bool IsKeyReleased(Scancode scancode);
 
-    static bool IsPressed(VirtKey vir);
-    static bool IsHeld(VirtKey vir);
-    static bool IsReleased(VirtKey vir);
+    static bool IsKeyPressed(Key key);
+    static bool IsKeyHeld(Key key);
+    static bool IsKeyReleased(Key key);
 
-    static bool IsPressed(MouseButton button);
-    static bool IsHeld(MouseButton button);
-    static bool IsReleased(MouseButton button);
+    static bool IsButtonPressed(Button button);
+    static bool IsButtonHeld(Button button);
+    static bool IsButtonReleased(Button button);
 
-    static bool IsWheelScrolled();
+    static void SetCursor(const Vector& pos);
 
-    static void SetCursorPos(const Vector& pos);
-    static Vector GetCursorPos();
+    static Vector GetCursor();
     static Vector GetWheel();
 
     friend class Application;
@@ -38,13 +37,13 @@ public:
 private:
     static SDL_Window* windowHandler;
 
-    static const uchar* keyCurrState;
-    static uchar keyPrevState[Anggur_ScancodeLength];
+    static const uchar* currScancodeMap;
+    static uchar prevScancodeMap[Anggur_ScancodeLength];
 
-    static uint mouseCurrState;
-    static uint mousePrevState;
-    static Vector mousePos;
-    static Vector mouseWheel;
+    static uint currButtonMap;
+    static uint prevButtonMap;
+    static Vector cursor;
+    static Vector wheel;
 };
 
 }
