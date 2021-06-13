@@ -1,10 +1,10 @@
 #pragma once
 
-#include <stb_truetype.h>
-#include <stb_image_write.h>
 #include <Anggur/Helper/Primitive.hpp>
 #include <Anggur/Math/Vector.hpp>
 #include "Texture.hpp"
+
+struct stbtt_fontinfo;
 
 namespace Anggur {
 
@@ -62,7 +62,7 @@ public:
     }
 
 private:
-    stbtt_fontinfo infoData;
+    stbtt_fontinfo* infoData;
     uchar* buffer;
     size_t bufferSize;
     CharRect charRects[96];

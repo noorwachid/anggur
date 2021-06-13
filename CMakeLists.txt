@@ -3,16 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(Anggur)
 
-file(GLOB Anggur_Header
-
-        "Source/Anggur/Math/*.hpp"
-	"Source/Anggur/Helper/*.hpp"
-        "Source/Anggur/Core/*.hpp"
-        "Source/Anggur/Core/Event/*.hpp"
-        "Source/Anggur/Renderer/*.hpp"
-)
-
-file(GLOB Anggur_Source
+file(GLOB Anggur_SourceFiles
 
         "Source/Anggur/Math/*.cpp"
 	"Source/Anggur/Helper/*.cpp"
@@ -23,8 +14,7 @@ file(GLOB Anggur_Source
 
 add_library(Anggur STATIC 
 
-	${Anggur_Header}
-	${Anggur_Source}
+	${Anggur_SourceFiles}
 )
 
 # Local libraries
@@ -48,3 +38,9 @@ target_link_libraries(Anggur
         ${CMAKE_DL_LIBS}
 )
 
+
+# Installation 
+# install(TARGETS Anggur DESTINATION /usr/lib)
+# install(DIRECTORY Source/Anggur 
+# 	DESTINATION /usr/include 
+# 	FILES_MATCHING PATTERN "*.hpp")

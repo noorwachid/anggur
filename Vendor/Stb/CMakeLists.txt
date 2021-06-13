@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.3)
 
 project (Stb)
 
-add_library (Stb 
+add_library (Stb STATIC
 	stb_image.h
 	stb_image.c
 	stb_image_write.h

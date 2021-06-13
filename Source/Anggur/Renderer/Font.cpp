@@ -1,3 +1,5 @@
+#include <stb_truetype.h>
+#include <stb_image_write.h>
 #include <Anggur/Helper/Io.hpp>
 #include <Anggur/Helper/Log.hpp>
 #include "Font.hpp"
@@ -18,6 +20,11 @@ Font::~Font()
         delete[] buffer;
         buffer = nullptr;
     }
+    if (!infoData)
+    {
+        delete infoData;
+        infoData = nullptr;
+    }
 }
 
 void Font::Initialize()
@@ -30,13 +37,16 @@ void Font::Load(const std::string& path, int height)
 {
     buffer = Io::Load(path, bufferSize);
 
-    int result = stbtt_InitFont(&infoData, buffer, stbtt_GetFontOffsetForIndex(buffer, 0));
+    if (!infoData)
+        infoData = new stbtt_fontinfo;
+
+    int result = stbtt_InitFont(infoData, buffer, stbtt_GetFontOffsetForIndex(buffer, 0));
     Anggur_Assert(result, "[Renederer.Font] failed to load font");
 
-    float scale = stbtt_ScaleForPixelHeight(&infoData, height);
+    float scale = stbtt_ScaleForPixelHeight(infoData, height);
     int ascent, decent;
 
-    stbtt_GetFontVMetrics(&infoData, &ascent, &decent, 0);
+    stbtt_GetFontVMetrics(infoData, &ascent, &decent, 0);
     ascent *= scale;
     decent *= scale;
     height = (ascent - decent);
@@ -51,8 +61,8 @@ void Font::Load(const std::string& path, int height)
     {
         int ax, lsb;
         int x0, y0, x1, y1;
-        stbtt_GetCodepointHMetrics(&infoData, c, &ax, &lsb);
-        stbtt_GetCodepointBitmapBox(&infoData, c, scale, scale, &x0, &y0, &x1, &y1);
+        stbtt_GetCodepointHMetrics(infoData, c, &ax, &lsb);
+        stbtt_GetCodepointBitmapBox(infoData, c, scale, scale, &x0, &y0, &x1, &y1);
 
         ax *= scale;
 
@@ -91,7 +101,7 @@ void Font::Load(const std::string& path, int height)
 
         int byteOffset = cr.x + (cr.y * bitmapWidth);
 
-        stbtt_MakeCodepointBitmap(&infoData, bitmap + byteOffset,
+        stbtt_MakeCodepointBitmap(infoData, bitmap + byteOffset,
                                   cr.w, cr.h,
                                   bitmapWidth, scale, scale, c);
     }
