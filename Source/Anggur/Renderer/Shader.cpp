@@ -90,7 +90,7 @@ void Shader::SetMatrix(const std::string& name, const Matrix& matrix)
 void Shader::SetVector(const std::string& name, const Vector& vec)
 {
     int locId = GetLocation(name);
-    glUniform2f(locId, vec.x, vec.y);
+    glUniform2f(locId, vec.X, vec.Y);
 }
 
 void Shader::SetInt(const std::string& name, int value)

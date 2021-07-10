@@ -14,6 +14,8 @@ struct Vertex
     static const size_t length = 9;
 };
 
+Camera Camera::Main;
+
 Shader Renderer::batchShader;
 
 float* Renderer::vertexData;
@@ -151,7 +153,7 @@ void Renderer::Initialize()
     indexBuffer.Bind();
     indexBuffer.SetCapacity(sizeof(uint) * maxIndices);
 
-    viewProjectionMatrix = Matrix::identity;
+    viewProjectionMatrix = Matrix::Identity;
 
     FlushData();
 }
@@ -176,7 +178,7 @@ void Renderer::Terminate()
 
 void Renderer::SetViewport(Vector size)
 {
-    glViewport(0, 0, size.x, size.y);
+    glViewport(0, 0, size.X, size.Y);
 }
 
 void Renderer::SetMaxQuad(size_t max)
@@ -194,7 +196,7 @@ void Renderer::SetCircleSegment(size_t segment)
 
 void Renderer::ClearBackground(const Color& color)
 {
-    glClearColor(color.r, color.g, color.b, color.a);
+    glClearColor(color.R, color.G, color.B, color.A);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -222,9 +224,9 @@ void Renderer::Render()
     FlushData();
 }
 
-void Renderer::SetCamera(const Camera& camera)
+void Renderer::SetViewProjectionMatrix(const Matrix& matrix)
 {
-   viewProjectionMatrix = camera.ToMatrix();
+    viewProjectionMatrix = matrix;
 }
 
 void Renderer::FlushData()
@@ -253,17 +255,17 @@ void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, fl
             x += wordSpacing;
 
         const CharRect& cr = font.GetCharRect(ch);
-        Vector p1(p0.x + x, p0.y);
-        float x1 = cr.ratio * size;
+        Vector p1(p0.X + x, p0.Y);
+        float x1 = cr.Ratio * size;
 
         AddQuadx(p1,
-                 {p1.x + x1, p1.y},
-                 {p1.x + x1, p1.y + size},
-                 {p1.x, p1.y + size},
-                 {cr.texOffsetX, 0},
-                 {cr.texOffsetX + cr.texClipX, 0},
-                 {cr.texOffsetX + cr.texClipX, 1},
-                 {cr.texOffsetX, 1}, font.GetTexture(), c);
+                 {p1.X + x1, p1.Y},
+                 {p1.X + x1, p1.Y + size},
+                 {p1.X, p1.Y + size},
+                 {cr.TexOffsetX, 0},
+                 {cr.TexOffsetX + cr.TexClipX, 0},
+                 {cr.TexOffsetX + cr.TexClipX, 1},
+                 {cr.TexOffsetX, 1}, font.GetTexture(), c);
 
         x += x1 + charSpacing;
     }
@@ -272,16 +274,16 @@ void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, fl
 void Renderer::AddText(Font& font, int ch, const Vector& p0, float size, const Color& c)
 {
     const CharRect& cr = font.GetCharRect(ch);
-    float x1 = cr.ratio * size;
+    float x1 = cr.Ratio * size;
 
     AddQuadx(p0,
-             {p0.x + x1, p0.y},
-             {p0.x + x1, p0.y + size},
-             {p0.x, p0.y + size},
-             {cr.texOffsetX, 0},
-             {cr.texOffsetX + cr.texClipX, 0},
-             {cr.texOffsetX + cr.texClipX, 1},
-             {cr.texOffsetX, 1}, font.GetTexture(), c);
+             {p0.X + x1, p0.Y},
+             {p0.X + x1, p0.Y + size},
+             {p0.X, p0.Y + size},
+             {cr.TexOffsetX, 0},
+             {cr.TexOffsetX + cr.TexClipX, 0},
+             {cr.TexOffsetX + cr.TexClipX, 1},
+             {cr.TexOffsetX, 1}, font.GetTexture(), c);
 
 }
 
@@ -327,9 +329,9 @@ void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2,
     CheckLimit(3, 3);
 
     float vertices[] = {
-        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p0.X, p0.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p1.X, p1.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p2.X, p2.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
     };
 
     uint indices[] = { 0, 1, 2 };
@@ -342,10 +344,10 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
     CheckLimit(4, 6);
 
     float vertices[] = {
-        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p3.x, p3.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p0.X, p0.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p1.X, p1.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p2.X, p2.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p3.X, p3.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
     };
 
     uint indices[] = {
@@ -361,10 +363,10 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
     CheckLimit(4, 6);
 
     float vertices[] = {
-        p0.x, p0.y, c0.r, c0.g, c0.b, c0.a, 0.f, 0.f, -1,
-        p1.x, p1.y, c1.r, c1.g, c1.b, c1.a, 0.f, 0.f, -1,
-        p2.x, p2.y, c2.r, c2.g, c2.b, c2.a, 0.f, 0.f, -1,
-        p3.x, p3.y, c3.r, c3.g, c3.b, c3.a, 0.f, 0.f, -1,
+        p0.X, p0.Y, c0.R, c0.G, c0.B, c0.A, 0.f, 0.f, -1,
+        p1.X, p1.Y, c1.R, c1.G, c1.B, c1.A, 0.f, 0.f, -1,
+        p2.X, p2.Y, c2.R, c2.G, c2.B, c2.A, 0.f, 0.f, -1,
+        p3.X, p3.Y, c3.R, c3.G, c3.B, c3.A, 0.f, 0.f, -1,
     };
 
     uint indices[] = {
@@ -379,9 +381,9 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 {
     AddQuad(
         p0,
-        Vector(p0.x + w, p0.y),
-        Vector(p0.x + w, p0.y + h),
-        Vector(p0.x,     p0.y + h),
+        Vector(p0.X + w, p0.Y),
+        Vector(p0.X + w, p0.Y + h),
+        Vector(p0.X,     p0.Y + h),
         c
     );
 }
@@ -389,10 +391,10 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 void Renderer::AddBox(const Vector& position, const Vector& radii, const Color& c)
 {
     AddQuad(
-        Vector(position.x - radii.x, position.y - radii.y),
-        Vector(position.x + radii.x, position.y - radii.y),
-        Vector(position.x + radii.x, position.y + radii.y),
-        Vector(position.x - radii.x, position.y + radii.y),
+        Vector(position.X - radii.X, position.Y - radii.Y),
+        Vector(position.X + radii.X, position.Y - radii.Y),
+        Vector(position.X + radii.X, position.Y + radii.Y),
+        Vector(position.X - radii.X, position.Y + radii.Y),
         c
     );
 }
@@ -405,13 +407,13 @@ void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
 
     for (size_t i = 0, offset = 0; i < ps.size(); ++i)
     {
-        vertices[offset + 0] = ps[i].x;
-        vertices[offset + 1] = ps[i].y;
+        vertices[offset + 0] = ps[i].X;
+        vertices[offset + 1] = ps[i].Y;
 
-        vertices[offset + 2] = c.r;
-        vertices[offset + 3] = c.g;
-        vertices[offset + 4] = c.b;
-        vertices[offset + 5] = c.a;
+        vertices[offset + 2] = c.R;
+        vertices[offset + 3] = c.G;
+        vertices[offset + 4] = c.B;
+        vertices[offset + 5] = c.A;
 
         vertices[offset + 6] = 0;
         vertices[offset + 7] = 0;
@@ -441,7 +443,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
 
     CheckLimit(segments, triangles * 3);
 
-    float theta           = Math::twoPi / segments;
+    float theta           = Math::TwoPi / segments;
     float tangetialFactor = Math::Tan(theta);
     float radialFactor    = Math::Cos(theta);
 
@@ -453,13 +455,13 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
 
     for (size_t i = 0, offset = 0; i < segments; i++)
     {
-        vertices[offset + 0] = x + p0.x;
-        vertices[offset + 1] = y + p0.y;
+        vertices[offset + 0] = x + p0.X;
+        vertices[offset + 1] = y + p0.Y;
 
-        vertices[offset + 2] = c.r;
-        vertices[offset + 3] = c.g;
-        vertices[offset + 4] = c.b;
-        vertices[offset + 5] = c.a;
+        vertices[offset + 2] = c.R;
+        vertices[offset + 3] = c.G;
+        vertices[offset + 4] = c.B;
+        vertices[offset + 5] = c.A;
 
         vertices[offset + 6] = 0;
         vertices[offset + 7] = 0;
@@ -511,9 +513,9 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, c
     Matrix m = f.ToMatrix();
     AddQuad(
         p0 * m,
-        Vector(p0.x + w, p0.y) * m,
-        Vector(p0.x + w, p0.y + h) * m,
-        Vector(p0.x,     p0.y + h) * m,
+        Vector(p0.X + w, p0.Y) * m,
+        Vector(p0.X + w, p0.Y + h) * m,
+        Vector(p0.X,     p0.Y + h) * m,
         c
     );
 }
@@ -522,10 +524,10 @@ void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, con
 {
     Matrix m = f.ToMatrix();
     AddQuad(
-        Vector(p0.x - r.x, p0.y - r.y) * m,
-        Vector(p0.x + r.x, p0.y - r.y) * m,
-        Vector(p0.x + r.x, p0.y + r.y) * m,
-        Vector(p0.x - r.x, p0.y + r.y) * m,
+        Vector(p0.X - r.X, p0.Y - r.Y) * m,
+        Vector(p0.X + r.X, p0.Y - r.Y) * m,
+        Vector(p0.X + r.X, p0.Y + r.Y) * m,
+        Vector(p0.X - r.X, p0.Y + r.Y) * m,
         c
     );
 }
@@ -551,10 +553,10 @@ void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, co
         ti += maxTextureUnits;
 
     float vertices[] = {
-        p0.x, p0.y, c.r, c.g, c.b, c.a, t0.x, t0.y, ti,
-        p1.x, p1.y,	c.r, c.g, c.b, c.a, t1.x, t1.y, ti,
-        p2.x, p2.y, c.r, c.g, c.b, c.a, t2.x, t2.y, ti,
-        p3.x, p3.y, c.r, c.g, c.b, c.a, t3.x, t3.y, ti,
+        p0.X, p0.Y, c.R, c.G, c.B, c.A, t0.X, t0.Y, ti,
+        p1.X, p1.Y,	c.R, c.G, c.B, c.A, t1.X, t1.Y, ti,
+        p2.X, p2.Y, c.R, c.G, c.B, c.A, t2.X, t2.Y, ti,
+        p3.X, p3.Y, c.R, c.G, c.B, c.A, t3.X, t3.Y, ti,
     };
 
     uint indices[] = {
@@ -572,9 +574,9 @@ void Renderer::Addx(const Vector& p0, const Texture& t, const Color& c)
 
     AddQuadx(
         p0,
-        {p0.x + w, p0.y},
-        {p0.x + w, p0.y + h},
-        {p0.x, p0.y + h},
+        {p0.X + w, p0.Y},
+        {p0.X + w, p0.Y + h},
+        {p0.X, p0.Y + h},
         {0.f, 0.f},
         {1.f, 0.f},
         {1.f, 1.f},
@@ -588,9 +590,9 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
 {
     AddQuadx(
         p0,
-        {p0.x + w, p0.y},
-        {p0.x + w, p0.y + h},
-        {p0.x, p0.y + h},
+        {p0.X + w, p0.Y},
+        {p0.X + w, p0.Y + h},
+        {p0.X, p0.Y + h},
         {0, 0},
         {1, 0},
         {1, 1},
@@ -603,10 +605,10 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
 void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c)
 {
     AddQuadx(
-        {position.x - radii.x, position.y - radii.y},
-        {position.x + radii.x, position.y - radii.y},
-        {position.x + radii.x, position.y + radii.y},
-        {position.x - radii.x, position.y + radii.y},
+        {position.X - radii.X, position.Y - radii.Y},
+        {position.X + radii.X, position.Y - radii.Y},
+        {position.X + radii.X, position.Y + radii.Y},
+        {position.X - radii.X, position.Y + radii.Y},
         {0, 0},
         {1, 0},
         {1, 1},
@@ -650,7 +652,7 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
     Vector t0 = (p1 - p0).GetPerpen();
     Vector t2 = (p2 - p1).GetPerpen();
 
-    if (0 < ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)))
+    if (0 < ((p1.X - p0.X) * (p2.Y - p0.Y) - (p2.X - p0.X) * (p1.Y - p0.Y)))
     {
         t0 = -t0;
         t2 = -t2;
@@ -678,21 +680,21 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
         const Vector& p3,
         Vector& p4) -> bool
     {
-        float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
-        float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
-        float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
+        float denom = (p3.Y - p2.Y) * (p1.X - p0.X) - (p3.X - p2.X) * (p1.Y - p0.Y);
+        float numea = (p3.X - p2.X) * (p0.Y - p2.Y) - (p3.Y - p2.Y) * (p0.X - p2.X);
+        float numeb = (p1.X - p0.X) * (p0.Y - p2.Y) - (p1.Y - p0.Y) * (p0.X - p2.X);
 
         float denomAbs = Math::Abs(denom);
         float numeaAbs = Math::Abs(numea);
         float numebAbs = Math::Abs(numeb);
 
-        if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
+        if (numeaAbs < Math::Epsilon && numebAbs < Math::Epsilon && denomAbs < Math::Epsilon)
         {
             p4 = Vector::Lerp(p0, p1, 0.5);
             return true;
         }
 
-        if (denomAbs < Math::epsilon)
+        if (denomAbs < Math::Epsilon)
             return false;
 
         float mua = numea / denom;
@@ -711,18 +713,18 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
     bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
 
     float vertices[] = {
-        e0.x, e0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 0
-        e1.x, e1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 1
-        u0.x, u0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 2
-        u1.x, u1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 3
-        n0.x, n0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 4
-        n1.x, n1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 5
-        c0.x, c0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 6
-        c1.x, c1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 7
-        d0.x, d0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 8
-        d1.x, d1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 9
-        i0.x, i0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 10
-        p1.x, p1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 11
+        e0.X, e0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 0
+        e1.X, e1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 1
+        u0.X, u0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 2
+        u1.X, u1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 3
+        n0.X, n0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 4
+        n1.X, n1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 5
+        c0.X, c0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 6
+        c1.X, c1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 7
+        d0.X, d0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 8
+        d1.X, d1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 9
+        i0.X, i0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 10
+        p1.X, p1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 11
     };
 
     uint indexLength = 21;
@@ -802,12 +804,12 @@ void Renderer::AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& 
         float ti = 1.f - t;
         float tiq = ti * ti;
 
-        pt.x = tiq * p0.x +
-               ti * t2 * p1.x +
-               tq * p2.x;
-        pt.y = tiq * p0.y +
-               ti * t2 * p1.y +
-               tq * p2.y;
+        pt.X = tiq * p0.X +
+               ti * t2 * p1.X +
+               tq * p2.X;
+        pt.Y = tiq * p0.Y +
+               ti * t2 * p1.Y +
+               tq * p2.Y;
 
         return pt;
     };
@@ -838,14 +840,14 @@ void Renderer::AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, 
         float tiq = ti * ti;
         float tic = ti * ti * ti;
 
-        pt.x = tic * p0.x +
-               tiq * t3 * p1.x +
-               ti * t3 * t * p2.x +
-               tc * p3.x;
-        pt.y = tic * p0.y +
-               tiq * t3 * p1.y +
-               ti * t3 * t * p2.y +
-               tc * p3.y;
+        pt.X = tic * p0.X +
+               tiq * t3 * p1.X +
+               ti * t3 * t * p2.X +
+               tc * p3.X;
+        pt.Y = tic * p0.Y +
+               tiq * t3 * p1.Y +
+               ti * t3 * t * p2.Y +
+               tc * p3.Y;
 
         return pt;
     };

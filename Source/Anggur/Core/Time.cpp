@@ -2,7 +2,7 @@
 
 namespace Anggur {
 
-float Time::delta = 0;
-float Time::elapsed = 0;
+float Time::Delta = 0;
+float Time::Elapsed = 0;
 
 }

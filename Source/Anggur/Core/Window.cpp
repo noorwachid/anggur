@@ -35,12 +35,12 @@ Window::Window(const WindowConfig& config)
 
 void Window::SetPosition(const Vector& pos)
 {
-    SDL_SetWindowPosition(handler, pos.x, pos.y);
+    SDL_SetWindowPosition(handler, pos.X, pos.Y);
 }
 
 void Window::SetSize(const Vector& size)
 {
-    SDL_SetWindowSize(handler, size.x, size.y);
+    SDL_SetWindowSize(handler, size.X, size.Y);
 }
 
 void Window::SetTitle(const std::string& title)

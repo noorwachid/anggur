@@ -8,8 +8,8 @@ namespace Anggur {
 class Matrix
 {
 public:
-    static const Matrix identity;
-    static const Matrix zero;
+    static const Matrix Identity;
+    static const Matrix Zero;
 
     Matrix();
     Matrix(const std::initializer_list<float>& list);

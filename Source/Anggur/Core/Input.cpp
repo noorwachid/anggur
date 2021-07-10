@@ -92,8 +92,8 @@ bool Input::IsButtonReleased(Button button)
 
 void Input::SetCursor(const Vector& pos)
 {
-    int x = pos.x;
-    int y = pos.y;
+    int x = pos.X;
+    int y = pos.Y;
     SDL_WarpMouseInWindow(windowHandler, x, y);
 }
 

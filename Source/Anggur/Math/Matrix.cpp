@@ -3,13 +3,13 @@
 
 namespace Anggur {
 
-const Matrix Matrix::identity({
+const Matrix Matrix::Identity({
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f,
 });
 
-const Matrix Matrix::zero({
+const Matrix Matrix::Zero({
     0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
@@ -17,7 +17,7 @@ const Matrix Matrix::zero({
 
 Matrix::Matrix()
 {
-    *this = Matrix::identity;
+    *this = Matrix::Identity;
 }
 
 Matrix::Matrix(const std::initializer_list<float>& list)
@@ -104,16 +104,16 @@ Matrix& Matrix::operator+=(const Matrix& right)
 
 Matrix& Matrix::Translate(const Vector& v)
 {
-    data[6] += v.x;
-    data[7] += v.y;
+    data[6] += v.X;
+    data[7] += v.Y;
 
     return *this;
 }
 
 Matrix& Matrix::Scale(const Vector& v)
 {
-    data[0] *= v.x;
-    data[4] *= v.y;
+    data[0] *= v.X;
+    data[4] *= v.Y;
 
     return *this;
 }
@@ -138,15 +138,15 @@ Matrix Matrix::CreateTranslation(const Vector& v)
     return Matrix({
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
-        v.x, v.y, 1.0f,
+        v.X, v.Y, 1.0f,
     });
 }
 
 Matrix Matrix::CreateScale(const Vector& v)
 {
     return Matrix({
-        v.x, 0.f, 0.f,
-        0.f, v.y, 0.f,
+        v.X, 0.f, 0.f,
+        0.f, v.Y, 0.f,
         0.f, 0.f, 1.f,
     });
 }
@@ -177,7 +177,7 @@ Matrix Matrix::CreateInverse(const Matrix& m)
     float determinant = Det(m);
 
     if (determinant == 0.0)
-        return Matrix::zero;
+        return Matrix::Zero;
 
     float oo = 1 / determinant;
 
