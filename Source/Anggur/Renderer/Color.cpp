@@ -27,7 +27,8 @@ const Color Color::Sky = Color::CreateHex(0x2081F4);
 const Color Color::Blue = Color::CreateHex(0x2424FF);
 const Color Color::Violet = Color::CreateHex(0x7D0CE2);
 const Color Color::Purple = Color::CreateHex(0xD351FA);
-const Color Color::Grape = Color::CreateHex(0x810066);
+const Color Color::Grape = Color::CreateHex(0xA10066);
+const Color Color::Burgundy = Color::CreateHex(0x800020);
 const Color Color::Fuchsia = Color::CreateHex(0xF81895);
 const Color Color::Pink = Color::CreateHex(0xFFB1DD);
 
