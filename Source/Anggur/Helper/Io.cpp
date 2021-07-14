@@ -45,7 +45,7 @@ std::string Io::Read(const std::string& path)
     return wrapper;
 }
 
-uchar* Io::Load(const std::string& path, size_t& size)
+uchar* Io::Load(const std::string& path, usize& size)
 {
     FILE* file = fopen(path.c_str(), "rb");
 
@@ -58,7 +58,7 @@ uchar* Io::Load(const std::string& path, size_t& size)
         if (size > 0)
         {
             uchar* buffer = new uchar[size];
-            size_t read = fread(buffer, sizeof(uchar), size, file);
+            usize read = fread(buffer, sizeof(uchar), size, file);
 
             if (read != size)
                 Anggur_Log("[Core.Io] File only read partially");
@@ -76,7 +76,7 @@ uchar* Io::Load(const std::string& path, size_t& size)
 
 std::string Io::GetFileExtention(const std::string& path)
 {
-    size_t index = path.length();
+    usize index = path.length();
 
     for (auto it = path.rbegin(); it != path.rend(); ++it, --index)
         if (*it == '.')

@@ -11,11 +11,11 @@ public:
     void Destroy();
     void Bind();
     void Unbind();
-    void SetCapacity(size_t size);
-    void SetData(size_t size, uint* data);
+    void SetCapacity(usize size);
+    void SetData(usize size, uint* data);
 
 private:
-    uint id;
+    unsigned int id;
 };
 
 class VertexBuffer
@@ -25,11 +25,11 @@ public:
     void Destroy();
     void Bind();
     void Unbind();
-    void SetCapacity(size_t size);
-    void SetData(size_t size, float* data);
+    void SetCapacity(usize size);
+    void SetData(usize size, float* data);
 
 private:
-    uint id;
+    unsigned int id;
 };
 
 class VertexArray
@@ -40,10 +40,10 @@ public:
     void Bind();
     void Unbind();
 
-    void SetAttributePtr(size_t index, size_t size, size_t stride, void* offset);
+    void SetAttributePtr(usize index, usize size, usize stride, void* offset);
 
 private:
-    uint id;
+    unsigned int id;
 };
 
 }

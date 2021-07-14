@@ -11,27 +11,27 @@ struct Vertex
     float texCoord[2];
     float texIndex;
 
-    static const size_t length = 9;
+    static const usize length = 9;
 };
 
-Camera Camera::Main;
+Camera Camera::main;
 
 Shader Renderer::batchShader;
 
 float* Renderer::vertexData;
 uint* Renderer::indexData;
 
-size_t Renderer::vertexCounter;
-size_t Renderer::indexCounter;
+usize Renderer::vertexCounter;
+usize Renderer::indexCounter;
 
-size_t Renderer::maxQuad = 2048;
-size_t Renderer::circleSegment = 32;
+usize Renderer::maxQuad = 2048;
+usize Renderer::circleSegment = 32;
 
-size_t Renderer::maxVertices;
-size_t Renderer::maxIndices;
+usize Renderer::maxVertices;
+usize Renderer::maxIndices;
 
-size_t Renderer::maxTextureUnits;
-size_t Renderer::textureCounter;
+usize Renderer::maxTextureUnits;
+usize Renderer::textureCounter;
 float Renderer::textureIndex;
 int* Renderer::textureIndices;
 Texture* Renderer::textureData;
@@ -101,7 +101,7 @@ void Renderer::CreateBatchShader()
     textureData = new Texture[maxTextureUnits];
     textureIndices = new int[maxTextureUnits];
 
-    for (size_t i = 0; i < maxTextureUnits; ++i)
+    for (usize i = 0; i < maxTextureUnits; ++i)
     {
         textureIndices[i] = i;
 
@@ -153,7 +153,7 @@ void Renderer::Initialize()
     indexBuffer.Bind();
     indexBuffer.SetCapacity(sizeof(uint) * maxIndices);
 
-    viewProjectionMatrix = Matrix::Identity;
+    viewProjectionMatrix = Matrix::identity;
 
     FlushData();
 }
@@ -178,16 +178,16 @@ void Renderer::Terminate()
 
 void Renderer::SetViewport(Vector size)
 {
-    glViewport(0, 0, size.X, size.Y);
+    glViewport(0, 0, size.x, size.y);
 }
 
-void Renderer::SetMaxQuad(size_t max)
+void Renderer::SetMaxQuad(usize max)
 {
     if (max < circleSegment) max = circleSegment;
     maxQuad = max;
 }
 
-void Renderer::SetCircleSegment(size_t segment)
+void Renderer::SetCircleSegment(usize segment)
 {
     if (segment < 3) segment = 3;
     if (maxQuad < segment) maxQuad = segment;
@@ -196,7 +196,7 @@ void Renderer::SetCircleSegment(size_t segment)
 
 void Renderer::ClearBackground(const Color& color)
 {
-    glClearColor(color.R, color.G, color.B, color.A);
+    glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -209,7 +209,7 @@ void Renderer::Render()
     batchShader.SetMatrix("uViewProjection", viewProjectionMatrix);
     batchShader.SetInt("uTex", maxTextureUnits, textureIndices);
 
-    for (size_t i = 0; i < textureCounter; ++i)
+    for (usize i = 0; i < textureCounter; ++i)
         textureData[i].Bind(i);
 
     vertexBuffer.Bind();
@@ -236,7 +236,7 @@ void Renderer::FlushData()
     textureCounter = 0;
 }
 
-void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textureOffset)
+void Renderer::CheckLimit(usize vertexOffset, usize indexOffset, usize textureOffset)
 {
     if (vertexCounter + vertexOffset > maxVertices) return Render();
     if (indexCounter + indexOffset > maxIndices) return Render();
@@ -255,17 +255,17 @@ void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, fl
             x += wordSpacing;
 
         const CharRect& cr = font.GetCharRect(ch);
-        Vector p1(p0.X + x, p0.Y);
-        float x1 = cr.Ratio * size;
+        Vector p1(p0.x + x, p0.y);
+        float x1 = cr.ratio * size;
 
         AddQuadx(p1,
-                 {p1.X + x1, p1.Y},
-                 {p1.X + x1, p1.Y + size},
-                 {p1.X, p1.Y + size},
-                 {cr.TexOffsetX, 0},
-                 {cr.TexOffsetX + cr.TexClipX, 0},
-                 {cr.TexOffsetX + cr.TexClipX, 1},
-                 {cr.TexOffsetX, 1}, font.GetTexture(), c);
+                 {p1.x + x1, p1.y},
+                 {p1.x + x1, p1.y + size},
+                 {p1.x, p1.y + size},
+                 {cr.texOffsetX, 0},
+                 {cr.texOffsetX + cr.texClipX, 0},
+                 {cr.texOffsetX + cr.texClipX, 1},
+                 {cr.texOffsetX, 1}, font.GetTexture(), c);
 
         x += x1 + charSpacing;
     }
@@ -274,28 +274,28 @@ void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, fl
 void Renderer::AddText(Font& font, int ch, const Vector& p0, float size, const Color& c)
 {
     const CharRect& cr = font.GetCharRect(ch);
-    float x1 = cr.Ratio * size;
+    float x1 = cr.ratio * size;
 
     AddQuadx(p0,
-             {p0.X + x1, p0.Y},
-             {p0.X + x1, p0.Y + size},
-             {p0.X, p0.Y + size},
-             {cr.TexOffsetX, 0},
-             {cr.TexOffsetX + cr.TexClipX, 0},
-             {cr.TexOffsetX + cr.TexClipX, 1},
-             {cr.TexOffsetX, 1}, font.GetTexture(), c);
+             {p0.x + x1, p0.y},
+             {p0.x + x1, p0.y + size},
+             {p0.x, p0.y + size},
+             {cr.texOffsetX, 0},
+             {cr.texOffsetX + cr.texClipX, 0},
+             {cr.texOffsetX + cr.texClipX, 1},
+             {cr.texOffsetX, 1}, font.GetTexture(), c);
 
 }
 
-void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* indices, size_t indexLength)
+void Renderer::AddData(const float* vetices, usize vertexLength, const uint* indices, usize indexLength)
 {
-    size_t vertexOffset = vertexCounter * Vertex::length;
-    size_t vertexSize   = vertexLength * Vertex::length;
+    usize vertexOffset = vertexCounter * Vertex::length;
+    usize vertexSize   = vertexLength * Vertex::length;
 
-    for (size_t i = 0; i < vertexSize; ++i)
+    for (usize i = 0; i < vertexSize; ++i)
         vertexData[vertexOffset + i] = vetices[i];
 
-    for (size_t i = 0; i < indexLength; ++i)
+    for (usize i = 0; i < indexLength; ++i)
         indexData[indexCounter + i] = vertexCounter + indices[i];
 
     vertexCounter += vertexLength;
@@ -304,7 +304,7 @@ void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* in
 
 void Renderer::AddDatax(const Texture& texture)
 {
-    for (size_t i = 0; i < textureCounter; ++i)
+    for (usize i = 0; i < textureCounter; ++i)
     {
         if (textureData[i].GetId() == texture.GetId())
         {
@@ -329,9 +329,9 @@ void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2,
     CheckLimit(3, 3);
 
     float vertices[] = {
-        p0.X, p0.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
-        p1.X, p1.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
-        p2.X, p2.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
     };
 
     uint indices[] = { 0, 1, 2 };
@@ -344,10 +344,10 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
     CheckLimit(4, 6);
 
     float vertices[] = {
-        p0.X, p0.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
-        p1.X, p1.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
-        p2.X, p2.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
-        p3.X, p3.Y, c.R, c.G, c.B, c.A, 0.f, 0.f, -1,
+        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        p3.x, p3.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
     };
 
     uint indices[] = {
@@ -363,10 +363,10 @@ void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, con
     CheckLimit(4, 6);
 
     float vertices[] = {
-        p0.X, p0.Y, c0.R, c0.G, c0.B, c0.A, 0.f, 0.f, -1,
-        p1.X, p1.Y, c1.R, c1.G, c1.B, c1.A, 0.f, 0.f, -1,
-        p2.X, p2.Y, c2.R, c2.G, c2.B, c2.A, 0.f, 0.f, -1,
-        p3.X, p3.Y, c3.R, c3.G, c3.B, c3.A, 0.f, 0.f, -1,
+        p0.x, p0.y, c0.r, c0.g, c0.b, c0.a, 0.f, 0.f, -1,
+        p1.x, p1.y, c1.r, c1.g, c1.b, c1.a, 0.f, 0.f, -1,
+        p2.x, p2.y, c2.r, c2.g, c2.b, c2.a, 0.f, 0.f, -1,
+        p3.x, p3.y, c3.r, c3.g, c3.b, c3.a, 0.f, 0.f, -1,
     };
 
     uint indices[] = {
@@ -381,9 +381,9 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 {
     AddQuad(
         p0,
-        Vector(p0.X + w, p0.Y),
-        Vector(p0.X + w, p0.Y + h),
-        Vector(p0.X,     p0.Y + h),
+        Vector(p0.x + w, p0.y),
+        Vector(p0.x + w, p0.y + h),
+        Vector(p0.x,     p0.y + h),
         c
     );
 }
@@ -391,29 +391,29 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
 void Renderer::AddBox(const Vector& position, const Vector& radii, const Color& c)
 {
     AddQuad(
-        Vector(position.X - radii.X, position.Y - radii.Y),
-        Vector(position.X + radii.X, position.Y - radii.Y),
-        Vector(position.X + radii.X, position.Y + radii.Y),
-        Vector(position.X - radii.X, position.Y + radii.Y),
+        Vector(position.x - radii.x, position.y - radii.y),
+        Vector(position.x + radii.x, position.y - radii.y),
+        Vector(position.x + radii.x, position.y + radii.y),
+        Vector(position.x - radii.x, position.y + radii.y),
         c
     );
 }
 
 void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
 {
-    size_t triangles = ps.size() - 2;
+    usize triangles = ps.size() - 2;
     uint indices[triangles * 3];
     float vertices[ps.size() * Vertex::length];
 
-    for (size_t i = 0, offset = 0; i < ps.size(); ++i)
+    for (usize i = 0, offset = 0; i < ps.size(); ++i)
     {
-        vertices[offset + 0] = ps[i].X;
-        vertices[offset + 1] = ps[i].Y;
+        vertices[offset + 0] = ps[i].x;
+        vertices[offset + 1] = ps[i].y;
 
-        vertices[offset + 2] = c.R;
-        vertices[offset + 3] = c.G;
-        vertices[offset + 4] = c.B;
-        vertices[offset + 5] = c.A;
+        vertices[offset + 2] = c.r;
+        vertices[offset + 3] = c.g;
+        vertices[offset + 4] = c.b;
+        vertices[offset + 5] = c.a;
 
         vertices[offset + 6] = 0;
         vertices[offset + 7] = 0;
@@ -423,7 +423,7 @@ void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
         offset += Vertex::length;
     }
 
-    for (size_t i = 0, offset = 0; i < triangles; ++i)
+    for (usize i = 0, offset = 0; i < triangles; ++i)
     {
         indices[offset + 0] = 0;
         indices[offset + 1] = i + 1;
@@ -435,15 +435,15 @@ void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
     AddData(vertices, ps.size(), indices, triangles * 3);
 }
 
-void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Color& c)
+void Renderer::AddPolygon(const Vector& p0, float r, usize segments, const Color& c)
 {
     if (segments < 3) segments = 3;
 
-    size_t triangles = segments - 2;
+    usize triangles = segments - 2;
 
     CheckLimit(segments, triangles * 3);
 
-    float theta           = Math::TwoPi / segments;
+    float theta           = Math::twoPi / segments;
     float tangetialFactor = Math::Tan(theta);
     float radialFactor    = Math::Cos(theta);
 
@@ -453,15 +453,15 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
     float vertices[segments * Vertex::length];
     uint indices[triangles * 3];
 
-    for (size_t i = 0, offset = 0; i < segments; i++)
+    for (usize i = 0, offset = 0; i < segments; i++)
     {
-        vertices[offset + 0] = x + p0.X;
-        vertices[offset + 1] = y + p0.Y;
+        vertices[offset + 0] = x + p0.x;
+        vertices[offset + 1] = y + p0.y;
 
-        vertices[offset + 2] = c.R;
-        vertices[offset + 3] = c.G;
-        vertices[offset + 4] = c.B;
-        vertices[offset + 5] = c.A;
+        vertices[offset + 2] = c.r;
+        vertices[offset + 3] = c.g;
+        vertices[offset + 4] = c.b;
+        vertices[offset + 5] = c.a;
 
         vertices[offset + 6] = 0;
         vertices[offset + 7] = 0;
@@ -480,7 +480,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Colo
         offset += Vertex::length;
     }
 
-    for (size_t i = 0, offset = 0; i < triangles; ++i)
+    for (usize i = 0, offset = 0; i < triangles; ++i)
     {
         indices[offset + 0] = 0;
         indices[offset + 1] = i + 1;
@@ -513,9 +513,9 @@ void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, c
     Matrix m = f.ToMatrix();
     AddQuad(
         p0 * m,
-        Vector(p0.X + w, p0.Y) * m,
-        Vector(p0.X + w, p0.Y + h) * m,
-        Vector(p0.X,     p0.Y + h) * m,
+        Vector(p0.x + w, p0.y) * m,
+        Vector(p0.x + w, p0.y + h) * m,
+        Vector(p0.x,     p0.y + h) * m,
         c
     );
 }
@@ -524,15 +524,15 @@ void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, con
 {
     Matrix m = f.ToMatrix();
     AddQuad(
-        Vector(p0.X - r.X, p0.Y - r.Y) * m,
-        Vector(p0.X + r.X, p0.Y - r.Y) * m,
-        Vector(p0.X + r.X, p0.Y + r.Y) * m,
-        Vector(p0.X - r.X, p0.Y + r.Y) * m,
+        Vector(p0.x - r.x, p0.y - r.y) * m,
+        Vector(p0.x + r.x, p0.y - r.y) * m,
+        Vector(p0.x + r.x, p0.y + r.y) * m,
+        Vector(p0.x - r.x, p0.y + r.y) * m,
         c
     );
 }
 
-void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c)
+void Renderer::AddPolygon(const Vector& p0, float r, usize segments, const Transform& f, const Color& c)
 {
     AddPolygon(p0 * f.ToMatrix(), r, segments, c);
 }
@@ -553,10 +553,10 @@ void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, co
         ti += maxTextureUnits;
 
     float vertices[] = {
-        p0.X, p0.Y, c.R, c.G, c.B, c.A, t0.X, t0.Y, ti,
-        p1.X, p1.Y,	c.R, c.G, c.B, c.A, t1.X, t1.Y, ti,
-        p2.X, p2.Y, c.R, c.G, c.B, c.A, t2.X, t2.Y, ti,
-        p3.X, p3.Y, c.R, c.G, c.B, c.A, t3.X, t3.Y, ti,
+        p0.x, p0.y, c.r, c.g, c.b, c.a, t0.x, t0.y, ti,
+        p1.x, p1.y,	c.r, c.g, c.b, c.a, t1.x, t1.y, ti,
+        p2.x, p2.y, c.r, c.g, c.b, c.a, t2.x, t2.y, ti,
+        p3.x, p3.y, c.r, c.g, c.b, c.a, t3.x, t3.y, ti,
     };
 
     uint indices[] = {
@@ -574,9 +574,9 @@ void Renderer::Addx(const Vector& p0, const Texture& t, const Color& c)
 
     AddQuadx(
         p0,
-        {p0.X + w, p0.Y},
-        {p0.X + w, p0.Y + h},
-        {p0.X, p0.Y + h},
+        {p0.x + w, p0.y},
+        {p0.x + w, p0.y + h},
+        {p0.x, p0.y + h},
         {0.f, 0.f},
         {1.f, 0.f},
         {1.f, 1.f},
@@ -590,9 +590,9 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
 {
     AddQuadx(
         p0,
-        {p0.X + w, p0.Y},
-        {p0.X + w, p0.Y + h},
-        {p0.X, p0.Y + h},
+        {p0.x + w, p0.y},
+        {p0.x + w, p0.y + h},
+        {p0.x, p0.y + h},
         {0, 0},
         {1, 0},
         {1, 1},
@@ -605,10 +605,10 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
 void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c)
 {
     AddQuadx(
-        {position.X - radii.X, position.Y - radii.Y},
-        {position.X + radii.X, position.Y - radii.Y},
-        {position.X + radii.X, position.Y + radii.Y},
-        {position.X - radii.X, position.Y + radii.Y},
+        {position.x - radii.x, position.y - radii.y},
+        {position.x + radii.x, position.y - radii.y},
+        {position.x + radii.x, position.y + radii.y},
+        {position.x - radii.x, position.y + radii.y},
         {0, 0},
         {1, 0},
         {1, 1},
@@ -652,7 +652,7 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
     Vector t0 = (p1 - p0).GetPerpen();
     Vector t2 = (p2 - p1).GetPerpen();
 
-    if (0 < ((p1.X - p0.X) * (p2.Y - p0.Y) - (p2.X - p0.X) * (p1.Y - p0.Y)))
+    if (0 < ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)))
     {
         t0 = -t0;
         t2 = -t2;
@@ -680,21 +680,21 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
         const Vector& p3,
         Vector& p4) -> bool
     {
-        float denom = (p3.Y - p2.Y) * (p1.X - p0.X) - (p3.X - p2.X) * (p1.Y - p0.Y);
-        float numea = (p3.X - p2.X) * (p0.Y - p2.Y) - (p3.Y - p2.Y) * (p0.X - p2.X);
-        float numeb = (p1.X - p0.X) * (p0.Y - p2.Y) - (p1.Y - p0.Y) * (p0.X - p2.X);
+        float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
+        float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
+        float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
 
         float denomAbs = Math::Abs(denom);
         float numeaAbs = Math::Abs(numea);
         float numebAbs = Math::Abs(numeb);
 
-        if (numeaAbs < Math::Epsilon && numebAbs < Math::Epsilon && denomAbs < Math::Epsilon)
+        if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
         {
             p4 = Vector::Lerp(p0, p1, 0.5);
             return true;
         }
 
-        if (denomAbs < Math::Epsilon)
+        if (denomAbs < Math::epsilon)
             return false;
 
         float mua = numea / denom;
@@ -713,18 +713,18 @@ void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, f
     bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
 
     float vertices[] = {
-        e0.X, e0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 0
-        e1.X, e1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 1
-        u0.X, u0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 2
-        u1.X, u1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 3
-        n0.X, n0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 4
-        n1.X, n1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 5
-        c0.X, c0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 6
-        c1.X, c1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 7
-        d0.X, d0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 8
-        d1.X, d1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 9
-        i0.X, i0.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 10
-        p1.X, p1.Y, c.R, c.G, c.B, c.A, 0, 0, -1, // 11
+        e0.x, e0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 0
+        e1.x, e1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 1
+        u0.x, u0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 2
+        u1.x, u1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 3
+        n0.x, n0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 4
+        n1.x, n1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 5
+        c0.x, c0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 6
+        c1.x, c1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 7
+        d0.x, d0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 8
+        d1.x, d1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 9
+        i0.x, i0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 10
+        p1.x, p1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 11
     };
 
     uint indexLength = 21;
@@ -763,10 +763,10 @@ void Renderer::AddPolyline(const std::vector<Vector>& ps, float w, const Color& 
     {
         std::vector<Vector> ms;
 
-        for (size_t i = 0; i < ps.size() - 1; ++i)
+        for (usize i = 0; i < ps.size() - 1; ++i)
             ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
 
-        for (size_t i = 1; i < ms.size(); ++i)
+        for (usize i = 1; i < ms.size(); ++i)
             AddAnchor(ms[i - 1], ps[i], ms[i], w, c);
 
         AddTerminator(ps.front(), ms.front(), w, c);
@@ -780,10 +780,10 @@ void Renderer::AddPolyring(const std::vector<Vector>& ps, float w, const Color& 
     {
         std::vector<Vector> ms;
 
-        for (size_t i = 0; i < ps.size() - 1; ++i)
+        for (usize i = 0; i < ps.size() - 1; ++i)
             ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
 
-        for (size_t i = 1; i < ms.size(); ++i)
+        for (usize i = 1; i < ms.size(); ++i)
             AddAnchor(ms[i - 1], ps[i], ms[i], w, c);
 
         Vector m = Vector::Lerp(ps.front(), ps.back(), 0.5);
@@ -804,12 +804,12 @@ void Renderer::AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& 
         float ti = 1.f - t;
         float tiq = ti * ti;
 
-        pt.X = tiq * p0.X +
-               ti * t2 * p1.X +
-               tq * p2.X;
-        pt.Y = tiq * p0.Y +
-               ti * t2 * p1.Y +
-               tq * p2.Y;
+        pt.x = tiq * p0.x +
+               ti * t2 * p1.x +
+               tq * p2.x;
+        pt.y = tiq * p0.y +
+               ti * t2 * p1.y +
+               tq * p2.y;
 
         return pt;
     };
@@ -840,14 +840,14 @@ void Renderer::AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, 
         float tiq = ti * ti;
         float tic = ti * ti * ti;
 
-        pt.X = tic * p0.X +
-               tiq * t3 * p1.X +
-               ti * t3 * t * p2.X +
-               tc * p3.X;
-        pt.Y = tic * p0.Y +
-               tiq * t3 * p1.Y +
-               ti * t3 * t * p2.Y +
-               tc * p3.Y;
+        pt.x = tic * p0.x +
+               tiq * t3 * p1.x +
+               ti * t3 * t * p2.x +
+               tc * p3.x;
+        pt.y = tic * p0.y +
+               tiq * t3 * p1.y +
+               ti * t3 * t * p2.y +
+               tc * p3.y;
 
         return pt;
     };

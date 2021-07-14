@@ -3,8 +3,8 @@
 
 namespace Anggur {
 
-Vector Vector::Zero(0, 0);
-Vector Vector::One(1, 1);
+Vector Vector::zero(0, 0);
+Vector Vector::one(1, 1);
 
 Vector::Vector()
 {
@@ -23,119 +23,119 @@ Vector::Vector(float x, float y)
 
 const float* Vector::ToFloatPtr() const
 {
-    return &X;
+    return &x;
 }
 
 float* Vector::ToFloatPtr()
 {
-    return &X;
+    return &x;
 }
 
 void Vector::Set(float v)
 {
-    X = v;
-    Y = v;
+    x = v;
+    y = v;
 }
 
 void Vector::Set(float x, float y)
 {
-    X = x;
-    Y = y;
+    this->x = x;
+    this->y = y;
 }
 
 void Vector::SetPolar(float angle, float length)
 {
-    X = Math::Cos(angle) * length;
-    Y = Math::Sin(angle) * length;
+    x = Math::Cos(angle) * length;
+    y = Math::Sin(angle) * length;
 }
 
 Vector Vector::operator+(const Vector& v) const
 {
-    return Vector(X + v.X, Y + v.Y);
+    return Vector(x + v.x, y + v.y);
 }
 
 Vector Vector::operator-(const Vector& v) const
 {
-    return Vector(X - v.X, Y - v.Y);
+    return Vector(x - v.x, y - v.y);
 }
 
 Vector Vector::operator*(const Vector& v) const
 {
-    return Vector(X * v.X, Y * v.Y);
+    return Vector(x * v.x, y * v.y);
 }
 
 Vector Vector::operator+(float scalar) const
 {
-    return Vector(X + scalar, Y + scalar);
+    return Vector(x + scalar, y + scalar);
 }
 
 Vector Vector::operator-(float scalar) const
 {
-    return Vector(X - scalar, Y - scalar);
+    return Vector(x - scalar, y - scalar);
 }
 
 Vector Vector::operator*(float scalar) const
 {
-    return Vector(X * scalar, Y * scalar);
+    return Vector(x * scalar, y * scalar);
 }
 
 Vector Vector::operator/(float scalar) const
 {
-        return Vector(X / scalar, Y / scalar);
+        return Vector(x / scalar, y / scalar);
 }
 
 Vector Vector::operator*(const Matrix& m) const
 {
     return Vector(
-        m[0] * X + m[3] * Y + m[6],
-        m[1] * X + m[4] * Y + m[7]
+        m[0] * x + m[3] * y + m[6],
+        m[1] * x + m[4] * y + m[7]
     );
 }
 
 Vector Vector::operator-() const
 {
-    return Vector(-X, -Y);
+    return Vector(-x, -y);
 }
 
 Vector& Vector::operator+=(float scalar)
 {
-    X += scalar;
-    Y += scalar;
+    x += scalar;
+    y += scalar;
     return *this;
 }
 
 Vector& Vector::operator-=(float scalar)
 {
-    X -= scalar;
-    Y -= scalar;
+    x -= scalar;
+    y -= scalar;
     return *this;
 }
 
 Vector& Vector::operator*=(float scalar)
 {
-    X *= scalar;
-    Y *= scalar;
+    x *= scalar;
+    y *= scalar;
     return *this;
 }
 
 Vector& Vector::operator/=(float scalar)
 {
-    X /= scalar;
-    Y /= scalar;
+    x /= scalar;
+    y /= scalar;
     return *this;
 }
 
 Vector& Vector::operator+=(const Vector& other)
 {
-    X += other.X;
-    Y += other.Y;
+    x += other.x;
+    y += other.y;
     return *this;
 }
 
 Vector& Vector::operator-=(const Vector& other)
 {
-    X -= other.X;
-    Y -= other.Y;
+    x -= other.x;
+    y -= other.y;
     return *this;
 }
 
@@ -147,7 +147,7 @@ Vector& Vector::operator*=(const Matrix& m)
 
 float Vector::GetLengthSq() const
 {
-    return (X*X + Y*Y);
+    return (x*x + y*y);
 }
 
 float Vector::GetLength() const
@@ -164,7 +164,7 @@ Vector& Vector::SetLength(float x)
 
 float Vector::GetAngle() const
 {
-    return Math::Atan(Y, X);
+    return Math::Atan(y, x);
 }
 
 Vector& Vector::SetAngle(float theta)
@@ -175,7 +175,7 @@ Vector& Vector::SetAngle(float theta)
 
 Vector Vector::GetPerpen() const
 {
-    return Vector(-Y, X);
+    return Vector(-y, x);
 }
 
 Vector& Vector::SetLengthLimit(float x)
@@ -189,19 +189,19 @@ Vector& Vector::Normalize()
 {
     float t = GetLength();
     if (t == 0) return *this;
-    X /= t;
-    Y /= t;
+    x /= t;
+    y /= t;
     return *this;
 }
 
 float Vector::Dot(const Vector& a, const Vector& b)
 {
-    return a.X * b.X + a.Y * b.Y;
+    return a.x * b.x + a.y * b.y;
 }
 
 float Vector::Cross(const Vector& a, const Vector& b)
 {
-    return a.X * b.Y - a.Y * b.X;
+    return a.x * b.y - a.y * b.x;
 }
 
 Vector Vector::Normalize(const Vector& vec)
@@ -223,8 +223,8 @@ float Vector::GetLength(const Vector& a, const Vector& b)
 
 float Vector::GetLengthSq(const Vector& a, const Vector& b)
 {
-    float pa =  a.X - b.X;
-    float pb =  a.Y - b.Y;
+    float pa =  a.x - b.x;
+    float pb =  a.y - b.y;
 
     return pa * pa + pb * pb;
 }
@@ -242,7 +242,7 @@ float Vector::GetDist(const Vector& a, const Vector& b)
 float Vector::GetDistSq(const Vector& a, const Vector& b)
 {
     Vector c = a - b;
-    return (c.X * c.X) + (c.Y * c.Y);
+    return (c.x * c.x) + (c.y * c.y);
 }
 
 Vector Vector::CreatePolar(float angle, float length)

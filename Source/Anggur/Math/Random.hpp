@@ -60,7 +60,7 @@ public:
 
     static float GetAngle()
     {
-        return generator.Range(0.f, Math::TwoPi);
+        return generator.Range(0.f, Math::twoPi);
     }
 
     static bool GetBool()

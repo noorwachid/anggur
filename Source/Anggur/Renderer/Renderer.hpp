@@ -22,29 +22,31 @@ struct Camera
 public:
     Camera()
     {
-        Viewport = Vector::One;
-        Distance = 1.0;
-        Rotation = 0.0;
+        origin   = Vector::zero;
+        offset   = Vector::zero;
+        viewport = Vector::one;
+        distance = 1.0;
+        rotation = 0.0;
     }
 
     Matrix ToMatrix() const
     {
-        float distanceY = Distance * (Viewport.X / Viewport.Y);
+        float distanceY = distance * (viewport.x / viewport.y);
         Matrix matrix({
-            Distance, 0, 0,
+            distance, 0, 0,
             0, distanceY, 0,
-            (-Origin.X + Offset.X) * Distance, (-Origin.Y + Offset.Y) * distanceY, 1,
+            (-origin.x + offset.x) * distance, (-origin.y + offset.y) * distanceY, 1,
         });
-        matrix.Rotate(Rotation);
+        matrix.Rotate(rotation);
         return matrix;
     }
 
     Vector ToWorldCoord(const Vector& screenCoord)
     {
-        float distanceY = Distance * (Viewport.X / Viewport.Y);
+        float distanceY = distance * (viewport.x / viewport.y);
         Vector result(
-            (2.0 * screenCoord.X) / Viewport.X - 1.0,
-           -(2.0 * screenCoord.Y) / Viewport.Y + 1.0
+            (2.0 * screenCoord.x) / viewport.x - 1.0,
+           -(2.0 * screenCoord.y) / viewport.y + 1.0
         );
 
         return result * Matrix::CreateInverse(ToMatrix());
@@ -52,32 +54,32 @@ public:
 
     void SetRatio(float ratio)
     {
-        Viewport.Y = Viewport.X * ratio;
+        viewport.y = viewport.x * ratio;
     }
 
     float GetRatio()
     {
-        return Viewport.X / Viewport.Y;
+        return viewport.x / viewport.y;
     }
 
     Vector GetVisibleTopLeftWorldCoord()
     {
-        return ToWorldCoord(Vector::Zero);
+        return ToWorldCoord(Vector::zero);
     }
 
     Vector GetVisibleBottomRightWorldCoord()
     {
-        return ToWorldCoord(Viewport);
+        return ToWorldCoord(viewport);
     }
 
-    float Distance;
-    float Rotation;
+    float distance;
+    float rotation;
 
-    Vector Origin;
-    Vector Offset;
-    Vector Viewport;
+    Vector origin;
+    Vector offset;
+    Vector viewport;
 
-    static Camera Main;
+    static Camera main;
 };
 
 struct Transform
@@ -86,7 +88,7 @@ struct Transform
     float rotation;
     Vector scale;
 
-    Transform(Vector t = Vector(), float r = 0, Vector s = Vector::One):
+    Transform(Vector t = Vector(), float r = 0, Vector s = Vector::one):
         translation(t),
         rotation(r),
         scale(s)
@@ -103,9 +105,9 @@ struct Transform
 
 struct TextOption
 {
-    float Size;
-    bool XCentering;
-    bool YCentering;
+    float size;
+    bool xCentering;
+    bool yCentering;
 };
 
 class Renderer
@@ -118,74 +120,74 @@ public:
     static void Terminate();
 
     static void SetViewport(Vector size);
-    static void SetMaxQuad(size_t max = 2048);
-    static void SetCircleSegment(size_t segment);
+    static void SetMaxQuad(usize max = 2048);
+    static void SetCircleSegment(usize segment);
 
-    static void CheckLimit(size_t vertexOffset = 0, size_t indexOffset = 0, size_t textureOffset = 0);
+    static void CheckLimit(usize vertexOffset = 0, usize indexOffset = 0, usize textureOffset = 0);
     static void Render();
 
     static void SetViewProjectionMatrix(const Matrix& matrix);
 
     // NEW API
-    static void AddData(const float* vertexData, size_t vertexLength, const uint* indexData, size_t indexLength);
+    static void AddData(const float* vertexData, usize vertexLength, const uint* indexData, usize indexLength);
     static void AddDatax(const Texture& texture);
     static void FlushData();
 
     static void SetDrawMode(DrawMode mode);
 
-    static void ClearBackground(const Color& color = Color::Black);
+    static void ClearBackground(const Color& color = Color::black);
 
     // -- Primitives
-    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::White);
-    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c = Color::White);
+    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c = Color::white);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c = Color::white);
     static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c0, const Color& c1, const Color& c2, const Color& c3);
-    static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::White);
-    static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::White);
-    static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::White);
-    static void AddCircle(const Vector& p0, float r, const Color& c = Color::White);
+    static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::white);
+    static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, usize segments, const Color& c = Color::white);
+    static void AddCircle(const Vector& p0, float r, const Color& c = Color::white);
 
-    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c = Color::White);
-    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c = Color::White);
-    static void AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c = Color::White);
-    static void AddBox(const Vector& position, const Vector& radii, const Transform& f, const Color& c = Color::White);
-    static void AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c = Color::White);
-    static void AddCircle(const Vector& p0, float r, const Transform& f, const Color& c = Color::White);
+    static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c = Color::white);
+    static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c = Color::white);
+    static void AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c = Color::white);
+    static void AddBox(const Vector& position, const Vector& radii, const Transform& f, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, usize segments, const Transform& f, const Color& c = Color::white);
+    static void AddCircle(const Vector& p0, float r, const Transform& f, const Color& c = Color::white);
 
     // -- Textures
-    static void Addx(const Vector& p0, const Texture& t, const Color& c = Color::White);
+    static void Addx(const Vector& p0, const Texture& t, const Color& c = Color::white);
     static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
                          const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
-                         const Texture& t, const Color& c = Color::White);
-    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c = Color::White);
-    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c = Color::White);
+                         const Texture& t, const Color& c = Color::white);
+    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c = Color::white);
+    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c = Color::white);
 
-    static void Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c = Color::White);
+    static void Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c = Color::white);
     static void AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3,
                          const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3,
-                         const Texture& t, const Transform& f, const Color& c = Color::White);
-    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c = Color::White);
-    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Transform& f, const Color& c = Color::White);
+                         const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c = Color::white);
+    static void AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Transform& f, const Color& c = Color::white);
 
     // -- Weirds
     // TODO DrawArc
-    static void AddConvex(const std::vector<Vector>& ps, const Color& c = Color::White);
+    static void AddConvex(const std::vector<Vector>& ps, const Color& c = Color::white);
 
     // -- Lines
-    static void AddTerminator(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::White);
-    static void AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::White);
-    static void AddLine(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::White);
-    static void AddPolyline(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::White);
-    static void AddPolyring(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::White);
+    static void AddTerminator(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::white);
+    static void AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::white);
+    static void AddLine(const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::white);
+    static void AddPolyline(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::white);
+    static void AddPolyring(const std::vector<Vector>& ps, float w = 0.5, const Color& c = Color::white);
 
     // -- Curves
-    static void AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::White);
-    static void AddQuadraticBzi(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::White);
-    static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::White);
+    static void AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::white);
+    static void AddQuadraticBzi(const Vector& p0, const Vector& p1, const Vector& p2, float w = 0.5, const Color& c = Color::white);
+    static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::white);
 
     // -- Texts
-    static void AddText(Font& font, int ch, const Vector& p0, float size = 1, const Color& c = Color::White);
-    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, const Color& c = Color::White);
-    static void AddText(Font& font, const std::string& text, const Vector& p0, const TextOption& o, const Color& c = Color::White);
+    static void AddText(Font& font, int ch, const Vector& p0, float size = 1, const Color& c = Color::white);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, const Color& c = Color::white);
+    static void AddText(Font& font, const std::string& text, const Vector& p0, const TextOption& o, const Color& c = Color::white);
 
 private:
     static Shader batchShader;
@@ -193,17 +195,17 @@ private:
     static float* vertexData;
     static uint* indexData;
 
-    static size_t vertexCounter;
-    static size_t indexCounter;
+    static usize vertexCounter;
+    static usize indexCounter;
 
-    static size_t maxQuad;
-    static size_t circleSegment;
+    static usize maxQuad;
+    static usize circleSegment;
 
-    static size_t maxVertices;
-    static size_t maxIndices;
+    static usize maxVertices;
+    static usize maxIndices;
 
-    static size_t maxTextureUnits;
-    static size_t textureCounter;
+    static usize maxTextureUnits;
+    static usize textureCounter;
     static float textureIndex;
     static int* textureIndices;
     static Texture* textureData;

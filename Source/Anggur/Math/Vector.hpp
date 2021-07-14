@@ -7,18 +7,18 @@ namespace Anggur {
 
 struct Vector
 {
-    float X;
-    float Y;
+    float x;
+    float y;
 
     Vector();
     Vector(float v);
-    Vector(float X, float Y);
+    Vector(float x, float y);
 
     const float* ToFloatPtr() const;
     float* ToFloatPtr();
 
     void Set(float v);
-    void Set(float X, float Y);
+    void Set(float x, float y);
     void SetPolar(float angle, float length);
 
     Vector operator+(const Vector& v) const;
@@ -48,8 +48,8 @@ struct Vector
 
     Vector GetPerpen() const;
 
-    Vector& SetLengthLimit(float X);
-    Vector& SetLength(float X);
+    Vector& SetLengthLimit(float x);
+    Vector& SetLength(float x);
     Vector& SetAngle(float theta);
     Vector& Normalize();
 
@@ -69,8 +69,8 @@ struct Vector
 
     static Vector CreatePolar(float angle, float length);
 
-    static Vector Zero;
-    static Vector One;
+    static Vector zero;
+    static Vector one;
 };
 
 }

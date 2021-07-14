@@ -130,12 +130,12 @@ void Application::Run(Scene* mainScene)
     Audio::Initialize();
     Input::Initialize();
 
-    Camera::Main.Viewport = window->GetSize();
-    Camera::Main.Distance = 0.1;
+    Camera::main.viewport = window->GetSize();
+    Camera::main.distance = 0.1;
 
     SDL_Event event;
-    Uint64 prevTimePoint = SDL_GetPerformanceCounter();
-    Time::Elapsed = 0;
+    ulong prevTimePoint = SDL_GetPerformanceCounter();
+    Time::elapsed = 0;
 
     scene = mainScene;
     if (scene)
@@ -151,15 +151,15 @@ void Application::Run(Scene* mainScene)
         while (SDL_PollEvent(&event))
             ProcessEvent(&event);
 
-        Uint64 currTimePoint = SDL_GetPerformanceCounter();
-        Time::Delta = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
-        Time::Elapsed += Time::Delta;
+        ulong currTimePoint = SDL_GetPerformanceCounter();
+        Time::delta = (currTimePoint - prevTimePoint) / static_cast<float>(SDL_GetPerformanceFrequency());
+        Time::elapsed += Time::delta;
         prevTimePoint = currTimePoint;
 
         Input::Update();
         if (scene)
         {
-            Renderer::SetViewProjectionMatrix(Camera::Main.ToMatrix());
+            Renderer::SetViewProjectionMatrix(Camera::main.ToMatrix());
             scene->Update();
         }
 

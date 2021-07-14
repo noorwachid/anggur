@@ -25,12 +25,12 @@ void VertexBuffer::Unbind()
 }
 
 
-void VertexBuffer::SetCapacity(size_t size)
+void VertexBuffer::SetCapacity(usize size)
 {
     glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-void VertexBuffer::SetData(size_t size, float* data)
+void VertexBuffer::SetData(usize size, float* data)
 {
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }
@@ -55,12 +55,12 @@ void IndexBuffer::Unbind()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void IndexBuffer::SetCapacity(size_t size)
+void IndexBuffer::SetCapacity(usize size)
 {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-void IndexBuffer::SetData(size_t size, uint* data)
+void IndexBuffer::SetData(usize size, uint* data)
 {
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
 }
@@ -85,7 +85,7 @@ void VertexArray::Unbind()
     glBindVertexArray(0);
 }
 
-void VertexArray::SetAttributePtr(size_t index, size_t size, size_t stride, void* offset)
+void VertexArray::SetAttributePtr(usize index, usize size, usize stride, void* offset)
 {
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, offset);
     glEnableVertexAttribArray(index);

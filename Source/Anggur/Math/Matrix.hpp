@@ -2,14 +2,15 @@
 
 #include <initializer_list>
 #include "Math.hpp"
+#include "Anggur/Helper/Primitive.hpp"
 
 namespace Anggur {
 
 class Matrix
 {
 public:
-    static const Matrix Identity;
-    static const Matrix Zero;
+    static const Matrix identity;
+    static const Matrix zero;
 
     Matrix();
     Matrix(const std::initializer_list<float>& list);
@@ -18,8 +19,8 @@ public:
     const float* ToFloatPtr() const;
     float* ToFloatPtr();
 
-    float& operator[](size_t index);
-    float operator[](size_t index) const;
+    float& operator[](usize index);
+    float operator[](usize index) const;
 
     Matrix operator*(const Matrix& right) const;
     Matrix operator+(const Matrix& right) const;

@@ -3,13 +3,13 @@
 
 namespace Anggur {
 
-const Matrix Matrix::Identity({
+const Matrix Matrix::identity({
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f,
 });
 
-const Matrix Matrix::Zero({
+const Matrix Matrix::zero({
     0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
@@ -17,7 +17,7 @@ const Matrix Matrix::Zero({
 
 Matrix::Matrix()
 {
-    *this = Matrix::Identity;
+    *this = Matrix::identity;
 }
 
 Matrix::Matrix(const std::initializer_list<float>& list)
@@ -27,7 +27,7 @@ Matrix::Matrix(const std::initializer_list<float>& list)
 
 void Matrix::Set(const std::initializer_list<float>& list)
 {
-    size_t i = 0;
+    usize i = 0;
     for (auto it = list.begin(); it != list.end(); ++it, ++i)
         data[i] = *it;
 }
@@ -42,12 +42,12 @@ float* Matrix::ToFloatPtr()
     return data;
 }
 
-float& Matrix::operator[](size_t index)
+float& Matrix::operator[](usize index)
 {
     return data[index];
 }
 
-float Matrix::operator[](size_t index) const
+float Matrix::operator[](usize index) const
 {
     return data[index];
 }
@@ -104,16 +104,16 @@ Matrix& Matrix::operator+=(const Matrix& right)
 
 Matrix& Matrix::Translate(const Vector& v)
 {
-    data[6] += v.X;
-    data[7] += v.Y;
+    data[6] += v.x;
+    data[7] += v.y;
 
     return *this;
 }
 
 Matrix& Matrix::Scale(const Vector& v)
 {
-    data[0] *= v.X;
-    data[4] *= v.Y;
+    data[0] *= v.x;
+    data[4] *= v.y;
 
     return *this;
 }
@@ -138,15 +138,15 @@ Matrix Matrix::CreateTranslation(const Vector& v)
     return Matrix({
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
-        v.X, v.Y, 1.0f,
+        v.x, v.y, 1.0f,
     });
 }
 
 Matrix Matrix::CreateScale(const Vector& v)
 {
     return Matrix({
-        v.X, 0.f, 0.f,
-        0.f, v.Y, 0.f,
+        v.x, 0.f, 0.f,
+        0.f, v.y, 0.f,
         0.f, 0.f, 1.f,
     });
 }
@@ -177,7 +177,7 @@ Matrix Matrix::CreateInverse(const Matrix& m)
     float determinant = Det(m);
 
     if (determinant == 0.0)
-        return Matrix::Zero;
+        return Matrix::zero;
 
     float oo = 1 / determinant;
 

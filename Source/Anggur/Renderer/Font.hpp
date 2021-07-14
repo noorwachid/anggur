@@ -10,17 +10,17 @@ namespace Anggur {
 
 struct CharRect
 {
-    int X;
-    int Y;
-    int W;
-    int H;
+    int x;
+    int y;
+    int width;
+    int height;
 
-    float Ratio;
+    float ratio;
 
-    float TexOffsetX;
-    float TexClipX;
+    float texOffsetX;
+    float texClipX;
 
-    static CharRect Empty;
+    static CharRect empty;
 };
 
 class Font
@@ -36,14 +36,14 @@ public:
     {
         if (c >= firstChar && c <= lastChar)
             return charRects[c - 32];
-        return CharRect::Empty;
+        return CharRect::empty;
     }
 
     inline CharRect GetCharRect(int c) const
     {
         if (c >= firstChar && c <= lastChar)
             return charRects[c - 32];
-        return CharRect::Empty;
+        return CharRect::empty;
     }
 
     inline Texture& GetTexture()
@@ -64,7 +64,7 @@ public:
 private:
     stbtt_fontinfo* infoData;
     uchar* buffer;
-    size_t bufferSize;
+    usize bufferSize;
     CharRect charRects[96];
 
     Texture texture;

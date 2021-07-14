@@ -5,8 +5,8 @@ namespace Anggur {
 class Time
 {
 public:
-    static float Delta;
-    static float Elapsed;
+    static float delta;
+    static float elapsed;
 };
 
 }

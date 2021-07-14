@@ -10,7 +10,7 @@ namespace Anggur {
 class Audio
 {
 public:
-    static void SetBuffer(int frequency = 44100, int bufferSize = 128);
+    static void SetBuffer(int frequency = 44100, int bufferusize = 128);
     static void SetPollSize(int size);
 
     static void Initialize();

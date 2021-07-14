@@ -90,7 +90,7 @@ void Shader::SetMatrix(const std::string& name, const Matrix& matrix)
 void Shader::SetVector(const std::string& name, const Vector& vec)
 {
     int locId = GetLocation(name);
-    glUniform2f(locId, vec.X, vec.Y);
+    glUniform2f(locId, vec.x, vec.y);
 }
 
 void Shader::SetInt(const std::string& name, int value)
@@ -99,7 +99,7 @@ void Shader::SetInt(const std::string& name, int value)
     glUniform1i(locId, value);
 }
 
-void Shader::SetInt(const std::string& name, size_t size, int* values)
+void Shader::SetInt(const std::string& name, usize size, int* values)
 {
     int locId = GetLocation(name);
     glUniform1iv(locId, size, values);
@@ -111,7 +111,7 @@ void Shader::SetFloat(const std::string& name, float value)
     glUniform1f(locId, value);
 }
 
-void Shader::SetFloat(const std::string& name, size_t size, float* values)
+void Shader::SetFloat(const std::string& name, usize size, float* values)
 {
     int locId = GetLocation(name);
     glUniform1fv(locId, size, values);

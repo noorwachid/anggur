@@ -6,7 +6,7 @@
 
 namespace Anggur {
 
-CharRect CharRect::Empty = { 0, 0, 0, 0 };
+CharRect CharRect::empty = { 0, 0, 0, 0 };
 
 Font::Font()
 {
@@ -72,10 +72,10 @@ void Font::Load(const std::string& path, int height)
         y = ascent + y0;
 
         CharRect& cr = GetCharRect(c);
-        cr.X = x0 + x;
-        cr.Y = y;
-        cr.W = w;
-        cr.H = h;
+        cr.x = x0 + x;
+        cr.y = y;
+        cr.width = w;
+        cr.height = h;
 
         x += ax + 10;
         bitmapWidth += ax + 10;
@@ -95,14 +95,14 @@ void Font::Load(const std::string& path, int height)
     for (int c = firstChar; c <= lastChar; ++c)
     {
         CharRect& cr = GetCharRect(c);
-        cr.TexOffsetX = cr.X * normalized.X;
-        cr.TexClipX = cr.W * normalized.X;
-        cr.Ratio = cr.W * normalized.Y;
+        cr.texOffsetX = cr.x * normalized.x;
+        cr.texClipX = cr.width * normalized.x;
+        cr.ratio = cr.width * normalized.y;
 
-        int byteOffset = cr.X + (cr.Y * bitmapWidth);
+        int byteOffset = cr.x + (cr.y * bitmapWidth);
 
         stbtt_MakeCodepointBitmap(infoData, bitmap + byteOffset,
-                                  cr.W, cr.H,
+                                  cr.width, cr.height,
                                   bitmapWidth, scale, scale, c);
     }
 
