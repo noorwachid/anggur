@@ -17,7 +17,7 @@ public:
     Texture(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
     ~Texture();
 
-    inline uint GetId() const { return id; }
+    inline uint GetID() const { return id; }
     inline uint GetWidth() const { return width; }
     inline uint GetHeight() const { return height; }
     inline uint GetChannels() const { return channels; }

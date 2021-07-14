@@ -7,7 +7,7 @@ namespace Anggur {
 class Shader
 {
 public:
-    uint GetId();
+    uint GetID();
     void SetVertexSource(const std::string& source);
     void SetFragmentSource(const std::string& source);
     void Compile();

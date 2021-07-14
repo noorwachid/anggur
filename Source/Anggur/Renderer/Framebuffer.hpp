@@ -11,7 +11,7 @@ public:
     Framebuffer(uint width, uint height);
     ~Framebuffer();
 
-    inline uint GetId() const { return id; }
+    inline uint GetID() const { return id; }
     inline uint GetColorAttachment() const { return colorAttachment; }
     inline uint GetWidth() const { return width; }
     inline uint GetHeight() const { return height; }

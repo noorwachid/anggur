@@ -105,7 +105,7 @@ void Texture::Bind(uint slot)
 
 bool operator==(const Texture& a, const Texture& b)
 {
-    return a.GetId() == b.GetId();
+    return a.GetID() == b.GetID();
 }
 
 }

@@ -7,7 +7,7 @@
 
 namespace Anggur {
 
-uint Shader::GetId()
+uint Shader::GetID()
 {
     return id;
 }
