@@ -4,7 +4,7 @@
 
 namespace Anggur {
 
-struct Io
+struct IO
 {
     static uchar* Load(const std::string& path, usize& size);
     static std::string Read(const std::string& path);

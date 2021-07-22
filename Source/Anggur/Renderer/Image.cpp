@@ -1,5 +1,5 @@
 #include <stb_image.h>
-#include <Anggur/Helper/Io.hpp>
+#include <Anggur/Helper/IO.hpp>
 #include <Anggur/Helper/Log.hpp>
 #include "Image.hpp"
 

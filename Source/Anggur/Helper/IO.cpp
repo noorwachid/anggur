@@ -1,9 +1,9 @@
-#include "Io.hpp"
+#include "IO.hpp"
 #include "Log.hpp"
 
 namespace Anggur {
 
-std::string Io::Read(const std::string& path)
+std::string IO::Read(const std::string& path)
 {
     std::string wrapper;
 
@@ -45,7 +45,7 @@ std::string Io::Read(const std::string& path)
     return wrapper;
 }
 
-uchar* Io::Load(const std::string& path, usize& size)
+uchar* IO::Load(const std::string& path, usize& size)
 {
     FILE* file = fopen(path.c_str(), "rb");
 
@@ -74,7 +74,7 @@ uchar* Io::Load(const std::string& path, usize& size)
     return nullptr;
 }
 
-std::string Io::GetFileExtention(const std::string& path)
+std::string IO::GetFileExtention(const std::string& path)
 {
     usize index = path.length();
 

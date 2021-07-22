@@ -1,6 +1,6 @@
 #include <stb_truetype.h>
 #include <stb_image_write.h>
-#include <Anggur/Helper/Io.hpp>
+#include <Anggur/Helper/IO.hpp>
 #include <Anggur/Helper/Log.hpp>
 #include "Font.hpp"
 
@@ -35,7 +35,7 @@ void Font::Initialize()
 
 void Font::Load(const std::string& path, int height)
 {
-    buffer = Io::Load(path, bufferSize);
+    buffer = IO::Load(path, bufferSize);
 
     if (!infoData)
         infoData = new stbtt_fontinfo;

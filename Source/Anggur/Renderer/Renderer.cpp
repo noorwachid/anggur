@@ -306,7 +306,7 @@ void Renderer::AddDatax(const Texture& texture)
 {
     for (usize i = 0; i < textureCounter; ++i)
     {
-        if (textureData[i].GetId() == texture.GetId())
+        if (textureData[i].GetID() == texture.GetID())
         {
             textureIndex = i;
             return;

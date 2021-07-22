@@ -25,7 +25,7 @@ add_subdirectory(Vendor/Stb)
 find_package(SDL2)
 find_package(SDL2_mixer)
 
-target_include_directories(Anggur PUBLIC Source)
+target_include_directories(Anggur PUBLIC Source Vendor/FastNoiseLite)
 target_include_directories(Anggur PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(Anggur
 
