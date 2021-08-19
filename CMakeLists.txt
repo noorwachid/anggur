@@ -18,15 +18,15 @@ add_library(Anggur STATIC
 )
 
 # Local libraries
-add_subdirectory(Vendor/Glad)
-add_subdirectory(Vendor/Stb)
+add_subdirectory(Libraries/Glad)
+add_subdirectory(Libraries/Stb)
 
 # SDL2
 find_package(SDL2)
 find_package(SDL2_mixer)
 find_package(Threads)
 
-target_include_directories(Anggur PUBLIC Source Vendor/FastNoiseLite)
+target_include_directories(Anggur PUBLIC Source Libraries/FastNoiseLite)
 target_include_directories(Anggur PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(Anggur
 
