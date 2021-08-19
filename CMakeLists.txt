@@ -5,11 +5,11 @@ project(Anggur)
 
 file(GLOB Anggur_SourceFiles
 
-        "Source/Anggur/Math/*.cpp"
-	"Source/Anggur/Helper/*.cpp"
-        "Source/Anggur/Core/*.cpp"
-        "Source/Anggur/Core/Event/*.cpp"
-        "Source/Anggur/Renderer/*.cpp"
+    "Source/Anggur/Math/*.cpp"
+    "Source/Anggur/Helper/*.cpp"
+    "Source/Anggur/Core/*.cpp"
+    "Source/Anggur/Core/Event/*.cpp"
+    "Source/Anggur/Renderer/*.cpp"
 )
 
 add_library(Anggur STATIC 
@@ -24,18 +24,19 @@ add_subdirectory(Vendor/Stb)
 # SDL2
 find_package(SDL2)
 find_package(SDL2_mixer)
+find_package(Threads)
 
 target_include_directories(Anggur PUBLIC Source Vendor/FastNoiseLite)
 target_include_directories(Anggur PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(Anggur
 
-	Glad
-	Stb
-	SDL2
-        SDL2_mixer
+    Glad
+    Stb
+    SDL2
+    SDL2_mixer
 
-	pthread
-        ${CMAKE_DL_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 
