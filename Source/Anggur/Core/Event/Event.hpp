@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Anggur/Helper/Primitive.hpp>
 #include <Anggur/Math/Vector.hpp>
 #include "Window.hpp"
 #include "Key.hpp"
@@ -31,7 +30,7 @@ enum class EventType
     GamepadAxis,
 };
 
-enum class EventGroup: uchar
+enum class EventGroup: uint8_t
 {
     Window  = 0x1,
     Mouse   = 0x2,

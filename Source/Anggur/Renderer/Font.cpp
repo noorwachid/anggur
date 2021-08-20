@@ -37,6 +37,9 @@ void Font::Load(const std::string& path, int height)
 {
     buffer = IO::Load(path, bufferSize);
 
+    if (!buffer)
+        std::exit(123);
+
     if (!infoData)
         infoData = new stbtt_fontinfo;
 
@@ -83,8 +86,8 @@ void Font::Load(const std::string& path, int height)
 
     normalized.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
     int bitmapSize = bitmapWidth * bitmapHeight;
-    uchar bitmap[bitmapSize];
-    uchar bitmapFlipped[bitmapSize];
+    uint8_t bitmap[bitmapSize];
+    uint8_t bitmapFlipped[bitmapSize];
 
     for (int i = 0; i < bitmapSize; ++i) // avoid undefined behaviour
     {

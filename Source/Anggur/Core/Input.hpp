@@ -37,8 +37,8 @@ public:
 private:
     static SDL_Window* windowHandler;
 
-    static const uchar* currScancodeMap;
-    static uchar prevScancodeMap[Anggur_ScancodeLength];
+    static const uint8_t* currScancodeMap;
+    static uint8_t prevScancodeMap[Anggur_ScancodeLength];
 
     static uint currButtonMap;
     static uint prevButtonMap;

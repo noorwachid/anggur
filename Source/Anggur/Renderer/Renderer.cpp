@@ -11,7 +11,7 @@ struct Vertex
     float texCoord[2];
     float texIndex;
 
-    static const usize length = 9;
+    static const size_t length = 9;
 };
 
 Camera Camera::main;
@@ -21,17 +21,17 @@ Shader Renderer::batchShader;
 float* Renderer::vertexData;
 uint* Renderer::indexData;
 
-usize Renderer::vertexCounter;
-usize Renderer::indexCounter;
+size_t Renderer::vertexCounter;
+size_t Renderer::indexCounter;
 
-usize Renderer::maxQuad = 2048;
-usize Renderer::circleSegment = 32;
+size_t Renderer::maxQuad = 2048;
+size_t Renderer::circleSegment = 32;
 
-usize Renderer::maxVertices;
-usize Renderer::maxIndices;
+size_t Renderer::maxVertices;
+size_t Renderer::maxIndices;
 
-usize Renderer::maxTextureUnits;
-usize Renderer::textureCounter;
+size_t Renderer::maxTextureUnits;
+size_t Renderer::textureCounter;
 float Renderer::textureIndex;
 int* Renderer::textureIndices;
 Texture* Renderer::textureData;
@@ -101,7 +101,7 @@ void Renderer::CreateBatchShader()
     textureData = new Texture[maxTextureUnits];
     textureIndices = new int[maxTextureUnits];
 
-    for (usize i = 0; i < maxTextureUnits; ++i)
+    for (size_t i = 0; i < maxTextureUnits; ++i)
     {
         textureIndices[i] = i;
 
@@ -181,13 +181,13 @@ void Renderer::SetViewport(Vector size)
     glViewport(0, 0, size.x, size.y);
 }
 
-void Renderer::SetMaxQuad(usize max)
+void Renderer::SetMaxQuad(size_t max)
 {
     if (max < circleSegment) max = circleSegment;
     maxQuad = max;
 }
 
-void Renderer::SetCircleSegment(usize segment)
+void Renderer::SetCircleSegment(size_t segment)
 {
     if (segment < 3) segment = 3;
     if (maxQuad < segment) maxQuad = segment;
@@ -209,7 +209,7 @@ void Renderer::Render()
     batchShader.SetMatrix("uViewProjection", viewProjectionMatrix);
     batchShader.SetInt("uTex", maxTextureUnits, textureIndices);
 
-    for (usize i = 0; i < textureCounter; ++i)
+    for (size_t i = 0; i < textureCounter; ++i)
         textureData[i].Bind(i);
 
     vertexBuffer.Bind();
@@ -236,7 +236,7 @@ void Renderer::FlushData()
     textureCounter = 0;
 }
 
-void Renderer::CheckLimit(usize vertexOffset, usize indexOffset, usize textureOffset)
+void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textureOffset)
 {
     if (vertexCounter + vertexOffset > maxVertices) return Render();
     if (indexCounter + indexOffset > maxIndices) return Render();
@@ -287,15 +287,15 @@ void Renderer::AddText(Font& font, int ch, const Vector& p0, float size, const C
 
 }
 
-void Renderer::AddData(const float* vetices, usize vertexLength, const uint* indices, usize indexLength)
+void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* indices, size_t indexLength)
 {
-    usize vertexOffset = vertexCounter * Vertex::length;
-    usize vertexSize   = vertexLength * Vertex::length;
+    size_t vertexOffset = vertexCounter * Vertex::length;
+    size_t vertexSize   = vertexLength * Vertex::length;
 
-    for (usize i = 0; i < vertexSize; ++i)
+    for (size_t i = 0; i < vertexSize; ++i)
         vertexData[vertexOffset + i] = vetices[i];
 
-    for (usize i = 0; i < indexLength; ++i)
+    for (size_t i = 0; i < indexLength; ++i)
         indexData[indexCounter + i] = vertexCounter + indices[i];
 
     vertexCounter += vertexLength;
@@ -304,7 +304,7 @@ void Renderer::AddData(const float* vetices, usize vertexLength, const uint* ind
 
 void Renderer::AddDatax(const Texture& texture)
 {
-    for (usize i = 0; i < textureCounter; ++i)
+    for (size_t i = 0; i < textureCounter; ++i)
     {
         if (textureData[i].GetID() == texture.GetID())
         {
@@ -401,11 +401,11 @@ void Renderer::AddBox(const Vector& position, const Vector& radii, const Color& 
 
 void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
 {
-    usize triangles = ps.size() - 2;
+    size_t triangles = ps.size() - 2;
     uint indices[triangles * 3];
     float vertices[ps.size() * Vertex::length];
 
-    for (usize i = 0, offset = 0; i < ps.size(); ++i)
+    for (size_t i = 0, offset = 0; i < ps.size(); ++i)
     {
         vertices[offset + 0] = ps[i].x;
         vertices[offset + 1] = ps[i].y;
@@ -423,7 +423,7 @@ void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
         offset += Vertex::length;
     }
 
-    for (usize i = 0, offset = 0; i < triangles; ++i)
+    for (size_t i = 0, offset = 0; i < triangles; ++i)
     {
         indices[offset + 0] = 0;
         indices[offset + 1] = i + 1;
@@ -435,11 +435,11 @@ void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
     AddData(vertices, ps.size(), indices, triangles * 3);
 }
 
-void Renderer::AddPolygon(const Vector& p0, float r, usize segments, const Color& c)
+void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Color& c)
 {
     if (segments < 3) segments = 3;
 
-    usize triangles = segments - 2;
+    size_t triangles = segments - 2;
 
     CheckLimit(segments, triangles * 3);
 
@@ -453,7 +453,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, usize segments, const Color
     float vertices[segments * Vertex::length];
     uint indices[triangles * 3];
 
-    for (usize i = 0, offset = 0; i < segments; i++)
+    for (size_t i = 0, offset = 0; i < segments; i++)
     {
         vertices[offset + 0] = x + p0.x;
         vertices[offset + 1] = y + p0.y;
@@ -480,7 +480,7 @@ void Renderer::AddPolygon(const Vector& p0, float r, usize segments, const Color
         offset += Vertex::length;
     }
 
-    for (usize i = 0, offset = 0; i < triangles; ++i)
+    for (size_t i = 0, offset = 0; i < triangles; ++i)
     {
         indices[offset + 0] = 0;
         indices[offset + 1] = i + 1;
@@ -532,7 +532,7 @@ void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, con
     );
 }
 
-void Renderer::AddPolygon(const Vector& p0, float r, usize segments, const Transform& f, const Color& c)
+void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c)
 {
     AddPolygon(p0 * f.ToMatrix(), r, segments, c);
 }
@@ -763,10 +763,10 @@ void Renderer::AddPolyline(const std::vector<Vector>& ps, float w, const Color& 
     {
         std::vector<Vector> ms;
 
-        for (usize i = 0; i < ps.size() - 1; ++i)
+        for (size_t i = 0; i < ps.size() - 1; ++i)
             ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
 
-        for (usize i = 1; i < ms.size(); ++i)
+        for (size_t i = 1; i < ms.size(); ++i)
             AddAnchor(ms[i - 1], ps[i], ms[i], w, c);
 
         AddTerminator(ps.front(), ms.front(), w, c);
@@ -780,10 +780,10 @@ void Renderer::AddPolyring(const std::vector<Vector>& ps, float w, const Color& 
     {
         std::vector<Vector> ms;
 
-        for (usize i = 0; i < ps.size() - 1; ++i)
+        for (size_t i = 0; i < ps.size() - 1; ++i)
             ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
 
-        for (usize i = 1; i < ms.size(); ++i)
+        for (size_t i = 1; i < ms.size(); ++i)
             AddAnchor(ms[i - 1], ps[i], ms[i], w, c);
 
         Vector m = Vector::Lerp(ps.front(), ps.back(), 0.5);

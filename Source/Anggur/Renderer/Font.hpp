@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Anggur/Helper/Primitive.hpp>
 #include <Anggur/Math/Vector.hpp>
 #include "Texture.hpp"
 
@@ -63,8 +62,8 @@ public:
 
 private:
     stbtt_fontinfo* infoData;
-    uchar* buffer;
-    usize bufferSize;
+    uint8_t* buffer;
+    size_t bufferSize;
     CharRect charRects[96];
 
     Texture texture;

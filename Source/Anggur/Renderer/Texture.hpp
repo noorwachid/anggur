@@ -22,7 +22,7 @@ public:
     inline uint GetHeight() const { return height; }
     inline uint GetChannels() const { return channels; }
 
-    void LoadBitmap(uchar* data, uint width, uint height, uint channels = 8, SamplerFilter filter = SamplerFilter::Linear);
+    void LoadBitmap(uint8_t* data, uint width, uint height, uint channels = 8, SamplerFilter filter = SamplerFilter::Linear);
     void Load(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
     void Load(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
     void Unload();

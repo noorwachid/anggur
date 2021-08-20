@@ -48,7 +48,7 @@ Color::Color(float r, float g, float b, float a)
     Set(r, g, b, a);
 }
 
-Color Color::CreateHex(ulong hex)
+Color Color::CreateHex(uint64_t hex)
 {
     Color color;
     color.SetHex(hex);
@@ -71,7 +71,7 @@ void Color::Set(float r, float g, float b, float a)
     this->a = a;
 }
 
-void Color::SetHex(ulong hex)
+void Color::SetHex(uint64_t hex)
 {
     r = (hex >> 16 & 0xFF) / 255.f;
     g = (hex >> 8  & 0xFF) / 255.f;

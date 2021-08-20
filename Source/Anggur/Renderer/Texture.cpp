@@ -29,7 +29,7 @@ Texture::~Texture()
     Unload();
 }
 
-void Texture::LoadBitmap(uchar* data, uint width, uint height, uint channels, SamplerFilter filter)
+void Texture::LoadBitmap(uint8_t* data, uint width, uint height, uint channels, SamplerFilter filter)
 {
     Unload();
     glEnable(GL_TEXTURE_2D);

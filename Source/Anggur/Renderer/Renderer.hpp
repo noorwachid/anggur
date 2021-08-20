@@ -120,16 +120,16 @@ public:
     static void Terminate();
 
     static void SetViewport(Vector size);
-    static void SetMaxQuad(usize max = 2048);
-    static void SetCircleSegment(usize segment);
+    static void SetMaxQuad(size_t max = 2048);
+    static void SetCircleSegment(size_t segment);
 
-    static void CheckLimit(usize vertexOffset = 0, usize indexOffset = 0, usize textureOffset = 0);
+    static void CheckLimit(size_t vertexOffset = 0, size_t indexOffset = 0, size_t textureOffset = 0);
     static void Render();
 
     static void SetViewProjectionMatrix(const Matrix& matrix);
 
     // NEW API
-    static void AddData(const float* vertexData, usize vertexLength, const uint* indexData, usize indexLength);
+    static void AddData(const float* vertexData, size_t vertexLength, const uint* indexData, size_t indexLength);
     static void AddDatax(const Texture& texture);
     static void FlushData();
 
@@ -143,14 +143,14 @@ public:
     static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c0, const Color& c1, const Color& c2, const Color& c3);
     static void AddRect(const Vector& p0, float w, float h, const Color& c = Color::white);
     static void AddBox(const Vector& position, const Vector& radii, const Color& c = Color::white);
-    static void AddPolygon(const Vector& p0, float r, usize segments, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, size_t segments, const Color& c = Color::white);
     static void AddCircle(const Vector& p0, float r, const Color& c = Color::white);
 
     static void AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c = Color::white);
     static void AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c = Color::white);
     static void AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c = Color::white);
     static void AddBox(const Vector& position, const Vector& radii, const Transform& f, const Color& c = Color::white);
-    static void AddPolygon(const Vector& p0, float r, usize segments, const Transform& f, const Color& c = Color::white);
+    static void AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c = Color::white);
     static void AddCircle(const Vector& p0, float r, const Transform& f, const Color& c = Color::white);
 
     // -- Textures
@@ -195,17 +195,17 @@ private:
     static float* vertexData;
     static uint* indexData;
 
-    static usize vertexCounter;
-    static usize indexCounter;
+    static size_t vertexCounter;
+    static size_t indexCounter;
 
-    static usize maxQuad;
-    static usize circleSegment;
+    static size_t maxQuad;
+    static size_t circleSegment;
 
-    static usize maxVertices;
-    static usize maxIndices;
+    static size_t maxVertices;
+    static size_t maxIndices;
 
-    static usize maxTextureUnits;
-    static usize textureCounter;
+    static size_t maxTextureUnits;
+    static size_t textureCounter;
     static float textureIndex;
     static int* textureIndices;
     static Texture* textureData;

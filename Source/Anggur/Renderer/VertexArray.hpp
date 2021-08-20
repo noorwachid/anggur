@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Anggur/Helper/Primitive.hpp>
+#include <stddef.h>
+#include <cinttypes>
 
 namespace Anggur {
 
@@ -11,8 +12,8 @@ public:
     void Destroy();
     void Bind();
     void Unbind();
-    void SetCapacity(usize size);
-    void SetData(usize size, uint* data);
+    void SetCapacity(size_t size);
+    void SetData(size_t size, uint32_t* data);
 
 private:
     unsigned int id;
@@ -25,8 +26,8 @@ public:
     void Destroy();
     void Bind();
     void Unbind();
-    void SetCapacity(usize size);
-    void SetData(usize size, float* data);
+    void SetCapacity(size_t size);
+    void SetData(size_t size, float* data);
 
 private:
     unsigned int id;
@@ -40,7 +41,7 @@ public:
     void Bind();
     void Unbind();
 
-    void SetAttributePtr(usize index, usize size, usize stride, void* offset);
+    void SetAttributePtr(size_t index, size_t size, size_t stride, void* offset);
 
 private:
     unsigned int id;

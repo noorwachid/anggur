@@ -2,7 +2,6 @@
 
 #include <initializer_list>
 #include "Math.hpp"
-#include "Anggur/Helper/Primitive.hpp"
 
 namespace Anggur {
 
@@ -19,8 +18,8 @@ public:
     const float* ToFloatPtr() const;
     float* ToFloatPtr();
 
-    float& operator[](usize index);
-    float operator[](usize index) const;
+    float& operator[](size_t index);
+    float operator[](size_t index) const;
 
     Matrix operator*(const Matrix& right) const;
     Matrix operator+(const Matrix& right) const;

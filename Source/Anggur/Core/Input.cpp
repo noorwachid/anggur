@@ -7,8 +7,8 @@ namespace Anggur {
 
 SDL_Window* Input::windowHandler = nullptr;
 
-const uchar* Input::currScancodeMap = nullptr;
-uchar Input::prevScancodeMap[Anggur_ScancodeLength];
+const uint8_t* Input::currScancodeMap = nullptr;
+uint8_t Input::prevScancodeMap[Anggur_ScancodeLength];
 
 uint Input::currButtonMap = 0;
 uint Input::prevButtonMap = 0;

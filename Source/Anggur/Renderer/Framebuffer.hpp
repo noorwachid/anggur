@@ -1,5 +1,5 @@
 #pragma once
-#include <Anggur/Helper/Primitive.hpp>
+
 #include "Texture.hpp"
 
 namespace Anggur {

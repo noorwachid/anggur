@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/Helper/Primitive.hpp>
+#include <cinttypes>
 
 namespace Anggur {
 
@@ -14,11 +14,11 @@ struct Color
     Color();
     Color(float r, float g, float b, float a = 1.0);
 
-    static Color CreateHex(ulong hex);
+    static Color CreateHex(uint64_t hex);
 
     void Set(float r, float g, float b);
     void Set(float r, float g, float b, float a);
-    void SetHex(ulong hex);
+    void SetHex(uint64_t hex);
 
     const float* ToFloatPtr() const;
     float* ToFloatPtr();

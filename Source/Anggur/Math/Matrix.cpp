@@ -27,7 +27,7 @@ Matrix::Matrix(const std::initializer_list<float>& list)
 
 void Matrix::Set(const std::initializer_list<float>& list)
 {
-    usize i = 0;
+    size_t i = 0;
     for (auto it = list.begin(); it != list.end(); ++it, ++i)
         data[i] = *it;
 }
@@ -42,12 +42,12 @@ float* Matrix::ToFloatPtr()
     return data;
 }
 
-float& Matrix::operator[](usize index)
+float& Matrix::operator[](size_t index)
 {
     return data[index];
 }
 
-float Matrix::operator[](usize index) const
+float Matrix::operator[](size_t index) const
 {
     return data[index];
 }
