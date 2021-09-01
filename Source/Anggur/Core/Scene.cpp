@@ -2,9 +2,4 @@
 
 namespace Anggur {
 
-void Scene::Restart()
-{
-    Create();
-}
-
 }

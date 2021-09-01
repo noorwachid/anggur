@@ -2,7 +2,6 @@
 
 #include <string>
 #include <Anggur/Helper/Enum.hpp>
-#include "Core.hpp"
 
 struct SDL_Window;
 
@@ -97,7 +96,7 @@ public:
     SDL_Window* GetHandler();
     void* GetContext();
 
-    friend class Application;
+    friend class Core;
 
 private:
     SDL_Window* handler;

@@ -32,7 +32,7 @@ public:
     static Vector GetCursor();
     static Vector GetWheel();
 
-    friend class Application;
+    friend class Core;
 
 private:
     static SDL_Window* windowHandler;
