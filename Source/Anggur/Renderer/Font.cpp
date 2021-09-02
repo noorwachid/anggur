@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <stb_truetype.h>
 #include <stb_image_write.h>
 #include <Anggur/Helper/IO.hpp>
@@ -29,8 +30,8 @@ Font::~Font()
 
 void Font::Initialize()
 {
-    firstChar = 33;
-    lastChar = 126;
+    firstChar = 'A';
+    lastChar = 'Z';
 }
 
 void Font::Load(const std::string& path, int height)
@@ -54,11 +55,24 @@ void Font::Load(const std::string& path, int height)
     decent *= scale;
     height = (ascent - decent);
 
-    int bitmapWidth  = 0;
-    int bitmapHeight = height;
+    // TODO: Check this boy, if it really the right way to do.
+    int maxBufferSize;
+    glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxBufferSize);
+    int inSquareTermSize = Math::Sqrt(maxBufferSize / 8);
+    int bitmapWidth  = inSquareTermSize;
+    int bitmapHeight = inSquareTermSize;
 
-    int x = 0;
+    normalized.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
+    int bitmapSize = bitmapWidth * bitmapHeight;
+    uint8_t* bitmap = new uint8_t[bitmapSize];
+
+    // Zeroing to avoid undefined behaviour
+    for (int i = 0; i < bitmapSize; ++i)
+        bitmap[i] = 0;
+
     int y = 0;
+    int x = 0;
+    int xPadding = 0;
 
     for (int c = firstChar; c <= lastChar; ++c)
     {
@@ -72,7 +86,7 @@ void Font::Load(const std::string& path, int height)
         int w = x1 - x0;
         int h = y1 - y0;
 
-        y = ascent + y0;
+        y += ascent + y0;
 
         CharRect& cr = GetCharRect(c);
         cr.x = x0 + x;
@@ -80,24 +94,8 @@ void Font::Load(const std::string& path, int height)
         cr.width = w;
         cr.height = h;
 
-        x += ax + 10;
-        bitmapWidth += ax + 10;
-    }
+        x += ax + xPadding;
 
-    normalized.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
-    int bitmapSize = bitmapWidth * bitmapHeight;
-    uint8_t bitmap[bitmapSize];
-    uint8_t bitmapFlipped[bitmapSize];
-
-    for (int i = 0; i < bitmapSize; ++i) // avoid undefined behaviour
-    {
-        bitmap[i] = 0;
-        bitmapFlipped[i] = 0;
-    }
-
-    for (int c = firstChar; c <= lastChar; ++c)
-    {
-        CharRect& cr = GetCharRect(c);
         cr.texOffsetX = cr.x * normalized.x;
         cr.texClipX = cr.width * normalized.x;
         cr.ratio = cr.width * normalized.y;
@@ -109,17 +107,20 @@ void Font::Load(const std::string& path, int height)
                                   bitmapWidth, scale, scale, c);
     }
 
-    // flip bitmap vertically
-    for (int i = 0, ii = bitmapHeight - 1; i < bitmapHeight; ++i, --ii)
+    // Flip bitmap vertically
+    int halfBitmapHeight = bitmapHeight / 2;
+    for (int i = 0, ii = bitmapHeight - 1; i < halfBitmapHeight; ++i, --ii)
     {
         for (int j = 0; j < bitmapWidth; ++j)
         {
             int k = bitmapWidth * i + j;
             int l = bitmapWidth * ii + j;
-            bitmapFlipped[l] = bitmap[k];
+            uint8_t tmp = bitmap[l];
+            bitmap[l] = bitmap[k];
+            bitmap[k] = tmp;
         }
     }
-    texture.LoadBitmap(bitmapFlipped, bitmapWidth, bitmapHeight, 1);
+    texture.LoadBitmap(bitmap, bitmapWidth, bitmapHeight, 1);
 }
 
 }

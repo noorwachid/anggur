@@ -40,6 +40,16 @@ void Core::SetScene(Scene* activeScene)
     }
 }
 
+float Core::GetDeltaTime()
+{
+    return deltaTime;
+}
+
+float Core::GetElapsedTime()
+{
+    return elapsedTime;
+}
+
 void Core::ProcessEvent(SDL_Event* event)
 {
     switch (event->type)
@@ -127,6 +137,8 @@ void Core::ProcessEvent(SDL_Event* event)
 
 void Core::Run(Scene* mainScene)
 {
+    Core::Initialize();
+
     window = new Window(windowConfig);
     Input::windowHandler = window->handler;
 

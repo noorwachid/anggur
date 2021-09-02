@@ -20,6 +20,9 @@ public:
     static void SetVsync(bool enable = true);
     static void SetScene(Scene* activeScene);
 
+    static float GetDeltaTime();
+    static float GetElapsedTime();
+
     static void Initialize();
     static void Terminate();
     static void LoadGraphicsFunctions();
