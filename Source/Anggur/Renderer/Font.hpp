@@ -11,8 +11,8 @@ struct CharRect
 {
     int x;
     int y;
-    int width;
-    int height;
+    int w;
+    int h;
 
     float ratio;
 

@@ -78,8 +78,6 @@ public:
     Vector origin;
     Vector offset;
     Vector viewport;
-
-    static Camera main;
 };
 
 struct Transform

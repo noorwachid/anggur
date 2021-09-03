@@ -145,9 +145,6 @@ void Core::Run(Scene* mainScene)
     Renderer::Initialize();
     Input::Initialize();
 
-    Camera::main.viewport = window->GetSize();
-    Camera::main.distance = 0.1;
-
     SDL_Event event;
     ulong prevTimePoint = SDL_GetPerformanceCounter();
 
@@ -173,7 +170,6 @@ void Core::Run(Scene* mainScene)
         Input::Update();
         if (scene)
         {
-            Renderer::SetViewProjectionMatrix(Camera::main.ToMatrix());
             scene->Update();
         }
 

@@ -14,8 +14,6 @@ struct Vertex
     static const size_t length = 9;
 };
 
-Camera Camera::main;
-
 Shader Renderer::batchShader;
 
 float* Renderer::vertexData;
