@@ -8,85 +8,47 @@
 
 namespace Anggur {
 
-enum class EventType
-{
-    WindowClosed,
-    WindowResized,
-    WindowMoved,
-
-    MouseMoved,
-    MouseScrolled,
-    MousePressed,
-    MouseHeld,
-    MouseReleased,
-
+enum class EventType {
     KeyPressed,
     KeyHeld,
     KeyReleased,
-    KeyInput,
 
-    GamepadConnected,
-    GamepadDisconnected,
-    GamepadAxis,
+    MouseMoved,
+    MouseScrolled,
+    MouseButtonPressed,
+    MouseButtonHeld,
+    MouseButtonReleased,
 };
 
-enum class EventGroup: uint8_t
-{
-    Window  = 0x1,
-    Mouse   = 0x2,
-    Key     = 0x4,
-    Gamepad = 0x8,
+enum class EventGroup {
+    Key,
+    Mouse,
 };
 
-struct Event
-{
+struct Event {
     EventType type;
     EventGroup group;
-    bool handled;
-
-    Event(EventType t, EventGroup g): type(t), group(g), handled(false) {};
+    bool consumed;
 };
 
-struct WindowEvent : public Event
-{
-    Vector pos;
-    Vector size;
-
-    WindowEvent(EventType t):
-        Event(t, EventGroup::Window)
-    {}
-};
-
-struct KeyboardEvent : public Event
-{
+struct KeyEvent: public Event {
     Scancode scancode;
     Key key;
     Modifier modifier;
-
-    KeyboardEvent(EventType t, Scancode c, Key k, Modifier m):
-        Event(t, EventGroup::Key), 
-        scancode(c),
-        key(k),
-        modifier(m) {}
 };
 
-struct MouseEvent : public Event
-{
-    Vector wheel;
-    Vector cursor;
-    Vector dx;
-    Button button;
-
-    MouseEvent(EventType t):
-        Event(t, EventGroup::Mouse)
-    {}
+struct MouseMovementEvent: public Event {
+    Vector position;
+    Vector deltaPosition;
 };
 
-// struct GamepadEvent : public Event
-// {
-//     Gamepad button;
-//     GamepadState state;
-//     GamepadAxis axis;
-// };
+struct MouseScrollEvent: public Event {
+    Vector direction;
+};
+
+struct MouseButtonEvent: public Event {
+    MouseButton button;
+    Vector position;
+};
 
 }

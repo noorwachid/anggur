@@ -65,17 +65,10 @@ void Core::ProcessEvent(SDL_Event* event)
             {
                 case SDL_WINDOWEVENT_MOVED:
                 {
-                    WindowEvent e(EventType::WindowMoved);
-                    e.pos.Set(event->window.data1, event->window.data2);
-                    if (scene) scene->OnEvent(e);
                     break;
                 }
                 case SDL_WINDOWEVENT_RESIZED:
                 {
-                    Renderer::SetViewport(Vector(event->window.data1, event->window.data2));
-                    WindowEvent e(EventType::WindowResized);
-                    e.size.Set(event->window.data1, event->window.data2);
-                    if (scene) scene->OnEvent(e);
                     break;
                 }
             }
@@ -83,51 +76,60 @@ void Core::ProcessEvent(SDL_Event* event)
         }
         case SDL_KEYDOWN:
         {
-            KeyboardEvent e(EventType::KeyPressed,
-                       static_cast<Scancode>(event->key.keysym.scancode),
-                       static_cast<Key>(event->key.keysym.sym),
-                       static_cast<Modifier>(event->key.keysym.mod));
+            KeyEvent e;
+            e.type = EventType::KeyPressed;
+            e.scancode = static_cast<Scancode>(event->key.keysym.scancode),
+            e.key = static_cast<Key>(event->key.keysym.sym),
+            e.modifier = static_cast<Modifier>(event->key.keysym.mod);
             if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_KEYUP:
         {
-            KeyboardEvent e(EventType::KeyReleased,
-                       static_cast<Scancode>(event->key.keysym.scancode),
-                       static_cast<Key>(event->key.keysym.sym),
-                       static_cast<Modifier>(event->key.keysym.mod));
+            KeyEvent e;
+            e.type = EventType::KeyReleased;
+            e.scancode = static_cast<Scancode>(event->key.keysym.scancode),
+            e.key = static_cast<Key>(event->key.keysym.sym),
+            e.modifier = static_cast<Modifier>(event->key.keysym.mod);
             if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEWHEEL:
         {
-            Input::wheel.Set(event->wheel.x, event->wheel.y);
-            MouseEvent e(EventType::MouseScrolled);
-            e.wheel.Set(event->wheel.x, event->wheel.y);
+            MouseScrollEvent e;
+            e.type = EventType::MouseScrolled;
+            e.group = EventGroup::Mouse;
+            e.direction.Set(event->wheel.x, event->wheel.y);
             if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEMOTION:
         {
-            MouseEvent e(EventType::MouseMoved);
-            e.cursor.Set(event->motion.x, event->motion.y);
-            e.dx.Set(event->motion.xrel, event->motion.yrel);
+            MouseMovementEvent e;
+            e.type = EventType::MouseMoved;
+            e.group = EventGroup::Mouse;
+            e.position.Set(event->motion.x, event->motion.y);
+            e.deltaPosition.Set(event->motion.xrel, event->motion.yrel);
             if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEBUTTONDOWN:
         {
-            MouseEvent e(EventType::MousePressed);
-            e.cursor.Set(event->button.x, event->button.y);
-            e.button = static_cast<Button>(event->button.button);
+            MouseButtonEvent e;
+            e.type = EventType::MouseButtonPressed;
+            e.group = EventGroup::Mouse;
+            e.position.Set(event->button.x, event->button.y);
+            e.button = static_cast<MouseButton>(event->button.button);
             if (scene) scene->OnEvent(e);
             break;
         }
         case SDL_MOUSEBUTTONUP:
         {
-            MouseEvent e(EventType::MouseReleased);
-            e.cursor.Set(event->button.x, event->button.y);
-            e.button = static_cast<Button>(event->button.button);
+            MouseButtonEvent e;
+            e.type = EventType::MouseButtonReleased;
+            e.group = EventGroup::Mouse;
+            e.position.Set(event->button.x, event->button.y);
+            e.button = static_cast<MouseButton>(event->button.button);
             if (scene) scene->OnEvent(e);
             break;
         }

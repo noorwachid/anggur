@@ -72,37 +72,37 @@ bool Input::IsKeyReleased(Key key)
     return !currScancodeMap[i] && prevScancodeMap[i];
 }
 
-bool Input::IsButtonPressed(Button button)
+bool Input::IsMouseButtonPressed(MouseButton button)
 {
     Uint32 btn = static_cast<Uint32>(button);
     return !(prevButtonMap & btn) && (currButtonMap & btn);
 }
 
-bool Input::IsButtonHeld(Button button)
+bool Input::IsMouseButtonHeld(MouseButton button)
 {
     Uint32 btn = static_cast<Uint32>(button);
     return (prevButtonMap & btn) && (currButtonMap & btn);
 }
 
-bool Input::IsButtonReleased(Button button)
+bool Input::IsMouseButtonReleased(MouseButton button)
 {
     Uint32 btn = static_cast<Uint32>(button);
     return (prevButtonMap & btn) && !(currButtonMap & btn);
 }
 
-void Input::SetCursor(const Vector& pos)
+void Input::SetMousePosition(const Vector& pos)
 {
     int x = pos.x;
     int y = pos.y;
     SDL_WarpMouseInWindow(windowHandler, x, y);
 }
 
-Vector Input::GetCursor()
+Vector Input::GetMousePosition()
 {
     return cursor;
 }
 
-Vector Input::GetWheel()
+Vector Input::GetMouseScrollDirection()
 {
     return wheel;
 }

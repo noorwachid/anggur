@@ -8,8 +8,6 @@
 
 namespace Anggur {
 
-CharRect CharRect::empty = { 0, 0, 0, 0 };
-
 Font::Font()
 {
     Initialize();
@@ -31,8 +29,17 @@ Font::~Font()
 
 void Font::Initialize()
 {
-    firstChar = 33;
-    lastChar = 127;
+    // ASCII
+    for (int c = 33; c < 127; ++c) ranges.push_back(c);
+
+    // // Latin1
+    // for (int c = 161; c < 256; ++c) ranges.push_back(c);
+    //
+    // // LatinExtendedA
+    // for (int c = 256; c < 384; ++c) ranges.push_back(c);
+    //
+    // // LatinExtendedB
+    // for (int c = 384; c < 592; ++c) ranges.push_back(c);
 }
 
 void Font::Load(const std::string& path, int height)
@@ -50,6 +57,7 @@ void Font::Load(const std::string& path, int height)
 
     float scale = stbtt_ScaleForPixelHeight(infoData, height);
     int ascent, decent;
+    float scalarPoint = height;
 
     stbtt_GetFontVMetrics(infoData, &ascent, &decent, 0);
     ascent *= scale;
@@ -78,7 +86,8 @@ void Font::Load(const std::string& path, int height)
     std::vector<stbrp_rect> packingRects;
     std::vector<stbrp_node> packingNodes;
 
-    for (int c = firstChar; c <= lastChar; ++c)
+
+    for (int c: ranges)
     {
         int ax, lsb;
         int x0, y0, x1, y1;
@@ -92,6 +101,13 @@ void Font::Load(const std::string& path, int height)
         rect.w = x1 - x0;
         rect.h = y1 - y0;
 
+        Glyph& glyph = GetGlyph(rect.id);
+        glyph.w = rect.w * normalized.x;
+        glyph.h = rect.h * normalized.y;
+        glyph.scaleX = rect.w / scalarPoint;
+        glyph.scaleY = rect.h / scalarPoint;
+        glyph.ascent = (ascent + y0) / scalarPoint;
+
         packingRects.push_back(rect);
     }
 
@@ -101,29 +117,27 @@ void Font::Load(const std::string& path, int height)
 
     for (stbrp_rect& rect: packingRects)
     {
-        CharRect& cr = GetCharRect(rect.id);
-        cr.x = rect.x;
-        cr.y = rect.y;
-        cr.w = rect.w;
-        cr.h = rect.h;
+        Glyph& glyph = GetGlyph(rect.id);
+        glyph.x = rect.x * normalized.x;
+        glyph.y = rect.y * normalized.y;
 
-        int byteOffset = cr.x + (cr.y * bitmapWidth);
-        stbtt_MakeCodepointBitmap(infoData, bitmap + byteOffset, cr.w, cr.h, bitmapWidth, scale, scale, rect.id);
+        int byteOffset = rect.x + (rect.y * bitmapWidth);
+        stbtt_MakeCodepointBitmap(infoData, bitmap + byteOffset, rect.w, rect.h, bitmapWidth, scale, scale, rect.id);
     }
 
     // Flip bitmap vertically
-    int halfBitmapHeight = bitmapHeight / 2;
-    for (int i = 0, ii = bitmapHeight - 1; i < halfBitmapHeight; ++i, --ii)
-    {
-        for (int j = 0; j < bitmapWidth; ++j)
-        {
-            int k = bitmapWidth * i + j;
-            int l = bitmapWidth * ii + j;
-            uint8_t tmp = bitmap[l];
-            bitmap[l] = bitmap[k];
-            bitmap[k] = tmp;
-        }
-    }
+//    int halfBitmapHeight = bitmapHeight / 2;
+//    for (int i = 0, ii = bitmapHeight - 1; i < halfBitmapHeight; ++i, --ii)
+//    {
+//        for (int j = 0; j < bitmapWidth; ++j)
+//        {
+//            int k = bitmapWidth * i + j;
+//            int l = bitmapWidth * ii + j;
+//            uint8_t tmp = bitmap[l];
+//            bitmap[l] = bitmap[k];
+//            bitmap[k] = tmp;
+//        }
+//    }
     texture.LoadBitmap(bitmap, bitmapWidth, bitmapHeight, 1);
 }
 

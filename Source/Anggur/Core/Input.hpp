@@ -23,14 +23,14 @@ public:
     static bool IsKeyHeld(Key key);
     static bool IsKeyReleased(Key key);
 
-    static bool IsButtonPressed(Button button);
-    static bool IsButtonHeld(Button button);
-    static bool IsButtonReleased(Button button);
+    static bool IsMouseButtonPressed(MouseButton button);
+    static bool IsMouseButtonHeld(MouseButton button);
+    static bool IsMouseButtonReleased(MouseButton button);
 
-    static void SetCursor(const Vector& pos);
+    static void SetMousePosition(const Vector& pos);
 
-    static Vector GetCursor();
-    static Vector GetWheel();
+    static Vector GetMousePosition();
+    static Vector GetMouseScrollDirection();
 
     friend class Core;
 

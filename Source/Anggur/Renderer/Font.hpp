@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_map>
 #include <Anggur/Math/Vector.hpp>
 #include "Texture.hpp"
 
@@ -7,19 +8,15 @@ struct stbtt_fontinfo;
 
 namespace Anggur {
 
-struct CharRect
+struct Glyph
 {
-    int x;
-    int y;
-    int w;
-    int h;
-
-    float ratio;
-
-    float texOffsetX;
-    float texClipX;
-
-    static CharRect empty;
+    float x;
+    float y;
+    float w;
+    float h;
+    float scaleX;
+    float scaleY;
+    float ascent;
 };
 
 class Font
@@ -31,18 +28,9 @@ public:
     void Initialize();
     void Load(const std::string& path, int height = 100);
 
-    inline CharRect& GetCharRect(int c)
+    inline Glyph& GetGlyph(int c)
     {
-        if (c >= firstChar && c <= lastChar)
-            return charRects[c - 32];
-        return CharRect::empty;
-    }
-
-    inline CharRect GetCharRect(int c) const
-    {
-        if (c >= firstChar && c <= lastChar)
-            return charRects[c - 32];
-        return CharRect::empty;
+        return charRects[c];
     }
 
     inline Texture& GetTexture()
@@ -64,11 +52,10 @@ private:
     stbtt_fontinfo* infoData;
     uint8_t* buffer;
     size_t bufferSize;
-    CharRect charRects[96];
 
     Texture texture;
-    int firstChar;
-    int lastChar;
+    std::vector<int> ranges;
+    std::unordered_map<int, Glyph> charRects;
 
     Vector normalized;
 };

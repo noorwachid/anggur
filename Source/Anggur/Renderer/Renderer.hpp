@@ -37,18 +37,26 @@ public:
             0, distanceY, 0,
             (-origin.x + offset.x) * distance, (-origin.y + offset.y) * distanceY, 1,
         });
-        matrix.Rotate(rotation);
+//        matrix.Rotate(rotation);
         return matrix;
     }
 
     Vector ToWorldCoord(const Vector& screenCoord)
     {
-        float distanceY = distance * (viewport.x / viewport.y);
         Vector result(
             (2.0 * screenCoord.x) / viewport.x - 1.0,
            -(2.0 * screenCoord.y) / viewport.y + 1.0
         );
 
+        return result * Matrix::CreateInverse(ToMatrix());
+    }
+
+    Vector ToNormalizedWorldCoord(const Vector& screenCoord)
+    {
+        Vector result(
+           -screenCoord.x / viewport.x,
+            screenCoord.y / viewport.y
+        );
         return result * Matrix::CreateInverse(ToMatrix());
     }
 
@@ -60,16 +68,6 @@ public:
     float GetRatio()
     {
         return viewport.x / viewport.y;
-    }
-
-    Vector GetVisibleTopLeftWorldCoord()
-    {
-        return ToWorldCoord(Vector::zero);
-    }
-
-    Vector GetVisibleBottomRightWorldCoord()
-    {
-        return ToWorldCoord(viewport);
     }
 
     float distance;
@@ -183,7 +181,6 @@ public:
     static void AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w = 0.5, const Color& c = Color::white);
 
     // -- Texts
-    static void AddText(Font& font, int ch, const Vector& p0, float size = 1, const Color& c = Color::white);
     static void AddText(Font& font, const std::string& text, const Vector& p0, float size = 1, const Color& c = Color::white);
     static void AddText(Font& font, const std::string& text, const Vector& p0, const TextOption& o, const Color& c = Color::white);
 

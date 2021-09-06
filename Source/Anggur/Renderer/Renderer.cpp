@@ -243,7 +243,8 @@ void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textur
 
 void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, float size, const Color& c)
 {
-    float x = 0;
+    float x = p0.x;
+    float y = p0.y;
     float charSpacing = size * 0.05;
     float wordSpacing = size * 0.1;
 
@@ -252,37 +253,29 @@ void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, fl
         if (ch == 32)
             x += wordSpacing;
 
-        const CharRect& cr = font.GetCharRect(ch);
-        Vector p1(p0.x + x, p0.y);
-        float x1 = cr.ratio * size;
+        Glyph& glyph = font.GetGlyph(ch);
 
-        AddQuadx(p1,
-                 {p1.x + x1, p1.y},
-                 {p1.x + x1, p1.y + size},
-                 {p1.x, p1.y + size},
-                 {cr.texOffsetX, 0},
-                 {cr.texOffsetX + cr.texClipX, 0},
-                 {cr.texOffsetX + cr.texClipX, 1},
-                 {cr.texOffsetX, 1}, font.GetTexture(), c);
+        float sizeX = size * glyph.scaleX;
+        float sizeY = -size * glyph.scaleY;
+        float ascent = -size * glyph.ascent;
 
-        x += x1 + charSpacing;
+//        AddRect({x, y + ascent}, sizeX, sizeY, Color::green);
+        AddQuadx(
+            {x, y + ascent},
+            {x + sizeX, y + ascent},
+            {x + sizeX, y + ascent + sizeY},
+            {x, y + ascent + sizeY},
+
+            {glyph.x, glyph.y},
+            {glyph.x + glyph.w, glyph.y},
+            {glyph.x + glyph.w, glyph.y + glyph.h},
+            {glyph.x, glyph.y + glyph.h},
+            font.GetTexture(),
+            c
+        );
+
+        x += sizeX + charSpacing;
     }
-}
-
-void Renderer::AddText(Font& font, int ch, const Vector& p0, float size, const Color& c)
-{
-    const CharRect& cr = font.GetCharRect(ch);
-    float x1 = cr.ratio * size;
-
-    AddQuadx(p0,
-             {p0.x + x1, p0.y},
-             {p0.x + x1, p0.y + size},
-             {p0.x, p0.y + size},
-             {cr.texOffsetX, 0},
-             {cr.texOffsetX + cr.texClipX, 0},
-             {cr.texOffsetX + cr.texClipX, 1},
-             {cr.texOffsetX, 1}, font.GetTexture(), c);
-
 }
 
 void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* indices, size_t indexLength)
