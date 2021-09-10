@@ -4,12 +4,12 @@
 
 namespace Anggur {
 
-class Framebuffer
+class FrameBuffer
 {
 public:
-    Framebuffer();
-    Framebuffer(uint width, uint height);
-    ~Framebuffer();
+    FrameBuffer();
+    FrameBuffer(uint width, uint height);
+    ~FrameBuffer();
 
     inline uint GetID() const { return id; }
     inline uint GetColorAttachment() const { return colorAttachment; }

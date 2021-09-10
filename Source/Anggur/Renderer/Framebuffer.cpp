@@ -1,25 +1,21 @@
-#include <glad/glad.h>
+#include "FrameBuffer.hpp"
 #include <Anggur/Helper/Log.hpp>
-#include "Framebuffer.hpp"
+#include <glad/glad.h>
 
-namespace Anggur {
-
-Framebuffer::Framebuffer()
+namespace Anggur
 {
-}
 
-Framebuffer::Framebuffer(uint width, uint height)
-{
-    Recreate(width, height);
-}
+FrameBuffer::FrameBuffer() {}
 
-Framebuffer::~Framebuffer()
+FrameBuffer::FrameBuffer(uint width, uint height) { Recreate(width, height); }
+
+FrameBuffer::~FrameBuffer()
 {
     glDeleteFramebuffers(1, &id);
     glDeleteTextures(1, &colorAttachment);
 }
 
-void Framebuffer::Recreate(uint width, uint height)
+void FrameBuffer::Recreate(uint width, uint height)
 {
     this->width = width;
     this->height = height;
@@ -35,36 +31,30 @@ void Framebuffer::Recreate(uint width, uint height)
 
     glGenTextures(1, &colorAttachment);
     glBindTexture(GL_TEXTURE_2D, colorAttachment);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           colorAttachment, 0);
 
-    Anggur_Assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
+    Anggur_Assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
+                      GL_FRAMEBUFFER_COMPLETE,
+                  "Framebuffer is incomplete!");
 
     glViewport(0, 0, width, height);
-
 }
 
-Texture Framebuffer::ToTexture()
+Texture FrameBuffer::ToTexture()
 {
     return Texture(colorAttachment, width, height);
 }
 
-void Framebuffer::BindDefault()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+void FrameBuffer::BindDefault() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
-void Framebuffer::Bind()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
-}
+void FrameBuffer::Bind() { glBindFramebuffer(GL_FRAMEBUFFER, id); }
 
-void Framebuffer::Unbind()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+void FrameBuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
-} // namespace Gularen
+} // namespace Anggur
