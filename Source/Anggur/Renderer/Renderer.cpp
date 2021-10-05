@@ -2,7 +2,7 @@
 #include <Anggur/Helper/Log.h>
 #include <glad/glad.h>
 
-#define Anggur_DebugTextRect 1
+#define ANGGUR_DEBUG_TEXT_RECTS 1
 
 namespace Anggur
 {
@@ -514,7 +514,7 @@ void Renderer::AddAnchor(const Transform& transform, const Vector& p0, const Vec
 
     bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
 
-#ifdef Anggur_DebugAnchorPoints
+#ifdef ANGGUR_DEBUG_ANCHOR_POINTS
     AddCircle(Transform(), e0, 0.01, Color::red);
     AddCircle(Transform(), e1, 0.01, Color::red);
     AddCircle(Transform(), u0, 0.01, Color::blue);
@@ -781,7 +781,7 @@ void Renderer::AddText(const Transform& transform, const Vector& p0, const Vecto
         lineArea.x += wordSpace;
         wordArea.x -= letterSpace;
 
-#ifdef Anggur_DebugTextRect
+#ifdef ANGGUR_DEBUG_TEXT_RECTS
         AddRect(transform, offset, offset + wordArea, Color(1, 1, 1, 0.33));
 #endif
         AddTextChunk(transform, offset, ccs, textFont, color);
@@ -800,7 +800,7 @@ void Renderer::AddText(const Transform& transform, const Vector& p0, const Vecto
 
         occupiedArea.x = Math::Max(occupiedArea.x, lineArea.x);
         occupiedArea.y += lineArea.y;
-#ifdef Anggur_DebugTextRect
+#ifdef ANGGUR_DEBUG_TEXT_RECTS
         AddRect(transform, offset, offset + lineArea, Color(1, 1, 1, 0.33));
 #endif
 
@@ -832,7 +832,7 @@ void Renderer::AddText(const Transform& transform, const Vector& p0, const Vecto
                 if (occupiedArea.y + lineArea.y > containerArea.y)
                 {
                     occupiedArea.x = Math::Max(occupiedArea.x, lineArea.x);
-#ifdef Anggur_DebugTextRect
+#ifdef ANGGUR_DEBUG_TEXT_RECTS
                     AddCircle(transform, p0 + Vector(occupiedArea.x, occupiedArea.y + lineArea.y), 0.1, Color(1, 1, 0, 0.5));
 #endif
                     isFit = false;
@@ -865,7 +865,7 @@ void Renderer::AddText(const Transform& transform, const Vector& p0, const Vecto
     }
 
     offset.x = p0.x;
-#ifdef Anggur_DebugTextRect
+#ifdef ANGGUR_DEBUG_TEXT_RECTS
     AddRect(transform, offset, offset + lineArea, Color(1, 1, 1, 0.33));
     AddRect(transform, p0, p0 + occupiedArea, Color(1, 1, 1, 0.33));
     AddCircle(transform, p0 + containerArea, 0.1, Color::green);
@@ -878,7 +878,7 @@ void Renderer::AddTextChunk(const Transform& transform, const Vector& p0, const 
 
     for (const CodepointContainer& cc: ccs)
     {
-#ifdef Anggur_DebugTextRect
+#ifdef ANGGUR_DEBUG_TEXT_RECTS
         AddRect(transform, p0 + cc.offset, p0 + cc.offset + cc.area, Color(1, 1, 1, 0.33));
 #endif
         AddQuadx(
