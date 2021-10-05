@@ -1,8 +1,8 @@
 #include <glad/glad.h>
 #include <stb_image.h>
-#include <Anggur/Helper/IO.hpp>
-#include <Anggur/Helper/Log.hpp>
-#include "Texture.hpp"
+#include <Anggur/Helper/IO.h>
+#include <Anggur/Helper/Log.h>
+#include "Texture.h"
 
 namespace Anggur {
 
@@ -11,14 +11,14 @@ Texture::Texture()
     id = 0;
 }
 
-Texture::Texture(uint id, uint width, uint height)
+Texture::Texture(uint32_t id, uint32_t width, uint32_t height)
 {
     this->id = id;
     this->width = width;
     this->height = height;
 }
 
-Texture::Texture(const std::string& path, SamplerFilter filter)
+Texture::Texture(const string& path, SamplerFilter filter)
 {
     id = 0;
     Load(path, filter);
@@ -29,7 +29,7 @@ Texture::~Texture()
     Unload();
 }
 
-void Texture::LoadBitmap(uint8_t* data, uint width, uint height, uint channels, SamplerFilter filter)
+void Texture::LoadBitmap(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter)
 {
     Unload();
     glEnable(GL_TEXTURE_2D);
@@ -73,7 +73,7 @@ void Texture::LoadBitmap(uint8_t* data, uint width, uint height, uint channels, 
     }
     else
     {
-        Anggur_Log("[Texture.LoadBitmap] Data is empty\n");
+        ANGGUR_LOG("[Texture.LoadBitmap] Data is empty\n");
     }
 }
 
@@ -85,7 +85,7 @@ void Texture::Load(const Image& image, SamplerFilter filter)
     LoadBitmap(image.GetData(), width, height, channels, filter);
 }
 
-void Texture::Load(const std::string& path, SamplerFilter filter)
+void Texture::Load(const string& path, SamplerFilter filter)
 {
     Image image(path);
     Load(image, filter);
@@ -97,7 +97,7 @@ void Texture::Unload()
         glDeleteTextures(1, &id);
 }
 
-void Texture::Bind(uint slot)
+void Texture::Bind(uint32_t slot)
 {
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, id);

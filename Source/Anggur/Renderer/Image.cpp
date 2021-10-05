@@ -1,27 +1,22 @@
+#include "Image.h"
+#include <Anggur/Helper/IO.h>
+#include <Anggur/Helper/Log.h>
 #include <stb_image.h>
-#include <Anggur/Helper/IO.hpp>
-#include <Anggur/Helper/Log.hpp>
-#include "Image.hpp"
 
-namespace Anggur {
-
-Image::Image()
+namespace Anggur
 {
-    data = nullptr;
-}
 
-Image::Image(const std::string& path)
+Image::Image() { data = nullptr; }
+
+Image::Image(const string& path)
 {
     data = nullptr;
     Load(path);
 }
 
-Image::~Image()
-{
-    Unload();
-}
+Image::~Image() { Unload(); }
 
-void Image::Load(const std::string& path)
+void Image::Load(const string& path)
 {
     Unload();
 
@@ -31,7 +26,7 @@ void Image::Load(const std::string& path)
 
     stbi_set_flip_vertically_on_load(1);
     data = stbi_load(path.c_str(), &width, &height, &channels, 4);
-    Anggur_Assert(data, "[Renderer.Image] failed to load image\n");
+    ANGGUR_ASSERT(data, "[Renderer.Image] failed to load image\n");
 
     this->width = width;
     this->height = height;
@@ -44,5 +39,4 @@ void Image::Unload()
         stbi_image_free(data);
 }
 
-
-} // namespace Gularen
+} // namespace Anggur

@@ -2,10 +2,10 @@
 #include <SDL_events.h>
 #include <SDL_timer.h>
 #include <glad/glad.h>
-#include <Anggur/Helper/Log.hpp>
-#include <Anggur/Renderer/Renderer.hpp>
-#include "Core.hpp"
-#include "Input.hpp"
+#include <Anggur/Helper/Log.h>
+#include <Anggur/Renderer/Renderer.h>
+#include "Core.h"
+#include "Input.h"
 
 namespace Anggur {
 
@@ -208,7 +208,7 @@ void Core::Initialize()
     if (!isInitialized)
     {
         int result = SDL_Init(SDL_INIT_VIDEO);
-        Anggur_Assert(result == 0, "[Core] Failed to initialize SDL: %i\n", result);
+        ANGGUR_ASSERT(result == 0, "[Core] Failed to initialize SDL: %i\n", result);
 
         isInitialized = true;
     }
@@ -226,7 +226,7 @@ void Core::LoadGraphicsFunctions()
     if (!isInitialized)
     {
         int result = gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress);
-        Anggur_Assert(result != 0, "[Core] Failed to load OpenGl functions");
+        ANGGUR_ASSERT(result != 0, "[Core] Failed to load OpenGl functions");
         isInitialized = true;
     }
 

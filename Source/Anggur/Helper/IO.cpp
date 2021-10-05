@@ -1,11 +1,12 @@
-#include "IO.hpp"
-#include "Log.hpp"
+#include "IO.h"
+#include "Log.h"
 
-namespace Anggur {
-
-std::string IO::Read(const std::string& path)
+namespace Anggur
 {
-    std::string wrapper;
+
+string IO::Read(const string& path)
+{
+    string wrapper;
 
     FILE* file;
     char* buffer;
@@ -14,7 +15,7 @@ std::string IO::Read(const std::string& path)
     file = fopen(path.c_str(), "r");
     if (file == nullptr)
     {
-        Anggur_Log("File.Read :: Cannot open file");
+        ANGGUR_LOG("File.Read :: Cannot open file");
         return wrapper;
     }
 
@@ -23,7 +24,7 @@ std::string IO::Read(const std::string& path)
 
     if (length == -1)
     {
-        Anggur_Log("File.Read :: File is broken");
+        ANGGUR_LOG("File.Read :: File is broken");
         return wrapper;
     }
 
@@ -34,7 +35,7 @@ std::string IO::Read(const std::string& path)
 
     if (ferror(file) != 0)
     {
-        Anggur_Log("File.Read :: Error while reading file");
+        ANGGUR_LOG("File.Read :: Error while reading file");
         return wrapper;
     }
 
@@ -45,36 +46,37 @@ std::string IO::Read(const std::string& path)
     return wrapper;
 }
 
-uint8_t* IO::Load(const std::string& path, size_t& size)
+std::vector<uint8_t> IO::Load(const string& path)
 {
     FILE* file = fopen(path.c_str(), "rb");
+    std::vector<uint8_t> buffer;
 
     if (file)
     {
         fseek(file, 0, SEEK_END);
-        size = ftell(file);
+        size_t size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
         if (size > 0)
         {
-            uint8_t* buffer = new uint8_t[size];
-            size_t read = fread(buffer, sizeof(uint8_t), size, file);
+            buffer.resize(size);
+            size_t read = fread(buffer.data(), sizeof(uint8_t), size, file);
+            fclose(file);
 
             if (read != size)
-                Anggur_Log("[Core.Io] File only read partially");
+                ANGGUR_LOG("[Core.IO] File only read partially");
 
             return buffer;
         }
         fclose(file);
-        Anggur_Log("[Core.Io] File is empty");
+        ANGGUR_LOG("[Core.IO] File is empty");
     }
 
-    Anggur_Log("[Core.Io] :: Failed to open file");
-
-    return nullptr;
+    ANGGUR_LOG("[Core.IO] :: Failed to open file");
+    return buffer;
 }
 
-std::string IO::GetFileExtention(const std::string& path)
+string IO::GetFileExtention(const string& path)
 {
     size_t index = path.length();
 
@@ -88,4 +90,4 @@ std::string IO::GetFileExtention(const std::string& path)
     return path.substr(index, path.length() - index + 1);
 }
 
-}
+} // namespace Anggur

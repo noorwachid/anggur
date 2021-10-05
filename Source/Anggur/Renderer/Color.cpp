@@ -1,5 +1,5 @@
-#include "Color.hpp"
-#include <Anggur/Math/Math.hpp>
+#include "Color.h"
+#include <Anggur/Math/Math.h>
 
 namespace Anggur {
 

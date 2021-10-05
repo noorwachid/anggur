@@ -2,13 +2,15 @@
 
 #include <string>
 
+using std::string;
+
 namespace Anggur {
 
 class Image
 {
 public:
     Image();
-    Image(const std::string& path);
+    Image(const string& path);
     ~Image();
 
     inline uint GetWidth() const { return width; }
@@ -16,7 +18,7 @@ public:
     inline uint GetChannels() const { return channels; }
     inline uint8_t* GetData() const { return data; }
 
-    void Load(const std::string& path);
+    void Load(const string& path);
     void Unload();
 
 private:

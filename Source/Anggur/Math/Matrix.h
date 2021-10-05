@@ -1,7 +1,7 @@
 #pragma once
 
 #include <initializer_list>
-#include "Math.hpp"
+#include "Math.h"
 
 namespace Anggur {
 

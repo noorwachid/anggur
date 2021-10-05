@@ -1,9 +1,11 @@
 #pragma once
 
 #include <string>
-#include <Anggur/Helper/Enum.hpp>
+#include <Anggur/Helper/Enum.h>
 
 struct SDL_Window;
+
+using std::string;
 
 namespace Anggur {
 
@@ -38,15 +40,15 @@ enum struct WindowFlag: int
     PopupMenu    = 0x00080000,
 };
 
-Anggur_EnumOverloads(WindowFlag);
+ANGGUR_OVERLOAD_ENUM(WindowFlag);
 
 struct WindowConfig
 {
     WindowFlag flag;
     uint width;
     uint height;
-    std::string title;
-    std::string icon;
+    string title;
+    string icon;
 
     WindowConfig(WindowFlag flag = WindowFlag::None):
         flag(flag),
@@ -58,13 +60,13 @@ struct WindowConfig
         width(width),
         height(height) {}
 
-    WindowConfig(int width, int height, const std::string& title, WindowFlag flag = WindowFlag::None):
+    WindowConfig(int width, int height, const string& title, WindowFlag flag = WindowFlag::None):
         flag(flag),
         width(width),
         height(height),
         title(title) {}
 
-    WindowConfig(int width, int height, const std::string& title, const std::string& icon, WindowFlag flag = WindowFlag::None):
+    WindowConfig(int width, int height, const string& title, const string& icon, WindowFlag flag = WindowFlag::None):
         flag(flag),
         width(width),
         height(height),
@@ -81,12 +83,12 @@ public:
 
     void SetPosition(const Vector& pos);
     void SetSize(const Vector& size);
-    void SetTitle(const std::string& title);
+    void SetTitle(const string& title);
 
     float GetRatio();
     Vector GetPosition();
     Vector GetSize();
-    const std::string& GetTitle();
+    const string& GetTitle();
     WindowFlag GetFlag();
 
     bool IsOpen();
@@ -102,8 +104,8 @@ private:
     SDL_Window* handler;
     void* context;
     float ratio;
-    bool open;
-    std::string title;
+    bool isOpen;
+    string title;
 };
 
 }

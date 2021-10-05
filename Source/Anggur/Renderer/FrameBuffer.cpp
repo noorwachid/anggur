@@ -1,5 +1,5 @@
-#include "FrameBuffer.hpp"
-#include <Anggur/Helper/Log.hpp>
+#include "FrameBuffer.h"
+#include <Anggur/Helper/Log.h>
 #include <glad/glad.h>
 
 namespace Anggur
@@ -39,7 +39,7 @@ void FrameBuffer::Recreate(uint width, uint height)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                            colorAttachment, 0);
 
-    Anggur_Assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
+    ANGGUR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
                       GL_FRAMEBUFFER_COMPLETE,
                   "Framebuffer is incomplete!");
 

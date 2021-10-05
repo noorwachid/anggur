@@ -1,5 +1,5 @@
 #include <SDL_events.h>
-#include "Event.hpp"
+#include "Event.h"
 
 namespace Anggur {
 }

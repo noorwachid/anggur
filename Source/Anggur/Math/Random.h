@@ -1,7 +1,7 @@
 #pragma once
 
 #include <random>
-#include "Math.hpp"
+#include "Math.h"
 
 namespace Anggur {
 

@@ -1,7 +1,9 @@
 #pragma once
 
-#include <stddef.h>
-#include <cinttypes>
+#include <inttypes.h>
+#include <cstddef>
+
+using std::size_t;
 
 namespace Anggur {
 
@@ -16,7 +18,7 @@ public:
     void SetData(size_t size, uint32_t* data);
 
 private:
-    unsigned int id;
+    uint32_t id;
 };
 
 class VertexBuffer
@@ -30,7 +32,7 @@ public:
     void SetData(size_t size, float* data);
 
 private:
-    unsigned int id;
+    uint32_t id;
 };
 
 class VertexArray
@@ -40,11 +42,10 @@ public:
     void Destroy();
     void Bind();
     void Unbind();
-
     void SetAttributePtr(size_t index, size_t size, size_t stride, void* offset);
 
 private:
-    unsigned int id;
+    uint32_t id;
 };
 
 }

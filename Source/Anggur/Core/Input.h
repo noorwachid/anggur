@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Anggur/Math/Vector.hpp>
-#include "Event/Event.hpp"
-#include "Core.hpp"
+#include <Anggur/Math/Vector.h>
+#include "Event/Event.h"
+#include "Core.h"
 
 struct SDL_Window;
 

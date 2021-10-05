@@ -1,10 +1,10 @@
 #include <SDL.h>
-#include <Anggur/Math/Vector.hpp>
-#include <Anggur/Renderer/Image.hpp>
-#include <Anggur/Helper/IO.hpp>
-#include <Anggur/Helper/Log.hpp>
-#include "Window.hpp"
-#include "Core.hpp"
+#include <Anggur/Math/Vector.h>
+#include <Anggur/Renderer/Image.h>
+#include <Anggur/Helper/IO.h>
+#include <Anggur/Helper/Log.h>
+#include "Window.h"
+#include "Core.h"
 
 namespace Anggur {
 
@@ -26,7 +26,7 @@ Window::Window(const WindowConfig& config)
                                 flag);
     context = SDL_GL_CreateContext(handler);
     ratio   = config.width / static_cast<float>(config.height);
-    open    = true;
+    isOpen    = true;
     SDL_GL_MakeCurrent(handler, context);
 
     Core::LoadGraphicsFunctions();
@@ -42,7 +42,7 @@ void Window::SetSize(const Vector& size)
     SDL_SetWindowSize(handler, size.x, size.y);
 }
 
-void Window::SetTitle(const std::string& title)
+void Window::SetTitle(const string& title)
 {
     SDL_SetWindowTitle(handler, title.c_str());
 }
@@ -66,7 +66,7 @@ Vector Window::GetSize()
     return Vector(w, h);
 }
 
-const std::string& Window::GetTitle()
+const string& Window::GetTitle()
 {
     title = SDL_GetWindowTitle(handler);
     return title;
@@ -79,7 +79,7 @@ Anggur::WindowFlag Window::GetFlag()
 
 bool Window::IsOpen()
 {
-    return open;
+    return isOpen;
 }
 
 void Window::SwapBuffers()
@@ -99,7 +99,7 @@ void* Window::GetContext()
 
 void Window::Close()
 {
-    open = false;
+    isOpen = false;
 }
 
 }

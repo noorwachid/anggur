@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Anggur/Helper/Enum.hpp>
-#include "Event.hpp"
+#include <Anggur/Helper/Enum.h>
+#include "Event.h"
 
 namespace Anggur {
 
@@ -549,6 +549,6 @@ enum class Modifier : unsigned int
     Reseved  = 0x8000
 };
 
-Anggur_EnumOverloads(Modifier);
+ANGGUR_OVERLOAD_ENUM(Modifier);
 
 }

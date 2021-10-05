@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Anggur/Math/Vector.hpp>
-#include "Window.hpp"
-#include "Key.hpp"
-#include "Mouse.hpp"
-#include "Gamepad.hpp"
+#include <Anggur/Math/Vector.h>
+#include "Window.h"
+#include "Key.h"
+#include "Mouse.h"
+#include "Gamepad.h"
 
 namespace Anggur {
 

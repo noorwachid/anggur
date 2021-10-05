@@ -1,8 +1,11 @@
+#include "Renderer.h"
+#include <Anggur/Helper/Log.h>
 #include <glad/glad.h>
-#include <Anggur/Helper/Log.hpp>
-#include "Renderer.hpp"
 
-namespace Anggur {
+#define Anggur_DebugTextRect 1
+
+namespace Anggur
+{
 
 struct Vertex
 {
@@ -62,14 +65,14 @@ void Renderer::CreateBatchShader()
 
         void main()
         {
-        gl_Position       = vec4(uViewProjection * vec3(aPosition, 1.0f), 1.0f);
+        gl_Position       = vec4(uViewProjection * vec3(aPosition.x, aPosition.y, 1.0f), 1.0f);
         vColor      	  = aColor;
         vTexCoord   	  = aTexCoord;
         vTexIndex   	  = aTexIndex;
         }
     )");
 
-    std::string fragmentSource = R"(
+    string fragmentSource = R"(
         #version 330 core
 
         layout (location = 0) out vec4 aColor;
@@ -119,7 +122,6 @@ void Renderer::CreateBatchShader()
 
     batchShader.SetFragmentSource(fragmentSource);
     batchShader.Compile();
-
 }
 
 void Renderer::Initialize()
@@ -131,7 +133,7 @@ void Renderer::Initialize()
     CreateBatchShader();
 
     maxVertices = maxQuad * 4;
-    maxIndices  = maxQuad * 6;
+    maxIndices = maxQuad * 6;
 
     vertexArray.Create();
     vertexArray.Bind();
@@ -142,10 +144,10 @@ void Renderer::Initialize()
     vertexBuffer.Bind();
     vertexBuffer.SetCapacity(sizeof(float) * maxVertices * Vertex::length);
 
-    vertexArray.SetAttributePtr(0, 2, sizeof(Vertex), (void*) offsetof(Vertex, position));
-    vertexArray.SetAttributePtr(1, 4, sizeof(Vertex), (void*) offsetof(Vertex, color));
-    vertexArray.SetAttributePtr(2, 2, sizeof(Vertex), (void*) offsetof(Vertex, texCoord));
-    vertexArray.SetAttributePtr(3, 1, sizeof(Vertex), (void*) offsetof(Vertex, texIndex));
+    vertexArray.SetAttributePtr(0, 2, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    vertexArray.SetAttributePtr(1, 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    vertexArray.SetAttributePtr(2, 2, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+    vertexArray.SetAttributePtr(3, 1, sizeof(Vertex), (void*)offsetof(Vertex, texIndex));
 
     indexBuffer.Create();
     indexBuffer.Bind();
@@ -153,7 +155,7 @@ void Renderer::Initialize()
 
     viewProjectionMatrix = Matrix::identity;
 
-    FlushData();
+    ClearData();
 }
 
 void Renderer::Terminate()
@@ -163,9 +165,9 @@ void Renderer::Terminate()
     delete[] textureData;
     delete[] textureIndices;
 
-    vertexData     = nullptr;
-    indexData      = nullptr;
-    textureData    = nullptr;
+    vertexData = nullptr;
+    indexData = nullptr;
+    textureData = nullptr;
     textureIndices = nullptr;
 
     indexBuffer.Destroy();
@@ -174,28 +176,89 @@ void Renderer::Terminate()
     batchShader.Destroy();
 }
 
-void Renderer::SetViewport(Vector size)
+void Renderer::SetDrawMode(DrawMode mode)
 {
-    glViewport(0, 0, size.x, size.y);
+    glPolygonMode(GL_FRONT_AND_BACK, static_cast<int>(mode));
 }
 
 void Renderer::SetMaxQuad(size_t max)
 {
-    if (max < circleSegment) max = circleSegment;
+    if (max < circleSegment)
+        max = circleSegment;
     maxQuad = max;
 }
 
 void Renderer::SetCircleSegment(size_t segment)
 {
-    if (segment < 3) segment = 3;
-    if (maxQuad < segment) maxQuad = segment;
+    if (segment < 3)
+        segment = 3;
+    if (maxQuad < segment)
+        maxQuad = segment;
     circleSegment = segment;
+}
+
+void Renderer::SetViewport(Vector size)
+{
+    glViewport(0, 0, size.x, size.y);
+}
+
+void Renderer::SetViewProjectionMatrix(const Matrix& matrix)
+{
+    viewProjectionMatrix = matrix;
 }
 
 void Renderer::ClearBackground(const Color& color)
 {
     glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textureOffset)
+{
+    if (vertexCounter + vertexOffset > maxVertices)
+        return Render();
+    if (indexCounter + indexOffset > maxIndices)
+        return Render();
+    if (textureCounter + textureOffset > maxTextureUnits)
+        return Render();
+}
+
+void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* indices, size_t indexLength)
+{
+    size_t vertexOffset = vertexCounter * Vertex::length;
+    size_t vertexSize = vertexLength * Vertex::length;
+
+    for (size_t i = 0; i < vertexSize; ++i)
+        vertexData[vertexOffset + i] = vetices[i];
+
+    for (size_t i = 0; i < indexLength; ++i)
+        indexData[indexCounter + i] = vertexCounter + indices[i];
+
+    vertexCounter += vertexLength;
+    indexCounter += indexLength;
+}
+
+void Renderer::AddTextureData(const Texture& texture)
+{
+    for (size_t i = 0; i < textureCounter; ++i)
+    {
+        if (textureData[i].GetID() == texture.GetID())
+        {
+            textureIndex = i;
+            return;
+        }
+    }
+
+    textureData[textureCounter] = texture;
+    textureIndex = textureCounter;
+    textureCounter++;
+}
+
+void Renderer::ClearData()
+{
+    vertexCounter = 0;
+    indexCounter = 0;
+    textureCounter = 0;
 }
 
 void Renderer::Render()
@@ -219,178 +282,419 @@ void Renderer::Render()
     vertexArray.Bind();
     glDrawElements(GL_TRIANGLES, indexCounter, GL_UNSIGNED_INT, nullptr);
 
-    FlushData();
-}
-
-void Renderer::SetViewProjectionMatrix(const Matrix& matrix)
-{
-    viewProjectionMatrix = matrix;
-}
-
-void Renderer::FlushData()
-{
-    vertexCounter  = 0;
-    indexCounter   = 0;
-    textureCounter = 0;
-}
-
-void Renderer::CheckLimit(size_t vertexOffset, size_t indexOffset, size_t textureOffset)
-{
-    if (vertexCounter + vertexOffset > maxVertices) return Render();
-    if (indexCounter + indexOffset > maxIndices) return Render();
-    if (textureCounter + textureOffset > maxTextureUnits) return Render();
-}
-
-void Renderer::AddText(Font& font, const std::string& text, const Vector& p0, float size, const Color& c)
-{
-    float x = p0.x;
-    float y = p0.y;
-    float charSpacing = size * 0.05;
-    float wordSpacing = size * 0.1;
-
-    for (auto ch: text)
-    {
-        if (ch == 32)
-            x += wordSpacing;
-
-        Glyph& glyph = font.GetGlyph(ch);
-
-        float sizeX = size * glyph.scaleX;
-        float sizeY = -size * glyph.scaleY;
-        float ascent = -size * glyph.ascent;
-
-//        AddRect({x, y + ascent}, sizeX, sizeY, Color::green);
-        AddQuadx(
-            {x, y + ascent},
-            {x + sizeX, y + ascent},
-            {x + sizeX, y + ascent + sizeY},
-            {x, y + ascent + sizeY},
-
-            {glyph.x, glyph.y},
-            {glyph.x + glyph.w, glyph.y},
-            {glyph.x + glyph.w, glyph.y + glyph.h},
-            {glyph.x, glyph.y + glyph.h},
-            font.GetTexture(),
-            c
-        );
-
-        x += sizeX + charSpacing;
-    }
-}
-
-void Renderer::AddData(const float* vetices, size_t vertexLength, const uint* indices, size_t indexLength)
-{
-    size_t vertexOffset = vertexCounter * Vertex::length;
-    size_t vertexSize   = vertexLength * Vertex::length;
-
-    for (size_t i = 0; i < vertexSize; ++i)
-        vertexData[vertexOffset + i] = vetices[i];
-
-    for (size_t i = 0; i < indexLength; ++i)
-        indexData[indexCounter + i] = vertexCounter + indices[i];
-
-    vertexCounter += vertexLength;
-    indexCounter += indexLength;
-}
-
-void Renderer::AddDatax(const Texture& texture)
-{
-    for (size_t i = 0; i < textureCounter; ++i)
-    {
-        if (textureData[i].GetID() == texture.GetID())
-        {
-            textureIndex = i;
-            return;
-        }
-    }
-
-    textureData[textureCounter] = texture;
-    textureIndex = textureCounter;
-    textureCounter++;
+    ClearData();
 }
 
 
-void Renderer::SetDrawMode(DrawMode mode)
-{
-    glPolygonMode(GL_FRONT_AND_BACK, static_cast<int>(mode));
-}
+// Primitive geometries
 
-void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Color& c)
+void Renderer::AddTriangle(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Color& c)
 {
     CheckLimit(3, 3);
 
+    Matrix m = transform.ToMatrix();
+    Vector l0 = p0 * m;
+    Vector l1 = p1 * m;
+    Vector l2 = p2 * m;
+
     float vertices[] = {
-        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        l0.x, l0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        l1.x, l1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        l2.x, l2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
     };
 
-    uint indices[] = { 0, 1, 2 };
+    uint indices[] = {0, 1, 2};
 
     AddData(vertices, 3, indices, 3);
 }
 
-void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c)
+void Renderer::AddQuad(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c)
 {
     CheckLimit(4, 6);
 
+    Matrix m = transform.ToMatrix();
+    Vector l0 = p0 * m;
+    Vector l1 = p1 * m;
+    Vector l2 = p2 * m;
+    Vector l3 = p3 * m;
+
     float vertices[] = {
-        p0.x, p0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p1.x, p1.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p2.x, p2.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
-        p3.x, p3.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
+        l0.x,
+        l0.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        0.f,
+        0.f,
+        -1,
+        l1.x,
+        l1.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        0.f,
+        0.f,
+        -1,
+        l2.x,
+        l2.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        0.f,
+        0.f,
+        -1,
+        l3.x,
+        l3.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        0.f,
+        0.f,
+        -1,
     };
 
     uint indices[] = {
         0, 1, 2,
-        2, 3, 0
-    };
+        2, 3, 0};
 
     AddData(vertices, 4, indices, 6);
 }
 
-void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c0, const Color& c1, const Color& c2, const Color& c3)
+void Renderer::AddRect(const Transform& transform, const Vector& p0, const Vector& p1, const Color& color)
 {
-    CheckLimit(4, 6);
+    Matrix m = transform.ToMatrix();
+    AddQuad(transform, p0 * m, Vector(p0.x, p1.y) * m, p1 * m, Vector(p1.x, p0.y) * m, color);
+}
+
+void Renderer::AddPolygon(const Transform& transform, const Vector& p0, float r, size_t segments, const Color& c)
+{
+    if (segments < 3)
+        segments = 3;
+
+    size_t triangles = segments - 2;
+
+    CheckLimit(segments, triangles * 3);
+
+    float theta = Math::twoPi / segments;
+    float tangetialFactor = Math::Tan(theta);
+    float radialFactor = Math::Cos(theta);
+
+    float x = r;
+    float y = 0;
+
+    float vertices[segments * Vertex::length];
+    uint indices[triangles * 3];
+    Matrix m = transform.ToMatrix();
+
+    for (size_t i = 0, offset = 0; i < segments; i++)
+    {
+        Vector point = Vector(p0.x + x, p0.y + y) * m;
+        vertices[offset + 0] = x + point.x;
+        vertices[offset + 1] = y + point.y;
+
+        vertices[offset + 2] = c.r;
+        vertices[offset + 3] = c.g;
+        vertices[offset + 4] = c.b;
+        vertices[offset + 5] = c.a;
+
+        vertices[offset + 6] = 0;
+        vertices[offset + 7] = 0;
+
+        vertices[offset + 8] = -1;
+
+        float tx = -y;
+        float ty = x;
+
+        x += tx * tangetialFactor;
+        y += ty * tangetialFactor;
+
+        x *= radialFactor;
+        y *= radialFactor;
+
+        offset += Vertex::length;
+    }
+
+    for (size_t i = 0, offset = 0; i < triangles; ++i)
+    {
+        indices[offset + 0] = 0;
+        indices[offset + 1] = i + 1;
+        indices[offset + 2] = i + 2;
+        offset += 3;
+    }
+
+    AddData(vertices, segments, indices, triangles * 3);
+}
+
+void Renderer::AddCircle(const Transform& transform, const Vector& p0, float r, const Color& c)
+{
+    AddPolygon(transform, p0, r, circleSegment, c);
+}
+
+// Complex geometries
+
+void Renderer::AddTerminator(const Transform& transform, const Vector& p0, const Vector& p1, float weight, const Color& c)
+{
+    Vector p3 = (p0 - p1).Normalize() * weight;
+    Vector t0 = (p1 - p0).GetPerpen().Normalize() * weight;
+
+    AddQuad(transform, p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
+}
+
+void Renderer::AddAnchor(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w0, const Color& c)
+{
+    Matrix m = transform.ToMatrix();
+    Vector i0 = Vector::zero * m;
+    Vector l0 = p0 * m;
+    Vector l1 = p1 * m;
+    Vector l2 = p2 * m;
+    Vector t0 = (l1 - l0).GetPerpen();
+    Vector t2 = (l2 - l1).GetPerpen();
+
+    if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y)))
+    {
+        t0 = -t0;
+        t2 = -t2;
+    }
+
+    t0.SetLength(w0);
+    t2.SetLength(w0);
+
+    Vector u0 = (l0 + t0);
+    Vector u1 = (l2 + t2);
+    Vector n0 = (l0 - t0);
+    Vector n1 = (l2 - t2);
+    Vector c0 = (l1 + t0);
+    Vector c1 = (l1 + t2);
+    Vector d0 = (l1 - t0);
+    Vector d1 = (l1 - t2);
+    Vector e0 = ((l1 - l0).SetLength(w0 * 2) + c0);
+    Vector e1 = ((l1 - l2).SetLength(w0 * 2) + c1);
+
+    auto areLinesIntersected = [](
+                                   const Vector& p0,
+                                   const Vector& p1,
+                                   const Vector& p2,
+                                   const Vector& p3,
+                                   Vector& p4) -> bool
+    {
+        float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
+        float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
+        float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
+
+        float denomAbs = Math::Abs(denom);
+        float numeaAbs = Math::Abs(numea);
+        float numebAbs = Math::Abs(numeb);
+
+        if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
+        {
+            p4 = Vector::Lerp(p0, p1, 0.5);
+            return true;
+        }
+
+        if (denomAbs < Math::epsilon)
+            return false;
+
+        float mua = numea / denom;
+        float mub = numeb / denom;
+
+        if (mua < 0 || mua > 1 || mub < 0 || mub > 1)
+        {
+            return false;
+        }
+
+        float muax = numea / denom;
+        p4 = (p1 - p0) * muax;
+        p4 += p0;
+        return true;
+    };
+
+    bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
+
+#ifdef Anggur_DebugAnchorPoints
+    AddCircle(Transform(), e0, 0.01, Color::red);
+    AddCircle(Transform(), e1, 0.01, Color::red);
+    AddCircle(Transform(), u0, 0.01, Color::blue);
+    AddCircle(Transform(), u1, 0.01, Color::blue);
+    AddCircle(Transform(), n0, 0.01, Color::green);
+    AddCircle(Transform(), n1, 0.01, Color::green);
+    AddCircle(Transform(), c0, 0.01, Color::yellow);
+    AddCircle(Transform(), c1, 0.01, Color::yellow);
+    AddCircle(Transform(), d0, 0.01, Color::pink);
+    AddCircle(Transform(), d1, 0.01, Color::pink);
+    AddCircle(Transform(), i0, 0.01, Color::cyan);
+    AddCircle(Transform(), l1, 0.01, Color::purple);
+    return;
+#endif
 
     float vertices[] = {
-        p0.x, p0.y, c0.r, c0.g, c0.b, c0.a, 0.f, 0.f, -1,
-        p1.x, p1.y, c1.r, c1.g, c1.b, c1.a, 0.f, 0.f, -1,
-        p2.x, p2.y, c2.r, c2.g, c2.b, c2.a, 0.f, 0.f, -1,
-        p3.x, p3.y, c3.r, c3.g, c3.b, c3.a, 0.f, 0.f, -1,
+        e0.x, e0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 0
+        e1.x, e1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 1
+        u0.x, u0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 2
+        u1.x, u1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 3
+        n0.x, n0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 4
+        n1.x, n1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 5
+        c0.x, c0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 6
+        c1.x, c1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 7
+        d0.x, d0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 8
+        d1.x, d1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 9
+        i0.x, i0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 10
+        l1.x, l1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 11
     };
 
+    uint indexLength = 21;
     uint indices[] = {
-        0, 1, 2,
-        2, 3, 0
+        2,
+        6,
+        8,
+        8,
+        4,
+        2,
+        7,
+        3,
+        5,
+        5,
+        9,
+        7,
+        6,
+        7,
+        11, // mid
+        6,
+        0,
+        1,
+        1,
+        7,
+        6,
     };
 
-    AddData(vertices, 4, indices, 6);
+    if (intersected)
+    {
+        indexLength = 18;
+        indices[15] = 6;
+        indices[16] = 10;
+        indices[17] = 7;
+    }
+
+    AddData(vertices, 12, indices, indexLength);
 }
 
-void Renderer::AddRect(const Vector& p0, float w, float h, const Color& c)
+void Renderer::AddLine(const Transform& transform, const Vector& p0, const Vector& p1, float weight, const Color& c)
 {
-    AddQuad(
-        p0,
-        Vector(p0.x + w, p0.y),
-        Vector(p0.x + w, p0.y + h),
-        Vector(p0.x,     p0.y + h),
-        c
-    );
+    Vector m0 = Vector::Lerp(p0, p1, 0.5);
+
+    AddTerminator(transform, p0, m0, weight, c);
+    AddTerminator(transform, p1, m0, weight, c);
 }
 
-void Renderer::AddBox(const Vector& position, const Vector& radii, const Color& c)
+void Renderer::AddPolyline(const Transform& transform, const std::vector<Vector>& ps, float w, const Color& c)
 {
-    AddQuad(
-        Vector(position.x - radii.x, position.y - radii.y),
-        Vector(position.x + radii.x, position.y - radii.y),
-        Vector(position.x + radii.x, position.y + radii.y),
-        Vector(position.x - radii.x, position.y + radii.y),
-        c
-    );
+    if (ps.size() > 1)
+    {
+        std::vector<Vector> ms;
+
+        for (size_t i = 0; i < ps.size() - 1; ++i)
+            ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
+
+        for (size_t i = 1; i < ms.size(); ++i)
+            AddAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+
+        // AddTerminator(transform, ps.front(), ms.front(), w, c);
+        // AddTerminator(transform, ps.back(), ms.back(), w, c);
+    }
 }
 
-void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
+void Renderer::AddPolyring(const Transform& transform, const std::vector<Vector>& ps, float w, const Color& c)
+{
+    if (ps.size() > 1)
+    {
+        std::vector<Vector> ms;
+
+        for (size_t i = 0; i < ps.size() - 1; ++i)
+            ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
+
+        for (size_t i = 1; i < ms.size(); ++i)
+            AddAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+
+        Vector m = Vector::Lerp(ps.front(), ps.back(), 0.5);
+
+        AddAnchor(transform, m, ps.front(), ms.front(), w, c);
+        AddAnchor(transform, ms.back(), ps.back(), m, w, c);
+    }
+}
+
+void Renderer::AddQuadraticBz(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
+{
+    auto GetLerped = [](const Vector& p0, const Vector& p1, const Vector& p2, float t)
+    {
+        Vector pt;
+
+        float t2 = t * 2;
+        float tq = t * t;
+        float ti = 1.f - t;
+        float tiq = ti * ti;
+
+        pt.x = tiq * p0.x +
+               ti * t2 * p1.x +
+               tq * p2.x;
+        pt.y = tiq * p0.y +
+               ti * t2 * p1.y +
+               tq * p2.y;
+
+        return pt;
+    };
+
+    std::vector<Vector> points;
+
+    for (int i = 0; i <= 10; ++i)
+        points.push_back(GetLerped(p0, p1, p2, i / 10.f));
+
+    AddPolyline(transform, points, w, c);
+}
+
+void Renderer::AddQuadraticBzi(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
+{
+    Vector px = p1 * 2 - (p0 + p2) / 2;
+    AddQuadraticBz(transform, p0, px, p2, w, c);
+}
+
+void Renderer::AddQubicBz(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w, const Color& c)
+{
+    auto GetLerped = [](const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float t)
+    {
+        Vector pt;
+
+        float t3 = t * 3;
+        float tc = t * t * t;
+        float ti = 1.f - t;
+        float tiq = ti * ti;
+        float tic = ti * ti * ti;
+
+        pt.x = tic * p0.x +
+               tiq * t3 * p1.x +
+               ti * t3 * t * p2.x +
+               tc * p3.x;
+        pt.y = tic * p0.y +
+               tiq * t3 * p1.y +
+               ti * t3 * t * p2.y +
+               tc * p3.y;
+
+        return pt;
+    };
+
+    std::vector<Vector> points;
+
+    for (int i = 0; i <= 10; ++i)
+        points.push_back(GetLerped(p0, p1, p2, p3, i / 10.f));
+
+    AddPolyline(transform, points, w, c);
+}
+
+// Natural geometries
+
+void Renderer::AddConvex(const Transform& transform, const std::vector<Vector>& ps, const Color& c)
 {
     size_t triangles = ps.size() - 2;
     uint indices[triangles * 3];
@@ -426,133 +730,229 @@ void Renderer::AddConvex(const std::vector<Vector>& ps, const Color& c)
     AddData(vertices, ps.size(), indices, triangles * 3);
 }
 
-void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Color& c)
+
+// Text
+
+void Renderer::AddText(const Transform& transform, const Vector& p0, const Vector& p1, const std::string& textBuffer, const TextOption& textOption, Font& textFont, const Color& color)
 {
-    if (segments < 3) segments = 3;
+    Vector offset = p0;
+    Vector containerArea = p1 - p0;
+    Vector occupiedArea;
+    Vector lineArea;
+    Vector wordOffset;
+    Vector wordArea;
 
-    size_t triangles = segments - 2;
+    occupiedArea.y = -textFont.GetLineHeight() * textOption.size * textOption.lineHeight;
+    lineArea.y = occupiedArea.y;
+    wordArea.y = occupiedArea.y - textOption.size * 0.3;
 
-    CheckLimit(segments, triangles * 3);
+    AddRect(transform, p0, p1, Color(0, 0, 1, 0.4));
 
-    float theta           = Math::twoPi / segments;
-    float tangetialFactor = Math::Tan(theta);
-    float radialFactor    = Math::Cos(theta);
+    bool isFit = true;
 
-    float x = r;
-    float y = 0;
+    float wordSpace = textOption.size * textOption.wordSpace;
+    float letterSpace = textOption.size * textOption.letterSpace;
 
-    float vertices[segments * Vertex::length];
-    uint indices[triangles * 3];
+    Vector ellipsisArea;
+    std::vector<CodepointContainer> ellipsisCcs;
 
-    for (size_t i = 0, offset = 0; i < segments; i++)
+    for (size_t i = 0; i < textOption.ellipsis.size(); ++i)
     {
-        vertices[offset + 0] = x + p0.x;
-        vertices[offset + 1] = y + p0.y;
+        int codepoint = textOption.ellipsis[i];
+        CodepointContainer cc;
+        cc.glyph = textFont.glyphs[codepoint];
+        cc.offset.x = ellipsisArea.x;
+        cc.offset.y = textOption.size * cc.glyph.ascent;
+        cc.area.x = textOption.size * cc.glyph.size.x;
+        cc.area.y = textOption.size * cc.glyph.size.y;
+        ellipsisCcs.push_back(cc);
 
-        vertices[offset + 2] = c.r;
-        vertices[offset + 3] = c.g;
-        vertices[offset + 4] = c.b;
-        vertices[offset + 5] = c.a;
+        ellipsisArea.x += cc.area.x + letterSpace;
+    }
+    ellipsisArea.x -= letterSpace;
 
-        vertices[offset + 6] = 0;
-        vertices[offset + 7] = 0;
+    std::vector<CodepointContainer> ccs;
 
-        vertices[offset + 8] = -1;
+    auto CreateNewWord = [&]()
+    {
+        wordOffset.x += wordSpace;
 
-        float tx = -y;
-        float ty = x;
+        lineArea.x += wordArea.x;
+        lineArea.x += wordSpace;
+        wordArea.x -= letterSpace;
 
-        x += tx * tangetialFactor;
-        y += ty * tangetialFactor;
+#ifdef Anggur_DebugTextRect
+        AddRect(transform, offset, offset + wordArea, Color(1, 1, 1, 0.33));
+#endif
+        AddTextChunk(transform, offset, ccs, textFont, color);
 
-        x *= radialFactor;
-        y *= radialFactor;
+        offset.x += wordOffset.x;
+        wordOffset.Set(0, 0);
+        wordArea.x = 0;
+        ccs.clear();
+    };
 
-        offset += Vertex::length;
+    auto CreateNewLine = [&]()
+    {
+        offset.x = p0.x;
+        lineArea.x -= wordSpace;
+        lineArea.x -= letterSpace;
+
+        occupiedArea.x = Math::Max(occupiedArea.x, lineArea.x);
+        occupiedArea.y += lineArea.y;
+#ifdef Anggur_DebugTextRect
+        AddRect(transform, offset, offset + lineArea, Color(1, 1, 1, 0.33));
+#endif
+
+        lineArea.x = 0;
+        offset.y += lineArea.y;
+    };
+
+    for (size_t i = 0; i < textBuffer.size(); ++i)
+    {
+        int codepoint = textBuffer[i];
+        CodepointContainer cc;
+        cc.glyph = textFont.glyphs[codepoint];
+        cc.offset.x = wordOffset.x;
+        cc.offset.y = textOption.size * cc.glyph.ascent;
+        cc.area.x = textOption.size * cc.glyph.size.x;
+        cc.area.y = textOption.size * cc.glyph.size.y;
+        ccs.push_back(cc);
+
+        if (codepoint == '\n')
+        {
+            CreateNewWord();
+            CreateNewLine();
+        }
+        else if (codepoint == ' ')
+        {
+            if (lineArea.x + wordArea.x > containerArea.x)
+            {
+
+                if (occupiedArea.y + lineArea.y > containerArea.y)
+                {
+                    occupiedArea.x = Math::Max(occupiedArea.x, lineArea.x);
+#ifdef Anggur_DebugTextRect
+                    AddCircle(transform, p0 + Vector(occupiedArea.x, occupiedArea.y + lineArea.y), 0.1, Color(1, 1, 0, 0.5));
+#endif
+                    isFit = false;
+                    AddTextChunk(transform, offset, ellipsisCcs, textFont, color);
+                    break;
+                }
+                else
+                {
+                    CreateNewLine();
+                    CreateNewWord();
+                }
+            }
+            else
+                CreateNewWord();
+        }
+        else
+        {
+            // TODO: Split the word if longer than the container area
+
+            float x = letterSpace + cc.area.x + textFont.GetKerning(codepoint, textBuffer[i + 1]) * textOption.size;
+            wordOffset.x += x;
+            wordArea.x += x;
+        }
     }
 
-    for (size_t i = 0, offset = 0; i < triangles; ++i)
+    if (isFit)
     {
-        indices[offset + 0] = 0;
-        indices[offset + 1] = i + 1;
-        indices[offset + 2] = i + 2;
-        offset += 3;
+        CreateNewLine();
+        CreateNewWord();
     }
 
-    AddData(vertices, segments, indices, triangles * 3);
+    offset.x = p0.x;
+#ifdef Anggur_DebugTextRect
+    AddRect(transform, offset, offset + lineArea, Color(1, 1, 1, 0.33));
+    AddRect(transform, p0, p0 + occupiedArea, Color(1, 1, 1, 0.33));
+    AddCircle(transform, p0 + containerArea, 0.1, Color::green);
+#endif
 }
 
-void Renderer::AddCircle(const Vector& p0, float r, const Color& c)
+void Renderer::AddTextChunk(const Transform& transform, const Vector& p0, const std::vector<CodepointContainer>& ccs, Font& textFont, const Color& color)
 {
-    AddPolygon(p0, r, circleSegment, c);
+    Matrix m = transform.ToMatrix();
+
+    for (const CodepointContainer& cc: ccs)
+    {
+#ifdef Anggur_DebugTextRect
+        AddRect(transform, p0 + cc.offset, p0 + cc.offset + cc.area, Color(1, 1, 1, 0.33));
+#endif
+        AddQuadx(
+            Vector(p0.x + cc.offset.x, p0.y + cc.offset.y) * m,
+            Vector(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y) * m,
+            Vector(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y + cc.area.y) * m,
+            Vector(p0.x + cc.offset.x, p0.y + cc.offset.y + cc.area.y) * m,
+
+            Vector(cc.glyph.x, cc.glyph.y),
+            Vector(cc.glyph.x + cc.glyph.w, cc.glyph.y),
+            Vector(cc.glyph.x + cc.glyph.w, cc.glyph.y + cc.glyph.h),
+            Vector(cc.glyph.x, cc.glyph.y + cc.glyph.h),
+            textFont.GetTexture(),
+            color);
+    }
 }
 
-void Renderer::AddTriangle(const Vector& p0, const Vector& p1, const Vector& p2, const Transform& f, const Color& c)
-{
-    Matrix m = f.ToMatrix();
-    AddTriangle(p0 * m, p1 * m, p2 * m, c);
-}
-
-void Renderer::AddQuad(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Transform& f, const Color& c)
-{
-    Matrix m = f.ToMatrix();
-    AddQuad(p0 * m, p1 * m, p2 * m, p3 * m, c);
-}
-
-void Renderer::AddRect(const Vector& p0, float w, float h, const Transform& f, const Color& c)
-{
-    Matrix m = f.ToMatrix();
-    AddQuad(
-        p0 * m,
-        Vector(p0.x + w, p0.y) * m,
-        Vector(p0.x + w, p0.y + h) * m,
-        Vector(p0.x,     p0.y + h) * m,
-        c
-    );
-}
-
-void Renderer::AddBox(const Vector& p0, const Vector& r, const Transform& f, const Color& c)
-{
-    Matrix m = f.ToMatrix();
-    AddQuad(
-        Vector(p0.x - r.x, p0.y - r.y) * m,
-        Vector(p0.x + r.x, p0.y - r.y) * m,
-        Vector(p0.x + r.x, p0.y + r.y) * m,
-        Vector(p0.x - r.x, p0.y + r.y) * m,
-        c
-    );
-}
-
-void Renderer::AddPolygon(const Vector& p0, float r, size_t segments, const Transform& f, const Color& c)
-{
-    AddPolygon(p0 * f.ToMatrix(), r, segments, c);
-}
-
-void Renderer::AddCircle(const Vector& p0, float r, const Transform& f, const Color& c)
-{
-    AddCircle(p0 * f.ToMatrix(), r, c);
-}
-
+// Textured geometries
 
 void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Color& c)
 {
     CheckLimit(4, 6, 1);
 
-    AddDatax(t);
+    AddTextureData(t);
     float ti = textureIndex;
     if (t.GetChannels() == 1)
         ti += maxTextureUnits;
 
     float vertices[] = {
-        p0.x, p0.y, c.r, c.g, c.b, c.a, t0.x, t0.y, ti,
-        p1.x, p1.y,	c.r, c.g, c.b, c.a, t1.x, t1.y, ti,
-        p2.x, p2.y, c.r, c.g, c.b, c.a, t2.x, t2.y, ti,
-        p3.x, p3.y, c.r, c.g, c.b, c.a, t3.x, t3.y, ti,
+        p0.x,
+        p0.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        t0.x,
+        t0.y,
+        ti,
+        p1.x,
+        p1.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        t1.x,
+        t1.y,
+        ti,
+        p2.x,
+        p2.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        t2.x,
+        t2.y,
+        ti,
+        p3.x,
+        p3.y,
+        c.r,
+        c.g,
+        c.b,
+        c.a,
+        t3.x,
+        t3.y,
+        ti,
     };
 
     uint indices[] = {
-        0, 1, 2,
-        2, 3, 0,
+        0,
+        1,
+        2,
+        2,
+        3,
+        0,
     };
 
     AddData(vertices, 4, indices, 6);
@@ -573,8 +973,7 @@ void Renderer::Addx(const Vector& p0, const Texture& t, const Color& c)
         {1.f, 1.f},
         {0.f, 1.f},
         t,
-        c
-    );
+        c);
 }
 
 void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, const Color& c)
@@ -589,8 +988,7 @@ void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, co
         {1, 1},
         {0, 1},
         t,
-        c
-    );
+        c);
 }
 
 void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Texture& t, const Color& c)
@@ -605,13 +1003,12 @@ void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Textur
         {1, 1},
         {0, 1},
         t,
-        c
-    );
+        c);
 }
 
 void Renderer::Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c)
 {
-    Addx(p0 * f.ToMatrix(), t, c);;
+    Addx(p0 * f.ToMatrix(), t, c);
 }
 
 void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Transform& f, const Color& c)
@@ -630,225 +1027,6 @@ void Renderer::AddBoxx(const Vector& p0, const Vector& radii, const Texture& t, 
     AddBoxx(p0 * f.ToMatrix(), radii, t, c);
 }
 
-void Renderer::AddTerminator(const Vector& p0, const Vector& p1, float weight, const Color& c)
-{
-    Vector p3 = (p0 - p1).Normalize() * weight;
-    Vector t0 = (p1 - p0).GetPerpen().Normalize() * weight;
 
-    AddQuad(p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
-}
 
-void Renderer::AddAnchor(const Vector& p0, const Vector& p1, const Vector& p2, float w0, const Color& c)
-{
-    Vector t0 = (p1 - p0).GetPerpen();
-    Vector t2 = (p2 - p1).GetPerpen();
-
-    if (0 < ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)))
-    {
-        t0 = -t0;
-        t2 = -t2;
-    }
-
-    t0.SetLength(w0);
-    t2.SetLength(w0);
-
-    Vector i0;
-    Vector u0 = p0 + t0;
-    Vector u1 = p2 + t2;
-    Vector n0 = p0 - t0;
-    Vector n1 = p2 - t2;
-    Vector c0 = p1 + t0;
-    Vector c1 = p1 + t2;
-    Vector d0 = p1 - t0;
-    Vector d1 = p1 - t2;
-    Vector e0 = (p1 - p0).SetLength(w0 * 2) + c0;
-    Vector e1 = (p1 - p2).SetLength(w0 * 2) + c1;
-
-    auto areLinesIntersected = [](
-        const Vector& p0,
-        const Vector& p1,
-        const Vector& p2,
-        const Vector& p3,
-        Vector& p4) -> bool
-    {
-        float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
-        float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
-        float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
-
-        float denomAbs = Math::Abs(denom);
-        float numeaAbs = Math::Abs(numea);
-        float numebAbs = Math::Abs(numeb);
-
-        if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
-        {
-            p4 = Vector::Lerp(p0, p1, 0.5);
-            return true;
-        }
-
-        if (denomAbs < Math::epsilon)
-            return false;
-
-        float mua = numea / denom;
-        float mub = numeb / denom;
-
-        if (mua < 0 || mua > 1 || mub < 0 || mub > 1) {
-            return false;
-        }
-
-        float muax = numea / denom;
-        p4 = (p1 - p0) * muax;
-        p4 += p0;
-        return true;
-    };
-
-    bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
-
-    float vertices[] = {
-        e0.x, e0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 0
-        e1.x, e1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 1
-        u0.x, u0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 2
-        u1.x, u1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 3
-        n0.x, n0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 4
-        n1.x, n1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 5
-        c0.x, c0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 6
-        c1.x, c1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 7
-        d0.x, d0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 8
-        d1.x, d1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 9
-        i0.x, i0.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 10
-        p1.x, p1.y, c.r, c.g, c.b, c.a, 0, 0, -1, // 11
-    };
-
-    uint indexLength = 21;
-    uint indices[] = {
-        2, 6, 8,
-        8, 4, 2,
-        7, 3, 5,
-        5, 9, 7,
-        6, 7, 11, // mid
-        6, 0, 1,
-        1, 7, 6,
-    };
-
-    if (intersected)
-    {
-        indexLength = 18;
-        indices[15] = 6;
-        indices[16] = 10;
-        indices[17] = 7;
-    }
-
-    AddData(vertices, 12, indices, indexLength);
-}
-
-void Renderer::AddLine(const Vector& p0, const Vector& p1, float weight, const Color& c)
-{
-    Vector m0 = Vector::Lerp(p0, p1, 0.5);
-
-    AddTerminator(p0, m0, weight, c);
-    AddTerminator(p1, m0, weight, c);
-}
-
-void Renderer::AddPolyline(const std::vector<Vector>& ps, float w, const Color& c)
-{
-    if (ps.size() > 1)
-    {
-        std::vector<Vector> ms;
-
-        for (size_t i = 0; i < ps.size() - 1; ++i)
-            ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
-
-        for (size_t i = 1; i < ms.size(); ++i)
-            AddAnchor(ms[i - 1], ps[i], ms[i], w, c);
-
-        AddTerminator(ps.front(), ms.front(), w, c);
-        AddTerminator(ps.back(), ms.back(), w, c);
-    }
-}
-
-void Renderer::AddPolyring(const std::vector<Vector>& ps, float w, const Color& c)
-{
-    if (ps.size() > 1)
-    {
-        std::vector<Vector> ms;
-
-        for (size_t i = 0; i < ps.size() - 1; ++i)
-            ms.push_back(Vector::Lerp(ps[i], ps[i + 1], 0.5));
-
-        for (size_t i = 1; i < ms.size(); ++i)
-            AddAnchor(ms[i - 1], ps[i], ms[i], w, c);
-
-        Vector m = Vector::Lerp(ps.front(), ps.back(), 0.5);
-
-        AddAnchor(m, ps.front(), ms.front(), w, c);
-        AddAnchor(ms.back(), ps.back(), m, w, c);
-    }
-}
-
-void Renderer::AddQuadraticBz(const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
-{
-    auto GetLerped = [](const Vector& p0, const Vector& p1, const Vector& p2, float t)
-    {
-        Vector pt;
-
-        float t2 = t * 2;
-        float tq = t * t;
-        float ti = 1.f - t;
-        float tiq = ti * ti;
-
-        pt.x = tiq * p0.x +
-               ti * t2 * p1.x +
-               tq * p2.x;
-        pt.y = tiq * p0.y +
-               ti * t2 * p1.y +
-               tq * p2.y;
-
-        return pt;
-    };
-
-    std::vector<Vector> points;
-
-    for (int i = 0; i <= 10; ++i)
-        points.push_back(GetLerped(p0, p1, p2, i / 10.f));
-
-    AddPolyline(points, w, c);
-}
-
-void Renderer::AddQuadraticBzi(const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
-{
-    Vector px = p1 * 2 - (p0 + p2) / 2;
-    AddQuadraticBz(p0, px, p2, w, c);
-}
-
-void Renderer::AddQubicBz(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w, const Color& c)
-{
-    auto GetLerped = [](const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float t)
-    {
-        Vector pt;
-
-        float t3 = t * 3;
-        float tc = t * t * t;
-        float ti = 1.f - t;
-        float tiq = ti * ti;
-        float tic = ti * ti * ti;
-
-        pt.x = tic * p0.x +
-               tiq * t3 * p1.x +
-               ti * t3 * t * p2.x +
-               tc * p3.x;
-        pt.y = tic * p0.y +
-               tiq * t3 * p1.y +
-               ti * t3 * t * p2.y +
-               tc * p3.y;
-
-        return pt;
-    };
-
-    std::vector<Vector> points;
-
-    for (int i = 0; i <= 10; ++i)
-        points.push_back(GetLerped(p0, p1, p2, p3, i/10.f));
-
-    AddPolyline(points, w, c);
-}
-
-}
+} // namespace Anggur

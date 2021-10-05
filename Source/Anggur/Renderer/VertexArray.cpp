@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include "VertexArray.hpp"
+#include "VertexArray.h"
 
 namespace Anggur {
 

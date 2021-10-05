@@ -1,7 +1,7 @@
 #include <string.h>
 #include <SDL_events.h>
-#include <Anggur/Helper/Log.hpp>
-#include "Input.hpp"
+#include <Anggur/Helper/Log.h>
+#include "Input.h"
 
 namespace Anggur {
 

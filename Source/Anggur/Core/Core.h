@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Window.hpp"
-#include "Input.hpp"
-#include "Scene.hpp"
+#include "Window.h"
+#include "Input.h"
+#include "Scene.h"
 
 union SDL_Event;
 
