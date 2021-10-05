@@ -207,6 +207,9 @@ void Core::Initialize()
 
     if (!isInitialized)
     {
+        // Do not disable compositing
+        SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
+        
         int result = SDL_Init(SDL_INIT_VIDEO);
         ANGGUR_ASSERT(result == 0, "[Core] Failed to initialize SDL: %i\n", result);
 
