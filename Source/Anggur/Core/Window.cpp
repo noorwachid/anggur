@@ -4,7 +4,7 @@
 #include <Anggur/Helper/IO.h>
 #include <Anggur/Helper/Log.h>
 #include "Window.h"
-#include "Core.h"
+#include "Application.h"
 
 namespace Anggur {
 
@@ -29,7 +29,7 @@ Window::Window(const WindowConfig& config)
     isOpen    = true;
     SDL_GL_MakeCurrent(handler, context);
 
-    Core::LoadGraphicsFunctions();
+    Application::LoadGraphicsFunctions();
 }
 
 void Window::SetPosition(const Vector& pos)

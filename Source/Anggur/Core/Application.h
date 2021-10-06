@@ -8,10 +8,10 @@ union SDL_Event;
 
 namespace Anggur {
 
-class Core
+class Application
 {
 public:
-    Core();
+    Application();
 
     static Window* GetWindow();
     static void Run(Scene* mainScene = nullptr);

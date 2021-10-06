@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Anggur/Math/Vector.h>
+#include "Application.h"
 #include "Event/Event.h"
-#include "Core.h"
 
 struct SDL_Window;
 
@@ -32,7 +32,7 @@ public:
     static Vector GetMousePosition();
     static Vector GetMouseScrollDirection();
 
-    friend class Core;
+    friend class Application;
 
 private:
     static SDL_Window* windowHandler;

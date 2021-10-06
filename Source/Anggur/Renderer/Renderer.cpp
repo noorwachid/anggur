@@ -601,8 +601,8 @@ void Renderer::AddPolyline(const Transform& transform, const std::vector<Vector>
         for (size_t i = 1; i < ms.size(); ++i)
             AddAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
 
-        // AddTerminator(transform, ps.front(), ms.front(), w, c);
-        // AddTerminator(transform, ps.back(), ms.back(), w, c);
+        AddTerminator(transform, ps.front(), ms.front(), w, c);
+        AddTerminator(transform, ps.back(), ms.back(), w, c);
     }
 }
 

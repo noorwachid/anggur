@@ -10,6 +10,7 @@ file(GLOB Anggur_SourceFiles
     "Source/Anggur/Core/*.cpp"
     "Source/Anggur/Core/Event/*.cpp"
     "Source/Anggur/Renderer/*.cpp"
+    "Source/Anggur/DS/*.cpp"
 )
 
 add_library(Anggur STATIC 
@@ -23,7 +24,6 @@ add_subdirectory(Dependencies/Stb)
 
 # SDL2
 find_package(SDL2)
-find_package(SDL2_mixer)
 find_package(Threads)
 
 target_include_directories(Anggur PUBLIC Source PRIVATE ${SDL2_INCLUDE_DIRS})

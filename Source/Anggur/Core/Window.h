@@ -98,7 +98,7 @@ public:
     SDL_Window* GetHandler();
     void* GetContext();
 
-    friend class Core;
+    friend class Application;
 
 private:
     SDL_Window* handler;

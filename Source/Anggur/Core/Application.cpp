@@ -4,27 +4,27 @@
 #include <glad/glad.h>
 #include <Anggur/Helper/Log.h>
 #include <Anggur/Renderer/Renderer.h>
-#include "Core.h"
+#include "Application.h"
 #include "Input.h"
 
 namespace Anggur {
 
-WindowConfig Core::windowConfig;
-Window* Core::window = nullptr;
-Scene* Core::scene = nullptr;
-float Core::deltaTime = 0;
-float Core::elapsedTime = 0;
+WindowConfig Application::windowConfig;
+Window* Application::window = nullptr;
+Scene* Application::scene = nullptr;
+float Application::deltaTime = 0;
+float Application::elapsedTime = 0;
 
-Core::Core()
+Application::Application()
 {
 }
 
-Window* Core::GetWindow()
+Window* Application::GetWindow()
 {
     return window;
 }
 
-void Core::SetScene(Scene* activeScene)
+void Application::SetScene(Scene* activeScene)
 {
     if (scene)
     {
@@ -40,17 +40,17 @@ void Core::SetScene(Scene* activeScene)
     }
 }
 
-float Core::GetDeltaTime()
+float Application::GetDeltaTime()
 {
     return deltaTime;
 }
 
-float Core::GetElapsedTime()
+float Application::GetElapsedTime()
 {
     return elapsedTime;
 }
 
-void Core::ProcessEvent(SDL_Event* event)
+void Application::ProcessEvent(SDL_Event* event)
 {
     switch (event->type)
     {
@@ -137,9 +137,9 @@ void Core::ProcessEvent(SDL_Event* event)
     }
 }
 
-void Core::Run(Scene* mainScene)
+void Application::Run(Scene* mainScene)
 {
-    Core::Initialize();
+    Application::Initialize();
 
     window = new Window(windowConfig);
     Input::windowHandler = window->handler;
@@ -191,17 +191,17 @@ void Core::Run(Scene* mainScene)
 
 }
 
-void Core::SetWindowConfig(const WindowConfig& config)
+void Application::SetWindowConfig(const WindowConfig& config)
 {
     windowConfig = config;
 }
 
-void Core::SetVsync(bool enable)
+void Application::SetVsync(bool enable)
 {
     SDL_GL_SetSwapInterval(enable);
 }
 
-void Core::Initialize()
+void Application::Initialize()
 {
     static bool isInitialized = false;
 
@@ -217,12 +217,12 @@ void Core::Initialize()
     }
 }
 
-void Core::Terminate()
+void Application::Terminate()
 {
     SDL_Quit();
 }
 
-void Core::LoadGraphicsFunctions()
+void Application::LoadGraphicsFunctions()
 {
     static bool isInitialized = false;
 
