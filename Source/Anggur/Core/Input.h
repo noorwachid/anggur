@@ -27,10 +27,10 @@ public:
     static bool IsMouseButtonHeld(MouseButton button);
     static bool IsMouseButtonReleased(MouseButton button);
 
-    static void SetMousePosition(const Vector& pos);
+    static void SetMouseCursor(const Vector& pos);
 
-    static Vector GetMousePosition();
-    static Vector GetMouseScrollDirection();
+    static Vector GetMouseCursor();
+    static Vector GetMouseWheel();
 
     friend class Application;
 

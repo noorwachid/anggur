@@ -13,6 +13,7 @@ public:
 
     Matrix();
     Matrix(const std::initializer_list<float>& list);
+    Matrix(const Vector& translation, float rotation = 0.0f, const Vector& scale = 1.0f);
 
     void Set(const std::initializer_list<float>& list);
     const float* ToFloatPtr() const;

@@ -100,6 +100,7 @@ void Application::ProcessEvent(SDL_Event* event)
             e.type = EventType::MouseScrolled;
             e.group = EventGroup::Mouse;
             e.direction.Set(event->wheel.x, event->wheel.y);
+            Input::wheel = e.direction;
             if (scene) scene->OnEvent(e);
             break;
         }
@@ -110,6 +111,7 @@ void Application::ProcessEvent(SDL_Event* event)
             e.group = EventGroup::Mouse;
             e.position.Set(event->motion.x, event->motion.y);
             e.deltaPosition.Set(event->motion.xrel, event->motion.yrel);
+            Input::cursor = e.position;
             if (scene) scene->OnEvent(e);
             break;
         }

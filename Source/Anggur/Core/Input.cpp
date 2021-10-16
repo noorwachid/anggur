@@ -90,19 +90,19 @@ bool Input::IsMouseButtonReleased(MouseButton button)
     return (prevButtonMap & btn) && !(currButtonMap & btn);
 }
 
-void Input::SetMousePosition(const Vector& pos)
+void Input::SetMouseCursor(const Vector& pos)
 {
     int x = pos.x;
     int y = pos.y;
     SDL_WarpMouseInWindow(windowHandler, x, y);
 }
 
-Vector Input::GetMousePosition()
+Vector Input::GetMouseCursor()
 {
     return cursor;
 }
 
-Vector Input::GetMouseScrollDirection()
+Vector Input::GetMouseWheel()
 {
     return wheel;
 }

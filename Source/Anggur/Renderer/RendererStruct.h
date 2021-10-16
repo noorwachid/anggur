@@ -72,28 +72,6 @@ public:
     Vector viewport;
 };
 
-struct Transform
-{
-    Vector position;
-    float rotation;
-    Vector scale;
-
-    Transform(Vector position = Vector(), float rotation = 0, Vector scale = Vector::one):
-        position(position),
-        rotation(rotation),
-        scale(scale)
-    {
-    }
-
-    Matrix ToMatrix() const
-    {
-        Matrix mt = Matrix::CreateScale(scale);
-        mt.Rotate(rotation);
-        mt.Translate(position);
-        return mt;
-    }
-};
-
 struct TextOption
 {
     float size;

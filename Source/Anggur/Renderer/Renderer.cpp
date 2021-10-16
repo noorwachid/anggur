@@ -37,7 +37,7 @@ float Renderer::textureIndex;
 int* Renderer::textureIndices;
 Texture* Renderer::textureData;
 
-Matrix Renderer::viewProjectionMatrix;
+Matrix Renderer::viewProjection;
 
 VertexArray Renderer::vertexArray;
 VertexBuffer Renderer::vertexBuffer;
@@ -153,7 +153,7 @@ void Renderer::Initialize()
     indexBuffer.Bind();
     indexBuffer.SetCapacity(sizeof(uint) * maxIndices);
 
-    viewProjectionMatrix = Matrix::identity;
+    viewProjection = Matrix::identity;
 
     ClearData();
 }
@@ -202,9 +202,9 @@ void Renderer::SetViewport(Vector size)
     glViewport(0, 0, size.x, size.y);
 }
 
-void Renderer::SetViewProjectionMatrix(const Matrix& matrix)
+void Renderer::SetViewProjection(const Matrix& vp)
 {
-    viewProjectionMatrix = matrix;
+    viewProjection = vp;
 }
 
 void Renderer::ClearBackground(const Color& color)
@@ -267,7 +267,7 @@ void Renderer::Render()
         return;
 
     batchShader.Bind();
-    batchShader.SetMatrix("uViewProjection", viewProjectionMatrix);
+    batchShader.SetMatrix("uViewProjection", viewProjection);
     batchShader.SetInt("uTex", maxTextureUnits, textureIndices);
 
     for (size_t i = 0; i < textureCounter; ++i)
@@ -288,14 +288,13 @@ void Renderer::Render()
 
 // Primitive geometries
 
-void Renderer::AddTriangle(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Color& c)
+void Renderer::AddTriangle(const Matrix& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Color& c)
 {
     CheckLimit(3, 3);
 
-    Matrix m = transform.ToMatrix();
-    Vector l0 = p0 * m;
-    Vector l1 = p1 * m;
-    Vector l2 = p2 * m;
+    Vector l0 = p0 * transform;
+    Vector l1 = p1 * transform;
+    Vector l2 = p2 * transform;
 
     float vertices[] = {
         l0.x, l0.y, c.r, c.g, c.b, c.a, 0.f, 0.f, -1,
@@ -308,15 +307,14 @@ void Renderer::AddTriangle(const Transform& transform, const Vector& p0, const V
     AddData(vertices, 3, indices, 3);
 }
 
-void Renderer::AddQuad(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c)
+void Renderer::AddQuad(const Matrix& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Color& c)
 {
     CheckLimit(4, 6);
 
-    Matrix m = transform.ToMatrix();
-    Vector l0 = p0 * m;
-    Vector l1 = p1 * m;
-    Vector l2 = p2 * m;
-    Vector l3 = p3 * m;
+    Vector l0 = p0 * transform;
+    Vector l1 = p1 * transform;
+    Vector l2 = p2 * transform;
+    Vector l3 = p3 * transform;
 
     float vertices[] = {
         l0.x,
@@ -364,13 +362,12 @@ void Renderer::AddQuad(const Transform& transform, const Vector& p0, const Vecto
     AddData(vertices, 4, indices, 6);
 }
 
-void Renderer::AddRect(const Transform& transform, const Vector& p0, const Vector& p1, const Color& color)
+void Renderer::AddRect(const Matrix& transform, const Vector& p0, const Vector& p1, const Color& color)
 {
-    Matrix m = transform.ToMatrix();
-    AddQuad(transform, p0 * m, Vector(p0.x, p1.y) * m, p1 * m, Vector(p1.x, p0.y) * m, color);
+    AddQuad(transform, p0 * transform, Vector(p0.x, p1.y) * transform, p1 * transform, Vector(p1.x, p0.y) * transform, color);
 }
 
-void Renderer::AddPolygon(const Transform& transform, const Vector& p0, float r, size_t segments, const Color& c)
+void Renderer::AddPolygon(const Matrix& transform, const Vector& p0, float r, size_t segments, const Color& c)
 {
     if (segments < 3)
         segments = 3;
@@ -388,11 +385,10 @@ void Renderer::AddPolygon(const Transform& transform, const Vector& p0, float r,
 
     float vertices[segments * Vertex::length];
     uint indices[triangles * 3];
-    Matrix m = transform.ToMatrix();
 
     for (size_t i = 0, offset = 0; i < segments; i++)
     {
-        Vector point = Vector(p0.x + x, p0.y + y) * m;
+        Vector point = Vector(p0.x + x, p0.y + y) * transform;
         vertices[offset + 0] = x + point.x;
         vertices[offset + 1] = y + point.y;
 
@@ -429,14 +425,14 @@ void Renderer::AddPolygon(const Transform& transform, const Vector& p0, float r,
     AddData(vertices, segments, indices, triangles * 3);
 }
 
-void Renderer::AddCircle(const Transform& transform, const Vector& p0, float r, const Color& c)
+void Renderer::AddCircle(const Matrix& transform, const Vector& p0, float r, const Color& c)
 {
     AddPolygon(transform, p0, r, circleSegment, c);
 }
 
 // Complex geometries
 
-void Renderer::AddTerminator(const Transform& transform, const Vector& p0, const Vector& p1, float weight, const Color& c)
+void Renderer::AddTerminator(const Matrix& transform, const Vector& p0, const Vector& p1, float weight, const Color& c)
 {
     Vector p3 = (p0 - p1).Normalize() * weight;
     Vector t0 = (p1 - p0).GetPerpen().Normalize() * weight;
@@ -444,13 +440,12 @@ void Renderer::AddTerminator(const Transform& transform, const Vector& p0, const
     AddQuad(transform, p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
 }
 
-void Renderer::AddAnchor(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w0, const Color& c)
+void Renderer::AddAnchor(const Matrix& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w0, const Color& c)
 {
-    Matrix m = transform.ToMatrix();
-    Vector i0 = Vector::zero * m;
-    Vector l0 = p0 * m;
-    Vector l1 = p1 * m;
-    Vector l2 = p2 * m;
+    Vector i0 = Vector::zero * transform;
+    Vector l0 = p0 * transform;
+    Vector l1 = p1 * transform;
+    Vector l2 = p2 * transform;
     Vector t0 = (l1 - l0).GetPerpen();
     Vector t2 = (l2 - l1).GetPerpen();
 
@@ -515,18 +510,18 @@ void Renderer::AddAnchor(const Transform& transform, const Vector& p0, const Vec
     bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
 
 #ifdef ANGGUR_DEBUG_ANCHOR_POINTS
-    AddCircle(Transform(), e0, 0.01, Color::red);
-    AddCircle(Transform(), e1, 0.01, Color::red);
-    AddCircle(Transform(), u0, 0.01, Color::blue);
-    AddCircle(Transform(), u1, 0.01, Color::blue);
-    AddCircle(Transform(), n0, 0.01, Color::green);
-    AddCircle(Transform(), n1, 0.01, Color::green);
-    AddCircle(Transform(), c0, 0.01, Color::yellow);
-    AddCircle(Transform(), c1, 0.01, Color::yellow);
-    AddCircle(Transform(), d0, 0.01, Color::pink);
-    AddCircle(Transform(), d1, 0.01, Color::pink);
-    AddCircle(Transform(), i0, 0.01, Color::cyan);
-    AddCircle(Transform(), l1, 0.01, Color::purple);
+    AddCircle(Matrix(), e0, 0.01, Color::red);
+    AddCircle(Matrix(), e1, 0.01, Color::red);
+    AddCircle(Matrix(), u0, 0.01, Color::blue);
+    AddCircle(Matrix(), u1, 0.01, Color::blue);
+    AddCircle(Matrix(), n0, 0.01, Color::green);
+    AddCircle(Matrix(), n1, 0.01, Color::green);
+    AddCircle(Matrix(), c0, 0.01, Color::yellow);
+    AddCircle(Matrix(), c1, 0.01, Color::yellow);
+    AddCircle(Matrix(), d0, 0.01, Color::pink);
+    AddCircle(Matrix(), d1, 0.01, Color::pink);
+    AddCircle(Matrix(), i0, 0.01, Color::cyan);
+    AddCircle(Matrix(), l1, 0.01, Color::purple);
     return;
 #endif
 
@@ -581,7 +576,7 @@ void Renderer::AddAnchor(const Transform& transform, const Vector& p0, const Vec
     AddData(vertices, 12, indices, indexLength);
 }
 
-void Renderer::AddLine(const Transform& transform, const Vector& p0, const Vector& p1, float weight, const Color& c)
+void Renderer::AddLine(const Matrix& transform, const Vector& p0, const Vector& p1, float weight, const Color& c)
 {
     Vector m0 = Vector::Lerp(p0, p1, 0.5);
 
@@ -589,7 +584,7 @@ void Renderer::AddLine(const Transform& transform, const Vector& p0, const Vecto
     AddTerminator(transform, p1, m0, weight, c);
 }
 
-void Renderer::AddPolyline(const Transform& transform, const std::vector<Vector>& ps, float w, const Color& c)
+void Renderer::AddPolyline(const Matrix& transform, const std::vector<Vector>& ps, float w, const Color& c)
 {
     if (ps.size() > 1)
     {
@@ -606,7 +601,7 @@ void Renderer::AddPolyline(const Transform& transform, const std::vector<Vector>
     }
 }
 
-void Renderer::AddPolyring(const Transform& transform, const std::vector<Vector>& ps, float w, const Color& c)
+void Renderer::AddPolyring(const Matrix& transform, const std::vector<Vector>& ps, float w, const Color& c)
 {
     if (ps.size() > 1)
     {
@@ -625,7 +620,7 @@ void Renderer::AddPolyring(const Transform& transform, const std::vector<Vector>
     }
 }
 
-void Renderer::AddQuadraticBz(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
+void Renderer::AddQuadraticBz(const Matrix& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
 {
     auto GetLerped = [](const Vector& p0, const Vector& p1, const Vector& p2, float t)
     {
@@ -654,13 +649,13 @@ void Renderer::AddQuadraticBz(const Transform& transform, const Vector& p0, cons
     AddPolyline(transform, points, w, c);
 }
 
-void Renderer::AddQuadraticBzi(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
+void Renderer::AddQuadraticBzi(const Matrix& transform, const Vector& p0, const Vector& p1, const Vector& p2, float w, const Color& c)
 {
     Vector px = p1 * 2 - (p0 + p2) / 2;
     AddQuadraticBz(transform, p0, px, p2, w, c);
 }
 
-void Renderer::AddQubicBz(const Transform& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w, const Color& c)
+void Renderer::AddQubicBz(const Matrix& transform, const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float w, const Color& c)
 {
     auto GetLerped = [](const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, float t)
     {
@@ -694,7 +689,7 @@ void Renderer::AddQubicBz(const Transform& transform, const Vector& p0, const Ve
 
 // Natural geometries
 
-void Renderer::AddConvex(const Transform& transform, const std::vector<Vector>& ps, const Color& c)
+void Renderer::AddConvex(const Matrix& transform, const std::vector<Vector>& ps, const Color& c)
 {
     size_t triangles = ps.size() - 2;
     uint indices[triangles * 3];
@@ -733,7 +728,7 @@ void Renderer::AddConvex(const Transform& transform, const std::vector<Vector>& 
 
 // Text
 
-void Renderer::AddText(const Transform& transform, const Vector& p0, const Vector& p1, const std::string& textBuffer, const TextOption& textOption, Font& textFont, const Color& color)
+void Renderer::AddText(const Matrix& transform, const Vector& p0, const Vector& p1, const std::string& textBuffer, const TextOption& textOption, Font& textFont, const Color& color)
 {
     Vector offset = p0;
     Vector containerArea = p1 - p0;
@@ -872,20 +867,18 @@ void Renderer::AddText(const Transform& transform, const Vector& p0, const Vecto
 #endif
 }
 
-void Renderer::AddTextChunk(const Transform& transform, const Vector& p0, const std::vector<CodepointContainer>& ccs, Font& textFont, const Color& color)
+void Renderer::AddTextChunk(const Matrix& transform, const Vector& p0, const std::vector<CodepointContainer>& ccs, Font& textFont, const Color& color)
 {
-    Matrix m = transform.ToMatrix();
-
     for (const CodepointContainer& cc: ccs)
     {
 #ifdef ANGGUR_DEBUG_TEXT_RECTS
         AddRect(transform, p0 + cc.offset, p0 + cc.offset + cc.area, Color(1, 1, 1, 0.33));
 #endif
         AddQuadx(
-            Vector(p0.x + cc.offset.x, p0.y + cc.offset.y) * m,
-            Vector(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y) * m,
-            Vector(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y + cc.area.y) * m,
-            Vector(p0.x + cc.offset.x, p0.y + cc.offset.y + cc.area.y) * m,
+            Vector(p0.x + cc.offset.x, p0.y + cc.offset.y) * transform,
+            Vector(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y) * transform,
+            Vector(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y + cc.area.y) * transform,
+            Vector(p0.x + cc.offset.x, p0.y + cc.offset.y + cc.area.y) * transform,
 
             Vector(cc.glyph.x, cc.glyph.y),
             Vector(cc.glyph.x + cc.glyph.w, cc.glyph.y),
@@ -1005,28 +998,5 @@ void Renderer::AddBoxx(const Vector& position, const Vector& radii, const Textur
         t,
         c);
 }
-
-void Renderer::Addx(const Vector& p0, const Texture& t, const Transform& f, const Color& c)
-{
-    Addx(p0 * f.ToMatrix(), t, c);
-}
-
-void Renderer::AddQuadx(const Vector& p0, const Vector& p1, const Vector& p2, const Vector& p3, const Vector& t0, const Vector& t1, const Vector& t2, const Vector& t3, const Texture& t, const Transform& f, const Color& c)
-{
-    Matrix m = f.ToMatrix();
-    AddQuadx(p0 * m, p1 * m, p2 * m, p3 * m, t0, t1, t2, t3, t, c);
-}
-
-void Renderer::AddRectx(const Vector& p0, float w, float h, const Texture& t, const Transform& f, const Color& c)
-{
-    AddRectx(p0 * f.ToMatrix(), w, h, t, c);
-}
-
-void Renderer::AddBoxx(const Vector& p0, const Vector& radii, const Texture& t, const Transform& f, const Color& c)
-{
-    AddBoxx(p0 * f.ToMatrix(), radii, t, c);
-}
-
-
 
 } // namespace Anggur

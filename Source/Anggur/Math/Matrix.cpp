@@ -25,6 +25,14 @@ Matrix::Matrix(const std::initializer_list<float>& list)
     Set(list);
 }
 
+Matrix::Matrix(const Vector& translation, float rotation, const Vector& scale)
+{
+    *this = Matrix::identity;
+    Scale(scale);
+    Rotate(rotation);
+    Translate(translation);
+}
+
 void Matrix::Set(const std::initializer_list<float>& list)
 {
     size_t i = 0;
