@@ -112,31 +112,21 @@ Matrix& Matrix::operator+=(const Matrix& right)
 
 Matrix& Matrix::Translate(const Vector& v)
 {
-    data[6] += v.x;
-    data[7] += v.y;
+    *this = *this * Matrix::CreateTranslation(v);
 
     return *this;
 }
 
 Matrix& Matrix::Scale(const Vector& v)
 {
-    data[0] *= v.x;
-    data[4] *= v.y;
+    *this = *this * Matrix::CreateScale(v);
 
     return *this;
 }
 
 Matrix& Matrix::Rotate(float theta)
 {
-    Matrix right = Matrix::CreateRotation(theta);
-    Matrix result;
-
-    result[0] = data[0] * right[0] + data[3] * right[1] + data[6] * right[2];
-    result[1] = data[1] * right[0] + data[4] * right[1] + data[7] * right[2];
-    result[3] = data[0] * right[3] + data[3] * right[4] + data[6] * right[5];
-    result[4] = data[1] * right[3] + data[4] * right[4] + data[7] * right[5];
-
-    *this = result;
+    *this = *this * Matrix::CreateRotation(theta);
 
     return *this;
 }

@@ -12,6 +12,21 @@
 namespace Anggur
 {
 
+struct Vertex
+{
+    Vector position;
+    Color color;
+    Vector texCoord;
+    float texIndex;
+
+    static const size_t length = 9;
+
+    Vertex(const Vector& position = Vector::zero, const Color& color = Color::white, const Vector& texCoord = Vector::zero, float texIndex = -1):
+        position(position), color(color), texCoord(texCoord), texIndex(texIndex) 
+    {
+    }
+};
+
 class Renderer
 {
 public:
@@ -41,9 +56,12 @@ public:
     // -- Primitives
     static void AddTriangle(const Matrix& transform, const Vector& p0 = Vector(0.0, -0.5), const Vector& p1 = Vector(0.5, 0.5), const Vector& p2 = Vector(-0.5, 0.5), const Color& c = Color::white);
     static void AddQuad(const Matrix& transform, const Vector& p0 = Vector(-0.5, -0.5), const Vector& p1 = Vector(0.5, -0.5), const Vector& p2 = Vector(0.5, 0.5), const Vector& p3 = Vector(-0.5, 0.5), const Color& c = Color::white);
-    static void AddRect(const Matrix& transform, const Vector& p0 = Vector(-0.5, -0.5), const Vector& p1 = Vector(0.5,                                                                                                        0.5), const Color& color = Color::white);
+    static void AddRect(const Matrix& transform, const Vector& p0 = Vector(-0.5, -0.5), const Vector& p1 = Vector(0.5, 0.5), const Color& color = Color::white);
     static void AddPolygon(const Matrix& transform, const Vector& p0, float r = 0.5, size_t segments = 6, const Color& c = Color::white);
     static void AddCircle(const Matrix& transform, const Vector& p0, float r = 0.5, const Color& c = Color::white);
+
+    // -- Vertex Primitives
+    static void AddQuad(const Matrix& transform, const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3);
 
     // -- Lines
     static void AddTerminator(const Matrix& transform, const Vector& p0, const Vector& p1, float w = 0.5, const Color& c = Color::white);

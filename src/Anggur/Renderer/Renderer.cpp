@@ -7,16 +7,6 @@
 namespace Anggur
 {
 
-struct Vertex
-{
-    float position[2];
-    float color[4];
-    float texCoord[2];
-    float texIndex;
-
-    static const size_t length = 9;
-};
-
 Shader Renderer::batchShader;
 
 float* Renderer::vertexData;
@@ -353,6 +343,64 @@ void Renderer::AddQuad(const Matrix& transform, const Vector& p0, const Vector& 
         0.f,
         0.f,
         -1,
+    };
+
+    uint indices[] = {
+        0, 1, 2,
+        2, 3, 0};
+
+    AddData(vertices, 4, indices, 6);
+}
+
+void Renderer::AddQuad(const Matrix& transform, const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3)
+{
+     CheckLimit(4, 6);
+
+    Vector l0 = v0.position * transform;
+    Vector l1 = v1.position * transform;
+    Vector l2 = v2.position * transform;
+    Vector l3 = v3.position * transform;
+
+    float vertices[] = {
+        l0.x,
+        l0.y,
+        v0.color.r,
+        v0.color.g,
+        v0.color.b,
+        v0.color.a,
+        v0.texCoord.x,
+        v0.texCoord.y,
+        v0.texIndex,
+
+        l1.x,
+        l1.y,
+        v1.color.r,
+        v1.color.g,
+        v1.color.b,
+        v1.color.a,
+        v1.texCoord.x,
+        v1.texCoord.y,
+        v1.texIndex,
+
+        l2.x,
+        l2.y,
+        v2.color.r,
+        v2.color.g,
+        v2.color.b,
+        v2.color.a,
+        v2.texCoord.x,
+        v2.texCoord.y,
+        v2.texIndex,
+
+        l3.x,
+        l3.y,
+        v3.color.r,
+        v3.color.g,
+        v3.color.b,
+        v3.color.a,
+        v3.texCoord.x,
+        v3.texCoord.y,
+        v3.texIndex,
     };
 
     uint indices[] = {
