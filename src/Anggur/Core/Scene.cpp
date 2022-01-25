@@ -1,5 +1,6 @@
 #include "Scene.h"
 
-namespace Anggur {
+namespace Anggur
+{
 
 }

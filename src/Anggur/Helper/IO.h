@@ -2,16 +2,14 @@
 #include <string>
 #include <vector>
 
-using std::string;
-
 namespace Anggur
 {
+	namespace IO
+	{
+		using std::string;
 
-struct IO
-{
-    static std::vector<uint8_t> Load(const string& path);
-    static string Read(const string& path);
-    static string GetFileExtention(const string& path);
-};
-
-} // namespace Anggur
+		std::vector<uint8_t> Load(const string& path);
+		string Read(const string& path);
+		string GetFileExtension(const string& path);
+	};
+}

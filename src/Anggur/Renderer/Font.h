@@ -9,48 +9,46 @@ struct stbtt_fontinfo;
 
 namespace Anggur
 {
+	struct Glyph
+	{
+		Vector size;
+		float x;
+		float y;
+		float w;
+		float h;
+		float ascent;
+	};
 
-struct Glyph
-{
-    Vector size;
-    float x;
-    float y;
-    float w;
-    float h;
-    float ascent;
-};
+	class Font
+	{
+	public:
+		Font();
+		~Font();
 
-class Font
-{
-public:
-    Font();
-    ~Font();
+		void Initialize();
+		void Load(const string& path, int sampleSize = 100);
 
-    void Initialize();
-    void Load(const string& path, int sampleSize = 100);
+		Texture& GetTexture();
+		const Texture& GetTexture() const;
 
-    Texture& GetTexture();
-    const Texture& GetTexture() const;
+		float GetKerning(int c0, int c1);
+		float GetLineHeight();
+		int GetSampleSize();
 
-    float GetKerning(int c0, int c1);
-    float GetLineHeight();
-    int GetSampleSize();
+	private:
+		stbtt_fontinfo* _info;
+		std::vector<uint8_t> _buffer;
 
-private:
-    stbtt_fontinfo* info;
-    std::vector<uint8_t> buffer;
+		Texture _texture;
+		std::vector<int> _ranges;
 
-    Texture texture;
-    std::vector<int> ranges;
+	public:
+		std::unordered_map<int, Glyph> glyphs;
 
-public:
-    std::unordered_map<int, Glyph> glyphs;
-
-private:
-    Vector normal;
-    float lineHeight;
-    float invSampleSize;
-    int sampleSize;
-};
-
-} // namespace Anggur
+	private:
+		Vector _normal;
+		float _lineHeight;
+		float _invSampleSize;
+		int _sampleSize;
+	};
+}

@@ -1,11 +1,10 @@
 #pragma once
 
-namespace Anggur {
-
-class AssetManager
+namespace Anggur
 {
-public:
-    AssetManager();
-};
-
+	class AssetManager
+	{
+	public:
+		AssetManager();
+	};
 }

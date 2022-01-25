@@ -2,32 +2,32 @@
 #include <string>
 #include <Anggur/Math/Math.h>
 
-namespace Anggur {
-
-class Shader
+namespace Anggur
 {
-public:
-    uint GetID();
-    void SetVertexSource(const string& source);
-    void SetFragmentSource(const string& source);
-    void Compile();
-    void Bind();
-    void Destroy();
+	using std::string;
 
-    int GetLocation(const string& name);
+	class Shader
+	{
+	public:
+		uint GetID();
+		void SetVertexSource(const string& source);
+		void SetFragmentSource(const string& source);
+		void Compile();
+		void Bind();
+		void Destroy();
 
-    void SetMatrix(const string& name, const Matrix& mat);
-    void SetVector(const string& name, const Vector& vec);
-    void SetInt(const string& name, int value);
-    void SetInt(const string& name, size_t size, int* values);
-    void SetFloat(const string& name, float value);
-    void SetFloat(const string& name, size_t size, float* values);
+		int GetLocation(const string& name);
 
-private:
-    uint id;
-    string vertexSource;
-    string fragmentSource;
+		void SetMatrix(const string& name, const Matrix& mat);
+		void SetVector(const string& name, const Vector& vec);
+		void SetInt(const string& name, int value);
+		void SetInt(const string& name, size_t size, int* values);
+		void SetFloat(const string& name, float value);
+		void SetFloat(const string& name, size_t size, float* values);
 
-};
-
+	private:
+		uint _id;
+		string _vertexSource;
+		string _fragmentSource;
+	};
 }

@@ -4,30 +4,40 @@
 
 using std::string;
 
-namespace Anggur {
-
-class Image
+namespace Anggur
 {
-public:
-    Image();
-    Image(const string& path);
-    ~Image();
+	class Image
+	{
+	public:
+		Image();
+		Image(const string& path);
+		~Image();
 
-    inline uint GetWidth() const { return width; }
-    inline uint GetHeight() const { return height; }
-    inline uint GetChannels() const { return channels; }
-    inline uint8_t* GetData() const { return data; }
+		inline uint GetWidth() const
+		{
+			return _width;
+		}
+		inline uint GetHeight() const
+		{
+			return _height;
+		}
+		inline uint GetChannels() const
+		{
+			return _channels;
+		}
+		inline uint8_t* GetData() const
+		{
+			return _data;
+		}
 
-    void Load(const string& path);
-    void Unload();
+		void Load(const string& path);
+		void Unload();
 
-private:
-    uint width;
-    uint height;
-    uint channels;
-    uint8_t* data;
-
-};
-
+	private:
+		uint _width;
+		uint _height;
+		uint _channels;
+		uint8_t* _data;
+	};
 }
 

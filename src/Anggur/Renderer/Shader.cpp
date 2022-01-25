@@ -5,116 +5,117 @@
 #include <Anggur/Math/Matrix.h>
 #include "Shader.h"
 
-namespace Anggur {
-
-uint Shader::GetID()
+namespace Anggur
 {
-    return id;
-}
 
-void Shader::SetVertexSource(const string& source)
-{
-    vertexSource = source;
-}
+	uint Shader::GetID()
+	{
+		return _id;
+	}
 
-void Shader::SetFragmentSource(const string& source)
-{
-    fragmentSource = source;
-}
+	void Shader::SetVertexSource(const string& source)
+	{
+		_vertexSource = source;
+	}
 
-void Shader::Compile()
-{
-    const char* cVertexSource   = vertexSource.c_str();
-    const char* cFragmentSource = fragmentSource.c_str();
-    int isSucceed;
-    char message[512];
+	void Shader::SetFragmentSource(const string& source)
+	{
+		_fragmentSource = source;
+	}
 
-    uint vertexId = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexId, 1, &cVertexSource, NULL);
-    glCompileShader(vertexId);
+	void Shader::Compile()
+	{
+		const char* cVertexSource = _vertexSource.c_str();
+		const char* cFragmentSource = _fragmentSource.c_str();
+		int isSucceed;
+		char message[512];
 
-    glGetShaderiv(vertexId, GL_COMPILE_STATUS, &isSucceed);
-    if (!isSucceed)
-    {
-        glGetShaderInfoLog(vertexId, 512, NULL, message);
-        ANGGUR_LOG("[Renderer.Shader] failed to compile vertex shader\n%s", message);
-    }
+		uint vertexId = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertexId, 1, &cVertexSource, NULL);
+		glCompileShader(vertexId);
 
-    uint fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentId, 1, &cFragmentSource, NULL);
-    glCompileShader(fragmentId);
+		glGetShaderiv(vertexId, GL_COMPILE_STATUS, &isSucceed);
+		if (!isSucceed)
+		{
+			glGetShaderInfoLog(vertexId, 512, NULL, message);
+			ANGGUR_LOG("[Renderer.Shader] failed to compile vertex shader\n%s", message);
+		}
 
-    glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &isSucceed);
-    if (!isSucceed)
-    {
-        glGetShaderInfoLog(fragmentId, 512, NULL, message);
-        ANGGUR_LOG("[Renderer.Shader] failed to compile fragment shader\n%s", message);
-    }
+		uint fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragmentId, 1, &cFragmentSource, NULL);
+		glCompileShader(fragmentId);
 
-    id = glCreateProgram();
-    glAttachShader(id, vertexId);
-    glAttachShader(id, fragmentId);
-    glLinkProgram(id);
+		glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &isSucceed);
+		if (!isSucceed)
+		{
+			glGetShaderInfoLog(fragmentId, 512, NULL, message);
+			ANGGUR_LOG("[Renderer.Shader] failed to compile fragment shader\n%s", message);
+		}
 
-    glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
-    if (!isSucceed) {
-        glGetProgramInfoLog(id, 512, NULL, message);
-        ANGGUR_LOG("[Renderer.Shader] failed to link shader program\n%s", message);
-    }
-    glDeleteShader(vertexId);
-    glDeleteShader(fragmentId);
-}
+		_id = glCreateProgram();
+		glAttachShader(_id, vertexId);
+		glAttachShader(_id, fragmentId);
+		glLinkProgram(_id);
 
-void Shader::Bind()
-{
-    glUseProgram(id);
-}
+		glGetProgramiv(_id, GL_LINK_STATUS, &isSucceed);
+		if (!isSucceed)
+		{
+			glGetProgramInfoLog(_id, 512, NULL, message);
+			ANGGUR_LOG("[Renderer.Shader] failed to link shader program\n%s", message);
+		}
+		glDeleteShader(vertexId);
+		glDeleteShader(fragmentId);
+	}
 
-void Shader::Destroy()
-{
-    glDeleteProgram(id);
-}
+	void Shader::Bind()
+	{
+		glUseProgram(_id);
+	}
 
+	void Shader::Destroy()
+	{
+		glDeleteProgram(_id);
+	}
 
-int Shader::GetLocation(const string& name)
-{
-    return glGetUniformLocation(id, name.c_str());
-}
+	int Shader::GetLocation(const string& name)
+	{
+		return glGetUniformLocation(_id, name.c_str());
+	}
 
-void Shader::SetMatrix(const string& name, const Matrix& matrix)
-{
-    int locId = GetLocation(name);
-    glUniformMatrix3fv(locId, 1, GL_FALSE, matrix.ToFloatPtr());
-}
+	void Shader::SetMatrix(const string& name, const Matrix& matrix)
+	{
+		int locId = GetLocation(name);
+		glUniformMatrix3fv(locId, 1, GL_FALSE, matrix.GetData());
+	}
 
-void Shader::SetVector(const string& name, const Vector& vec)
-{
-    int locId = GetLocation(name);
-    glUniform2f(locId, vec.x, vec.y);
-}
+	void Shader::SetVector(const string& name, const Vector& vec)
+	{
+		int locId = GetLocation(name);
+		glUniform2f(locId, vec.x, vec.y);
+	}
 
-void Shader::SetInt(const string& name, int value)
-{
-    int locId = GetLocation(name);
-    glUniform1i(locId, value);
-}
+	void Shader::SetInt(const string& name, int value)
+	{
+		int locId = GetLocation(name);
+		glUniform1i(locId, value);
+	}
 
-void Shader::SetInt(const string& name, size_t size, int* values)
-{
-    int locId = GetLocation(name);
-    glUniform1iv(locId, size, values);
-}
+	void Shader::SetInt(const string& name, size_t size, int* values)
+	{
+		int locId = GetLocation(name);
+		glUniform1iv(locId, size, values);
+	}
 
-void Shader::SetFloat(const string& name, float value)
-{
-    int locId = GetLocation(name);
-    glUniform1f(locId, value);
-}
+	void Shader::SetFloat(const string& name, float value)
+	{
+		int locId = GetLocation(name);
+		glUniform1f(locId, value);
+	}
 
-void Shader::SetFloat(const string& name, size_t size, float* values)
-{
-    int locId = GetLocation(name);
-    glUniform1fv(locId, size, values);
-}
+	void Shader::SetFloat(const string& name, size_t size, float* values)
+	{
+		int locId = GetLocation(name);
+		glUniform1fv(locId, size, values);
+	}
 
 }

@@ -1,10 +1,9 @@
 #include "AssetManager.h"
 
-namespace Anggur {
-
-AssetManager::AssetManager()
+namespace Anggur
 {
+	AssetManager::AssetManager()
+	{
 
-}
-
+	}
 }

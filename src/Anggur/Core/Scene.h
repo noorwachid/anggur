@@ -2,20 +2,29 @@
 
 #include "Event/Event.h"
 
-namespace Anggur {
-
-class Scene
+namespace Anggur
 {
-public:
-    virtual void Create() {}
-    virtual void Start() {}
-    virtual void Update() {}
-    virtual void Stop() {}
-    virtual void Destroy() {}
+	class Scene
+	{
+	public:
+		virtual void OnCreate()
+		{
+		}
 
-    virtual void OnEvent(Event& event) {}
+		virtual void OnUpdate()
+		{
+		}
 
-    virtual ~Scene() {}
-};
+		virtual void OnDestroy()
+		{
+		}
 
+		virtual void OnEvent(Event& event)
+		{
+		}
+
+		virtual ~Scene()
+		{
+		}
+	};
 }

@@ -6,37 +6,43 @@
 namespace Anggur
 {
 
-Image::Image() { data = nullptr; }
+	Image::Image()
+	{
+		_data = nullptr;
+	}
 
-Image::Image(const string& path)
-{
-    data = nullptr;
-    Load(path);
-}
+	Image::Image(const string& path)
+	{
+		_data = nullptr;
+		Load(path);
+	}
 
-Image::~Image() { Unload(); }
+	Image::~Image()
+	{
+		Unload();
+	}
 
-void Image::Load(const string& path)
-{
-    Unload();
+	void Image::Load(const string& path)
+	{
+		Unload();
 
-    int width;
-    int height;
-    int channels;
+		int width;
+		int height;
+		int channels;
 
-    stbi_set_flip_vertically_on_load(1);
-    data = stbi_load(path.c_str(), &width, &height, &channels, 4);
-    ANGGUR_ASSERT(data, "[Renderer.Image] failed to load image\n");
+		stbi_set_flip_vertically_on_load(1);
+		_data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+		ANGGUR_ASSERT(_data, "[Renderer.Image] failed to load image\n");
 
-    this->width = width;
-    this->height = height;
-    this->channels = channels;
-}
+		this->_width = width;
+		this->_height = height;
+		this->_channels = channels;
+	}
 
-void Image::Unload()
-{
-    if (data)
-        stbi_image_free(data);
-}
+	void Image::Unload()
+	{
+		if (_data)
+			stbi_image_free(_data);
+	}
 
 } // namespace Anggur
