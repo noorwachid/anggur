@@ -1,15 +1,12 @@
 #pragma once
 
-#include <Anggur/Math/Vector.h>
+#include <Anggur/Math/Vector2.h>
 #include "Window.h"
 #include "Key.h"
 #include "Mouse.h"
-#include "Gamepad.h"
 
-namespace Anggur
-{
-	enum class EventType
-	{
+namespace Anggur {
+	enum class EventType {
 		KeyPressed,
 		KeyHeld,
 		KeyReleased,
@@ -21,40 +18,34 @@ namespace Anggur
 		MouseButtonReleased,
 	};
 
-	enum class EventGroup
-	{
+	enum class EventGroup {
 		Key,
 		Mouse,
 	};
 
-	struct Event
-	{
+	struct Event {
 		EventType type;
 		EventGroup group;
 		bool consumed;
 	};
 
-	struct KeyEvent : public Event
-	{
+	struct KeyEvent : public Event {
 		Scancode scancode;
 		Key key;
 		Modifier modifier;
 	};
 
-	struct MouseMovementEvent : public Event
-	{
-		Vector position;
-		Vector deltaPosition;
+	struct MouseMovementEvent : public Event {
+		Vector2 position;
+		Vector2 deltaPosition;
 	};
 
-	struct MouseScrollEvent : public Event
-	{
-		Vector direction;
+	struct MouseScrollEvent : public Event {
+		Vector2 direction;
 	};
 
-	struct MouseButtonEvent : public Event
-	{
+	struct MouseButtonEvent : public Event {
 		MouseButton button;
-		Vector position;
+		Vector2 position;
 	};
 }

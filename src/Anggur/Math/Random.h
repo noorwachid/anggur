@@ -3,29 +3,23 @@
 #include <random>
 #include "Math.h"
 
-namespace Anggur
-{
-	class RandomGenerator
-	{
+namespace Anggur {
+	class RandomGenerator {
 	public:
 		RandomGenerator()
 			:
-			generator(device())
-		{
+			generator(device()) {
 		}
 
-		void SetSeed(float n)
-		{
+		void SetSeed(float n) {
 			generator.seed(n);
 		}
 
-		float Generate()
-		{
+		float Generate() {
 			return generator();
 		}
 
-		float Range(float lower, float upper)
-		{
+		float Range(float lower, float upper) {
 			std::uniform_real_distribution<float> distribution(lower, upper);
 			return distribution(generator);
 		}
@@ -36,36 +30,29 @@ namespace Anggur
 
 	};
 
-	class Random
-	{
+	class Random {
 	public:
-		static float Generate()
-		{
+		static float Generate() {
 			return generator.Generate();
 		}
 
-		static float Range(float lower, float upper)
-		{
+		static float Range(float lower, float upper) {
 			return generator.Range(lower, upper);
 		}
 
-		static float GetNormal()
-		{
+		static float GetNormal() {
 			return generator.Range(0.f, 1.f);
 		}
 
-		static float GetSigned()
-		{
+		static float GetSigned() {
 			return generator.Range(-1.f, 1.f);
 		}
 
-		static float GetAngle()
-		{
+		static float GetAngle() {
 			return generator.Range(0.f, Math::twoPi);
 		}
 
-		static bool GetBool()
-		{
+		static bool GetBool() {
 			return GetNormal() > 0.5;
 		}
 

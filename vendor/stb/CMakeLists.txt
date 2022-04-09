@@ -1,11 +1,12 @@
-cmake_minimum_required (VERSION 3.3)
+cmake_minimum_required(VERSION 3.3)
 
-project (Stb)
+project(stb)
 
-add_library (Stb STATIC
+add_library(stb STATIC
         stb_image.c
         stb_image_write.c
         stb_truetype.c
         stb_rect_pack.c
 )
-target_include_directories(Stb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_include_directories(stb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

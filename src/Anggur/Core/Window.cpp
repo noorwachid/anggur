@@ -1,104 +1,100 @@
-#include <SDL.h>
-#include <Anggur/Math/Vector.h>
-#include <Anggur/Renderer/Image.h>
-#include <Anggur/Helper/IO.h>
-#include <Anggur/Helper/Log.h>
-#include "Window.h"
-#include "Application.h"
+#include "Anggur/Core/Log.h"
+#include "Anggur/Core/Window.h"
+#include "Anggur/Core/Application.h"
+#include "Anggur/Core/IO.h"
+#include "Anggur/Core/Internal.h"
+#include "Anggur/Math/Vector2.h"
+#include "Anggur/Graphic/Image.h"
 
-namespace Anggur
-{
-	Window::Window(const WindowConfig& config)
-	{
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+namespace Anggur {
+	Window::Window() {
+		size.x = 800.0f;
+		size.y = 600.0f;
 
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		int flag = SDL_WINDOW_OPENGL | static_cast<int>(config.flag);
+		#ifdef ANGGUR_OS_APPLE
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		#endif
 
-		_windowHandler = SDL_CreateWindow(config.title.c_str(),
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			config.width, config.height,
-			flag);
-		_context = SDL_GL_CreateContext(_windowHandler);
-		_ratio = config.width / static_cast<float>(config.height);
-		_open = true;
-		SDL_GL_MakeCurrent(_windowHandler, _context);
-
-		Application::LoadGraphicsFunctions();
+		handler = glfwCreateWindow(size.x, size.y, "", nullptr, nullptr);
+		ANGGUR_ASSERT(handler, "Failed to create a window");
 	}
 
-	void Window::SetPosition(const Vector& pos)
-	{
-		SDL_SetWindowPosition(_windowHandler, pos.x, pos.y);
+	Window::~Window() {
+		if (handler) {
+			delete handler;
+			handler = nullptr;
+		}
 	}
 
-	void Window::SetSize(const Vector& size)
-	{
-		SDL_SetWindowSize(_windowHandler, size.x, size.y);
+	void Window::setPosition(const Vector2& position) {
+		glfwSetWindowPos(handler, position.x, position.y);
+
+		this->position = position;
 	}
 
-	void Window::SetTitle(const string& title)
-	{
-		SDL_SetWindowTitle(_windowHandler, title.c_str());
+	void Window::setSize(const Vector2& size) {
+		glfwSetWindowSize(handler, size.x, size.y);
+
+		this->size = size;
 	}
 
-	float Window::GetRatio()
-	{
-		return _ratio;
+	void Window::setTitle(const std::string& title) {
+		glfwSetWindowTitle(handler, title.c_str());
+
+		this->title = title;
 	}
 
-	Vector Window::GetPosition()
-	{
+	float Window::getRatio() {
+		return position.x / position.y;
+	}
+
+	Vector2 Window::getPosition() {
 		int x, y;
-		SDL_GetWindowPosition(_windowHandler, &x, &y);
-		return Vector(x, y);
+
+		glfwGetWindowPos(handler, &x, &y);
+
+		position.x = x;
+		position.y = y;
+
+		return position;
 	}
 
-	Vector Window::GetSize()
-	{
-		int w, h;
-		SDL_GetWindowSize(_windowHandler, &w, &h);
-		return Vector(w, h);
+	Vector2 Window::getSize() {
+		int x, y;
+
+		glfwGetWindowSize(handler, &x, &y);
+
+		size.x = x;
+		size.y = y;
+
+		return size;
 	}
 
-	const string& Window::GetTitle()
-	{
-		_title = SDL_GetWindowTitle(_windowHandler);
-		return _title;
+	const std::string& Window::getTitle() {
+		return title;
 	}
 
-	Anggur::WindowFlag Window::GetFlag()
-	{
-		return static_cast<WindowFlag>(SDL_GetWindowFlags(_windowHandler));
+	bool Window::isOpen() {
+		return !glfwWindowShouldClose(handler);
 	}
 
-	bool Window::IsOpen()
-	{
-		return _open;
+	void Window::swapBuffers() {
+		glfwSwapBuffers(handler);
 	}
 
-	void Window::SwapBuffers()
-	{
-		SDL_GL_SwapWindow(_windowHandler);
+	WindowHandler* Window::getHandler() {
+		return handler;
 	}
 
-	SDL_Window* Window::GetHandler()
-	{
-		return _windowHandler;
+	void Window::close() {
+		glfwSetWindowShouldClose(handler, true);
 	}
 
-	void* Window::GetContext()
-	{
-		return _context;
-	}
-
-	void Window::Close()
-	{
-		_open = false;
+	void Window::bind() {
+		glfwMakeContextCurrent(handler);
 	}
 }

@@ -1,15 +1,13 @@
 #pragma once
 
-#include <Anggur/Math/Vector.h>
-#include "Application.h"
-#include "Event/Event.h"
+#include "Anggur/Math/Vector2.h"
+#include "Anggur/Core/Application.h"
+#include "Anggur/Core/Event/Event.h"
 
 struct SDL_Window;
 
-namespace Anggur
-{
-	class Input
-	{
+namespace Anggur {
+	class Input {
 	public:
 		static void Initialize();
 		static void PreUpdate();
@@ -27,23 +25,12 @@ namespace Anggur
 		static bool IsMouseButtonHeld(MouseButton button);
 		static bool IsMouseButtonReleased(MouseButton button);
 
-		static void SetMouseCursor(const Vector& pos);
+		static void SetMouseCursor(const Vector2& pos);
 
-		static Vector GetMouseCursor();
-		static Vector GetMouseWheel();
+		static Vector2 GetMouseCursor();
+		static Vector2 GetMouseWheel();
 
 		friend class Application;
-
-	private:
-		static SDL_Window* _windowHandler;
-
-		static const uint8_t* _currentScancodeMap;
-		static uint8_t _previousScancodeMap[ANGGUR_SCANCODE_SIZE];
-
-		static uint _currentButtonMap;
-		static uint _previousButtonMap;
-		static Vector _cursor;
-		static Vector _wheel;
 	};
 }
 

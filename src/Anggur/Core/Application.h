@@ -1,39 +1,24 @@
 #pragma once
 
-#include "Window.h"
-#include "Input.h"
-#include "Scene.h"
+#include "Anggur/Core/Window.h"
+#include "Anggur/Core/Scene/Scene.h"
 
-union SDL_Event;
-
-namespace Anggur
-{
-	class Application
-	{
+namespace Anggur {
+	class Application {
 	public:
-		Application();
+		static Window* getWindow();
 
-		static Window* GetWindow();
-		static void Run(Scene* mainScene = nullptr);
+		static void run(Scene* scene);
 
-		static void SetWindowConfig(const WindowConfig& config);
-		static void SetVsync(bool enable = true);
-		static void SetScene(Scene* activeScene);
+		static void setVsync(bool enable = true);
 
-		static float GetDeltaTime();
-		static float GetElapsedTime();
-
-		static void Initialize();
-		static void Terminate();
-		static void LoadGraphicsFunctions();
+		static void initialize();
+		static void terminate();
 
 	private:
-		static void ProcessEvent(SDL_Event* event);
+		Application();
 
-		static WindowConfig _windowConfig;
-		static Window* _window;
-		static Scene* _currentScene;
-		static float _deltaTime;
-		static float _elapsedTime;
+	private:
+		static Window* window;
 	};
 }

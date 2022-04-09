@@ -1,15 +1,13 @@
 #pragma once
 
-#include <Anggur/Helper/Enum.h>
+#include <Anggur/Utility/Enum.h>
 #include "Event.h"
 
-namespace Anggur
-{
-	#define ANGGUR_SCANCODE_MASK (1 << 30)
-	#define ANGGUR_SCANCODE_SIZE 512
+namespace Anggur {
+#define ANGGUR_SCANCODE_MASK (1 << 30)
+#define ANGGUR_SCANCODE_SIZE 512
 
-	enum class Scancode : int
-	{
+	enum class Scancode : int {
 		Unknown = 0,
 
 		Return = 40,
@@ -259,8 +257,7 @@ namespace Anggur
 		App2 = 284,
 	};
 
-	enum class Key : int
-	{
+	enum class Key : int {
 		Unknown = 0,
 
 		Return = '\r',
@@ -528,8 +525,7 @@ namespace Anggur
 		App2 = (ANGGUR_SCANCODE_MASK | 284),
 	};
 
-	enum class Modifier : unsigned int
-	{
+	enum class Modifier : unsigned int {
 		None = 0x0000,
 		LShift = 0x0001,
 		RShift = 0x0002,

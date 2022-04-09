@@ -1,9 +1,7 @@
 #pragma once
 
-namespace Anggur
-{
-	enum class MouseButton
-	{
+namespace Anggur {
+	enum class MouseButton {
 		F1 = 0x001,
 		F2 = 0x002,
 		F3 = 0x004,

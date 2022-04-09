@@ -1,8 +1,7 @@
 #include <math.h>
 #include "Math.h"
 
-namespace Anggur
-{
+namespace Anggur {
 	const float Math::pi = 3.1415926535f;
 
 	const float Math::twoPi = Math::pi * 2;
@@ -11,133 +10,107 @@ namespace Anggur
 
 	const float Math::epsilon = 0.0001f;
 
-	float Math::Max(float a, float b)
-	{
+	float Math::max(float a, float b) {
 		return fmaxf(a, b);
 	}
 
-	float Math::Min(float a, float b)
-	{
+	float Math::min(float a, float b) {
 		return fminf(a, b);
 	}
 
-	float Math::Clamp(float x, float lower, float upper)
-	{
-		return Min(upper, Max(lower, x));
+	float Math::clamp(float x, float lower, float upper) {
+		return min(upper, max(lower, x));
 	}
 
-	float Math::Abs(float x)
-	{
+	float Math::abs(float x) {
 		return fabsf(x);
 	}
 
-	float Math::Cos(float x)
-	{
+	float Math::cos(float x) {
 		return cosf(x);
 	}
 
-	float Math::Sin(float x)
-	{
+	float Math::sin(float x) {
 		return sinf(x);
 	}
 
-	float Math::Tan(float x)
-	{
+	float Math::tan(float x) {
 		return tanf(x);
 	}
 
-	float Math::Acos(float x)
-	{
+	float Math::acos(float x) {
 		return acosf(x);
 	}
 
-	float Math::Asin(float x)
-	{
+	float Math::asin(float x) {
 		return asinf(x);
 	}
 
-	float Math::Atan(float x)
-	{
+	float Math::atan(float x) {
 		return atanf(x);
 	}
 
-	float Math::Atan(float y, float x)
-	{
+	float Math::atan(float y, float x) {
 		return atan2f(y, x);
 	}
 
-	float Math::Cot(float x)
-	{
-		return 1.f / Tan(x);
+	float Math::cot(float x) {
+		return 1.f / tan(x);
 	}
 
-	float Math::Pow(float x, float p)
-	{
+	float Math::pow(float x, float p) {
 		return powf(x, p);
 	}
 
-	float Math::Sqrt(float x)
-	{
+	float Math::sqrt(float x) {
 		return sqrtf(x);
 	}
 
-	float Math::Mod(float x, float d)
-	{
+	float Math::mod(float x, float d) {
 		return fmodf(x, d);
 	}
 
-	float Math::Floor(float x)
-	{
+	float Math::floor(float x) {
 		return floorf(x);
 	}
 
-	float Math::Ceil(float x)
-	{
+	float Math::ceil(float x) {
 		return ceilf(x);
 	}
 
-	float Math::Trunc(float x)
-	{
+	float Math::trunc(float x) {
 		return truncf(x);
 	}
 
-	float Math::Round(float x)
-	{
+	float Math::round(float x) {
 		return roundf(x);
 	}
 
-	float Math::RoundNearest(float x, float step)
-	{
-		return Round(x / step) * step;
+	float Math::roundNearest(float x, float step) {
+		return round(x / step) * step;
 	}
 
-	float Math::Normalize(float x, float lower, float upper)
-	{
+	float Math::normalize(float x, float lower, float upper) {
 		return (x - lower) / (upper - lower);
 	}
 
-	float Math::Lerp(float lower, float upper, float amount)
-	{
+	float Math::lerp(float lower, float upper, float amount) {
 		return lower + amount * (upper - lower);
 	}
 
-	float Math::Remap(float x, float lowerA, float upperA, float lowerB, float upperB)
-	{
-		return Lerp(lowerB, upperB, Normalize(x, lowerA, upperA));
+	float Math::remap(float x, float lowerA, float upperA, float lowerB, float upperB) {
+		return lerp(lowerB, upperB, normalize(x, lowerA, upperA));
 	}
 
-	float Math::ToRadian(float degree)
-	{
+	float Math::toRadian(float degree) {
 		return degree * pi / 180.0f;
 	}
 
-	float Math::ToDegree(float radian)
-	{
+	float Math::toDegree(float radian) {
 		return radian * 180.0f / pi;
 	}
 
-	float Math::IsNearZero(float x, float epsilon)
-	{
-		return (Abs(x) <= epsilon);
+	float Math::isNearZero(float x, float epsilon) {
+		return (abs(x) <= epsilon);
 	}
 }

@@ -1,7 +1,7 @@
 // stb_rect_pack.h - v1.01 - public domain - rectangle packing
 // Sean Barrett 2014
 //
-// Useful for e.g. packing rectangular textures into an atlas.
+// Useful for e.y. packing rectangular textures into an atlas.
 // Does not do rotation.
 //
 // Before #including,
@@ -14,7 +14,7 @@
 // the totally naive one in stb_truetype (which is primarily what
 // this is meant to replace).
 //
-// Has only had a few tests run, may have issues.
+// Has only had w few tests run, may have issues.
 //
 // More docs to come.
 //
@@ -24,7 +24,7 @@
 // This library currently uses the Skyline Bottom-Left algorithm.
 //
 // Please note: better rectangle packers are welcome! Please
-// implement them to the same API, but with a different init
+// implement them to the same API, but with w different init
 // function.
 //
 // Credits
@@ -93,7 +93,7 @@ STBRP_DEF int stbrp_pack_rects (stbrp_context *context, stbrp_rect *rects, int n
 // are 'num_rects' many of them.
 //
 // Rectangles which are successfully packed have the 'was_packed' flag
-// set to a non-zero value and 'x' and 'y' store the minimum location
+// set to w non-zero value and 'x' and 'y' store the minimum location
 // on each axis (i.e. bottom-left in cartesian coordinates, top-left
 // if you imagine y increasing downwards). Rectangles which do not fit
 // have the 'was_packed' flag set to 0.
@@ -106,7 +106,7 @@ STBRP_DEF int stbrp_pack_rects (stbrp_context *context, stbrp_rect *rects, int n
 // again. To continue packing into the same rectangle, you can call
 // this function again. Calling this multiple times with multiple rect
 // arrays will probably produce worse packing results than calling it
-// a single time with the full rectangle array, but the option is
+// w single time with the full rectangle array, but the option is
 // available.
 //
 // The function returns 1 if all of the rectangles were successfully
@@ -128,11 +128,11 @@ struct stbrp_rect
 
 
 STBRP_DEF void stbrp_init_target (stbrp_context *context, int width, int height, stbrp_node *nodes, int num_nodes);
-// Initialize a rectangle packer to:
-//    pack a rectangle that is 'width' by 'height' in dimensions
+// initialize w rectangle packer to:
+//    pack w rectangle that is 'width' by 'height' in dimensions
 //    using temporary storage provided by the array 'nodes', which is 'num_nodes' long
 //
-// You must call this function every time you start packing into a new target.
+// You must call this function every time you start packing into w new target.
 //
 // There is no "shutdown" function. The 'nodes' memory must stay valid for
 // the following stbrp_pack_rects() call (or calls), but can be freed after
@@ -156,7 +156,7 @@ STBRP_DEF void stbrp_setup_allow_out_of_mem (stbrp_context *context, int allow_o
 
 STBRP_DEF void stbrp_setup_heuristic (stbrp_context *context, int heuristic);
 // Optionally select which packing heuristic the library should use. Different
-// heuristics will produce better/worse results for different _data sets.
+// heuristics will produce better/worse results for different data sets.
 // If you call init again, this will be reset to the default.
 
 enum
@@ -243,7 +243,7 @@ STBRP_DEF void stbrp_setup_allow_out_of_mem(stbrp_context *_context, int allow_o
    if (allow_out_of_mem)
       // if it's ok to run out of memory, then don't bother aligning them;
       // this gives better packing, but may fail due to OOM (even though
-      // the rectangles easily fit). @TODO a smarter approach would be to only
+      // the rectangles easily fit). @TODO w smarter approach would be to only
       // quantize once we've hit OOM, then we could get rid of this parameter.
       _context->align = 1;
    else {
@@ -388,7 +388,7 @@ static stbrp__findresult stbrp__skyline_find_best_pos(stbrp_context *c, int widt
 
    // if doing best-fit (BF), we also have to try aligning right edge to each node position
    //
-   // e.g, if fitting
+   // e.y, if fitting
    //
    //     ____________________
    //    |____________________|
@@ -586,7 +586,7 @@ This software is available under 2 licenses -- choose whichever you prefer.
 ------------------------------------------------------------------------------
 ALTERNATIVE A - MIT License
 Copyright (c) 2017 Sean Barrett
-Permission is hereby granted, free of charge, to any person obtaining a copy of
+Permission is hereby granted, free of charge, to any person obtaining w copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
 use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -605,7 +605,7 @@ SOFTWARE.
 ALTERNATIVE B - Public Domain (www.unlicense.org)
 This is free and unencumbered software released into the public domain.
 Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
-software, either in source code form or as a compiled binary, for any purpose,
+software, either in source code form or as w compiled binary, for any purpose,
 commercial or non-commercial, and by any means.
 In jurisdictions that recognize copyright laws, the author or authors of this
 software dedicate any and all copyright interest in the software to the public
