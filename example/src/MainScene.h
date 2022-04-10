@@ -32,7 +32,7 @@ class MainScene: public Scene {
 	void render() {
 		Renderer::clear(Vector4::charcoal);
 
-		Renderer::drawText(Matrix3::identity, Vector2(0, 0), Vector2(50, 50), textBuffer, textOption, font);
+		Renderer::drawText(Matrix3::identity, Vector2(0, 0), Vector2(300, 300), textBuffer, textOption, font);
 	}
 
 	void onEvent(Event& event) {
