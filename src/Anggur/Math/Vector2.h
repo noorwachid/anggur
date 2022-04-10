@@ -17,7 +17,7 @@ namespace Anggur {
 
 		void set(float v);
 		void set(float x, float y);
-		void setPolar(float angle, float length);
+		void setPolar(float length, float angle);
 
 		Vector2 operator+(const Vector2& v) const;
 		Vector2 operator-(const Vector2& v) const;
@@ -64,7 +64,7 @@ namespace Anggur {
 		static float getDistance(const Vector2& a, const Vector2& b);
 		static float getDistanceSquared(const Vector2& a, const Vector2& b);
 
-		static Vector2 createPolar(float angle, float length);
+		static Vector2 createPolar(float length, float angle);
 
 		static Vector2 zero;
 		static Vector2 one;

@@ -37,7 +37,7 @@ namespace Anggur {
 		this->y = y;
 	}
 
-	void Vector2::setPolar(float angle, float length) {
+	void Vector2::setPolar(float length, float angle) {
 		x = Math::cos(angle) * length;
 		y = Math::sin(angle) * length;
 	}
@@ -205,9 +205,9 @@ namespace Anggur {
 		return (c.x * c.x) + (c.y * c.y);
 	}
 
-	Vector2 Vector2::createPolar(float angle, float length) {
+	Vector2 Vector2::createPolar(float length, float angle) {
 		Vector2 temp;
-		temp.setPolar(angle, length);
+		temp.setPolar(length, angle);
 		return temp;
 	}
 

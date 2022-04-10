@@ -9,6 +9,8 @@ namespace Anggur {
 		float rotation;
 		Vector2 scale;
 
+		Transform(const Vector2& translation = Vector2(0.0f, 0.0f), float rotation = 0.0f, const Vector2& scale = 1.0f);
+
 		Matrix3 toMatrix3();
 	};
 }
