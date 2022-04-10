@@ -20,52 +20,52 @@ namespace Anggur {
 	}
 
 	Matrix3::Matrix3(const std::initializer_list<float>& list) {
-		Set(list);
+		set(list);
 	}
 
 	Matrix3::Matrix3(const Vector2& translation, float rotation, const Vector2& scale) {
 		*this = Matrix3::identity;
-		Scale(scale);
-		Rotate(rotation);
-		Translate(translation);
+		this->scale(scale);
+		this->rotate(rotation);
+		this->translate(translation);
 	}
 
-	void Matrix3::Set(const std::initializer_list<float>& list) {
+	void Matrix3::set(const std::initializer_list<float>& list) {
 		size_t i = 0;
 		for (auto it = list.begin(); it != list.end(); ++it, ++i)
-			_data[i] = *it;
+			data[i] = *it;
 	}
 
-	const float* Matrix3::GetData() const {
-		return _data;
+	const float* Matrix3::toPointer() const {
+		return data;
 	}
 
-	float* Matrix3::GetData() {
-		return _data;
+	float* Matrix3::toPointer() {
+		return data;
 	}
 
 	float& Matrix3::operator[](size_t index) {
-		return _data[index];
+		return data[index];
 	}
 
 	float Matrix3::operator[](size_t index) const {
-		return _data[index];
+		return data[index];
 	}
 
 	Matrix3 Matrix3::operator*(const Matrix3& right) const {
 		Matrix3 result;
 
-		result[0] = _data[0] * right[0] + _data[3] * right[1] + _data[6] * right[2];
-		result[1] = _data[1] * right[0] + _data[4] * right[1] + _data[7] * right[2];
-		result[2] = _data[2] * right[0] + _data[5] * right[1] + _data[8] * right[2];
+		result[0] = data[0] * right[0] + data[3] * right[1] + data[6] * right[2];
+		result[1] = data[1] * right[0] + data[4] * right[1] + data[7] * right[2];
+		result[2] = data[2] * right[0] + data[5] * right[1] + data[8] * right[2];
 
-		result[3] = _data[0] * right[3] + _data[3] * right[4] + _data[6] * right[5];
-		result[4] = _data[1] * right[3] + _data[4] * right[4] + _data[7] * right[5];
-		result[5] = _data[2] * right[3] + _data[5] * right[4] + _data[8] * right[5];
+		result[3] = data[0] * right[3] + data[3] * right[4] + data[6] * right[5];
+		result[4] = data[1] * right[3] + data[4] * right[4] + data[7] * right[5];
+		result[5] = data[2] * right[3] + data[5] * right[4] + data[8] * right[5];
 
-		result[6] = _data[0] * right[6] + _data[3] * right[7] + _data[6] * right[8];
-		result[7] = _data[1] * right[6] + _data[4] * right[7] + _data[7] * right[8];
-		result[8] = _data[2] * right[6] + _data[5] * right[7] + _data[8] * right[8];
+		result[6] = data[0] * right[6] + data[3] * right[7] + data[6] * right[8];
+		result[7] = data[1] * right[6] + data[4] * right[7] + data[7] * right[8];
+		result[8] = data[2] * right[6] + data[5] * right[7] + data[8] * right[8];
 
 		return result;
 	}
@@ -73,17 +73,17 @@ namespace Anggur {
 	Matrix3 Matrix3::operator+(const Matrix3& right) const {
 		Matrix3 result;
 
-		result[0] = _data[0] + right[0];
-		result[1] = _data[1] + right[1];
-		result[2] = _data[2] + right[2];
+		result[0] = data[0] + right[0];
+		result[1] = data[1] + right[1];
+		result[2] = data[2] + right[2];
 
-		result[3] = _data[3] + right[3];
-		result[4] = _data[4] + right[4];
-		result[5] = _data[5] + right[5];
+		result[3] = data[3] + right[3];
+		result[4] = data[4] + right[4];
+		result[5] = data[5] + right[5];
 
-		result[6] = _data[6] + right[6];
-		result[7] = _data[7] + right[7];
-		result[8] = _data[8] + right[8];
+		result[6] = data[6] + right[6];
+		result[7] = data[7] + right[7];
+		result[8] = data[8] + right[8];
 
 		return result;
 	}
@@ -98,79 +98,79 @@ namespace Anggur {
 		return *this;
 	}
 
-	Matrix3& Matrix3::Translate(const Vector2& v) {
-		*this = *this * Matrix3::CreateTranslation(v);
+	Matrix3& Matrix3::translate(const Vector2& translation) {
+		*this = *this * Matrix3::createTranslation(translation);
 
 		return *this;
 	}
 
-	Matrix3& Matrix3::Scale(const Vector2& v) {
-		*this = *this * Matrix3::CreateScale(v);
+	Matrix3& Matrix3::scale(const Vector2& scale) {
+		*this = *this * Matrix3::createScale(scale);
 
 		return *this;
 	}
 
-	Matrix3& Matrix3::Rotate(float theta) {
-		*this = *this * Matrix3::CreateRotation(theta);
+	Matrix3& Matrix3::rotate(float rotation) {
+		*this = *this * Matrix3::createRotation(rotation);
 
 		return *this;
 	}
 
-	Matrix3 Matrix3::CreateTranslation(const Vector2& v) {
+	Matrix3 Matrix3::createTranslation(const Vector2& translation) {
 		return Matrix3({
 			1.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
-			v.x, v.y, 1.0f,
+			translation.x, translation.y, 1.0f,
 		});
 	}
 
-	Matrix3 Matrix3::CreateScale(const Vector2& v) {
+	Matrix3 Matrix3::createScale(const Vector2& scale) {
 		return Matrix3({
-			v.x, 0.f, 0.f,
-			0.f, v.y, 0.f,
+			scale.x, 0.f, 0.f,
+			0.f, scale.y, 0.f,
 			0.f, 0.f, 1.f,
 		});
 	}
 
-	Matrix3 Matrix3::CreateRotation(float theta) {
+	Matrix3 Matrix3::createRotation(float rotation) {
 		return Matrix3({
-			Math::cos(theta), Math::sin(theta), 0.0f,
-			-Math::sin(theta), Math::cos(theta), 0.0f,
+			Math::cos(rotation), Math::sin(rotation), 0.0f,
+			-Math::sin(rotation), Math::cos(rotation), 0.0f,
 			0.0f, 0.0f, 1.0f,
 		});
 	}
 
-	static float Det(float a, float b, float c, float d) {
+	static float det(float a, float b, float c, float d) {
 		return (a * d) - (b * c);
 	}
 
-	static float Det(const Matrix3& m) {
+	static float det(const Matrix3& m) {
 		return
 			((m[0] * m[4] * m[8]) + (m[3] * m[7] * m[2]) + (m[6] * m[1] * m[5]))
 				- ((m[6] * m[4] * m[2]) + (m[0] * m[7] * m[5]) + (m[3] * m[1] * m[8]));
 	}
 
-	Matrix3 Matrix3::CreateInverse(const Matrix3& m) {
-		float determinant = Det(m);
+	Matrix3 Matrix3::createInverse(const Matrix3& original) {
+		float determinant = det(original);
 
 		if (determinant == 0.0)
 			return Matrix3::zero;
 
 		float oo = 1 / determinant;
 
-		// 1/det(M) * (coef(m))^-T // in one take
+		// 1/det(M) * (coef(original))^-T // in one take
 		return Matrix3({
-			oo * Det(m[4], m[7], m[5], m[8]), // 0
-			oo * -Det(m[1], m[7], m[2], m[8]), // 1
-			oo * Det(m[1], m[4], m[2], m[5]), // 2
+			oo * det(original[4], original[7], original[5], original[8]), // 0
+			oo * -det(original[1], original[7], original[2], original[8]), // 1
+			oo * det(original[1], original[4], original[2], original[5]), // 2
 
-			oo * -Det(m[3], m[6], m[5], m[8]), // 3
-			oo * Det(m[0], m[6], m[2], m[8]), // 4
-			oo * -Det(m[0], m[3], m[2], m[5]), // 5
+			oo * -det(original[3], original[6], original[5], original[8]), // 3
+			oo * det(original[0], original[6], original[2], original[8]), // 4
+			oo * -det(original[0], original[3], original[2], original[5]), // 5
 
-			oo * Det(m[3], m[6], m[4], m[7]), // 6
-			oo * -Det(m[0], m[6], m[1], m[7]), // 7
-			oo * Det(m[0], m[3], m[1], m[4])  // 8
+			oo * det(original[3], original[6], original[4], original[7]), // 6
+			oo * -det(original[0], original[6], original[1], original[7]), // 7
+			oo * det(original[0], original[3], original[1], original[4])  // 8
 		});
 	}
 

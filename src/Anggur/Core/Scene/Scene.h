@@ -1,15 +1,9 @@
 #pragma once
 
 #include "Anggur/Core/Event/Event.h"
+#include "Anggur/Core/Scene/Entity.h"
 
 namespace Anggur {
-	class Scene {
-	public:
-		virtual void onAttach();
-		virtual void onDetach();
-
-		virtual void onUpdate();
-
-		virtual void onEvent(Event& event);
+	class Scene: public Entity {
 	};
 }

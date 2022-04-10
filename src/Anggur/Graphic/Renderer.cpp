@@ -211,7 +211,7 @@ namespace Anggur {
 			return render();
 	}
 
-	void Renderer::addVertexData(const float* vertexData, size_t vertexLength, const uint32_t* indexData, size_t indexLength) {
+	void Renderer::draw(const float* vertexData, size_t vertexLength, const uint32_t* indexData, size_t indexLength) {
 		size_t vertexOffset = _vertexCounter * Vertex::length;
 		size_t vertexSize = vertexLength * Vertex::length;
 
@@ -225,7 +225,7 @@ namespace Anggur {
 		_indexCounter += indexLength;
 	}
 
-	void Renderer::addTextureData(const Texture& texture) {
+	void Renderer::draw(const Texture& texture) {
 		for (size_t i = 0; i < _textureCounter; ++i) {
 			if (_textureData[i].getId() == texture.getId()) {
 				_textureIndex = i;
@@ -271,7 +271,7 @@ namespace Anggur {
 // Primitive geometries
 
 	void
-	Renderer::AddTriangle(const Matrix3& transform,
+	Renderer::drawTriangle(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
@@ -290,10 +290,10 @@ namespace Anggur {
 
 		uint32_t indices[] = { 0, 1, 2 };
 
-		addVertexData(vertices, 3, indices, 3);
+		draw(vertices, 3, indices, 3);
 	}
 
-	void Renderer::AddQuad(const Matrix3& transform,
+	void Renderer::drawQuad(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
@@ -349,11 +349,11 @@ namespace Anggur {
 			0, 1, 2,
 			2, 3, 0 };
 
-		addVertexData(vertices, 4, indices, 6);
+		draw(vertices, 4, indices, 6);
 	}
 
 	void
-	Renderer::AddQuad(const Matrix3& transform, const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3) {
+	Renderer::drawQuad(const Matrix3& transform, const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3) {
 		checkCapacityLimit(4, 6);
 
 		Vector2 l0 = v0.position * transform;
@@ -407,11 +407,11 @@ namespace Anggur {
 			0, 1, 2,
 			2, 3, 0 };
 
-		addVertexData(vertices, 4, indices, 6);
+		draw(vertices, 4, indices, 6);
 	}
 
-	void Renderer::AddRect(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector4& color) {
-		AddQuad(transform,
+	void Renderer::drawRectangle(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector4& color) {
+		drawQuad(transform,
 			p0 * transform,
 			Vector2(p0.x, p1.y) * transform,
 			p1 * transform,
@@ -419,7 +419,7 @@ namespace Anggur {
 			color);
 	}
 
-	void Renderer::AddPolygon(const Matrix3& transform, const Vector2& p0, float r, size_t segments, const Vector4& c) {
+	void Renderer::drawPolygon(const Matrix3& transform, const Vector2& p0, float r, size_t segments, const Vector4& c) {
 		if (segments < 3)
 			segments = 3;
 
@@ -471,47 +471,47 @@ namespace Anggur {
 			offset += 3;
 		}
 
-		addVertexData(vertices, segments, indices, triangles * 3);
+		draw(vertices, segments, indices, triangles * 3);
 	}
 
-	void Renderer::AddCircle(const Matrix3& transform, const Vector2& p0, float r, const Vector4& c) {
-		AddPolygon(transform, p0, r, _circleSegment, c);
+	void Renderer::drawCircle(const Matrix3& transform, const Vector2& p0, float r, const Vector4& c) {
+		drawPolygon(transform, p0, r, _circleSegment, c);
 	}
 
 // Complex geometries
 
 	void
-	Renderer::AddTerminator(const Matrix3& transform,
+	Renderer::drawLineTerminator(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
-		float weight,
+		float w,
 		const Vector4& c) {
-		Vector2 p3 = (p0 - p1).Normalize() * weight;
-		Vector2 t0 = (p1 - p0).GetPerpen().Normalize() * weight;
+		Vector2 p3 = (p0 - p1).normalize() * w;
+		Vector2 t0 = (p1 - p0).getPerpendicular().normalize() * w;
 
-		AddQuad(transform, p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
+		drawQuad(transform, p1 + t0, p3 + p0 + t0, p3 + p0 - t0, p1 - t0, c);
 	}
 
-	void Renderer::AddAnchor(const Matrix3& transform,
+	void Renderer::drawLineAnchor(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
-		float w0,
+		float w,
 		const Vector4& c) {
 		Vector2 i0 = Vector2::zero * transform;
 		Vector2 l0 = p0 * transform;
 		Vector2 l1 = p1 * transform;
 		Vector2 l2 = p2 * transform;
-		Vector2 t0 = (l1 - l0).GetPerpen();
-		Vector2 t2 = (l2 - l1).GetPerpen();
+		Vector2 t0 = (l1 - l0).getPerpendicular();
+		Vector2 t2 = (l2 - l1).getPerpendicular();
 
 		if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y))) {
 			t0 = -t0;
 			t2 = -t2;
 		}
 
-		t0.SetLength(w0);
-		t2.SetLength(w0);
+		t0.setLength(w);
+		t2.setLength(w);
 
 		Vector2 u0 = (l0 + t0);
 		Vector2 u1 = (l2 + t2);
@@ -521,8 +521,8 @@ namespace Anggur {
 		Vector2 c1 = (l1 + t2);
 		Vector2 d0 = (l1 - t0);
 		Vector2 d1 = (l1 - t2);
-		Vector2 e0 = ((l1 - l0).SetLength(w0 * 2) + c0);
-		Vector2 e1 = ((l1 - l2).SetLength(w0 * 2) + c1);
+		Vector2 e0 = ((l1 - l0).setLength(w * 2) + c0);
+		Vector2 e1 = ((l1 - l2).setLength(w * 2) + c1);
 
 		auto areLinesIntersected = [](
 			const Vector2& p0,
@@ -539,7 +539,7 @@ namespace Anggur {
 			float numebAbs = Math::abs(numeb);
 
 			if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon) {
-				p4 = Vector2::Lerp(p0, p1, 0.5);
+				p4 = Vector2::lerp(p0, p1, 0.5);
 				return true;
 			}
 
@@ -624,50 +624,50 @@ namespace Anggur {
 			indices[17] = 7;
 		}
 
-		addVertexData(vertices, 12, indices, indexLength);
+		draw(vertices, 12, indices, indexLength);
 	}
 
 	void
-	Renderer::AddLine(const Matrix3& transform, const Vector2& p0, const Vector2& p1, float weight, const Vector4& c) {
-		Vector2 m0 = Vector2::Lerp(p0, p1, 0.5);
+	Renderer::drawLine(const Matrix3& transform, const Vector2& p0, const Vector2& p1, float w, const Vector4& c) {
+		Vector2 m0 = Vector2::lerp(p0, p1, 0.5);
 
-		AddTerminator(transform, p0, m0, weight, c);
-		AddTerminator(transform, p1, m0, weight, c);
+		drawLineTerminator(transform, p0, m0, w, c);
+		drawLineTerminator(transform, p1, m0, w, c);
 	}
 
-	void Renderer::AddPolyline(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
+	void Renderer::drawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
 		if (ps.size() > 1) {
 			std::vector<Vector2> ms;
 
 			for (size_t i = 0; i < ps.size() - 1; ++i)
-				ms.push_back(Vector2::Lerp(ps[i], ps[i + 1], 0.5));
+				ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
 
 			for (size_t i = 1; i < ms.size(); ++i)
-				AddAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+				drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
 
-			AddTerminator(transform, ps.front(), ms.front(), w, c);
-			AddTerminator(transform, ps.back(), ms.back(), w, c);
+			drawLineTerminator(transform, ps.front(), ms.front(), w, c);
+			drawLineTerminator(transform, ps.back(), ms.back(), w, c);
 		}
 	}
 
-	void Renderer::AddPolyring(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
+	void Renderer::drawPolyLineConnected(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
 		if (ps.size() > 1) {
 			std::vector<Vector2> ms;
 
 			for (size_t i = 0; i < ps.size() - 1; ++i)
-				ms.push_back(Vector2::Lerp(ps[i], ps[i + 1], 0.5));
+				ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
 
 			for (size_t i = 1; i < ms.size(); ++i)
-				AddAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+				drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
 
-			Vector2 m = Vector2::Lerp(ps.front(), ps.back(), 0.5);
+			Vector2 m = Vector2::lerp(ps.front(), ps.back(), 0.5);
 
-			AddAnchor(transform, m, ps.front(), ms.front(), w, c);
-			AddAnchor(transform, ms.back(), ps.back(), m, w, c);
+			drawLineAnchor(transform, m, ps.front(), ms.front(), w, c);
+			drawLineAnchor(transform, ms.back(), ps.back(), m, w, c);
 		}
 	}
 
-	void Renderer::AddQuadraticBz(const Matrix3& transform,
+	void Renderer::drawQuadraticBezier(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
@@ -696,20 +696,20 @@ namespace Anggur {
 		for (int i = 0; i <= 10; ++i)
 			points.push_back(GetLerped(p0, p1, p2, i / 10.f));
 
-		AddPolyline(transform, points, w, c);
+		drawPolyLine(transform, points, w, c);
 	}
 
-	void Renderer::AddQuadraticBzi(const Matrix3& transform,
+	void Renderer::drawQuadraticBezierAlt(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
 		float w,
 		const Vector4& c) {
 		Vector2 px = p1 * 2 - (p0 + p2) / 2;
-		AddQuadraticBz(transform, p0, px, p2, w, c);
+		drawQuadraticBezier(transform, p0, px, p2, w, c);
 	}
 
-	void Renderer::AddQubicBz(const Matrix3& transform,
+	void Renderer::drawQubicBezier(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
@@ -742,12 +742,12 @@ namespace Anggur {
 		for (int i = 0; i <= 10; ++i)
 			points.push_back(GetLerped(p0, p1, p2, p3, i / 10.f));
 
-		AddPolyline(transform, points, w, c);
+		drawPolyLine(transform, points, w, c);
 	}
 
 // Natural geometries
 
-	void Renderer::AddConvex(const Matrix3& transform, const std::vector<Vector2>& ps, const Vector4& c) {
+	void Renderer::drawConvex(const Matrix3& transform, const std::vector<Vector2>& ps, const Vector4& c) {
 		size_t triangles = ps.size() - 2;
 		uint32_t indices[triangles * 3];
 		float vertices[ps.size() * Vertex::length];
@@ -777,13 +777,13 @@ namespace Anggur {
 			offset += 3;
 		}
 
-		addVertexData(vertices, ps.size(), indices, triangles * 3);
+		draw(vertices, ps.size(), indices, triangles * 3);
 	}
 
 
 // Text
 
-	void Renderer::AddText(const Matrix3& transform,
+	void Renderer::drawText(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const std::string& textBuffer,
@@ -801,7 +801,7 @@ namespace Anggur {
 		lineArea.y = occupiedArea.y;
 		wordArea.y = occupiedArea.y - textOption.size * 0.3;
 
-		AddRect(transform, p0, p1, Vector4(0, 0, 1, 0.4));
+		drawRectangle(transform, p0, p1, Vector4(0, 0, 1, 0.4));
 
 		bool isFit = true;
 
@@ -835,12 +835,12 @@ namespace Anggur {
 			wordArea.x -= letterSpace;
 
 #ifdef ANGGUR_DEBUG_TEXT_RECTS
-			AddRect(transform, offset, offset + wordArea, Vector4(1, 1, 1, 0.33));
+			drawRectangle(transform, offset, offset + wordArea, Vector4(1, 1, 1, 0.33));
 #endif
-			AddTextChunk(transform, offset, ccs, textFont, color);
+			drawText(transform, offset, ccs, textFont, color);
 
 			offset.x += wordOffset.x;
-			wordOffset.Set(0, 0);
+			wordOffset.set(0, 0);
 			wordArea.x = 0;
 			ccs.clear();
 		};
@@ -853,7 +853,7 @@ namespace Anggur {
 			occupiedArea.x = Math::max(occupiedArea.x, lineArea.x);
 			occupiedArea.y += lineArea.y;
 #ifdef ANGGUR_DEBUG_TEXT_RECTS
-			AddRect(transform, offset, offset + lineArea, Vector4(1, 1, 1, 0.33));
+			drawRectangle(transform, offset, offset + lineArea, Vector4(1, 1, 1, 0.33));
 #endif
 
 			lineArea.x = 0;
@@ -880,13 +880,13 @@ namespace Anggur {
 					if (occupiedArea.y + lineArea.y > containerArea.y) {
 						occupiedArea.x = Math::max(occupiedArea.x, lineArea.x);
 #ifdef ANGGUR_DEBUG_TEXT_RECTS
-						AddCircle(transform,
+						drawCircle(transform,
 							p0 + Vector2(occupiedArea.x, occupiedArea.y + lineArea.y),
 							0.1,
 							Vector4(1, 1, 0, 0.5));
 #endif
 						isFit = false;
-						AddTextChunk(transform, offset, ellipsisCcs, textFont, color);
+						drawText(transform, offset, ellipsisCcs, textFont, color);
 						break;
 					}
 					else {
@@ -913,22 +913,22 @@ namespace Anggur {
 
 		offset.x = p0.x;
 #ifdef ANGGUR_DEBUG_TEXT_RECTS
-		AddRect(transform, offset, offset + lineArea, Vector4(1, 1, 1, 0.33));
-		AddRect(transform, p0, p0 + occupiedArea, Vector4(1, 1, 1, 0.33));
-		AddCircle(transform, p0 + containerArea, 0.1, Vector4::green);
+		drawRectangle(transform, offset, offset + lineArea, Vector4(1, 1, 1, 0.33));
+		drawRectangle(transform, p0, p0 + occupiedArea, Vector4(1, 1, 1, 0.33));
+		drawCircle(transform, p0 + containerArea, 0.1, Vector4::green);
 #endif
 	}
 
-	void Renderer::AddTextChunk(const Matrix3& transform,
+	void Renderer::drawText(const Matrix3& transform,
 		const Vector2& p0,
 		const std::vector<CodepointContainer>& ccs,
 		Font& textFont,
 		const Vector4& color) {
 		for (const CodepointContainer& cc: ccs) {
 #ifdef ANGGUR_DEBUG_TEXT_RECTS
-			AddRect(transform, p0 + cc.offset, p0 + cc.offset + cc.area, Vector4(1, 1, 1, 0.33));
+			drawRectangle(transform, p0 + cc.offset, p0 + cc.offset + cc.area, Vector4(1, 1, 1, 0.33));
 #endif
-			AddQuadx(
+			drawTexturedQuad(
 				Vector2(p0.x + cc.offset.x, p0.y + cc.offset.y) * transform,
 				Vector2(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y) * transform,
 				Vector2(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y + cc.area.y) * transform,
@@ -945,7 +945,7 @@ namespace Anggur {
 
 // Textured geometries
 
-	void Renderer::AddQuadx(const Vector2& p0,
+	void Renderer::drawTexturedQuad(const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
 		const Vector2& p3,
@@ -957,7 +957,7 @@ namespace Anggur {
 		const Vector4& c) {
 		checkCapacityLimit(4, 6, 1);
 
-		addTextureData(t);
+		draw(t);
 		float ti = _textureIndex;
 		if (t.getChannels() == 1)
 			ti += _maxTextureUnits;
@@ -1010,14 +1010,14 @@ namespace Anggur {
 			0,
 		};
 
-		addVertexData(vertices, 4, indices, 6);
+		draw(vertices, 4, indices, 6);
 	}
 
-	void Renderer::Addx(const Vector2& p0, const Texture& t, const Vector4& c) {
+	void Renderer::drawTexture(const Vector2& p0, const Texture& t, const Vector4& c) {
 		float w = t.getWidth();
 		float h = t.getHeight();
 
-		AddQuadx(
+		drawTexturedQuad(
 			p0,
 			{ p0.x + w, p0.y },
 			{ p0.x + w, p0.y + h },
@@ -1030,26 +1030,12 @@ namespace Anggur {
 			c);
 	}
 
-	void Renderer::AddRectx(const Vector2& p0, float w, float h, const Texture& t, const Vector4& c) {
-		AddQuadx(
+	void Renderer::drawTexturedRectangle(const Vector2& p0, float w, float h, const Texture& t, const Vector4& c) {
+		drawTexturedQuad(
 			p0,
 			{ p0.x + w, p0.y },
 			{ p0.x + w, p0.y + h },
 			{ p0.x, p0.y + h },
-			{ 0, 0 },
-			{ 1, 0 },
-			{ 1, 1 },
-			{ 0, 1 },
-			t,
-			c);
-	}
-
-	void Renderer::AddBoxx(const Vector2& position, const Vector2& radii, const Texture& t, const Vector4& c) {
-		AddQuadx(
-			{ position.x - radii.x, position.y - radii.y },
-			{ position.x + radii.x, position.y - radii.y },
-			{ position.x + radii.x, position.y + radii.y },
-			{ position.x - radii.x, position.y + radii.y },
 			{ 0, 0 },
 			{ 1, 0 },
 			{ 1, 1 },

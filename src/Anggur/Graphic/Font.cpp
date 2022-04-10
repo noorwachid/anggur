@@ -63,7 +63,7 @@ namespace Anggur {
 		int bitmapWidth = inSquareTermSize;
 		int bitmapHeight = inSquareTermSize;
 
-		normal.Set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
+		normal.set(1.0 / bitmapWidth, 1.0 / bitmapHeight);
 		int bitmapSize = bitmapWidth * bitmapHeight;
 		std::vector<uint8_t> bitmap(bitmapSize);
 
@@ -91,7 +91,7 @@ namespace Anggur {
 			glyph.w = rect.w * normal.x;
 			glyph.h = rect.h * normal.y;
 			glyph.ascent = (ascent + y0) * invSampleSize;
-			glyph.size.Set(rect.w * invSampleSize, rect.h * invSampleSize);
+			glyph.size.set(rect.w * invSampleSize, rect.h * invSampleSize);
 
 			packingRects.push_back(rect);
 		}

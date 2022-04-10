@@ -73,7 +73,7 @@ namespace Anggur {
 
 	void Shader::setMatrix3(const std::string& name, const Matrix3& mat) {
 		int locId = getLocation(name);
-		glUniformMatrix3fv(locId, 1, GL_FALSE, mat.GetData());
+		glUniformMatrix3fv(locId, 1, GL_FALSE, mat.toPointer());
 	}
 
 	void Shader::setVector2(const std::string& name, const Vector2& vec) {

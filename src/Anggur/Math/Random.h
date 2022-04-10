@@ -11,15 +11,15 @@ namespace Anggur {
 			generator(device()) {
 		}
 
-		void SetSeed(float n) {
+		void setSeed(float n) {
 			generator.seed(n);
 		}
 
-		float Generate() {
+		float generate() {
 			return generator();
 		}
 
-		float Range(float lower, float upper) {
+		float range(float lower, float upper) {
 			std::uniform_real_distribution<float> distribution(lower, upper);
 			return distribution(generator);
 		}
@@ -32,28 +32,28 @@ namespace Anggur {
 
 	class Random {
 	public:
-		static float Generate() {
-			return generator.Generate();
+		static float generate() {
+			return generator.generate();
 		}
 
-		static float Range(float lower, float upper) {
-			return generator.Range(lower, upper);
+		static float range(float lower, float upper) {
+			return generator.range(lower, upper);
 		}
 
-		static float GetNormal() {
-			return generator.Range(0.f, 1.f);
+		static float getNormal() {
+			return generator.range(0.f, 1.f);
 		}
 
-		static float GetSigned() {
-			return generator.Range(-1.f, 1.f);
+		static float getSigned() {
+			return generator.range(-1.f, 1.f);
 		}
 
-		static float GetAngle() {
-			return generator.Range(0.f, Math::twoPi);
+		static float getAngle() {
+			return generator.range(0.f, Math::twoPi);
 		}
 
-		static bool GetBool() {
-			return GetNormal() > 0.5;
+		static bool getBoolean() {
+			return getNormal() > 0.5;
 		}
 
 

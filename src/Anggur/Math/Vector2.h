@@ -12,12 +12,12 @@ namespace Anggur {
 		Vector2(float v);
 		Vector2(float x, float y);
 
-		const float* GetData() const;
-		float* GetData();
+		const float* toPointer() const;
+		float* toPointer();
 
-		void Set(float v);
-		void Set(float x, float y);
-		void SetPolar(float angle, float length);
+		void set(float v);
+		void set(float x, float y);
+		void setPolar(float angle, float length);
 
 		Vector2 operator+(const Vector2& v) const;
 		Vector2 operator-(const Vector2& v) const;
@@ -40,31 +40,31 @@ namespace Anggur {
 		Vector2& operator-=(const Vector2& v);
 		Vector2& operator*=(const Matrix3& m);
 
-		float GetLengthSq() const;
-		float GetLength() const;
-		float GetAngle() const;
+		float getLengthSquared() const;
+		float getLength() const;
+		float getAngle() const;
 
-		Vector2 GetPerpen() const;
+		Vector2 getPerpendicular() const;
 
-		Vector2& SetLengthLimit(float x);
-		Vector2& SetLength(float x);
-		Vector2& SetAngle(float theta);
-		Vector2& Normalize();
+		Vector2& setLengthLimit(float x);
+		Vector2& setLength(float x);
+		Vector2& setAngle(float theta);
+		Vector2& normalize();
 
-		static Vector2 Normalize(const Vector2& vec);
-		static Vector2 Lerp(const Vector2& a, const Vector2& b, float amount);
+		static Vector2 normalize(const Vector2& vec);
+		static Vector2 lerp(const Vector2& a, const Vector2& b, float amount);
 
-		static float Dot(const Vector2& a, const Vector2& b);
-		static float Cross(const Vector2& a, const Vector2& b);
+		static float dot(const Vector2& a, const Vector2& b);
+		static float cross(const Vector2& a, const Vector2& b);
 
-		static float GetLength(const Vector2& a, const Vector2& b);
-		static float GetLengthSq(const Vector2& a, const Vector2& b);
-		static float GetAngle(const Vector2& a, const Vector2& b);
+		static float getLength(const Vector2& a, const Vector2& b);
+		static float getLengthSquared(const Vector2& a, const Vector2& b);
+		static float getAngle(const Vector2& a, const Vector2& b);
 
-		static float GetDist(const Vector2& a, const Vector2& b);
-		static float GetDistSq(const Vector2& a, const Vector2& b);
+		static float getDistance(const Vector2& a, const Vector2& b);
+		static float getDistanceSquared(const Vector2& a, const Vector2& b);
 
-		static Vector2 CreatePolar(float angle, float length);
+		static Vector2 createPolar(float angle, float length);
 
 		static Vector2 zero;
 		static Vector2 one;

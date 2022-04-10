@@ -27,7 +27,7 @@ namespace Anggur {
 				0, distanceY, 0,
 				(-origin.x + offset.x) * distance, (-origin.y + offset.y) * distanceY, 1,
 			});
-			//        matrix.Rotate(rotation);
+			//        matrix.rotate(rotation);
 			return matrix;
 		}
 
@@ -36,14 +36,14 @@ namespace Anggur {
 				(2.0 * screenPoint.x) / viewport.x - 1.0,
 				-(2.0 * screenPoint.y) / viewport.y + 1.0);
 
-			return result * Matrix3::CreateInverse(toMatrix());
+			return result * Matrix3::createInverse(toMatrix());
 		}
 
 		Vector2 toScreenPoint(const Vector2& worldPoint) {
 			Vector2 result(
 				-worldPoint.x / viewport.x,
 				worldPoint.y / viewport.y);
-			return result * Matrix3::CreateInverse(toMatrix());
+			return result * Matrix3::createInverse(toMatrix());
 		}
 
 		void setRatio(float ratio) {

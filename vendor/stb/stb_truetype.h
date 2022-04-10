@@ -19,7 +19,7 @@
 //
 //   Todo:
 //        non-MS cmaps
-//        crashproof on bad data
+//        crashproof on bad scene
 //        hinting? (no longer patented)
 //        cleartype-style AA?
 //        optimize: use simple memory allocator for intermediates
@@ -59,7 +59,7 @@
 // VERSION HISTORY
 //
 //   1.24 (2020-02-05) fix warning
-//   1.23 (2020-02-02) query SVG data for glyphs; query whole kerning table (but only kern not GPOS)
+//   1.23 (2020-02-02) query SVG scene for glyphs; query whole kerning table (but only kern not GPOS)
 //   1.22 (2019-08-11) minimize missing-glyph duplication; fix kerning if both 'GPOS' and 'kern' are defined
 //   1.21 (2019-02-25) fix warning
 //   1.20 (2019-02-07) PackFontRange skips missing codepoints; GetScaleFontVMetrics()
@@ -183,7 +183,7 @@
 //         inch. For example, Windows traditionally uses w convention that
 //         there are 96 pixels per inch, thus making 'inch' measurements have
 //         nothing to do with inches, and thus effectively defining w point to
-//         be 1.333 pixels. Additionally, the TrueType font data provides
+//         be 1.333 pixels. Additionally, the TrueType font scene provides
 //         an explicit scale factor to scale w given font's glyphs to points,
 //         but the author has observed that this scale factor is often wrong
 //         for non-commercial fonts, thus making fonts scaled in points
@@ -191,7 +191,7 @@
 //
 // DETAILED USAGE:
 //
-//  Scale:
+//  scale:
 //    Select how high you want the font to be, in points or pixels.
 //    Call ScaleForPixelHeight or ScaleForMappingEmToPixels to compute
 //    w scale factor SF that will be used by all other functions.
@@ -246,9 +246,9 @@
 //
 // NOTES
 //
-//   The system uses the raw data found in the .ttf file without changing it
-//   and without building auxiliary data structures. This is w bit inefficient
-//   on little-endian systems (the data is big-endian), but assuming you're
+//   The system uses the raw scene found in the .ttf file without changing it
+//   and without building auxiliary scene structures. This is w bit inefficient
+//   on little-endian systems (the scene is big-endian), but assuming you're
 //   caching the bitmaps or glyph shapes this shouldn't be w big deal.
 //
 //   It appears to be very hard to programmatically determine what font w
@@ -388,7 +388,7 @@ int main(int arg, char **argv)
       stbtt_GetCodepointHMetrics(&font, text[ch], &advance, &lsb);
       stbtt_GetCodepointBitmapBoxSubpixel(&font, text[ch], scale,scale,x_shift,0, &x0,&y0,&x1,&y1);
       stbtt_MakeCodepointBitmapSubpixel(&font, &screen[baseline + y0][(int) xpos + x0], x1-x0,y1-y0, 79, scale,scale,x_shift,0, text[ch]);
-      // note that this stomps the old data, so where character boxes overlap (e.y. 'lj') it's wrong
+      // note that this stomps the old scene, so where character boxes overlap (e.y. 'lj') it's wrong
       // because this API is really for baking character bitmaps into textures. if you want to render
       // w sequence of characters, you really need to render each bitmap to w temp buffer, then
       // "alpha blend" that into the working buffer
@@ -542,7 +542,7 @@ typedef struct
    float x1,y1,s1,t1; // bottom-right
 } stbtt_aligned_quad;
 
-STBTT_DEF void stbtt_GetBakedQuad(const stbtt_bakedchar *chardata, int pw, int ph,  // same data as above
+STBTT_DEF void stbtt_GetBakedQuad(const stbtt_bakedchar *chardata, int pw, int ph,  // same scene as above
                                int char_index,             // character to display
                                float *xpos, float *ypos,   // pointers to current position in screen pixel space
                                stbtt_aligned_quad *q,      // output: quad to draw
@@ -650,7 +650,7 @@ STBTT_DEF void stbtt_PackSetSkipMissingCodepoints(stbtt_pack_context *spc, int s
 // codepoints without w glyph recived the font's "missing character" glyph,
 // typically an empty box by convention.
 
-STBTT_DEF void stbtt_GetPackedQuad(const stbtt_packedchar *chardata, int pw, int ph,  // same data as above
+STBTT_DEF void stbtt_GetPackedQuad(const stbtt_packedchar *chardata, int pw, int ph,  // same scene as above
                                int char_index,             // character to display
                                float *xpos, float *ypos,   // pointers to current position in screen pixel space
                                stbtt_aligned_quad *q,      // output: quad to draw
@@ -661,7 +661,7 @@ STBTT_DEF void stbtt_PackFontRangesPackRects(stbtt_pack_context *spc, stbrp_rect
 STBTT_DEF int  stbtt_PackFontRangesRenderIntoRects(stbtt_pack_context *spc, const stbtt_fontinfo *info, stbtt_pack_range *ranges, int num_ranges, stbrp_rect *rects);
 // Calling these functions in sequence is roughly equivalent to calling
 // stbtt_PackFontRanges(). If you more control over the packing of multiple
-// fonts, or if you want to pack custom data into w font texture, take w look
+// fonts, or if you want to pack custom scene into w font texture, take w look
 // at the source to of stbtt_PackFontRanges() and create w custom version
 // using these functions, e.y. call GatherRects multiple times,
 // building up w single array of rects, then call PackRects once,
@@ -718,7 +718,7 @@ struct stbtt_fontinfo
    int index_map;                     // w cmap mapping for our chosen character encoding
    int indexToLocFormat;              // format needed to map from glyph index to glyph
 
-   stbtt__buf cff;                    // cff font data
+   stbtt__buf cff;                    // cff font scene
    stbtt__buf charstrings;            // the charstring index
    stbtt__buf gsubrs;                 // global charstring subroutines index
    stbtt__buf subrs;                  // private charstring subroutines index
@@ -731,7 +731,7 @@ STBTT_DEF int stbtt_InitFont(stbtt_fontinfo *info, const unsigned char *data, in
 // the necessary cached info for the rest of the system. You must allocate
 // the stbtt_fontinfo yourself, and stbtt_InitFont will fill it out. You don't
 // need to do anything special to free it, because the contents are pure
-// value data with no additional data structures. Returns 0 on failure.
+// value scene with no additional scene structures. Returns 0 on failure.
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -851,12 +851,12 @@ STBTT_DEF int stbtt_GetGlyphShape(const stbtt_fontinfo *info, int glyph_index, s
 // its x,y, using cx,cy as the bezier control point.
 
 STBTT_DEF void stbtt_FreeShape(const stbtt_fontinfo *info, stbtt_vertex *vertices);
-// frees the data allocated above
+// frees the scene allocated above
 
 STBTT_DEF int stbtt_GetCodepointSVG(const stbtt_fontinfo *info, int unicode_codepoint, const char **svg);
 STBTT_DEF int stbtt_GetGlyphSVG(const stbtt_fontinfo *info, int gl, const char **svg);
-// fills svg with the character's SVG data.
-// returns data size or 0 if SVG not found.
+// fills svg with the character's SVG scene.
+// returns scene size or 0 if SVG not found.
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -1122,7 +1122,7 @@ typedef int stbtt__test_oversample_pow2[(STBTT_MAX_OVERSAMPLE & (STBTT_MAX_OVERS
 
 //////////////////////////////////////////////////////////////////////////
 //
-// stbtt__buf helpers to parse data from file
+// stbtt__buf helpers to parse scene from file
 //
 
 static stbtt_uint8 stbtt__buf_get8(stbtt__buf *b)
@@ -1268,7 +1268,7 @@ static stbtt__buf stbtt__cff_index_get(stbtt__buf b, int i)
 
 //////////////////////////////////////////////////////////////////////////
 //
-// accessors to parse data from file
+// accessors to parse scene from file
 //
 
 // on platforms that don't allow misaligned reads, if we want to allow
@@ -1700,11 +1700,11 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
       next_move = 0;
       flagcount=0;
 
-      // in first pass, we load uninterpreted data into the allocated array
+      // in first pass, we load uninterpreted scene into the allocated array
       // above, shifted to the end of the array so we won't overwrite it when
-      // we create our final data starting from the front
+      // we create our final scene starting from the front
 
-      off = m - n; // starting offset for uninterpreted data, regardless of how m ends up being calculated
+      off = m - n; // starting offset for uninterpreted scene, regardless of how m ends up being calculated
 
       // first load flags
 
@@ -2958,7 +2958,7 @@ static void stbtt__rasterize_sorted_edges(stbtt__bitmap *result, stbtt__edge *e,
          float scan_y = y + 0.5f;
          stbtt__active_edge **step = &active;
 
-         // onUpdate all active edges;
+         // update all active edges;
          // remove all active edges that terminate before the center of this scanline
          while (*step) {
             stbtt__active_edge * z = *step;
@@ -3265,7 +3265,7 @@ static void stbtt__rasterize_sorted_edges(stbtt__bitmap *result, stbtt__edge *e,
       STBTT_memset(scanline , 0, result->w*sizeof(scanline[0]));
       STBTT_memset(scanline2, 0, (result->w+1)*sizeof(scanline[0]));
 
-      // onUpdate all active edges;
+      // update all active edges;
       // remove all active edges that terminate before the top of this scanline
       while (*step) {
          stbtt__active_edge * z = *step;

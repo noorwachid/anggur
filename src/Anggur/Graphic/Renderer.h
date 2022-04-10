@@ -18,11 +18,7 @@ namespace Anggur {
 
 		static const size_t length = 9;
 
-		Vertex(const Vector2& position = Vector2::zero,
-			const Vector4& color = Vector4::white,
-			const Vector2& texCoord = Vector2::zero,
-			float texIndex = -1)
-			:
+		Vertex(const Vector2& position = Vector2::zero, const Vector4& color = Vector4::white, const Vector2& texCoord = Vector2::zero, float texIndex = -1):
 			position(position), color(color), texCoord(texCoord), texIndex(texIndex) {
 		}
 	};
@@ -43,117 +39,52 @@ namespace Anggur {
 		static void setViewProjection(const Matrix3& vp);
 
 		static void clear(const Vector4& color = Vector4::black);
+
 		static void checkCapacityLimit(size_t vertexOffset = 0, size_t indexOffset = 0, size_t textureOffset = 0);
-		static void addVertexData(const float* vertexData, size_t vertexLength, const uint32_t* indexData, size_t indexLength);
-		static void addTextureData(const Texture& texture);
+		static void draw(const float* vertexData, size_t vertexLength, const uint32_t* indexData, size_t indexLength);
+		static void draw(const Texture& texture);
 		static void clearData();
 		static void render();
 
 		// NEW API
 
 		// -- Primitives
-		static void AddTriangle(const Matrix3& transform,
-			const Vector2& p0 = Vector2(0.0, -0.5),
-			const Vector2& p1 = Vector2(0.5, 0.5),
-			const Vector2& p2 = Vector2(-0.5, 0.5),
-			const Vector4& c = Vector4::white);
-		static void AddQuad(const Matrix3& transform,
-			const Vector2& p0 = Vector2(-0.5, -0.5),
-			const Vector2& p1 = Vector2(0.5, -0.5),
-			const Vector2& p2 = Vector2(0.5, 0.5),
-			const Vector2& p3 = Vector2(-0.5, 0.5),
-			const Vector4& c = Vector4::white);
-		static void AddRect(const Matrix3& transform,
-			const Vector2& p0 = Vector2(-0.5, -0.5),
-			const Vector2& p1 = Vector2(0.5, 0.5),
-			const Vector4& color = Vector4::white);
-		static void AddPolygon(const Matrix3& transform,
-			const Vector2& p0,
-			float r = 0.5,
-			size_t segments = 6,
-			const Vector4& c = Vector4::white);
-		static void
-		AddCircle(const Matrix3& transform, const Vector2& p0, float r = 0.5, const Vector4& c = Vector4::white);
+		static void drawTriangle(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector4& c = Vector4::white);
+		static void drawQuad(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector4& c = Vector4::white);
+		static void drawRectangle(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector4& color = Vector4::white);
+		static void drawPolygon(const Matrix3& transform, const Vector2& p0, float r = 0.5, size_t segments = 6, const Vector4& c = Vector4::white);
+		static void drawCircle(const Matrix3& transform, const Vector2& p0, float r = 0.5, const Vector4& c = Vector4::white);
 
 		// -- Vertex Primitives
-		static void
-		AddQuad(const Matrix3& transform, const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3);
+		static void drawQuad(const Matrix3& transform, const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3);
 
 		// -- Lines
-		static void AddTerminator(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
-		static void AddAnchor(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			const Vector2& p2,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
-		static void AddLine(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
-		static void AddPolyline(const Matrix3& transform,
-			const std::vector<Vector2>& ps,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
-		static void AddPolyring(const Matrix3& transform,
-			const std::vector<Vector2>& ps,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
+		static void drawLineTerminator(const Matrix3& transform, const Vector2& p0, const Vector2& p1, float w = 0.5, const Vector4& c = Vector4::white);
+		static void drawLineAnchor(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, float w = 0.5, const Vector4& c = Vector4::white);
+		static void drawLine(const Matrix3& transform, const Vector2& p0, const Vector2& p1, float w = 0.5, const Vector4& c = Vector4::white);
+		static void drawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w = 0.5, const Vector4& c = Vector4::white);
+		static void drawPolyLineConnected(const Matrix3& transform, const std::vector<Vector2>& ps, float w = 0.5, const Vector4& c = Vector4::white);
 
 		// -- Curves
-		static void AddQuadraticBz(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			const Vector2& p2,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
-		static void AddQuadraticBzi(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			const Vector2& p2,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
-		static void AddQubicBz(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			const Vector2& p2,
-			const Vector2& p3,
-			float w = 0.5,
-			const Vector4& c = Vector4::white);
+		static void drawQuadraticBezier(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, float w = 0.5, const Vector4& c = Vector4::white);
+		static void drawQuadraticBezierAlt(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, float w = 0.5, const Vector4& c = Vector4::white);
+		static void drawQubicBezier(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector2& p3, float w = 0.5, const Vector4& c = Vector4::white);
 
 		// -- Natural
 		// TODO DrawArc
-		static void
-		AddConvex(const Matrix3& transform, const std::vector<Vector2>& ps, const Vector4& c = Vector4::white);
+		static void drawConvex(const Matrix3& transform, const std::vector<Vector2>& ps, const Vector4& c = Vector4::white);
 
 		// -- Text
-		static void AddText(const Matrix3& transform,
-			const Vector2& p0,
-			const Vector2& p1,
-			const std::string& textBuffer,
-			const TextOption& textOption,
-			Font& textFont,
-			const Vector4& color = Vector4::white);
-		static void AddTextChunk(const Matrix3& transform,
-			const Vector2& p0,
-			const std::vector<CodepointContainer>& ccs,
-			Font& textFont,
-			const Vector4& color);
+		static void drawText(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const std::string& textBuffer, const TextOption& textOption, Font& textFont, const Vector4& color = Vector4::white);
+		static void drawText(const Matrix3& transform, const Vector2& p0, const std::vector<CodepointContainer>& ccs, Font& textFont, const Vector4& color);
 
 		// OLD API
 		// -- Textures
-		static void Addx(const Vector2& p0, const Texture& t, const Vector4& c = Vector4::white);
-		static void AddQuadx(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector2& p3,
+		static void drawTexture(const Vector2& p0, const Texture& t, const Vector4& c = Vector4::white);
+		static void drawTexturedQuad(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector2& p3,
 			const Vector2& t0, const Vector2& t1, const Vector2& t2, const Vector2& t3,
 			const Texture& t, const Vector4& c = Vector4::white);
-		static void AddRectx(const Vector2& p0, float w, float h, const Texture& t, const Vector4& c = Vector4::white);
-		static void
-		AddBoxx(const Vector2& position, const Vector2& radii, const Texture& t, const Vector4& c = Vector4::white);
+		static void drawTexturedRectangle(const Vector2& p0, float w, float h, const Texture& t, const Vector4& c = Vector4::white);
 
 	private:
 		static Shader _batchShader;

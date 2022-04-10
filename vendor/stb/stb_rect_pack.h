@@ -156,7 +156,7 @@ STBRP_DEF void stbrp_setup_allow_out_of_mem (stbrp_context *context, int allow_o
 
 STBRP_DEF void stbrp_setup_heuristic (stbrp_context *context, int heuristic);
 // Optionally select which packing heuristic the library should use. Different
-// heuristics will produce better/worse results for different data sets.
+// heuristics will produce better/worse results for different scene sets.
 // If you call init again, this will be reset to the default.
 
 enum

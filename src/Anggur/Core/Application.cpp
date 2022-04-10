@@ -1,8 +1,8 @@
 #include "Anggur/Core/GraphicFunction.h"
 #include "Anggur/Core/Internal.h"
-#include "Anggur/Core/Log.h"
 #include "Anggur/Core/Application.h"
 #include "Anggur/Core/Scene/SceneManager.h"
+#include "Anggur/Core/Event/EventManager.h"
 #include "Anggur/Graphic/Renderer.h"
 
 namespace Anggur {
@@ -19,13 +19,14 @@ namespace Anggur {
 
 		while (window->isOpen()) {
 			SceneManager::update();
+			Renderer::render();
 
 			window->swapBuffers();
 
-			glfwPollEvents();
+			EventManager::poll();
 		}
 
-		SceneManager::destroy();
+		SceneManager::terminate();
 
 		terminate();
 	}
@@ -36,10 +37,11 @@ namespace Anggur {
 
 	void Application::initialize() {
 		bool ioResult = glfwInit();
-		ANGGUR_ASSERT(ioResult, "Failed to initialize IO");
 
 		window = new Window();
 		window->bind();
+
+		EventManager::attach(window);
 
 		GraphicFunction::load();
 
