@@ -18,6 +18,11 @@ namespace Anggur {
 			Renderer::setViewport(event.size);
 			SceneManager::emit(event);
 		});
+
+		glfwSetCharCallback(window->getHandler(), [](WindowHandler* handler, uint32_t codepoint) {
+			CodepointEvent event(codepoint);
+			SceneManager::emit(event);
+		});
 	}
 
 	void EventManager::detach(Window* window) {

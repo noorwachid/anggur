@@ -6,14 +6,14 @@
 namespace Anggur {
 	class Application {
 	public:
-		static Window* getWindow();
+		static void initialize(const Vector2& windowSize, const std::string& windowTitle);
+		static void terminate();
 
-		static void run(Scene* scene);
+		static void run(Scene* scene, const Vector2& windowSize = Vector2(800, 600), const std::string& windowTitle = "");
 
 		static void setVsync(bool enable = true);
 
-		static void initialize();
-		static void terminate();
+		static Window* getWindow();
 
 	private:
 		Application();

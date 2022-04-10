@@ -9,11 +9,11 @@ namespace Anggur {
 
 	// public:
 	Window* Application::getWindow() {
-		return nullptr;
+		return window;
 	}
 
-	void Application::run(Scene* scene) {
-		initialize();
+	void Application::run(Scene* scene, const Vector2& windowSize, const std::string& windowTitle) {
+		initialize(windowSize, windowTitle);
 
 		SceneManager::set(scene);
 
@@ -32,13 +32,12 @@ namespace Anggur {
 	}
 
 	void Application::setVsync(bool enable) {
-
 	}
 
-	void Application::initialize() {
+	void Application::initialize(const Vector2& windowSize, const std::string& windowTitle) {
 		bool ioResult = glfwInit();
 
-		window = new Window();
+		window = new Window(windowSize, windowTitle);
 		window->bind();
 
 		EventManager::attach(window);

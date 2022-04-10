@@ -5,9 +5,9 @@
 
 namespace Anggur {
 	enum class DrawMode {
-		Point = 0x1B00,
-		Line = 0x1B01,
-		Fill = 0x1B02,
+		point = 0x1B00,
+		line = 0x1B01,
+		filled = 0x1B02,
 	};
 
 	struct Camera {
@@ -20,30 +20,31 @@ namespace Anggur {
 			rotation = 0.0;
 		}
 
-		Matrix3 toMatrix() const {
+		Matrix3 toMatrix3() const {
 			float distanceY = -distance * (viewport.x / viewport.y);
 			Matrix3 matrix({
 				distance, 0, 0,
 				0, distanceY, 0,
 				(-origin.x + offset.x) * distance, (-origin.y + offset.y) * distanceY, 1,
 			});
-			//        matrix.rotate(rotation);
+			// matrix.rotate(rotation);
 			return matrix;
 		}
 
 		Vector2 toWorldPoint(const Vector2& screenPoint) {
 			Vector2 result(
 				(2.0 * screenPoint.x) / viewport.x - 1.0,
-				-(2.0 * screenPoint.y) / viewport.y + 1.0);
+				-(2.0 * screenPoint.y) / viewport.y + 1.0
+			);
 
-			return result * Matrix3::createInverse(toMatrix());
+			return result * Matrix3::createInverse(toMatrix3());
 		}
 
 		Vector2 toScreenPoint(const Vector2& worldPoint) {
 			Vector2 result(
 				-worldPoint.x / viewport.x,
 				worldPoint.y / viewport.y);
-			return result * Matrix3::createInverse(toMatrix());
+			return result * Matrix3::createInverse(toMatrix3());
 		}
 
 		void setRatio(float ratio) {
@@ -75,8 +76,7 @@ namespace Anggur {
 			float wordSpace = 0.2,
 			float letterSpace = 0.05,
 			bool isBreakable = false,
-			const std::string& ellipsis = "...")
-			:
+			const std::string& ellipsis = "..."):
 			size(size),
 			lineHeight(lineHeight),
 			wordSpace(wordSpace),

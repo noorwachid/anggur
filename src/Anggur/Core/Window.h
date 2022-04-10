@@ -12,7 +12,7 @@ namespace Anggur {
 		// TODO: Implement subwindow
 
 	public:
-		Window();
+		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
 
 		~Window();
 

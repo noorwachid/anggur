@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Anggur/Math/Vector2.h>
-#include "Window.h"
-#include "Key.h"
-#include "Mouse.h"
+#include "Anggur/Core/Event/Window.h"
+#include "Anggur/Core/Event/Key.h"
+#include "Anggur/Core/Event/Mouse.h"
+#include "Anggur/Math/Vector2.h"
 
 namespace Anggur {
 	enum class EventType {
@@ -22,13 +22,19 @@ namespace Anggur {
 		windowMinimized,
 		windowMaximized,
 
+		codepointInput,
+
 		frameBufferResized,
 	};
 
 	enum class EventGroup {
+		// hardware
 		key,
 		mouse,
 		window,
+
+		// software
+		codepoint,
 		frameBuffer,
 	};
 
@@ -40,24 +46,30 @@ namespace Anggur {
 		Event(EventType type, EventGroup group);
 	};
 
-	struct KeyEvent : public Event {
-		Scancode scancode;
+	struct KeyEvent: public Event {
 		Key key;
-		Modifier modifier;
+		ModifierKey modifierKey;
+
+		KeyEvent(EventType type, Key key, ModifierKey modifierKey);
 	};
 
-	struct MouseMovementEvent : public Event {
+	struct MouseButtonEvent: public Event {
+		MouseButton button;
+		ModifierKey modifierKey;
+
+		MouseButtonEvent(EventType type, MouseButton button, ModifierKey modifierKey);
+	};
+
+	struct MousePositionEvent: public Event {
 		Vector2 position;
-		Vector2 deltaPosition;
+
+		MousePositionEvent(const Vector2& position);
 	};
 
 	struct MouseScrollEvent : public Event {
 		Vector2 direction;
-	};
 
-	struct MouseButtonEvent : public Event {
-		MouseButton button;
-		Vector2 position;
+		MouseScrollEvent(const Vector2& direction);
 	};
 
 	struct WindowPositionEvent: public Event {
@@ -70,6 +82,12 @@ namespace Anggur {
 		Vector2 size;
 
 		WindowSizeEvent(const Vector2& size);
+	};
+
+	struct CodepointEvent: public Event {
+		uint32_t codepoint;
+
+		CodepointEvent(uint32_t codepoint);
 	};
 
 	struct FrameBufferSizeEvent: public Event {

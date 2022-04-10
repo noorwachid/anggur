@@ -307,47 +307,16 @@ namespace Anggur {
 		Vector2 l3 = p3 * transform;
 
 		float vertices[] = {
-			l0.x,
-			l0.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			0.f,
-			0.f,
-			-1,
-			l1.x,
-			l1.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			0.f,
-			0.f,
-			-1,
-			l2.x,
-			l2.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			0.f,
-			0.f,
-			-1,
-			l3.x,
-			l3.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			0.f,
-			0.f,
-			-1,
+			l0.x, l0.y, 	c.x, c.y, c.z, c.w, 	0.f, 0.f, 	-1,
+			l1.x, l1.y, 	c.x, c.y, c.z, c.w, 	0.f, 0.f, 	-1,
+			l2.x, l2.y, 	c.x, c.y, c.z, c.w, 	0.f, 0.f, 	-1,
+			l3.x, l3.y, 	c.x, c.y, c.z, c.w, 	0.f, 0.f, 	-1,
 		};
 
 		uint32_t indices[] = {
 			0, 1, 2,
-			2, 3, 0 };
+			2, 3, 0 
+		};
 
 		draw(vertices, 4, indices, 6);
 	}
@@ -405,18 +374,14 @@ namespace Anggur {
 
 		uint32_t indices[] = {
 			0, 1, 2,
-			2, 3, 0 };
+			2, 3, 0 
+		};
 
 		draw(vertices, 4, indices, 6);
 	}
 
 	void Renderer::drawRectangle(const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector4& color) {
-		drawQuad(transform,
-			p0 * transform,
-			Vector2(p0.x, p1.y) * transform,
-			p1 * transform,
-			Vector2(p1.x, p0.y) * transform,
-			color);
+		drawQuad(transform, p0 * transform, Vector2(p0.x, p1.y) * transform, p1 * transform, Vector2(p1.x, p0.y) * transform, color);
 	}
 
 	void Renderer::drawPolygon(const Matrix3& transform, const Vector2& p0, float r, size_t segments, const Vector4& c) {
@@ -478,10 +443,9 @@ namespace Anggur {
 		drawPolygon(transform, p0, r, _circleSegment, c);
 	}
 
-// Complex geometries
+	// Complex geometries
 
-	void
-	Renderer::drawLineTerminator(const Matrix3& transform,
+	void Renderer::drawLineTerminator(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		float w,
@@ -594,27 +558,13 @@ namespace Anggur {
 
 		uint32_t indexLength = 21;
 		uint32_t indices[] = {
-			2,
-			6,
-			8,
-			8,
-			4,
-			2,
-			7,
-			3,
-			5,
-			5,
-			9,
-			7,
-			6,
-			7,
-			11, // mid
-			6,
-			0,
-			1,
-			1,
-			7,
-			6,
+			2, 6, 8,
+			8, 4, 2,
+			7, 3, 5,
+			5, 9, 7,
+			6, 7, 11, // mid
+			6, 0, 1,
+			1, 7, 6,
 		};
 
 		if (intersected) {
@@ -834,9 +784,10 @@ namespace Anggur {
 			lineArea.x += wordSpace;
 			wordArea.x -= letterSpace;
 
-#ifdef ANGGUR_DEBUG_TEXT_RECTS
+			#ifdef ANGGUR_DEBUG_TEXT_RECTS
 			drawRectangle(transform, offset, offset + wordArea, Vector4(1, 1, 1, 0.33));
-#endif
+			#endif
+			
 			drawText(transform, offset, ccs, textFont, color);
 
 			offset.x += wordOffset.x;
@@ -852,9 +803,9 @@ namespace Anggur {
 
 			occupiedArea.x = Math::max(occupiedArea.x, lineArea.x);
 			occupiedArea.y += lineArea.y;
-#ifdef ANGGUR_DEBUG_TEXT_RECTS
+			#ifdef ANGGUR_DEBUG_TEXT_RECTS
 			drawRectangle(transform, offset, offset + lineArea, Vector4(1, 1, 1, 0.33));
-#endif
+			#endif
 
 			lineArea.x = 0;
 			offset.y += lineArea.y;
@@ -879,12 +830,12 @@ namespace Anggur {
 
 					if (occupiedArea.y + lineArea.y > containerArea.y) {
 						occupiedArea.x = Math::max(occupiedArea.x, lineArea.x);
-#ifdef ANGGUR_DEBUG_TEXT_RECTS
+						#ifdef ANGGUR_DEBUG_TEXT_RECTS
 						drawCircle(transform,
 							p0 + Vector2(occupiedArea.x, occupiedArea.y + lineArea.y),
 							0.1,
 							Vector4(1, 1, 0, 0.5));
-#endif
+						#endif
 						isFit = false;
 						drawText(transform, offset, ellipsisCcs, textFont, color);
 						break;
@@ -912,11 +863,11 @@ namespace Anggur {
 		}
 
 		offset.x = p0.x;
-#ifdef ANGGUR_DEBUG_TEXT_RECTS
+		#ifdef ANGGUR_DEBUG_TEXT_RECTS
 		drawRectangle(transform, offset, offset + lineArea, Vector4(1, 1, 1, 0.33));
 		drawRectangle(transform, p0, p0 + occupiedArea, Vector4(1, 1, 1, 0.33));
 		drawCircle(transform, p0 + containerArea, 0.1, Vector4::green);
-#endif
+		#endif
 	}
 
 	void Renderer::drawText(const Matrix3& transform,
@@ -924,10 +875,12 @@ namespace Anggur {
 		const std::vector<CodepointContainer>& ccs,
 		Font& textFont,
 		const Vector4& color) {
+		
 		for (const CodepointContainer& cc: ccs) {
-#ifdef ANGGUR_DEBUG_TEXT_RECTS
+			#ifdef ANGGUR_DEBUG_TEXT_RECTS
 			drawRectangle(transform, p0 + cc.offset, p0 + cc.offset + cc.area, Vector4(1, 1, 1, 0.33));
-#endif
+			#endif
+			
 			drawTexturedQuad(
 				Vector2(p0.x + cc.offset.x, p0.y + cc.offset.y) * transform,
 				Vector2(p0.x + cc.offset.x + cc.area.x, p0.y + cc.offset.y) * transform,
@@ -939,11 +892,12 @@ namespace Anggur {
 				Vector2(cc.glyph.x + cc.glyph.w, cc.glyph.y + cc.glyph.h),
 				Vector2(cc.glyph.x, cc.glyph.y + cc.glyph.h),
 				textFont.getTexture(),
-				color);
+				color
+			);
 		}
 	}
 
-// Textured geometries
+	// Textured geometries
 
 	void Renderer::drawTexturedQuad(const Vector2& p0,
 		const Vector2& p1,
@@ -963,51 +917,15 @@ namespace Anggur {
 			ti += _maxTextureUnits;
 
 		float vertices[] = {
-			p0.x,
-			p0.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			t0.x,
-			t0.y,
-			ti,
-			p1.x,
-			p1.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			t1.x,
-			t1.y,
-			ti,
-			p2.x,
-			p2.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			t2.x,
-			t2.y,
-			ti,
-			p3.x,
-			p3.y,
-			c.x,
-			c.y,
-			c.z,
-			c.w,
-			t3.x,
-			t3.y,
-			ti,
+			p0.x, p0.y, 	c.x, c.y, c.z, c.w, 	t0.x, t0.y, 	ti,
+			p1.x, p1.y, 	c.x, c.y, c.z, c.w, 	t1.x, t1.y, 	ti,
+			p2.x, p2.y, 	c.x, c.y, c.z, c.w, 	t2.x, t2.y, 	ti,
+			p3.x, p3.y, 	c.x, c.y, c.z, c.w, 	t3.x, t3.y, 	ti,
 		};
 
 		uint32_t indices[] = {
-			0,
-			1,
-			2,
-			2,
-			3,
-			0,
+			0, 1, 2,
+			2, 3, 0,
 		};
 
 		draw(vertices, 4, indices, 6);
@@ -1043,5 +961,4 @@ namespace Anggur {
 			t,
 			c);
 	}
-
-} // namespace Anggur
+} 

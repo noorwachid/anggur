@@ -7,9 +7,9 @@
 #include "Anggur/Graphic/Image.h"
 
 namespace Anggur {
-	Window::Window() {
-		size.x = 800.0f;
-		size.y = 600.0f;
+	Window::Window(const Vector2& size, const std::string& title) {
+		this->size = size;
+		this->title = title;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -19,7 +19,7 @@ namespace Anggur {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		#endif
 
-		handler = glfwCreateWindow(size.x, size.y, "", nullptr, nullptr);
+		handler = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
 		ANGGUR_ASSERT(handler, "Failed to create a window");
 	}
 

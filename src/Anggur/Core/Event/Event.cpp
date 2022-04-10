@@ -7,6 +7,30 @@ namespace Anggur {
 		consumed(false) {
 	}
 
+	// Key
+	KeyEvent::KeyEvent(EventType type, Key key, ModifierKey modifierKey):
+		Event(type, EventGroup::key),
+		key(key),
+		modifierKey(modifierKey) {
+	}
+
+	// mouse
+	MouseButtonEvent::MouseButtonEvent(EventType type, MouseButton button, ModifierKey modifierKey):
+		Event(type, EventGroup::mouse),
+		button(button),
+		modifierKey(modifierKey) {
+	}
+
+	MousePositionEvent::MousePositionEvent(const Vector2& position):
+		Event(EventType::mouseMoved, EventGroup::mouse),
+		position(position) {
+	}
+
+	MouseScrollEvent::MouseScrollEvent(const Vector2& direction):
+		Event(EventType::mouseScrolled, EventGroup::mouse),
+		direction(direction) {
+	}
+
 	// window
 	WindowPositionEvent::WindowPositionEvent(const Vector2& position):
 		Event(EventType::windowMoved, EventGroup::window),
@@ -16,6 +40,12 @@ namespace Anggur {
 	WindowSizeEvent::WindowSizeEvent(const Vector2& size):
 		Event(EventType::windowResized, EventGroup::window),
 		size(size) {
+	}
+
+	// codepoint
+	CodepointEvent::CodepointEvent(uint32_t codepoint):
+		Event(EventType::codepointInput, EventGroup::codepoint),
+		codepoint(codepoint) {
 	}
 
 	// frameBuffer
