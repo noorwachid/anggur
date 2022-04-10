@@ -1,7 +1,5 @@
-#include "MainScene.h"
-
-using Anggur::Application;
+#include "PhyllotaxisScene.h"
 
 int main() {
-	Application::run(new MainScene(), Vector2(600, 400), "Anggur Example");
+	Application::run(new PhyllotaxisScene(), Vector2(800, 600), "Anggur Example");
 }
