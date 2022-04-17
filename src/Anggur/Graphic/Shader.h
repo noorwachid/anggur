@@ -17,14 +17,14 @@ namespace Anggur {
 
 		int getLocation(const std::string& name);
 
-		void setMatrix3(const std::string& name, const Matrix3& mat);
-		void setVector2(const std::string& name, const Vector2& vec);
+		void setUniformMatrix3(const std::string& name, const Matrix3& mat);
+		void setUniformVector2(const std::string& name, const Vector2& vec);
 
-		void setInt(const std::string& name, int value);
-		void setInt(const std::string& name, size_t size, int* values);
+		void setUniformInt(const std::string& name, int value);
+		void setUniformInt(const std::string& name, size_t size, int* values);
 
-		void setFloat(const std::string& name, float value);
-		void setFloat(const std::string& name, size_t size, float* values);
+		void setUniformFloat(const std::string& name, float value);
+		void setUniformFloat(const std::string& name, size_t size, float* values);
 
 	private:
 		uint32_t id;

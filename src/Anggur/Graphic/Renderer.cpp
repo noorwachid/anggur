@@ -136,18 +136,18 @@ namespace Anggur {
 		_vertexData = new float[_maxVertices * Vertex::length];
 		_indexData = new uint32_t[_maxIndices];
 
-		_vertexBuffer.create();
-		_vertexBuffer.bind();
-		_vertexBuffer.setCapacity(sizeof(float) * _maxVertices * Vertex::length);
+		// _vertexBuffer.create();
+		// _vertexBuffer.bind();
+		// _vertexBuffer.setCapacity(sizeof(float) * _maxVertices * Vertex::length);
 
-		_vertexArray.setAttribute(0, 2, sizeof(Vertex), (void*)offsetof(Vertex, position));
-		_vertexArray.setAttribute(1, 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
-		_vertexArray.setAttribute(2, 2, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
-		_vertexArray.setAttribute(3, 1, sizeof(Vertex), (void*)offsetof(Vertex, texIndex));
+		// _vertexArray.setAttribute(0, 2, sizeof(Vertex), (void*)offsetof(Vertex, position));
+		// _vertexArray.setAttribute(1, 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
+		// _vertexArray.setAttribute(2, 2, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+		// _vertexArray.setAttribute(3, 1, sizeof(Vertex), (void*)offsetof(Vertex, texIndex));
 
-		_indexBuffer.create();
-		_indexBuffer.bind();
-		_indexBuffer.setCapacity(sizeof(uint32_t) * _maxIndices);
+		// _indexBuffer.create();
+		// _indexBuffer.bind();
+		// _indexBuffer.setCapacity(sizeof(uint32_t) * _maxIndices);
 
 		_viewProjectionMatrix = Matrix3::identity;
 
@@ -249,17 +249,17 @@ namespace Anggur {
 			return;
 
 		_batchShader.bind();
-		_batchShader.setMatrix3("uViewProjection", _viewProjectionMatrix);
-		_batchShader.setInt("uTex", _maxTextureUnits, _textureIndices);
+		_batchShader.setUniformMatrix3("uViewProjection", _viewProjectionMatrix);
+		_batchShader.setUniformInt("uTex", _maxTextureUnits, _textureIndices);
 
 		for (size_t i = 0; i < _textureCounter; ++i)
 			_textureData[i].bind(i);
 
-		_vertexBuffer.bind();
-		_vertexBuffer.setData(sizeof(float) * _maxVertices * Vertex::length, _vertexData);
+		// _vertexBuffer.bind();
+		// _vertexBuffer.setData(sizeof(float) * _maxVertices * Vertex::length, _vertexData);
 
-		_indexBuffer.bind();
-		_indexBuffer.setData(sizeof(uint32_t) * _maxIndices, _indexData);
+		// _indexBuffer.bind();
+		// _indexBuffer.setData(sizeof(uint32_t) * _maxIndices, _indexData);
 
 		_vertexArray.bind();
 		glDrawElements(GL_TRIANGLES, _indexCounter, GL_UNSIGNED_INT, nullptr);

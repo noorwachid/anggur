@@ -74,32 +74,32 @@ namespace Anggur {
 		return glGetUniformLocation(id, name.c_str());
 	}
 
-	void Shader::setMatrix3(const std::string& name, const Matrix3& mat) {
+	void Shader::setUniformMatrix3(const std::string& name, const Matrix3& mat) {
 		int locId = getLocation(name);
 		glUniformMatrix3fv(locId, 1, GL_FALSE, mat.toPointer());
 	}
 
-	void Shader::setVector2(const std::string& name, const Vector2& vec) {
+	void Shader::setUniformVector2(const std::string& name, const Vector2& vec) {
 		int locId = getLocation(name);
 		glUniform2f(locId, vec.x, vec.y);
 	}
 
-	void Shader::setInt(const std::string& name, int value) {
+	void Shader::setUniformInt(const std::string& name, int value) {
 		int locId = getLocation(name);
 		glUniform1i(locId, value);
 	}
 
-	void Shader::setInt(const std::string& name, size_t size, int* values) {
+	void Shader::setUniformInt(const std::string& name, size_t size, int* values) {
 		int locId = getLocation(name);
 		glUniform1iv(locId, size, values);
 	}
 
-	void Shader::setFloat(const std::string& name, float value) {
+	void Shader::setUniformFloat(const std::string& name, float value) {
 		int locId = getLocation(name);
 		glUniform1f(locId, value);
 	}
 
-	void Shader::setFloat(const std::string& name, size_t size, float* values) {
+	void Shader::setUniformFloat(const std::string& name, size_t size, float* values) {
 		int locId = getLocation(name);
 		glUniform1fv(locId, size, values);
 	}

@@ -20,23 +20,23 @@ namespace Anggur {
 	}
 
 	void VertexBuffer::setCapacity(size_t size) {
-		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * size, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void VertexBuffer::setData(size_t size, float* data) {
-		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	void VertexBuffer::setData(const std::vector<float>& data) {
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * data.size(), data.data());
 	}
 
 	void IndexBuffer::create() {
-		glGenBuffers(1, &_id);
+		glGenBuffers(1, &id);
 	}
 
 	void IndexBuffer::destroy() {
-		glDeleteBuffers(1, &_id);
+		glDeleteBuffers(1, &id);
 	}
 
 	void IndexBuffer::bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 
 	void IndexBuffer::unbind() {
@@ -44,11 +44,11 @@ namespace Anggur {
 	}
 
 	void IndexBuffer::setCapacity(size_t size) {
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * size, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void IndexBuffer::setData(size_t size, uint32_t* data) {
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
+	void IndexBuffer::setData(const std::vector<uint32_t>& data) {
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * data.size(), data.data());
 	}
 
 	void VertexArray::create() {
@@ -67,8 +67,12 @@ namespace Anggur {
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::setAttribute(size_t index, size_t size, size_t stride, void* offset) {
-		glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, offset);
+	void VertexArray::setAttribute(size_t index, size_t stride, size_t size, size_t offset) {
+		glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (void*) (sizeof(float) * offset));
 		glEnableVertexAttribArray(index);
+	}
+
+	void VertexArray::drawUntil(size_t indexCount) {
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	}
 }

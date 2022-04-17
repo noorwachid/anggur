@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <vector>
 
 using std::size_t;
 
@@ -13,10 +14,10 @@ namespace Anggur {
 		void bind();
 		void unbind();
 		void setCapacity(size_t size);
-		void setData(size_t size, uint32_t* data);
+		void setData(const std::vector<uint32_t>& data);
 
 	private:
-		uint32_t _id;
+		uint32_t id;
 	};
 
 	class VertexBuffer {
@@ -26,7 +27,7 @@ namespace Anggur {
 		void bind();
 		void unbind();
 		void setCapacity(size_t size);
-		void setData(size_t size, float* data);
+		void setData(const std::vector<float>& data);
 
 	private:
 		uint32_t id;
@@ -38,7 +39,8 @@ namespace Anggur {
 		void destroy();
 		void bind();
 		void unbind();
-		void setAttribute(size_t index, size_t size, size_t stride, void* offset);
+		void setAttribute(size_t index, size_t stride, size_t size, size_t offset = 0);
+		void drawUntil(size_t indexCount);
 
 	private:
 		uint32_t id;
