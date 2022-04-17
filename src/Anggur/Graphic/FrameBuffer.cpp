@@ -1,6 +1,7 @@
-#include "Anggur/Core/Log.h"
-#include "Anggur/Graphic/FrameBuffer.h"
-#include <glad/glad.h>
+#include <Anggur/Utility/Assert.h>
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Graphic/Function.h>
+#include <Anggur/Graphic/FrameBuffer.h>
 
 namespace Anggur {
 
@@ -30,17 +31,14 @@ namespace Anggur {
 
 		glGenTextures(1, &colorAttachment);
 		glBindTexture(GL_TEXTURE_2D, colorAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
-			GL_UNSIGNED_BYTE, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 			colorAttachment, 0);
 
-		ANGGUR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
-			GL_FRAMEBUFFER_COMPLETE,
-			"Framebuffer is incomplete!");
+		ANGGUR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
 		glViewport(0, 0, width, height);
 	}
@@ -60,5 +58,4 @@ namespace Anggur {
 	void FrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-
-} // namespace Anggur
+}

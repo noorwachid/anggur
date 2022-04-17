@@ -1,12 +1,12 @@
 #pragma once
-#include "Anggur/Math/Vector2.h"
-#include "Anggur/Math/Vector4.h"
-#include "Anggur/Math/Matrix3.h"
-#include "Anggur/Graphic/Font.h"
-#include "Anggur/Graphic/Shader.h"
-#include "Anggur/Graphic/Texture.h"
-#include "Anggur/Graphic/VertexArray.h"
-#include "Anggur/Graphic/RendererStruct.h"
+#include <Anggur/Math/Vector2.h>
+#include <Anggur/Math/Vector4.h>
+#include <Anggur/Math/Matrix3.h>
+#include <Anggur/Graphic/Font.h>
+#include <Anggur/Graphic/Shader.h>
+#include <Anggur/Graphic/Texture.h>
+#include <Anggur/Graphic/VertexArray.h>
+#include <Anggur/Graphic/RendererStruct.h>
 #include <vector>
 
 namespace Anggur {

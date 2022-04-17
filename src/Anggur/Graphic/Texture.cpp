@@ -1,7 +1,7 @@
-#include "Anggur/Core/GraphicFunction.h"
-#include "Anggur/Core/Log.h"
-#include "Anggur/Graphic/Texture.h"
 #include <stb_image.h>
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Graphic/Function.h>
+#include <Anggur/Graphic/Texture.h>
 
 namespace Anggur {
 
@@ -64,7 +64,7 @@ namespace Anggur {
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else {
-			ANGGUR_LOG("[Texture.loadBitmap] Data is empty\n");
+			ANGGUR_LOG("[Graphic.Texture.loadBitmap] Data is empty");
 		}
 	}
 

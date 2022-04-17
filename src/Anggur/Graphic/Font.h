@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Anggur/Graphic/Texture.h"
-#include "Anggur/Math/Vector2.h"
-#include "Anggur/Utility/Enum.h"
 #include <unordered_map>
+#include <Anggur/Math/Vector2.h>
+#include <Anggur/Utility/Enum.h>
+#include <Anggur/Graphic/Texture.h>
 
 struct stbtt_fontinfo;
 

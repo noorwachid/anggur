@@ -6,7 +6,6 @@ namespace Anggur {
 	class Image {
 	public:
 		Image();
-
 		Image(const std::string& path);
 
 		~Image();

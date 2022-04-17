@@ -4,12 +4,12 @@ set(CMAKE_CXX_STANDARD 17)
 project(anggur)
 
 file(GLOB anggur_sources
-    "src/Anggur/Math/*.cpp"
-    "src/Anggur/Utility/*.cpp"
     "src/Anggur/Core/*.cpp"
     "src/Anggur/Core/Event/*.cpp"
-    "src/Anggur/Core/Scene/*.cpp"
+    "src/Anggur/Core/Hierarchy/*.cpp"
     "src/Anggur/Graphic/*.cpp"
+    "src/Anggur/Math/*.cpp"
+    "src/Anggur/Utility/*.cpp"
 )
 
 add_library(anggur STATIC

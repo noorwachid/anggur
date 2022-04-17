@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Anggur/Graphic/Texture.h"
+#include <Anggur/Graphic/Texture.h>
 
 namespace Anggur {
 	class FrameBuffer {
 	public:
 		FrameBuffer();
-
 		FrameBuffer(uint32_t width, uint32_t height);
 
 		~FrameBuffer();

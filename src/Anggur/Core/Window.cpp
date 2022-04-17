@@ -1,10 +1,12 @@
-#include "Anggur/Core/Log.h"
-#include "Anggur/Core/Window.h"
-#include "Anggur/Core/Application.h"
-#include "Anggur/Core/IO.h"
-#include "Anggur/Core/Internal.h"
-#include "Anggur/Math/Vector2.h"
-#include "Anggur/Graphic/Image.h"
+#include <Anggur/Graphic/Function.h>
+#include <Anggur/Graphic/Image.h>
+#include <Anggur/Utility/Assert.h>
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Utility/File.h>
+#include <Anggur/Core/Window.h>
+#include <Anggur/Core/Application.h>
+#include <Anggur/Core/Internal.h>
+#include <Anggur/Math/Vector2.h>
 
 namespace Anggur {
 	Window::Window(const Vector2& size, const std::string& title) {
@@ -20,7 +22,7 @@ namespace Anggur {
 		#endif
 
 		handler = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
-		ANGGUR_ASSERT(handler, "Failed to create a window");
+		ANGGUR_ASSERT(handler, "[Core.Window] Failed to create a window");
 	}
 
 	Window::~Window() {
@@ -96,5 +98,10 @@ namespace Anggur {
 
 	void Window::bind() {
 		glfwMakeContextCurrent(handler);
+	}
+
+	void Window::load() {
+		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
 	}
 }

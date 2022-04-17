@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Anggur/Core/Window.h"
-#include "Anggur/Core/Scene/Scene.h"
+#include <Anggur/Core/Window.h>
+#include <Anggur/Core/Hierarchy/Node.h>
 
 namespace Anggur {
 	class Application {
@@ -9,7 +9,7 @@ namespace Anggur {
 		static void initialize(const Vector2& windowSize, const std::string& windowTitle);
 		static void terminate();
 
-		static void run(Scene* scene, const Vector2& windowSize = Vector2(800, 600), const std::string& windowTitle = "");
+		static void run(Node* rootNode);
 
 		static void setVsync(bool enable = true);
 

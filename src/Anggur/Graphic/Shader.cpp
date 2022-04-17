@@ -1,9 +1,9 @@
-#include "Anggur/Core/GraphicFunction.h"
-#include "Anggur/Core/IO.h"
-#include "Anggur/Core/Log.h"
-#include "Anggur/Math/Vector2.h"
-#include "Anggur/Math/Matrix3.h"
-#include "Anggur/Graphic/Shader.h"
+#include <Anggur/Utility/File.h>
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Math/Vector2.h>
+#include <Anggur/Math/Matrix3.h>
+#include <Anggur/Graphic/Function.h>
+#include <Anggur/Graphic/Shader.h>
 
 namespace Anggur {
 
@@ -32,7 +32,8 @@ namespace Anggur {
 		glGetShaderiv(vertexId, GL_COMPILE_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetShaderInfoLog(vertexId, 512, NULL, message);
-			ANGGUR_LOG("[Graphic.Shader] failed to compile vertex shader\n%s", message);
+			ANGGUR_LOG("[Graphic.Shader.compile] Failed to compile vertex shader");
+			ANGGUR_LOG("    %s", message);
 		}
 
 		uint32_t fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -42,7 +43,8 @@ namespace Anggur {
 		glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetShaderInfoLog(fragmentId, 512, NULL, message);
-			ANGGUR_LOG("[Graphic.Shader] failed to compile fragment shader\n%s", message);
+			ANGGUR_LOG("[Graphic.Shader.compile] failed to compile fragment shader");
+			ANGGUR_LOG("    %s", message);
 		}
 
 		id = glCreateProgram();
@@ -53,7 +55,8 @@ namespace Anggur {
 		glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetProgramInfoLog(id, 512, NULL, message);
-			ANGGUR_LOG("[Graphic.Shader] failed to link shader program\n%s", message);
+			ANGGUR_LOG("[Graphic.Shader.compile] failed to link shader program");
+			ANGGUR_LOG("    %s", message);
 		}
 		glDeleteShader(vertexId);
 		glDeleteShader(fragmentId);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Math.h"
-#include "Random.h"
+#include <Anggur/Math/Math.h>
+#include <Anggur/Math/Random.h>
 
 namespace Anggur {
 	struct Vector2 {

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Anggur/Core/Event/Window.h"
-#include "Anggur/Core/Event/Key.h"
-#include "Anggur/Core/Event/Mouse.h"
-#include "Anggur/Math/Vector2.h"
+#include <Anggur/Core/Event/Window.h>
+#include <Anggur/Core/Event/Key.h>
+#include <Anggur/Core/Event/Mouse.h>
+#include <Anggur/Math/Vector2.h>
 
 namespace Anggur {
 	enum class EventType {

@@ -1,9 +1,8 @@
-#include "Anggur/Core/GraphicFunction.h"
-#include "Anggur/Core/Internal.h"
-#include "Anggur/Core/Application.h"
-#include "Anggur/Core/Scene/SceneManager.h"
-#include "Anggur/Core/Event/EventManager.h"
-#include "Anggur/Graphic/Renderer.h"
+#include <Anggur/Utility/Assert.h>
+#include <Anggur/Core/Internal.h>
+#include <Anggur/Core/Application.h>
+#include <Anggur/Core/Event/EventManager.h>
+#include <Anggur/Core/Hierarchy/Tree.h>
 
 namespace Anggur {
 
@@ -12,21 +11,16 @@ namespace Anggur {
 		return window;
 	}
 
-	void Application::run(Scene* scene, const Vector2& windowSize, const std::string& windowTitle) {
-		initialize(windowSize, windowTitle);
-
-		SceneManager::set(scene);
+	void Application::run(Node* rootNode) {
+		Tree::setRoot(rootNode);
 
 		while (window->isOpen()) {
-			SceneManager::update();
-			Renderer::render();
+			Tree::update();
 
 			window->swapBuffers();
 
 			EventManager::poll();
 		}
-
-		SceneManager::terminate();
 
 		terminate();
 	}
@@ -36,28 +30,23 @@ namespace Anggur {
 
 	void Application::initialize(const Vector2& windowSize, const std::string& windowTitle) {
 		bool ioResult = glfwInit();
+		ANGGUR_ASSERT(ioResult, "[Core.Application.initialize] Failed to io system");
 
 		window = new Window(windowSize, windowTitle);
 		window->bind();
+		window->load();
 
 		EventManager::attach(window);
-
-		GraphicFunction::load();
-
-		Renderer::initialize();
 	}
 
 	void Application::terminate() {
-
+		Tree::terminate();
 	}
 
 	// private:
 	Application::Application() {
-
 	}
-
 
 	// private:
 	Window* Application::window = nullptr;
-
 }

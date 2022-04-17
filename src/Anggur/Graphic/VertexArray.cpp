@@ -1,5 +1,5 @@
-#include "Anggur/Core/GraphicFunction.h"
-#include "Anggur/Graphic/VertexArray.h"
+#include <Anggur/Graphic/Function.h>
+#include <Anggur/Graphic/VertexArray.h>
 
 namespace Anggur {
 

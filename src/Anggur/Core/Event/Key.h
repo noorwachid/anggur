@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Utility/Enum.h"
+#include <Anggur/Utility/Enum.h>
 
 namespace Anggur {
 	#define ANGGUR_SCANCODE_MASK (1 << 30)
@@ -266,5 +266,5 @@ namespace Anggur {
 		numLock = 0x0020,  
 	};
 
-	ANGGUR_OVERLOAD_ENUM(ModifierKey);
+	ANGGUR_ENUM(ModifierKey);
 }

@@ -1,6 +1,6 @@
-#include "Anggur/Core/Log.h"
-#include "Anggur/Core/GraphicFunction.h"
-#include "Anggur/Graphic/Renderer.h"
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Graphic/Function.h>
+#include <Anggur/Graphic/Renderer.h>
 
 #define ANGGUR_DEBUG_TEXT_RECTS 1
 

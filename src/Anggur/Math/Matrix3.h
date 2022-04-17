@@ -1,7 +1,7 @@
 #pragma once
 
 #include <initializer_list>
-#include "Math.h"
+#include <Anggur/Math/Math.h>
 
 namespace Anggur {
 	class Matrix3 {

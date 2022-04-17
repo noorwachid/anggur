@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Anggur/Math/Vector2.h"
+#include <Anggur/Math/Vector2.h>
 
 struct GLFWwindow;
 
@@ -30,6 +30,7 @@ namespace Anggur {
 		void close();
 
 		void bind();
+		void load();
 
 		void swapBuffers();
 

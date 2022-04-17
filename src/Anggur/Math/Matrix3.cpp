@@ -1,5 +1,5 @@
-#include "Vector2.h"
-#include "Matrix3.h"
+#include <Anggur/Math/Vector2.h>
+#include <Anggur/Math/Matrix3.h>
 
 namespace Anggur {
 
@@ -173,7 +173,6 @@ namespace Anggur {
 			oo * det(original[0], original[3], original[1], original[4])  // 8
 		});
 	}
-
 }
 
 

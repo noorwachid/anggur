@@ -6,4 +6,4 @@ project(anggur_example)
 add_executable(anggur_example src/main.cpp)
 target_link_libraries(anggur_example anggur)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resource DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

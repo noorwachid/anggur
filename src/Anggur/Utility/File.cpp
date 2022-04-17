@@ -1,12 +1,11 @@
-#include "IO.h"
-#include "Anggur/Core/Log.h"
+#include <Anggur/Utility/Assert.h>
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Utility/File.h>
 
 namespace Anggur {
-	namespace IO {
-		using std::string;
-
-		string read(const string& path) {
-			string wrapper;
+	namespace File {
+		std::string loadText(const std::string& path) {
+			std::string wrapper;
 
 			FILE* file;
 			char* buffer;
@@ -14,7 +13,7 @@ namespace Anggur {
 
 			file = fopen(path.c_str(), "x");
 			if (file == nullptr) {
-				ANGGUR_LOG("File.read :: Cannot open file");
+				ANGGUR_LOG("[Utility.File.read] Cannot open file");
 				return wrapper;
 			}
 
@@ -22,7 +21,7 @@ namespace Anggur {
 			length = ftell(file);
 
 			if (length == -1) {
-				ANGGUR_LOG("File.read :: File is broken");
+				ANGGUR_LOG("[Utility.File.read] File is broken");
 				return wrapper;
 			}
 
@@ -32,7 +31,7 @@ namespace Anggur {
 			buffer[length] = '\0';
 
 			if (ferror(file) != 0) {
-				ANGGUR_LOG("File.read :: Error while reading file");
+				ANGGUR_LOG("[Utility.File.read] Error while reading file");
 				return wrapper;
 			}
 
@@ -43,7 +42,7 @@ namespace Anggur {
 			return wrapper;
 		}
 
-		std::vector<uint8_t> load(const string& path) {
+		std::vector<uint8_t> load(const std::string& path) {
 			FILE* file = fopen(path.c_str(), "rb");
 			std::vector<uint8_t> buffer;
 
@@ -58,15 +57,15 @@ namespace Anggur {
 					fclose(file);
 
 					if (read != size)
-						ANGGUR_LOG("[Core.IO] File only read partially");
+						ANGGUR_LOG("[Utility.File.load] File only read partially");
 
 					return buffer;
 				}
 				fclose(file);
-				ANGGUR_LOG("[Core.IO] File is empty");
+				ANGGUR_LOG("[Utility.File.load] File is empty");
 			}
 
-			ANGGUR_LOG("[Core.IO] :: Failed to open file");
+			ANGGUR_LOG("[Utility.File.load] Failed to open file");
 			return buffer;
 		}
 	}

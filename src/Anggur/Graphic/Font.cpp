@@ -1,10 +1,11 @@
-#include "Anggur/Core/GraphicFunction.h"
-#include "Anggur/Core/IO.h"
-#include "Anggur/Core/Log.h"
-#include "Anggur/Graphic/Font.h"
+#include <glad/glad.h>
 #include <stb_image_write.h>
 #include <stb_rect_pack.h>
 #include <stb_truetype.h>
+#include <Anggur/Utility/Assert.h>
+#include <Anggur/Utility/Log.h>
+#include <Anggur/Utility/File.h>
+#include <Anggur/Graphic/Font.h>
 
 namespace Anggur {
 
@@ -35,7 +36,7 @@ namespace Anggur {
 	}
 
 	void Font::load(const std::string& path, int sampleSize) {
-		buffer = IO::load(path);
+		buffer = File::load(path);
 
 		if (buffer.empty())
 			std::exit(123);
@@ -47,7 +48,7 @@ namespace Anggur {
 		this->invSampleSize = 1.f / sampleSize;
 
 		int result = stbtt_InitFont(info, buffer.data(), 0);
-		ANGGUR_ASSERT(result, "[Graphic.Font] failed to load font");
+		ANGGUR_ASSERT(result, "[Graphic.Font.load] Failed to load font");
 
 		float scale = stbtt_ScaleForPixelHeight(info, sampleSize);
 		int ascent, decent;

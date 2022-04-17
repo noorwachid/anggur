@@ -1,5 +1,5 @@
 #pragma once
-#include "Anggur/Graphic/Image.h"
+#include <Anggur/Graphic/Image.h>
 
 namespace Anggur {
 	enum class SamplerFilter {

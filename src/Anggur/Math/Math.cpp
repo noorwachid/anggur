@@ -1,5 +1,5 @@
 #include <math.h>
-#include "Math.h"
+#include <Anggur/Math/Math.h>
 
 namespace Anggur {
 	const float Math::pi = 3.1415926535f;
