@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Anggur/Core/Event/Event.h>
-#include <Anggur/Core/Hierarchy/Transform.h>
+#include <Anggur/Window/Event/Event.h>
+#include <Anggur/Core/Transform.h>
 #include <vector>
 
 namespace Anggur {

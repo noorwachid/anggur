@@ -2,10 +2,10 @@
 #include <stb_image_write.h>
 #include <stb_rect_pack.h>
 #include <stb_truetype.h>
-#include <Anggur/Utility/Assert.h>
+#include <Anggur/System/File.h>
 #include <Anggur/Utility/Log.h>
-#include <Anggur/Utility/File.h>
-#include <Anggur/Graphic/Font.h>
+#include <Anggur/Utility/Assert.h>
+#include <Anggur/Graphics/Font.h>
 
 namespace Anggur {
 

@@ -1,6 +1,6 @@
 /.vscode
 /.idea
-/architecture.txt
+/architecture.md
 /*build*
 /test*
 /sandbox*

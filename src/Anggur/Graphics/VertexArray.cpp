@@ -1,37 +1,41 @@
-#include <Anggur/Graphic/Function.h>
-#include <Anggur/Graphic/VertexArray.h>
+#include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/VertexArray.h>
 
 namespace Anggur {
 
-	void VertexBuffer::create() {
-		glGenBuffers(1, &id);
+	VertexBuffer::VertexBuffer() {
+		ANGGUR_GF(glGenBuffers(1, &id));
+		bind();
 	}
 
-	void VertexBuffer::destroy() {
-		glDeleteBuffers(1, &id);
+	VertexBuffer::~VertexBuffer() {
+		if (id > 0) {
+			ANGGUR_GF(glDeleteBuffers(1, &id));
+		}
 	}
 
 	void VertexBuffer::bind() {
-		glBindBuffer(GL_ARRAY_BUFFER, id);
+		ANGGUR_GF(glBindBuffer(GL_ARRAY_BUFFER, id));
 	}
 
 	void VertexBuffer::unbind() {
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		ANGGUR_GF(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 
 	void VertexBuffer::setCapacity(size_t size) {
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * size, nullptr, GL_DYNAMIC_DRAW);
+		ANGGUR_GF(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * size, nullptr, GL_DYNAMIC_DRAW));
 	}
 
 	void VertexBuffer::setData(const std::vector<float>& data) {
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * data.size(), data.data());
+		ANGGUR_GF(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * data.size(), data.data()));
 	}
 
-	void IndexBuffer::create() {
+	IndexBuffer::IndexBuffer() {
 		glGenBuffers(1, &id);
+		bind();
 	}
 
-	void IndexBuffer::destroy() {
+	IndexBuffer::~IndexBuffer() {
 		glDeleteBuffers(1, &id);
 	}
 
@@ -51,11 +55,12 @@ namespace Anggur {
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * data.size(), data.data());
 	}
 
-	void VertexArray::create() {
+	VertexArray::VertexArray() {
 		glGenVertexArrays(1, &id);
+		bind();
 	}
 
-	void VertexArray::destroy() {
+	VertexArray::~VertexArray() {
 		glDeleteVertexArrays(1, &id);
 	}
 

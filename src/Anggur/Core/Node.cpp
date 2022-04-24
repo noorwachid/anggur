@@ -1,4 +1,4 @@
-#include <Anggur/Core/Hierarchy/Node.h>
+#include <Anggur/Core/Node.h>
 
 namespace Anggur {
 

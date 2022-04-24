@@ -1,5 +1,5 @@
 #pragma once
-#include <Anggur/Graphic/Image.h>
+#include <Anggur/Graphics/Image.h>
 
 namespace Anggur {
 	enum class SamplerFilter {
@@ -45,6 +45,8 @@ namespace Anggur {
 
 		void bind(uint32_t slot = 0);
 
+		static int getMaxSlot();
+
 		friend bool operator==(const Texture& a, const Texture& b);
 
 	private:
@@ -52,5 +54,7 @@ namespace Anggur {
 		uint32_t width;
 		uint32_t height;
 		uint32_t channels;
+
+		static int maxSlot;
 	};
 }

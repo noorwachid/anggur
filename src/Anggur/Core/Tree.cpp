@@ -1,4 +1,4 @@
-#include <Anggur/Core/Hierarchy/Tree.h>
+#include <Anggur/Core/Tree.h>
 
 namespace Anggur {
 	// public:

@@ -6,6 +6,9 @@
 namespace Anggur {
 	class Shader {
 	public:
+		Shader();
+		~Shader();
+
 		uint32_t getId();
 
 		void setVertexSource(const std::string& source);
@@ -18,6 +21,8 @@ namespace Anggur {
 		int getLocation(const std::string& name);
 
 		void setUniformMatrix3(const std::string& name, const Matrix3& mat);
+		void setUniformMatrix4(const std::string& name, const Matrix4& matrix);
+
 		void setUniformVector2(const std::string& name, const Vector2& vec);
 
 		void setUniformInt(const std::string& name, int value);

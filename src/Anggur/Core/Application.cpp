@@ -1,8 +1,8 @@
-#include <Anggur/Utility/Assert.h>
-#include <Anggur/Core/Internal.h>
 #include <Anggur/Core/Application.h>
-#include <Anggur/Core/Event/EventManager.h>
-#include <Anggur/Core/Hierarchy/Tree.h>
+#include <Anggur/Core/Tree.h>
+#include <Anggur/Window/Internal.h>
+#include <Anggur/Window/Event/EventManager.h>
+#include <Anggur/Utility/Assert.h>
 
 namespace Anggur {
 

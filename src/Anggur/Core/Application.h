@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Anggur/Core/Window.h>
-#include <Anggur/Core/Hierarchy/Node.h>
+#include <Anggur/Window/Window.h>
+#include <Anggur/Core/Node.h>
 
 namespace Anggur {
 	class Application {

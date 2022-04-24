@@ -1,7 +1,7 @@
 #include <stb_image.h>
 #include <Anggur/Utility/Log.h>
-#include <Anggur/Graphic/Function.h>
-#include <Anggur/Graphic/Texture.h>
+#include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/Texture.h>
 
 namespace Anggur {
 
@@ -90,8 +90,16 @@ namespace Anggur {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
+	int Texture::getMaxSlot() {
+		static int maxSlot = 0;
+		if (maxSlot == 0) {
+			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
+		}
+
+		return maxSlot;
+	}
+
 	bool operator==(const Texture& a, const Texture& b) {
 		return a.getId() == b.getId();
 	}
-
 }

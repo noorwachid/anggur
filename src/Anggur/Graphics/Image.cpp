@@ -1,7 +1,7 @@
 #include <stb_image.h>
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
-#include <Anggur/Graphic/Image.h>
+#include <Anggur/Graphics/Image.h>
 
 namespace Anggur {
 

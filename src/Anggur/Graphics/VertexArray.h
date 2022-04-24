@@ -9,21 +9,23 @@ using std::size_t;
 namespace Anggur {
 	class IndexBuffer {
 	public:
-		void create();
-		void destroy();
+		IndexBuffer();
+		~IndexBuffer();
+
 		void bind();
 		void unbind();
 		void setCapacity(size_t size);
 		void setData(const std::vector<uint32_t>& data);
 
 	private:
-		uint32_t id;
+		uint32_t id = 0;
 	};
 
 	class VertexBuffer {
 	public:
-		void create();
-		void destroy();
+		VertexBuffer();
+		~VertexBuffer();
+
 		void bind();
 		void unbind();
 		void setCapacity(size_t size);
@@ -35,8 +37,9 @@ namespace Anggur {
 
 	class VertexArray {
 	public:
-		void create();
-		void destroy();
+		VertexArray();
+		~VertexArray();
+
 		void bind();
 		void unbind();
 		void setAttribute(size_t index, size_t stride, size_t size, size_t offset = 0);

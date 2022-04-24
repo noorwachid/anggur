@@ -1,11 +1,19 @@
-#include <Anggur/Utility/File.h>
+#include <Anggur/System/File.h>
 #include <Anggur/Utility/Log.h>
 #include <Anggur/Math/Vector2.h>
 #include <Anggur/Math/Matrix3.h>
-#include <Anggur/Graphic/Function.h>
-#include <Anggur/Graphic/Shader.h>
+#include <Anggur/Math/Matrix4.h>
+#include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/Shader.h>
 
 namespace Anggur {
+
+	Shader::Shader() {
+	}
+
+	Shader::~Shader() {
+		destroy();
+	}
 
 	uint32_t Shader::getId() {
 		return id;
@@ -47,6 +55,8 @@ namespace Anggur {
 			ANGGUR_LOG("    %s", message);
 		}
 
+		destroy(); // in case shader already created
+
 		id = glCreateProgram();
 		glAttachShader(id, vertexId);
 		glAttachShader(id, fragmentId);
@@ -67,7 +77,9 @@ namespace Anggur {
 	}
 
 	void Shader::destroy() {
-		glDeleteProgram(id);
+		if (id > 0) {
+			glDeleteProgram(id);
+		}
 	}
 
 	int Shader::getLocation(const std::string& name) {
@@ -77,6 +89,11 @@ namespace Anggur {
 	void Shader::setUniformMatrix3(const std::string& name, const Matrix3& mat) {
 		int locId = getLocation(name);
 		glUniformMatrix3fv(locId, 1, GL_FALSE, mat.toPointer());
+	}
+
+	void Shader::setUniformMatrix4(const std::string& name, const Matrix4& matrix) {
+		int locId = getLocation(name);
+		glUniformMatrix4fv(locId, 1, GL_FALSE, matrix.toPointer());
 	}
 
 	void Shader::setUniformVector2(const std::string& name, const Vector2& vec) {

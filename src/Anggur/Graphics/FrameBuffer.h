@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/Graphic/Texture.h>
+#include <Anggur/Graphics/Texture.h>
 
 namespace Anggur {
 	class FrameBuffer {

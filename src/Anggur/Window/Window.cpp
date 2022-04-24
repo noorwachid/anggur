@@ -1,11 +1,9 @@
-#include <Anggur/Graphic/Function.h>
-#include <Anggur/Graphic/Image.h>
+#include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/Image.h>
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
-#include <Anggur/Utility/File.h>
-#include <Anggur/Core/Window.h>
-#include <Anggur/Core/Application.h>
-#include <Anggur/Core/Internal.h>
+#include <Anggur/Window/Window.h>
+#include <Anggur/Window/Internal.h>
 #include <Anggur/Math/Vector2.h>
 
 namespace Anggur {

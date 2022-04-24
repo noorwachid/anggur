@@ -1,7 +1,7 @@
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
-#include <Anggur/Graphic/Function.h>
-#include <Anggur/Graphic/FrameBuffer.h>
+#include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/FrameBuffer.h>
 
 namespace Anggur {
 

@@ -1,9 +1,9 @@
-#include <Anggur/Core/Internal.h>
-#include <Anggur/Core/Window.h>
+#include <Anggur/Window/Internal.h>
+#include <Anggur/Window/Window.h>
+#include <Anggur/Window/Event/EventManager.h>
+#include <Anggur/Graphics/Renderer.h>
 #include <Anggur/Core/Application.h>
-#include <Anggur/Core/Event/EventManager.h>
-#include <Anggur/Core/Hierarchy/Tree.h>
-#include <Anggur/Graphic/Renderer.h>
+#include <Anggur/Core/Tree.h>
 
 namespace Anggur {
 	void EventManager::attach(Window* window) {
@@ -15,7 +15,6 @@ namespace Anggur {
 
 		glfwSetFramebufferSizeCallback(window->getHandler(), [](WindowHandler* handler, int width, int height) {
 			FrameBufferSizeEvent event(Vector2(width, height));
-			Renderer::setViewport(event.size);
 			Tree::emit(event);
 		});
 

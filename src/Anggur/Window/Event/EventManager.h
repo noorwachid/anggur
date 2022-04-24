@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Anggur/Core/Window.h>
-#include <Anggur/Core/Event/Event.h>
+#include <Anggur/Window/Window.h>
+#include <Anggur/Window/Event/Event.h>
 
 namespace Anggur {
 	class EventManager {

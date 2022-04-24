@@ -2,7 +2,12 @@
 
 namespace Anggur {
 	struct Vector2;
+	struct Vector3;
+	struct Vector4;
+
+	struct Matrix2;
 	struct Matrix3;
+	struct Matrix4;
 
 	struct Math {
 		static const float pi;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Anggur/Core/Event/Window.h>
-#include <Anggur/Core/Event/Key.h>
-#include <Anggur/Core/Event/Mouse.h>
+#include <Anggur/Window/Event/Window.h>
+#include <Anggur/Window/Event/Key.h>
+#include <Anggur/Window/Event/Mouse.h>
 #include <Anggur/Math/Vector2.h>
 
 namespace Anggur {
