@@ -1,17 +1,10 @@
-#include <Anggur/Window/Event/Event.h>
+#include <Anggur/Core/Event/Common.h>
 
 namespace Anggur {
 	Event::Event(EventType type, EventGroup group):
 		type(type),
 		group(group),
 		consumed(false) {
-	}
-
-	// Key
-	KeyEvent::KeyEvent(EventType type, Key key, ModifierKey modifierKey):
-		Event(type, EventGroup::key),
-		key(key),
-		modifierKey(modifierKey) {
 	}
 
 	// mouse

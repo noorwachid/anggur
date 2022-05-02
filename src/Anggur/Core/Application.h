@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/Window/Window.h>
+#include <Anggur/Core/Window.h>
 #include <Anggur/Core/Node.h>
 
 namespace Anggur {

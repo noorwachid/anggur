@@ -1,12 +1,15 @@
 #pragma once
 
 #include <string>
+#include <functional>
+#include <Anggur/Core/Event/Common.h>
 #include <Anggur/Math/Vector2.h>
 
 struct GLFWwindow;
 
 namespace Anggur {
 	using WindowHandler = GLFWwindow;
+	using EventCallback = std::function<void (Event&)>;
 
 	class Window {
 		// TODO: Implement subwindow
@@ -19,12 +22,13 @@ namespace Anggur {
 		void setPosition(const Vector2& pos);
 		void setSize(const Vector2& size);
 		void setTitle(const std::string& title);
+		void setEventCallback(const EventCallback& callback);
 
 		float getRatio();
-		Vector2 getPosition();
-		Vector2 getSize();
-
+		const Vector2& getPosition();
+		const Vector2& getSize();
 		const std::string& getTitle();
+		WindowHandler* getHandler();
 
 		bool isOpen();
 		void close();
@@ -34,14 +38,13 @@ namespace Anggur {
 
 		void swapBuffers();
 
-		WindowHandler* getHandler();
-
 		friend class Application;
+
+		static void pollEvents();
 
 	private:
 		WindowHandler* handler;
-		Vector2 position;
-		Vector2 size;
+		EventCallback eventCallback;
 		std::string title;
 	};
 }

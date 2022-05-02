@@ -1,7 +1,7 @@
 #pragma once
 
 #include <random>
-#include <Anggur/Math/Math.h>
+#include <Anggur/Math/Common.h>
 
 namespace Anggur {
 	class RandomGenerator {

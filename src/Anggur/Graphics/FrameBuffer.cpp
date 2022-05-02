@@ -47,10 +47,6 @@ namespace Anggur {
 		return Texture(colorAttachment, width, height);
 	}
 
-	void FrameBuffer::bindDefault() {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
 	void FrameBuffer::bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 	}

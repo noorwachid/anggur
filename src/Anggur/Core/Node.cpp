@@ -14,6 +14,9 @@ namespace Anggur {
 
 	}
 
+	void Node::render() {
+	}
+
 	void Node::onEvent(Event& event) {
 
 	}

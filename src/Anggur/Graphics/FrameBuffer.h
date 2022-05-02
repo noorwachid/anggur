@@ -31,9 +31,7 @@ namespace Anggur {
 		void recreate(uint32_t width, uint32_t height);
 
 		Texture toTexture();
-
-		static void bindDefault();
-
+		
 	private:
 		uint32_t id;
 		uint32_t colorAttachment;

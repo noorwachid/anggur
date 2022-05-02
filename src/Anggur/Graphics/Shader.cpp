@@ -86,6 +86,11 @@ namespace Anggur {
 		return glGetUniformLocation(id, name.c_str());
 	}
 
+	void Shader::setUniformVector2(const std::string& name, const Vector2& vec) {
+		int locId = getLocation(name);
+		glUniform2f(locId, vec.x, vec.y);
+	}
+
 	void Shader::setUniformMatrix3(const std::string& name, const Matrix3& mat) {
 		int locId = getLocation(name);
 		glUniformMatrix3fv(locId, 1, GL_FALSE, mat.toPointer());
@@ -94,11 +99,6 @@ namespace Anggur {
 	void Shader::setUniformMatrix4(const std::string& name, const Matrix4& matrix) {
 		int locId = getLocation(name);
 		glUniformMatrix4fv(locId, 1, GL_FALSE, matrix.toPointer());
-	}
-
-	void Shader::setUniformVector2(const std::string& name, const Vector2& vec) {
-		int locId = getLocation(name);
-		glUniform2f(locId, vec.x, vec.y);
 	}
 
 	void Shader::setUniformInt(const std::string& name, int value) {

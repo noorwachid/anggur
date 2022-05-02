@@ -14,8 +14,8 @@ namespace Anggur {
 
 		void bind();
 		void unbind();
-		void setCapacity(size_t size);
-		void setData(const std::vector<uint32_t>& data);
+		void setCapacity(size_t byteSize);
+		void setData(size_t byteSize, void* byteData);
 
 	private:
 		uint32_t id = 0;
@@ -28,8 +28,8 @@ namespace Anggur {
 
 		void bind();
 		void unbind();
-		void setCapacity(size_t size);
-		void setData(const std::vector<float>& data);
+		void setCapacity(size_t byteSize);
+		void setData(size_t byteSize, void* byteData);
 
 	private:
 		uint32_t id;
@@ -42,8 +42,7 @@ namespace Anggur {
 
 		void bind();
 		void unbind();
-		void setAttribute(size_t index, size_t stride, size_t size, size_t offset = 0);
-		void drawUntil(size_t indexCount);
+		void setAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset);
 
 	private:
 		uint32_t id;

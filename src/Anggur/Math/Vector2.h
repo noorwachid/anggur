@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Anggur/Math/Math.h>
-#include <Anggur/Math/Random.h>
-
 namespace Anggur {
+	struct Matrix3;
+
 	struct Vector2 {
 		float x;
 		float y;

@@ -3,9 +3,6 @@
 #include <Anggur/Utility/Enum.h>
 
 namespace Anggur {
-	#define ANGGUR_SCANCODE_MASK (1 << 30)
-	#define ANGGUR_SCANCODE_SIZE 512
-
 	enum class Key: int {
 		unknown = 0,
 

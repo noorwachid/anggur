@@ -1,7 +1,7 @@
 #include <Anggur/Core/Application.h>
 #include <Anggur/Core/Tree.h>
-#include <Anggur/Window/Internal.h>
-#include <Anggur/Window/Event/EventManager.h>
+#include <Anggur/Core/Internal.h>
+#include <Anggur/Core/Event/Common.h>
 #include <Anggur/Utility/Assert.h>
 
 namespace Anggur {
@@ -19,7 +19,7 @@ namespace Anggur {
 
 			window->swapBuffers();
 
-			EventManager::poll();
+			Window::pollEvents();
 		}
 
 		terminate();
@@ -36,7 +36,7 @@ namespace Anggur {
 		window->bind();
 		window->load();
 
-		EventManager::attach(window);
+		window->setEventCallback(Tree::emit);
 	}
 
 	void Application::terminate() {

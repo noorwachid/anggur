@@ -1,11 +1,12 @@
 #pragma once
 
-#include <Anggur/Math/Vector3.h>
 #include <initializer_list>
 #include <string>
+#include <Anggur/Math/Common.h>
+#include <Anggur/Math/Vector3.h>
 
 namespace Anggur {
-    // struct Matrix4 {
+    struct Matrix4 {
         float a, b, c, d;
         float e, f, g, h;
         float i, j, k, l;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/Window/Event/Event.h>
+#include <Anggur/Core/Event/Common.h>
 #include <Anggur/Core/Transform.h>
 #include <vector>
 
@@ -10,6 +10,7 @@ namespace Anggur {
 		virtual void initialize();
 		virtual void terminate();
 		virtual void update();
+		virtual void render();
 		virtual void onEvent(Event& event);
 
 	public:

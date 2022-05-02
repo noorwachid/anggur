@@ -1,3 +1,5 @@
+#include <Anggur/Math/Common.h>
+#include <Anggur/Math/Random.h>
 #include <Anggur/Math/Vector2.h>
 #include <Anggur/Math/Matrix3.h>
 
@@ -38,8 +40,8 @@ namespace Anggur {
 	}
 
 	void Vector2::setPolar(float length, float angle) {
-		x = Math::cos(angle) * length;
-		y = Math::sin(angle) * length;
+		x = cos(angle) * length;
+		y = sin(angle) * length;
 	}
 
 	Vector2 Vector2::operator+(const Vector2& v) const {
@@ -72,8 +74,8 @@ namespace Anggur {
 
 	Vector2 Vector2::operator*(const Matrix3& m) const {
 		return Vector2(
-			m[0] * x + m[3] * y + m[6],
-			m[1] * x + m[4] * y + m[7]
+			m.a * x + m.d * y + m.g,
+			m.b * x + m.e * y + m.h
 		);
 	}
 
@@ -127,7 +129,7 @@ namespace Anggur {
 	}
 
 	float Vector2::getLength() const {
-		return Math::sqrt(getLengthSquared());
+		return sqrt(getLengthSquared());
 	}
 
 	Vector2& Vector2::setLength(float x) {
@@ -182,7 +184,7 @@ namespace Anggur {
 	}
 
 	float Vector2::getLength(const Vector2& a, const Vector2& b) {
-		return Math::sqrt(getLengthSquared(a, b));
+		return sqrt(getLengthSquared(a, b));
 	}
 
 	float Vector2::getLengthSquared(const Vector2& a, const Vector2& b) {
@@ -193,11 +195,11 @@ namespace Anggur {
 	}
 
 	float Vector2::getAngle(const Vector2& a, const Vector2& b) {
-		return Math::acos(Vector2::dot(a, b));
+		return acos(Vector2::dot(a, b));
 	}
 
 	float Vector2::getDistance(const Vector2& a, const Vector2& b) {
-		return Math::sqrt(getDistanceSquared(a, b));
+		return sqrt(getDistanceSquared(a, b));
 	}
 
 	float Vector2::getDistanceSquared(const Vector2& a, const Vector2& b) {

@@ -58,6 +58,7 @@ namespace Anggur {
 		if (node) {
 			// BFS traversal
 			node->update();
+			node->render();
 
 			for (Node* child: node->children) {
 				traverseAndUpdate(child);

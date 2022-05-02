@@ -6,6 +6,7 @@
 #include <Anggur/Utility/Log.h>
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Graphics/Font.h>
+#include <Anggur/Math/Common.h>
 
 namespace Anggur {
 
