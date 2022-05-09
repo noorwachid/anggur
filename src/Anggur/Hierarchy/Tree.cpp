@@ -3,31 +3,31 @@
 namespace Anggur {
 	// public:
 	void Tree::initialize() {
-		traverseAndInitialize(root);
+		traverseAndInitialize(rootNode);
 	}
 
 	void Tree::terminate() {
-		traverseAndTerminate(root);
+		traverseAndTerminate(rootNode);
 	}
 
-	Node* Tree::getRoot() {
-		return root;
+	Node* Tree::getRootNode() {
+		return rootNode;
 	}
 
-	void Tree::setRoot(Node* root) {
+	void Tree::setRootNode(Node* node) {
 		terminate();
 
-		Tree::root = root;
+		rootNode = node;
 
 		initialize();
 	}
 
 	void Tree::update() {
-		traverseAndUpdate(root);
+		traverseAndUpdate(rootNode);
 	}
 
 	void Tree::emit(Event& event) {
-		traverseAndEmit(root, event);
+		traverseAndEmit(rootNode, event);
 	}
 
 	void Tree::traverseAndInitialize(Node* node) {
@@ -76,7 +76,4 @@ namespace Anggur {
 			node->onEvent(event);
 		}
 	}
-
-	// private:
-	Node* Tree::root = nullptr;
 }

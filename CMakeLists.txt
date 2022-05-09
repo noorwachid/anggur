@@ -4,8 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 project(anggur)
 
 file(GLOB anggur_sources
-    "src/Anggur/Core/*.cpp"
-    "src/Anggur/Core/Event/*.cpp"
+    "src/Anggur/Window/*.cpp"
+    "src/Anggur/Window/Event/*.cpp"
     "src/Anggur/Graphics/*.cpp"
     "src/Anggur/Math/*.cpp"
     "src/Anggur/System/*.cpp"

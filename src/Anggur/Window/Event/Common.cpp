@@ -1,4 +1,4 @@
-#include <Anggur/Core/Event/Common.h>
+#include <Anggur/Window/Event/Common.h>
 
 namespace Anggur {
 	Event::Event(EventType type, EventGroup group):

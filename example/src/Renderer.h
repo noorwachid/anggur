@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/Core/Application.h>
+#include <Anggur/Window/WindowManager.h>
 #include <Anggur/Graphics/Function.h>
 #include <Anggur/Graphics/Shader.h>
 #include <Anggur/Graphics/VertexArray.h>
@@ -9,7 +9,6 @@
 #include <Anggur/Math/Vector2.h>
 #include <Anggur/Math/Vector4.h>
 #include <Anggur/Math/Matrix3.h>
-#include <memory>
 
 using namespace Anggur;
 
@@ -27,39 +26,41 @@ public:
 		}
 	};
 
-	static void initialize();
-	static void setClearColor(const Vector4& color);
-	static void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-	static void clear();
+	Renderer();
+	~Renderer();
+	
+	void setClearColor(const Vector4& color);
+	void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+	void clear();
 
-	static void setViewProjection(const Matrix3& newViewProjection);
+	void setViewProjection(const Matrix3& newViewProjection);
 
-	static void beginScene();
-	static void endScene();
+	void begin();
+	void end();
 
-	static void flush();
+	void flush();
 
-	static void render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices);
-
-	static void renderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
-
-private:
-	static void initializeVertexArray();
-	static void initializeShader();
+	void render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices);
+	void renderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
 
 private:
-	static std::unique_ptr<Shader> shader;
-	static std::unique_ptr<VertexArray> vertexArray;
-	static std::unique_ptr<VertexBuffer> vertexBuffer;
-	static std::unique_ptr<IndexBuffer> indexBuffer;
-	static std::vector<Vertex> vertices;
-	static std::vector<uint32_t> indices;
+	void initializeVertexArray();
+	void initializeShader();
 
-	static size_t vertexOffset;
-	static size_t indexOffset;
-	static size_t renderCount;
-	static size_t batchVertex;
-	static size_t batchIndexMultiplier;
+private:
+	Shader shader;
+	VertexArray vertexArray;
+	VertexBuffer vertexBuffer;
+	IndexBuffer indexBuffer;
 
-	static Matrix3 viewProjection;
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+
+	size_t vertexOffset = 0;
+	size_t indexOffset = 0;
+	size_t renderCount = 0;
+	size_t batchVertex = 128;
+	size_t batchIndexMultiplier = 2;
+
+	Matrix3 viewProjection;
 };

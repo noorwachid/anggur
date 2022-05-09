@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Anggur/Core/Event/Common.h>
-#include <Anggur/Core/Transform.h>
 #include <vector>
 
 namespace Anggur {
@@ -14,7 +13,9 @@ namespace Anggur {
 		virtual void onEvent(Event& event);
 
 	public:
-		Transform transform;
+		Vector2 position;
+		Vector2 scale;
+		float rotation;
 
 		std::vector<Node*> children;
 	};

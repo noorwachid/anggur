@@ -2,8 +2,8 @@
 #include <Anggur/Graphics/Image.h>
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
-#include <Anggur/Core/Window.h>
-#include <Anggur/Core/Internal.h>
+#include <Anggur/Window/Window.h>
+#include <Anggur/Window/Internal.h>
 #include <Anggur/Math/Vector2.h>
 
 namespace Anggur {
@@ -22,12 +22,15 @@ namespace Anggur {
 		ANGGUR_ASSERT(handler, "[Core.Window] Failed to create a window");
 
 		glfwSetWindowUserPointer(handler, static_cast<void*>(this));
+
+		bind();
+		initializeGraphicsFunctions();
+		initializeEventEmmiter();
 	}
 
 	Window::~Window() {
 		if (handler) {
-			delete handler;
-			handler = nullptr;
+			glfwDestroyWindow(handler);
 		}
 	}
 
@@ -45,30 +48,8 @@ namespace Anggur {
 		this->title = title;
 	}
 
-	void Window::setEventCallback(const EventCallback& callback) {
-		eventCallback = callback;
-
-		glfwSetWindowSizeCallback(handler, [](WindowHandler* handler, int width, int height) {
-			WindowSizeEvent event(Vector2(width, height));
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->eventCallback(event);
-		});
-
-		glfwSetFramebufferSizeCallback(handler, [](WindowHandler* handler, int width, int height) {
-			FrameBufferSizeEvent event(Vector2(width, height));
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->eventCallback(event);
-		});
-
-		glfwSetCharCallback(handler, [](WindowHandler* handler, uint32_t codepoint) {
-			CodepointEvent event(codepoint);
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->eventCallback(event);
-		});
-	}
-
-	float Window::getRatio() {
-		Vector2 size = getSize();
+	float Window::getAspectRatio() {
+		const Vector2& size = getSize();
 
 		return size.y / size.x;
 	}
@@ -78,7 +59,9 @@ namespace Anggur {
 
 		glfwGetWindowPos(handler, &x, &y);
 
-		return Vector2(x, y);
+		position.set(x, y);
+
+		return position;
 	}
 
 	const Vector2& Window::getSize() {
@@ -86,7 +69,9 @@ namespace Anggur {
 
 		glfwGetWindowSize(handler, &x, &y);
 
-		return Vector2(x, y);
+		size.set(x, y);
+
+		return size;
 	}
 
 	const std::string& Window::getTitle() {
@@ -113,12 +98,35 @@ namespace Anggur {
 		glfwMakeContextCurrent(handler);
 	}
 
-	void Window::load() {
+	void Window::initializeGraphicsFunctions() {
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
 	}
 
-	void Window::pollEvents() {
-		glfwPollEvents();
+	void Window::initializeEventEmmiter() {
+
+		glfwSetWindowSizeCallback(handler, [](WindowHandler* handler, int width, int height) {
+			WindowSizeEvent event(Vector2(width, height));
+			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
+			window->emitEvent(event);
+		});
+
+		glfwSetFramebufferSizeCallback(handler, [](WindowHandler* handler, int width, int height) {
+			FrameBufferSizeEvent event(Vector2(width, height));
+			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
+			window->emitEvent(event);
+		});
+
+		glfwSetCharCallback(handler, [](WindowHandler* handler, uint32_t codepoint) {
+			CodepointEvent event(codepoint);
+			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
+			window->emitEvent(event);
+		});
+	}
+
+	void Window::emitEvent(Event& event) {
+		for (auto& eventListener: eventListeners) {
+			eventListener(event);
+		}
 	}
 }
