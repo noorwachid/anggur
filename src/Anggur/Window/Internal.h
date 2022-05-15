@@ -1,7 +1,9 @@
 #pragma once
 
-#include "GLFW/glfw3.h"
+#include <Anggur/Window/Platform.h>
 
-#ifdef __APPLE__
-	#define ANGGUR_OS_APPLE
-#endif
+// #ifdef ANGGUR_OS_APPLE
+// 	#define GLFW_INCLUDE_GLCOREARB
+// #endif
+
+#include "GLFW/glfw3.h"

@@ -5,6 +5,11 @@
 Renderer::Renderer() {
     initializeVertexArray();
     initializeShader();
+
+    blankTextureData = {255, 255, 255, 255};
+    blankTexture = std::make_shared<Texture>(blankTextureData.data(), 1, 1, 4);
+
+    textures.reserve(Texture::getMaxSlot());
 }
 
 Renderer::~Renderer() {
@@ -61,7 +66,7 @@ void Renderer::initializeShader() {
         uniform sampler2D uTextures[)" + std::to_string(Texture::getMaxSlot()) + R"(];
         
         void main() {
-            fColor = vColor;
+            fColor = texture(uTextures[int(vTexSlot)], vTexCoord);
         }
     )");
 
@@ -87,6 +92,8 @@ void Renderer::setViewProjection(const Matrix3& newViewProjection) {
 
 void Renderer::begin() {
     renderCount = 0;
+
+    textures.push_back(blankTexture);
 }
 
 void Renderer::end() {
@@ -109,12 +116,19 @@ void Renderer::flush() {
     indexBuffer.bind();
     indexBuffer.setData(sizeof(uint32_t) * indices.size(), indices.data());
 
+    for (auto& texture: textures) {
+        texture->bind();
+    }
+
     glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
     ++renderCount;
 
     vertexOffset = 0;
     indexOffset = 0;
+	textureOffset = 0;
+
+    textures.clear();
 }
 
 void Renderer::render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices) {
@@ -145,4 +159,21 @@ void Renderer::renderRectangle(const Vector2& position, const Vector2& size, con
         0, 1, 2,
         2, 3, 1,
     });
+}
+
+void Renderer::renderTexturedRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) {
+	float textureSlot = static_cast<float>(textureOffset);
+
+    render({
+        // position                                               // color                                     // texCoord          // texSlot
+        Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y                ), textureSlot),
+        Vertex(Vector2(position.x + size.x, position.y),	      Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y                ), textureSlot),
+        Vertex(Vector2(position.x,          position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y + textureSize.y), textureSlot),
+        Vertex(Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y), textureSlot),
+    }, {
+        0, 1, 2,
+        2, 3, 1,
+    });
+
+	++textureOffset;
 }

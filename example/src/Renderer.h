@@ -42,6 +42,7 @@ public:
 
 	void render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices);
 	void renderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
+	void renderTexturedRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
 
 private:
 	void initializeVertexArray();
@@ -58,9 +59,14 @@ private:
 
 	size_t vertexOffset = 0;
 	size_t indexOffset = 0;
+	size_t textureOffset = 1;
+
 	size_t renderCount = 0;
 	size_t batchVertex = 128;
 	size_t batchIndexMultiplier = 2;
 
 	Matrix3 viewProjection;
+	std::shared_ptr<Texture> blankTexture;
+	std::vector<uint8_t> blankTextureData;
+	std::vector<std::shared_ptr<Texture>> textures;
 };

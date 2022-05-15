@@ -100,12 +100,12 @@ namespace Anggur::Math {
 		return lerp(lowerB, upperB, normalize(x, lowerA, upperA));
 	}
 
-	float toRadian(float degree) {
-		return degree * pi / 180.0f;
+	float degreeToRadian(float x) {
+		return x * pi / 180.0f;
 	}
 
-	float toDegree(float radian) {
-		return radian * 180.0f / pi;
+	float radianToDegree(float x) {
+		return x * 180.0f / pi;
 	}
 
 	float isNearZero(float x, float epsilon) {

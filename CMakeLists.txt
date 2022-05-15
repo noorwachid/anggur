@@ -20,6 +20,7 @@ add_library(anggur STATIC
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/stb)
+add_subdirectory(vendor/msdf-atlas-gen)
 
 target_include_directories(anggur PUBLIC src PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(anggur

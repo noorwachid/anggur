@@ -2,6 +2,7 @@
 #include <Anggur/Window/WindowManager.h>
 #include <Anggur/Window/Event/Common.h>
 #include <Anggur/Utility/Assert.h>
+#include <Anggur/Utility/Log.h>
 
 namespace Anggur {
 	WindowManager::WindowManager() {

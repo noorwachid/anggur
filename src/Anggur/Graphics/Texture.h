@@ -15,6 +15,8 @@ namespace Anggur {
 
 		Texture(const std::string& path, SamplerFilter filter = SamplerFilter::linear);
 
+		Texture(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::linear);
+
 		~Texture();
 
 		inline uint32_t getId() const {
@@ -33,7 +35,7 @@ namespace Anggur {
 			return channels;
 		}
 
-		void loadBitmap(uint8_t* data,
+		void load(uint8_t* data,
 			uint32_t width,
 			uint32_t height,
 			uint32_t channels = 8,
@@ -48,6 +50,9 @@ namespace Anggur {
 		static int getMaxSlot();
 
 		friend bool operator==(const Texture& a, const Texture& b);
+
+	public:
+		const static Texture blank;
 
 	private:
 		uint32_t id;

@@ -1,33 +1,19 @@
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
 #include <Anggur/System/File.h>
+#include <fstream>
 
 namespace Anggur::File {
 	std::vector<uint8_t> load(const std::string& path) {
-		FILE* file = fopen(path.c_str(), "rb");
-		std::vector<uint8_t> buffer;
+		std::ifstream file(path, std::ios::in | std::ios::binary);
+		std::vector<uint8_t> bytes;
 
-		if (file) {
-			fseek(file, 0, SEEK_END);
-			size_t size = ftell(file);
-			fseek(file, 0, SEEK_SET);
+		bytes.insert(bytes.begin(),
+            std::istream_iterator<uint8_t>(file),
+            std::istream_iterator<uint8_t>()
+		);
 
-			if (size > 0) {
-				buffer.resize(size);
-				size_t read = fread(buffer.data(), sizeof(uint8_t), size, file);
-				fclose(file);
-
-				if (read != size)
-					ANGGUR_LOG("[System.File.load] File only read partially");
-
-				return buffer;
-			}
-			fclose(file);
-			ANGGUR_LOG("[System.File.load] File is empty");
-		}
-
-		ANGGUR_LOG("[System.File.load] Failed to open file");
-		return buffer;
+		return bytes;
 	}
 
 	std::string loadText(const std::string& path) {

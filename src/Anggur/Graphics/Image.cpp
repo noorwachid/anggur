@@ -27,7 +27,7 @@ namespace Anggur {
 
 		stbi_set_flip_vertically_on_load(1);
 		data = stbi_load(path.c_str(), &width, &height, &channels, 4);
-		ANGGUR_ASSERT(data, "[Graphic.Image.load] failed to load image");
+		ANGGUR_ASSERT(data, "[Graphics.Image.load] failed to load image: %s", path.c_str());
 
 		this->width = width;
 		this->height = height;

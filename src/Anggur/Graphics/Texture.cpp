@@ -2,6 +2,7 @@
 #include <Anggur/Utility/Log.h>
 #include <Anggur/Graphics/Function.h>
 #include <Anggur/Graphics/Texture.h>
+#include <vector>
 
 namespace Anggur {
 
@@ -20,11 +21,19 @@ namespace Anggur {
 		load(path, filter);
 	}
 
+	Texture::Texture(uint8_t* data,
+			uint32_t width,
+			uint32_t height,
+			uint32_t channels,
+			SamplerFilter filter) {
+		load(data, width, height, channels, filter);
+	}
+
 	Texture::~Texture() {
 		unload();
 	}
 
-	void Texture::loadBitmap(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) {
+	void Texture::load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) {
 		unload();
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -72,7 +81,7 @@ namespace Anggur {
 		width = image.getWidth();
 		height = image.getHeight();
 		channels = image.getChannels();
-		loadBitmap(image.getData(), width, height, channels, filter);
+		load(image.getData(), width, height, channels, filter);
 	}
 
 	void Texture::load(const std::string& path, SamplerFilter filter) {

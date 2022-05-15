@@ -118,7 +118,7 @@ namespace Anggur {
 				rect.id);
 		}
 
-		texture.loadBitmap(bitmap.data(), bitmapWidth, bitmapHeight, 1, SamplerFilter::nearest);
+		texture.load(bitmap.data(), bitmapWidth, bitmapHeight, 1, SamplerFilter::nearest);
 	}
 
 	float Font::getKerning(int c0, int c1) {

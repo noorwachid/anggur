@@ -44,8 +44,8 @@ namespace Anggur {
 		float lerp(float lower, float upper, float amount);
 		float remap(float x, float lowerA, float upperA, float lowerB, float upperB);
 
-		float toRadian(float degree);
-		float toDegree(float radian);
+		float degreeToRadian(float x);
+		float radianToDegree(float x);
 
 		float isNearZero(float x, float epsilon = ::Anggur::Math::epsilon);
 	}
