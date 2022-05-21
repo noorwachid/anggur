@@ -8,7 +8,8 @@
 
 struct GLFWwindow;
 
-namespace Anggur {
+namespace Anggur 
+{
 	using WindowHandler = GLFWwindow;
 	using EventListener = std::function<void (Event&)>;
 
@@ -20,29 +21,29 @@ namespace Anggur {
 
 		~Window();
 
-		void setPosition(const Vector2& pos);
-		void setSize(const Vector2& size);
-		void setTitle(const std::string& title);
+		void SetPosition(const Vector2& pos);
+		void SetSize(const Vector2& size);
+		void SetTitle(const std::string& title);
 
-		float getAspectRatio();
-		const Vector2& getPosition();
-		const Vector2& getSize();
-		const std::string& getTitle();
-		WindowHandler* getHandler();
+		float GetAspectRatio();
+		const Vector2& GetPosition();
+		const Vector2& GetSize();
+		const std::string& GetTitle();
+		WindowHandler* GetHandler();
 
-		bool isOpen();
-		void close();
-		void bind();
+		bool IsOpen();
+		void Close();
+		void Bind();
 		
-		void swapBuffers();
+		void SwapBuffers();
 
-		void addEventListener(EventListener eventListener);
-		void removeEventListener(EventListener eventListener);
+		void AddEventListener(EventListener eventListener);
+		void RemoveEventListener(EventListener eventListener);
 
 	private:
-		void initializeGraphicsFunctions();
-		void initializeEventEmmiter();
-		void emitEvent(Event& event);
+		void InitializeGraphicsFunctions();
+		void InitializeEventEmmiter();
+		void EmitEvent(Event& event);
 
 	private:
 		WindowHandler* handler = nullptr;

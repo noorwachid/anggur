@@ -2,13 +2,15 @@
 
 #include <Anggur/Window/Window.h>
 
-namespace Anggur {
-	class WindowManager {
+namespace Anggur 
+{
+	class WindowManager 
+	{
 	public:
 		WindowManager();
 		~WindowManager();
 
-		void pollEvents();
+		void PollEvents();
 
 	private:
 		bool successful;

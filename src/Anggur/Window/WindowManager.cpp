@@ -4,19 +4,28 @@
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
 
-namespace Anggur {
-	WindowManager::WindowManager() {
+namespace Anggur 
+{
+	WindowManager::WindowManager() 
+	{
+		#ifdef ANGGUR_OS_APPLE
+			glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, GL_FALSE);
+		#endif
+
 		successful = glfwInit();
 		ANGGUR_ASSERT(successful, "[Window.WindowManager] Failed to io system");
 	}
 
-	WindowManager::~WindowManager() {
-		if (successful) {
+	WindowManager::~WindowManager() 
+	{
+		if (successful) 
+		{
 			glfwTerminate();
 		}
 	}
 
-	void WindowManager::pollEvents() {
+	void WindowManager::PollEvents() 
+	{
 		glfwPollEvents();
 	}
 }

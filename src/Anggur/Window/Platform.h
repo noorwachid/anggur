@@ -8,15 +8,15 @@
 	#define ANGGUR_OS_APPLE
 #endif
 
-#ifdef _WIN32 || _WIN64
-    #define ANGGUR_PLATFORM_DESKTOP
+#ifdef _WIN32
     #define ANGGUR_OS_WINDOWS
-    #ifdef _WIN32
-        #define ANGGUR_ARCH_32
-    #endif
-    #ifdef _WIN64
-        #define ANGGUR_ARCH_64
-    #endif
+    #define ANGGUR_PLATFORM_DESKTOP
+    #define ANGGUR_ARCH_32
+#endif
+#ifdef _WIN64
+    #define ANGGUR_OS_WINDOWS
+    #define ANGGUR_PLATFORM_DESKTOP
+    #define ANGGUR_ARCH_64
 #endif
 
 #ifdef __ANDROID__

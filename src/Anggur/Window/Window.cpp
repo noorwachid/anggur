@@ -6,8 +6,10 @@
 #include <Anggur/Window/Internal.h>
 #include <Anggur/Math/Vector2.h>
 
-namespace Anggur {
-	Window::Window(const Vector2& size, const std::string& title) {
+namespace Anggur 
+{
+	Window::Window(const Vector2& size, const std::string& title) 
+	{
 		this->title = title;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -15,7 +17,7 @@ namespace Anggur {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		#ifdef ANGGUR_OS_APPLE
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		#endif
 
 		handler = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
@@ -23,38 +25,40 @@ namespace Anggur {
 
 		glfwSetWindowUserPointer(handler, static_cast<void*>(this));
 
-		bind();
-		initializeGraphicsFunctions();
-		initializeEventEmmiter();
+		Bind();
+		InitializeGraphicsFunctions();
+		InitializeEventEmmiter();
 	}
 
-	Window::~Window() {
+	Window::~Window() 
+	{
 		if (handler) {
 			glfwDestroyWindow(handler);
 		}
 	}
 
-	void Window::setPosition(const Vector2& position) {
+	void Window::SetPosition(const Vector2& position) 
+	{
 		glfwSetWindowPos(handler, position.x, position.y);
 	}
 
-	void Window::setSize(const Vector2& size) {
+	void Window::SetSize(const Vector2& size) {
 		glfwSetWindowSize(handler, size.x, size.y);
 	}
 
-	void Window::setTitle(const std::string& title) {
+	void Window::SetTitle(const std::string& title) {
 		glfwSetWindowTitle(handler, title.c_str());
 
 		this->title = title;
 	}
 
-	float Window::getAspectRatio() {
-		const Vector2& size = getSize();
+	float Window::GetAspectRatio() {
+		const Vector2& size = GetSize();
 
 		return size.y / size.x;
 	}
 
-	const Vector2& Window::getPosition() {
+	const Vector2& Window::GetPosition() {
 		int x, y;
 
 		glfwGetWindowPos(handler, &x, &y);
@@ -64,7 +68,7 @@ namespace Anggur {
 		return position;
 	}
 
-	const Vector2& Window::getSize() {
+	const Vector2& Window::GetSize() {
 		int x, y;
 
 		glfwGetWindowSize(handler, &x, &y);
@@ -74,57 +78,61 @@ namespace Anggur {
 		return size;
 	}
 
-	const std::string& Window::getTitle() {
+	const std::string& Window::GetTitle() {
 		return title;
 	}
 
-	bool Window::isOpen() {
+	bool Window::IsOpen() {
 		return !glfwWindowShouldClose(handler);
 	}
 
-	void Window::swapBuffers() {
+	void Window::SwapBuffers() {
 		glfwSwapBuffers(handler);
 	}
 
-	WindowHandler* Window::getHandler() {
+	WindowHandler* Window::GetHandler() {
 		return handler;
 	}
 
-	void Window::close() {
+	void Window::Close() {
 		glfwSetWindowShouldClose(handler, true);
 	}
 
-	void Window::bind() {
+	void Window::Bind() {
 		glfwMakeContextCurrent(handler);
 	}
 
-	void Window::initializeGraphicsFunctions() {
+	void Window::InitializeGraphicsFunctions() {
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
 	}
 
-	void Window::initializeEventEmmiter() {
-
-		glfwSetWindowSizeCallback(handler, [](WindowHandler* handler, int width, int height) {
+	void Window::InitializeEventEmmiter() 
+	{
+		glfwSetWindowSizeCallback(handler, [](WindowHandler* handler, int width, int height) 
+		{
 			WindowSizeEvent event(Vector2(width, height));
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->emitEvent(event);
+			window->EmitEvent(event);
 		});
 
-		glfwSetFramebufferSizeCallback(handler, [](WindowHandler* handler, int width, int height) {
+		glfwSetFramebufferSizeCallback(handler, [](WindowHandler* handler, int width, int height) 
+		{
 			FrameBufferSizeEvent event(Vector2(width, height));
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->emitEvent(event);
+			window->EmitEvent(event);
 		});
 
-		glfwSetCharCallback(handler, [](WindowHandler* handler, uint32_t codepoint) {
+		glfwSetCharCallback(handler, [](WindowHandler* handler, uint32_t codepoint) 
+		{
 			CodepointEvent event(codepoint);
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->emitEvent(event);
+			window->EmitEvent(event);
 		});
 	}
 
-	void Window::emitEvent(Event& event) {
+	void Window::EmitEvent(Event& event) 
+	{
 		for (auto& eventListener: eventListeners) {
 			eventListener(event);
 		}
