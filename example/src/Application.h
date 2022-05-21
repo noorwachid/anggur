@@ -4,21 +4,29 @@
 #include <Anggur/Graphics/Function.h>
 #include <Anggur/Graphics/Shader.h>
 #include <Anggur/Graphics/VertexArray.h>
-#include <Anggur/Graphics/Texture.h>
+#include <Anggur/Graphics/Texture2D.h>
 #include <Anggur/Utility/Log.h>
 #include <Anggur/System/File.h>
-#include "Renderer.h"
+#include "Renderer2D.h"
 #include "ScreenVP.h"
 #include <msdf-atlas-gen/msdf-atlas-gen.h>
 #include <fstream>
+#include <thread>
+#include <chrono>
+#include <filesystem>
 
-struct Application {
-	struct Rectangle {
+using namespace std::chrono_literals;
+
+struct Application 
+{
+	struct Rectangle 
+	{
 		Vector2 position;
 		Vector2 size;
 	};
 
-	bool generateAtlas(const char *fontFilename, const std::string& outPath) {
+	bool GenerateAtlas(const char *fontFilename, const std::string& outPath) 
+	{
 		using namespace msdf_atlas;
 
 		bool success = false;
@@ -95,36 +103,28 @@ struct Application {
 	}
 
 
-	Application() {
+	Application() 
+	{
+		WindowManager windowManager;
+		Window window(Vector2(400, 300), "Example Window");
+		Renderer2D renderer;
 
-		Image image;
-		image.load("out.png");
+		auto texture = std::make_shared<Texture2D>("resources/images/wall.jpeg"); 
 
-		WindowManager wm;
-		Window w(Vector2(400, 300), "Example Window");
+		while (window.IsOpen())
+		{
+			renderer.SetViewProjection(CreateScreenVP(window.GetSize()));
+			renderer.SetClearColor(Vector4::charcoal);
 
-		Renderer r;
-		Rectangle rectangle;
-		rectangle.position = Vector2(0, 0);
-		rectangle.size = Vector2(100, 100);
+			renderer.Begin();
 
-		auto texture = std::make_shared<Texture>();
-		texture->load(image);
+				renderer.Clear();
+				renderer.RenderRectangle(Vector2(0.0f, 0.0f), Vector2(200.0f, 200.0f), texture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
 
-		while (w.isOpen()) {
-			r.begin();
-
-			r.setViewProjection(createScreenVP(w.getSize()));
-			r.clear();
-
-			r.renderRectangle(rectangle.position, rectangle.size);
+			renderer.End();
 			
-			r.renderTexturedRectangle(Vector2(100, 100), Vector2(100, 100), texture);
-
-			r.end();
-
-			w.swapBuffers();
-			wm.pollEvents();
+			windowManager.PollEvents();
+			window.SwapBuffers();
 		}
 	}
 };

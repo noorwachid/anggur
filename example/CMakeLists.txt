@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(anggur_example)
 
-add_executable(anggur_example src/main.cpp src/Renderer.cpp)
+add_executable(anggur_example src/main.cpp src/Renderer2D.cpp)
 target_link_libraries(anggur_example anggur)
 target_link_libraries(anggur_example msdf-atlas-gen)
 
