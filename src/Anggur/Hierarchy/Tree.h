@@ -2,24 +2,26 @@
 
 #include <Anggur/Core/Node.h>
 
-namespace Anggur {
-	class Tree {
+namespace Anggur 
+{
+	class Tree 
+	{
 	public:
-		void initialize();
-		void terminate();
+		void Initialize();
+		void Terminate();
 
-		Node* getRootNode();
-		void setRootNode(Node* node);
+		Node* GetRootNode();
+		void SetRootNode(Node* node);
 
-		void update();
-		void emit(Event& event);
+		void Update();
+		void Emit(Event& event);
 
 	private:
-		void traverseAndInitialize(Node* node);
-		void traverseAndTerminate(Node* node);
+		void TraverseAndInitialize(Node* node);
+		void TraverseAndTerminate(Node* node);
 
-		void traverseAndUpdate(Node* node);
-		void traverseAndEmit(Node* node, Event& event);
+		void TraverseAndUpdate(Node* node);
+		void TraverseAndEmit(Node* node, Event& event);
 
 	private:
 		Node* rootNode;

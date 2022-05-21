@@ -1,51 +1,63 @@
 #include <Anggur/Core/Tree.h>
 
-namespace Anggur {
+namespace Anggur 
+{
 	// public:
-	void Tree::initialize() {
-		traverseAndInitialize(rootNode);
+	
+	void Tree::Initialize() {
+		TraverseAndInitialize(rootNode);
 	}
 
-	void Tree::terminate() {
-		traverseAndTerminate(rootNode);
+	void Tree::Terminate() 
+	{
+		TraverseAndTerminate(rootNode);
 	}
 
-	Node* Tree::getRootNode() {
+	Node* Tree::GetRootNode() 
+	{
 		return rootNode;
 	}
 
-	void Tree::setRootNode(Node* node) {
-		terminate();
+	void Tree::GetRootNode(Node* node) 
+	{
+		Terminate();
 
 		rootNode = node;
 
-		initialize();
+		Initialize();
 	}
 
-	void Tree::update() {
-		traverseAndUpdate(rootNode);
+	void Tree::Update() 
+	{
+		TraverseAndUpdate(rootNode);
 	}
 
-	void Tree::emit(Event& event) {
-		traverseAndEmit(rootNode, event);
+	void Tree::Emit(Event& event) 
+	{
+		TraverseAndEmit(rootNode, event);
 	}
 
-	void Tree::traverseAndInitialize(Node* node) {
-		if (node) {
+	void Tree::TraverseAndInitialize(Node* node) 
+	{
+		if (node) 
+		{
 			// BFS traversal
 			node->initialize();
 
-			for (Node* child: node->children) {
-				traverseAndInitialize(child);
+			for (Node* child: node->children) 
+			{
+				TraverseAndInitialize(child);
 			}
 		}
 	}
 
-	void Tree::traverseAndTerminate(Node* node) {
+	void Tree::TraverseAndTerminate(Node* node) 
+	{
 		if (node) {
 			// DFS traversal
-			for (Node* child: node->children) {
-				traverseAndTerminate(child);
+			for (Node* child: node->children) 
+			{
+				TraverseAndTerminate(child);
 			}
 
 			node->terminate();
@@ -54,23 +66,29 @@ namespace Anggur {
 		}
 	}
 
-	void Tree::traverseAndUpdate(Node* node) {
-		if (node) {
+	void Tree::TraverseAndUpdate(Node* node) 
+	{
+		if (node) 
+		{
 			// BFS traversal
 			node->update();
 			node->render();
 
-			for (Node* child: node->children) {
-				traverseAndUpdate(child);
+			for (Node* child: node->children) 
+			{
+				TraverseAndUpdate(child);
 			}
 		}
 	}
 
-	void Tree::traverseAndEmit(Node* node, Event& event) {
-		if (node) {
+	void Tree::TraverseAndEmit(Node* node, Event& event) 
+	{
+		if (node) 
+		{
 			// DFS traversal
-			for (Node* child: node->children) {
-				traverseAndUpdate(child);
+			for (Node* child: node->children) 
+			{
+				TraverseAndUpdate(child);
 			}
 
 			node->onEvent(event);

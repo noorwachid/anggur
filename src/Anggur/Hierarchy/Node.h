@@ -3,14 +3,16 @@
 #include <Anggur/Core/Event/Common.h>
 #include <vector>
 
-namespace Anggur {
-	class Node {
+namespace Anggur 
+{
+	class Node 
+	{
 	public:
-		virtual void initialize();
-		virtual void terminate();
-		virtual void update();
-		virtual void render();
-		virtual void onEvent(Event& event);
+		virtual void Initialize();
+		virtual void Terminate();
+		virtual void Update();
+		virtual void Render();
+		virtual void OnEvent(Event& event);
 
 	public:
 		Vector2 position;
