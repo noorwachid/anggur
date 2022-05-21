@@ -3,33 +3,35 @@
 #include <string>
 #include <Anggur/Math/Common.h>
 
-namespace Anggur {
-	class Shader {
+namespace Anggur 
+{
+	class Shader 
+	{
 	public:
 		Shader();
 		~Shader();
 
-		uint32_t getId();
+		inline uint32_t GetID() const { return id; }
 
-		void setVertexSource(const std::string& source);
-		void setFragmentSource(const std::string& source);
+		void SetVertexSource(const std::string& source);
+		void SetFragmentSource(const std::string& source);
 
-		void compile();
-		void bind();
-		void destroy();
+		void Compile();
+		void Bind();
+		void Terminate();
 
-		int getLocation(const std::string& name);
+		int GetLocation(const std::string& name);
 
-		void setUniformMatrix3(const std::string& name, const Matrix3& mat);
-		void setUniformMatrix4(const std::string& name, const Matrix4& matrix);
+		void SetUniformMatrix3(const std::string& name, const Matrix3& mat);
+		void SetUniformMatrix4(const std::string& name, const Matrix4& matrix);
 
-		void setUniformVector2(const std::string& name, const Vector2& vec);
+		void SetUniformVector2(const std::string& name, const Vector2& vec);
 
-		void setUniformInt(const std::string& name, int value);
-		void setUniformInt(const std::string& name, size_t size, int* values);
+		void SetUniformInt(const std::string& name, int value);
+		void SetUniformInt(const std::string& name, size_t size, int* values);
 
-		void setUniformFloat(const std::string& name, float value);
-		void setUniformFloat(const std::string& name, size_t size, float* values);
+		void SetUniformFloat(const std::string& name, float value);
+		void SetUniformFloat(const std::string& name, size_t size, float* values);
 
 	private:
 		uint32_t id;

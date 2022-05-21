@@ -43,8 +43,8 @@ namespace Anggur {
 		glViewport(0, 0, width, height);
 	}
 
-	Texture FrameBuffer::toTexture() {
-		return Texture(colorAttachment, width, height);
+	Texture2D FrameBuffer::ToTexture2D() {
+		return Texture2D(colorAttachment, width, height);
 	}
 
 	void FrameBuffer::bind() {

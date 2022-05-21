@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/Graphics/Texture.h>
+#include <Anggur/Graphics/Texture2D.h>
 
 namespace Anggur {
 	class FrameBuffer {
@@ -30,7 +30,7 @@ namespace Anggur {
 		void unbind();
 		void recreate(uint32_t width, uint32_t height);
 
-		Texture toTexture();
+		Texture2D ToTexture2D();
 		
 	private:
 		uint32_t id;
