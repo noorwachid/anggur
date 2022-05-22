@@ -8,7 +8,7 @@
 
 namespace Anggur 
 {
-	Window::Window(const Vector2& size, const std::string& title) 
+	Window::Window(const Vector2& size, const String& title) 
 	{
 		this->title = title;
 
@@ -42,23 +42,27 @@ namespace Anggur
 		glfwSetWindowPos(handler, position.x, position.y);
 	}
 
-	void Window::SetSize(const Vector2& size) {
+	void Window::SetSize(const Vector2& size) 
+	{
 		glfwSetWindowSize(handler, size.x, size.y);
 	}
 
-	void Window::SetTitle(const std::string& title) {
+	void Window::SetTitle(const String& title) 
+	{
 		glfwSetWindowTitle(handler, title.c_str());
 
 		this->title = title;
 	}
 
-	float Window::GetAspectRatio() {
+	float Window::GetAspectRatio() 
+	{
 		const Vector2& size = GetSize();
 
 		return size.y / size.x;
 	}
 
-	const Vector2& Window::GetPosition() {
+	const Vector2& Window::GetPosition() 
+	{
 		int x, y;
 
 		glfwGetWindowPos(handler, &x, &y);
@@ -68,7 +72,8 @@ namespace Anggur
 		return position;
 	}
 
-	const Vector2& Window::GetSize() {
+	const Vector2& Window::GetSize() 
+	{
 		int x, y;
 
 		glfwGetWindowSize(handler, &x, &y);
@@ -78,31 +83,38 @@ namespace Anggur
 		return size;
 	}
 
-	const std::string& Window::GetTitle() {
+	const String& Window::GetTitle() 
+	{
 		return title;
 	}
 
-	bool Window::IsOpen() {
+	bool Window::IsOpen() 
+	{
 		return !glfwWindowShouldClose(handler);
 	}
 
-	void Window::SwapBuffers() {
+	void Window::SwapBuffers() 
+	{
 		glfwSwapBuffers(handler);
 	}
 
-	WindowHandler* Window::GetHandler() {
+	WindowHandler* Window::GetHandler() 
+	{
 		return handler;
 	}
 
-	void Window::Close() {
+	void Window::Close() 
+	{
 		glfwSetWindowShouldClose(handler, true);
 	}
 
-	void Window::Bind() {
+	void Window::Bind() 
+	{
 		glfwMakeContextCurrent(handler);
 	}
 
-	void Window::InitializeGraphicsFunctions() {
+	void Window::InitializeGraphicsFunctions() 
+	{
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
 	}
@@ -131,10 +143,8 @@ namespace Anggur
 		});
 	}
 
-	void Window::EmitEvent(Event& event) 
+	void Window::EmitEvent(Event& event)
 	{
-		for (auto& eventListener: eventListeners) {
-			eventListener(event);
-		}
+		
 	}
 }

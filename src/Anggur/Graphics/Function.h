@@ -1,7 +1,7 @@
 #pragma once
 
-#include "glad/glad.h"
-#include "Anggur/Utility/Log.h"
+#include <glad/glad.h>
+#include <Anggur/Utility/Log.h>
 
 #ifndef NDEBUG
     #define ANGGUR_GF(funcCall) \
@@ -16,5 +16,3 @@
 #else
     #define ANGGUR_GF(funcCall) funcCall
 #endif
-
-#include <glad/glad.h>

@@ -1,34 +1,30 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <functional>
 #include <Anggur/Window/Event/Common.h>
-#include <Anggur/Math/Vector2.h>
+#include <Anggur/System/String.h>
+#include <Anggur/System/Array.h>
 
 struct GLFWwindow;
 
 namespace Anggur 
 {
 	using WindowHandler = GLFWwindow;
-	using EventListener = std::function<void (Event&)>;
 
-	class Window {
-		// TODO: Implement subwindow
-
+	class Window 
+	{
 	public:
-		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
+		Window(const Vector2& size = Vector2(800, 600), const String& title = "");
 
-		~Window();
+		virtual ~Window();
 
 		void SetPosition(const Vector2& pos);
 		void SetSize(const Vector2& size);
-		void SetTitle(const std::string& title);
+		void SetTitle(const String& title);
 
 		float GetAspectRatio();
 		const Vector2& GetPosition();
 		const Vector2& GetSize();
-		const std::string& GetTitle();
+		const String& GetTitle();
 		WindowHandler* GetHandler();
 
 		bool IsOpen();
@@ -37,9 +33,6 @@ namespace Anggur
 		
 		void SwapBuffers();
 
-		void AddEventListener(EventListener eventListener);
-		void RemoveEventListener(EventListener eventListener);
-
 	private:
 		void InitializeGraphicsFunctions();
 		void InitializeEventEmmiter();
@@ -47,8 +40,7 @@ namespace Anggur
 
 	private:
 		WindowHandler* handler = nullptr;
-		std::vector<EventListener> eventListeners;
-		std::string title;
+		String title;
 
 		Vector2 size;
 		Vector2 position;

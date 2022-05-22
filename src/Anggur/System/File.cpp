@@ -5,10 +5,10 @@
 
 namespace Anggur::File 
 {
-	std::vector<uint8_t> Load(const std::string& path) 
+	Array<uint8_t> Load(const String& path) 
 	{
 		std::ifstream file(path, std::ios::in | std::ios::binary);
-		std::vector<uint8_t> bytes;
+		Array<uint8_t> bytes;
 
 		bytes.insert(bytes.begin(),
             std::istream_iterator<uint8_t>(file),
@@ -18,9 +18,9 @@ namespace Anggur::File
 		return bytes;
 	}
 
-	std::string LoadText(const std::string& path) 
+	String LoadText(const String& path) 
 	{
-		std::string wrapper;
+		String wrapper;
 		FILE* file;
 		char* buffer;
 		long length;

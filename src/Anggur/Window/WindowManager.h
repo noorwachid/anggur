@@ -7,12 +7,17 @@ namespace Anggur
 	class WindowManager 
 	{
 	public:
-		WindowManager();
-		~WindowManager();
+		static void Initialize();
+		static void Add(const std::shared_ptr<Window>& window);
+		static std::shared_ptr<Window>& At(size_t index);
 
-		void PollEvents();
+		static void PollEvents();
+		static void SwapBuffers();
+
+		static bool IsOpen();
+		static void Close();
 
 	private:
-		bool successful;
+		WindowManager();
 	};
 }

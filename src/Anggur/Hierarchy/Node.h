@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Anggur/Core/Event/Common.h>
-#include <vector>
+#include <Anggur/System/Array.h>
 
 namespace Anggur 
 {
@@ -19,6 +19,6 @@ namespace Anggur
 		Vector2 scale;
 		float rotation;
 
-		std::vector<Node*> children;
+		Array<Node*> children;
 	};
 }

@@ -28,46 +28,27 @@ public:
 		}
 	};
 
+	static void Initialize();
+
+	static void SetClearColor(const Vector4& color);
+	static void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+	static void Clear();
+
+	static void SetViewProjection(const Matrix3& newViewProjection);
+
+	static void Begin();
+	static void End();
+
+	static bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
+	static void Flush();
+
+	static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+	static void RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
+
+private:
 	Renderer2D();
-	~Renderer2D();
-	
-	void SetClearColor(const Vector4& color);
-	void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-	void Clear();
 
-	void SetViewProjection(const Matrix3& newViewProjection);
-
-	void Begin();
-	void End();
-
-	bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
-	void Flush();
-
-	void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
-	void RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
-
-private:
-	void InitializeVertexPool();
-	void InitializeTexturePool();
-	void InitializeShader();
-
-private:
-	Shader shader;
-	VertexArray vertexArray;
-	VertexBuffer vertexBuffer;
-	IndexBuffer indexBuffer;
-
-	std::vector<Vertex> vertices;
-	std::vector<uint32_t> indices;
-	std::vector<std::shared_ptr<Texture2D>> textures;
-
-	size_t vertexOffset = 0;
-	size_t indexOffset = 0;
-	size_t textureOffset = 0;
-
-	size_t renderCount = 0;
-	size_t batchVertex = 128;
-	size_t batchIndexMultiplier = 2;
-
-	Matrix3 viewProjection;
+	static void InitializeVertexPool();
+	static void InitializeTexturePool();
+	static void InitializeShader();
 };

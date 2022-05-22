@@ -1,13 +1,13 @@
 #pragma once 
 
-#include <string>
-#include <vector>
+#include <Anggur/System/String.h>
+#include <Anggur/System/Array.h>
 
 namespace Anggur 
 {
 	class Scene 
 	{
-		std::string name;
-		std::vector<Layer> layers;
+		String name;
+		Array<Layer> layers;
 	};
 }
