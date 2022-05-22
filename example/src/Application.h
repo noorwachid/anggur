@@ -40,7 +40,9 @@ struct Application
 
 				Renderer2D::Clear();
 
-				Renderer2D::RenderRectangle(Vector2(0.0f, 0.0f), Vector2(200.0f, 200.0f), texture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f), Vector4::white);
+				Renderer2D::RenderRectangle(Vector2(100.0f, 100.0f), Vector2(100.0f, 100.0f), Vector4::green);
+				Renderer2D::RenderRectangle(Vector2(200.0f, 200.0f), Vector2(100.0f, 100.0f), Vector4::blue);
+				Renderer2D::RenderRectangle(Vector2(0.0f, 0.0f), Vector2(100.0f, 100.0f), texture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f), Vector4::red);
 
 			Renderer2D::End();
 			

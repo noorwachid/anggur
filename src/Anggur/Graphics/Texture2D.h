@@ -1,14 +1,8 @@
 #pragma once
-#include <Anggur/Graphics/Image.h>
+#include <Anggur/Graphics/Texture.h>
 
 namespace Anggur 
 {
-	enum class SamplerFilter 
-	{
-		Nearest = 0x2600,
-		Linear = 0x2601
-	};
-
 	class Texture2D
 	{
 	public:
@@ -31,8 +25,6 @@ namespace Anggur
 
 		void Bind(uint32_t slot = 0);
 
-		static int GetMaxSlot();
-
 		friend bool operator==(const Texture2D& a, const Texture2D& b);
 
 	private:
@@ -40,7 +32,5 @@ namespace Anggur
 		uint32_t width;
 		uint32_t height;
 		uint32_t channels;
-
-		static int maxSlot;
 	};
 }

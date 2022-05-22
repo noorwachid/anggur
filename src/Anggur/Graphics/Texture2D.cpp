@@ -106,17 +106,6 @@ namespace Anggur
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	int Texture2D::GetMaxSlot() 
-	{
-		static int maxSlot = 0;
-		if (maxSlot == 0) 
-		{
-			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
-		}
-
-		return maxSlot;
-	}
-
 	bool operator==(const Texture2D& a, const Texture2D& b) 
 	{
 		return a.GetID() == b.GetID();

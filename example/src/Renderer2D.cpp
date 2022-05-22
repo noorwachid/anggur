@@ -12,6 +12,9 @@ struct Renderer2DData
 	Array<Renderer2D::Vertex> vertices;
 	Array<uint32_t> indices;
 	Array<Shared<Texture2D>> textures;
+    Array<int> textureSlots;
+
+    Shared<Texture2D> whiteTexture;
 
 	size_t vertexOffset = 0;
 	size_t indexOffset = 0;
@@ -57,7 +60,15 @@ void Renderer2D::InitializeVertexPool()
 
 void Renderer2D::InitializeTexturePool() 
 {
-    data.textures.assign(Texture2D::GetMaxSlot(), nullptr);
+    data.textures.assign(Texture::GetMaxSlot(), nullptr);
+    data.textureSlots.reserve(Texture::GetMaxSlot());
+
+    for (int i = 0; i < Texture::GetMaxSlot(); ++i) {
+        data.textureSlots.push_back(i);
+    }
+
+    uint8_t whitePixel[] = {255, 255, 255, 255};
+    data.whiteTexture = CreateShared<Texture2D>(whitePixel, 1, 1, 4);
 }
 
 void Renderer2D::InitializeShader() 
@@ -95,7 +106,7 @@ void Renderer2D::InitializeShader()
 
         out vec4 fColor;
 
-        uniform sampler2D uTextures[)" + std::to_string(Texture2D::GetMaxSlot()) + R"(];
+        uniform sampler2D uTextures[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
         
         void main() {
             fColor = texture(uTextures[int(vTexSlot)], vTexCoord) * vColor;
@@ -129,11 +140,15 @@ void Renderer2D::SetViewProjection(const Matrix3& newViewProjection)
 void Renderer2D::Begin() 
 {
     data.renderCount = 0;
+
+    FlushData();
 }
 
 void Renderer2D::End() 
 {
-    Renderer2D::Flush();
+    Flush();
+
+    ANGGUR_LOG("RENEDER COUNT: %lu\n", data.renderCount);
 }
 
 void Renderer2D::Flush() 
@@ -143,31 +158,42 @@ void Renderer2D::Flush()
         return;
     }
 
+    for (size_t i = 0; i < data.textureOffset; ++i) 
+    {
+        data.textures[i]->Bind(i);
+
+        ANGGUR_LOG("TEXTURE ID, SLOT: %u, %lu", data.textures[i]->GetID(), i);
+    }
+
     data.shader->Bind();
     data.shader->SetUniformMatrix3("uViewProjection", data.viewProjection);
+    data.shader->SetUniformInt("uTextures", data.textureOffset, data.textureSlots.data());
 
     data.vertexArray->Bind();
     
     data.vertexBuffer->Bind();
-    data.vertexBuffer->SetData(sizeof(Vertex) * data.vertices.size(), data.vertices.data());
+    data.vertexBuffer->SetData(sizeof(Vertex) * data.vertexOffset, data.vertices.data());
 
     data.indexBuffer->Bind();
-    data.indexBuffer->SetData(sizeof(uint32_t) * data.indices.size(), data.indices.data());
+    data.indexBuffer->SetData(sizeof(uint32_t) * data.indexOffset, data.indices.data());
 
-    for (size_t i = 0; i < data.textureOffset; ++i) 
+    for (size_t i = 0; i < data.vertexOffset; ++i) 
     {
-        data.textures[i]->Bind();
+        ANGGUR_LOG("VERTEX %s", data.vertices[i].ToString().c_str());
     }
 
     glDrawElements(GL_TRIANGLES, data.indexOffset, GL_UNSIGNED_INT, nullptr);
 
+    FlushData();
+
+    ++data.renderCount;
+}
+
+void Renderer2D::FlushData()
+{
     data.vertexOffset = 0;
     data.indexOffset = 0;
 	data.textureOffset = 0;
-
-    data.textures.clear();
-
-    ++data.renderCount;
 }
 
 bool Renderer2D::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) 
@@ -185,12 +211,26 @@ void Renderer2D::Render(const Array<Vertex>& newVertices, const Array<uint32_t>&
         Flush();
     }
 
+    // Find or add new texture slot 
+    int textureSlot = 0;
+
+    // This code only create one branch
+    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
+
+    ANGGUR_LOG("%i", textureSlot);
+
+    if (textureSlot == data.textureOffset) {
+        textureSlot = data.textureOffset;
+        data.textures[data.textureOffset] = texture;
+        data.textureOffset += 1;
+    }
+
     for (size_t i = 0; i < newVertices.size(); ++i) 
     {
         auto& vertex = data.vertices[i + data.vertexOffset];
 
         vertex = newVertices[i];
-        vertex.texSlot = data.textureOffset;
+        vertex.texSlot = textureSlot;
     }
 
     for (size_t i = 0; i < newIndices.size(); ++i) 
@@ -198,19 +238,40 @@ void Renderer2D::Render(const Array<Vertex>& newVertices, const Array<uint32_t>&
         data.indices[i + data.indexOffset] = newIndices[i] + data.vertexOffset;
     }
 
-    // TODO: naive method add cheking same texture ID or something
-    data.textures[data.textureOffset] = texture;
-
     data.vertexOffset += newVertices.size();
     data.indexOffset += newIndices.size();
-    data.textureOffset += 1;
+
+    ANGGUR_LOG("TEXTURE SUMITTED ID, SLOT: %u, %lu", texture->GetID(), data.textureOffset - 1);
+
+    ANGGUR_LOG("VERTICES: %lu/%lu", data.vertexOffset, data.vertices.size());
+    ANGGUR_LOG("INDICES: %lu/%lu", data.indexOffset, data.indices.size());
+    ANGGUR_LOG("TEXTURES: %lu/%lu", data.textureOffset, data.textures.size());
+    
+}
+
+void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
+{
+    Render(
+        {
+            // position                                               // color                                     // texCoord          
+            Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(0.0f, 0.0f)),
+            Vertex(Vector2(position.x + size.x, position.y),	      Vector4(color.x, color.y, color.z, color.w), Vector2(1.0f, 0.0f)),
+            Vertex(Vector2(position.x,          position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0.0f, 1.0f)),
+            Vertex(Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(1.0f, 1.0f)),
+        }, 
+        {
+            0, 1, 2,
+            2, 3, 1,
+        }, 
+        data.whiteTexture
+    );
 }
 
 void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const Shared<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
 {
     Render(
         {
-            // position                                               // color                                     // texCoord          // texSlot
+            // position                                               // color                                     // texCoord         
             Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y                )),
             Vertex(Vector2(position.x + size.x, position.y),	      Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y                )),
             Vertex(Vector2(position.x,          position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y + textureSize.y)),
