@@ -51,8 +51,8 @@ void Renderer2D::InitializeVertexPool()
     data.vertexArray = std::make_shared<VertexArray>();
     data.vertexArray->SetAttribute(0, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
     data.vertexArray->SetAttribute(1, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
-    data.vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texCoord));
-    data.vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, texSlot));
+    data.vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureCoord));
+    data.vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureSlot));
     
     data.indexBuffer = std::make_shared<IndexBuffer>();
     data.indexBuffer->SetCapacity(sizeof(uint32_t) * data.indices.size());
@@ -147,8 +147,6 @@ void Renderer2D::Begin()
 void Renderer2D::End() 
 {
     Flush();
-
-    ANGGUR_LOG("RENEDER COUNT: %lu\n", data.renderCount);
 }
 
 void Renderer2D::Flush() 
@@ -161,8 +159,6 @@ void Renderer2D::Flush()
     for (size_t i = 0; i < data.textureOffset; ++i) 
     {
         data.textures[i]->Bind(i);
-
-        ANGGUR_LOG("TEXTURE ID, SLOT: %u, %lu", data.textures[i]->GetID(), i);
     }
 
     data.shader->Bind();
@@ -176,11 +172,6 @@ void Renderer2D::Flush()
 
     data.indexBuffer->Bind();
     data.indexBuffer->SetData(sizeof(uint32_t) * data.indexOffset, data.indices.data());
-
-    for (size_t i = 0; i < data.vertexOffset; ++i) 
-    {
-        ANGGUR_LOG("VERTEX %s", data.vertices[i].ToString().c_str());
-    }
 
     glDrawElements(GL_TRIANGLES, data.indexOffset, GL_UNSIGNED_INT, nullptr);
 
@@ -217,8 +208,6 @@ void Renderer2D::Render(const Array<Vertex>& newVertices, const Array<uint32_t>&
     // This code only create one branch
     for (; textureSlot < data.textureOffset && data.textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
 
-    ANGGUR_LOG("%i", textureSlot);
-
     if (textureSlot == data.textureOffset) {
         textureSlot = data.textureOffset;
         data.textures[data.textureOffset] = texture;
@@ -230,7 +219,7 @@ void Renderer2D::Render(const Array<Vertex>& newVertices, const Array<uint32_t>&
         auto& vertex = data.vertices[i + data.vertexOffset];
 
         vertex = newVertices[i];
-        vertex.texSlot = textureSlot;
+        vertex.textureSlot = textureSlot;
     }
 
     for (size_t i = 0; i < newIndices.size(); ++i) 
@@ -240,13 +229,6 @@ void Renderer2D::Render(const Array<Vertex>& newVertices, const Array<uint32_t>&
 
     data.vertexOffset += newVertices.size();
     data.indexOffset += newIndices.size();
-
-    ANGGUR_LOG("TEXTURE SUMITTED ID, SLOT: %u, %lu", texture->GetID(), data.textureOffset - 1);
-
-    ANGGUR_LOG("VERTICES: %lu/%lu", data.vertexOffset, data.vertices.size());
-    ANGGUR_LOG("INDICES: %lu/%lu", data.indexOffset, data.indices.size());
-    ANGGUR_LOG("TEXTURES: %lu/%lu", data.textureOffset, data.textures.size());
-    
 }
 
 void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color)

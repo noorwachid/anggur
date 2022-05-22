@@ -9,6 +9,7 @@
 #include <Anggur/Math/Vector2.h>
 #include <Anggur/Math/Vector4.h>
 #include <Anggur/Math/Matrix3.h>
+#include <Anggur/System/Memory.h>
 
 using namespace Anggur;
 
@@ -19,12 +20,12 @@ public:
 	{
 		Vector2 position;
 		Vector4 color;
-		Vector2 texCoord;
-		float texSlot;
+		Vector2 textureCoord;
+		float textureSlot;
 
 		Vertex() = default;
-		Vertex(const Vector2& newPosition, const Vector4& newColor, const Vector2& newTexCoord, float newTexSlot = 0.0f): 
-			position(newPosition), color(newColor), texCoord(newTexCoord), texSlot(newTexSlot) 
+		Vertex(const Vector2& newPosition, const Vector4& newColor, const Vector2& newTextureCoord, float newTextureSlot = 0.0f): 
+			position(newPosition), color(newColor), textureCoord(newTextureCoord), textureSlot(newTextureSlot) 
 		{
 		}
 
@@ -33,8 +34,8 @@ public:
 			String b;
 			b += "po: " + Anggur::ToString(position.x) + ", " + Anggur::ToString(position.y) + "; ";
 			b += "co: " + Anggur::ToString(color.x) + ", " + Anggur::ToString(color.y) + ", " + Anggur::ToString(color.z) + ", " + Anggur::ToString(color.w) + "; ";
-			b += "tc: " + Anggur::ToString(texCoord.x) + ", " + Anggur::ToString(texCoord.y) + "; ";
-			b += "ts: " + Anggur::ToString(texSlot);
+			b += "tc: " + Anggur::ToString(textureCoord.x) + ", " + Anggur::ToString(textureCoord.y) + "; ";
+			b += "ts: " + Anggur::ToString(textureSlot);
 
 			return b;
 		}
@@ -55,9 +56,9 @@ public:
 	static void Flush();
 	static void FlushData();
 
-	static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+	static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const Shared<Texture2D>& texture);
 	static void RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
-	static void RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
+	static void RenderRectangle(const Vector2& position, const Vector2& size, const Shared<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
 
 private:
 	Renderer2D();
