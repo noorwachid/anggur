@@ -5,8 +5,7 @@
 #include "Renderer2D.h"
 #include <vector>
 
-struct Renderer2DData
-{
+struct Renderer2DData {
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<VertexArray> vertexArray;
 	std::shared_ptr<VertexBuffer> vertexBuffer;
@@ -32,19 +31,16 @@ struct Renderer2DData
 
 static Renderer2DData data;
 
-Renderer2D::Renderer2D() 
-{
+Renderer2D::Renderer2D() {
 }
 
-void Renderer2D::Initialize()
-{
-    InitializeVertexPool();
-    InitializeTexturePool();
-    InitializeShader();
+void Renderer2D::initialize() {
+    initializeVertexPool();
+    initializeTexturePool();
+    initializeShader();
 }
 
-void Renderer2D::InitializeVertexPool() 
-{
+void Renderer2D::initializeVertexPool() {
     data.vertices.assign(data.batchVertex, Vertex(Vector2(0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
     data.indices.assign(data.batchVertex * data.batchIndexMultiplier, 0);
 
@@ -61,12 +57,11 @@ void Renderer2D::InitializeVertexPool()
     data.indexBuffer->setCapacity(sizeof(uint32_t) * data.indices.size());
 }
 
-void Renderer2D::InitializeTexturePool() 
-{
-    data.textures.assign(Texture::GetMaxSlot(), nullptr);
-    data.textureSlots.reserve(Texture::GetMaxSlot());
+void Renderer2D::initializeTexturePool() {
+    data.textures.assign(Texture::getMaxSlot(), nullptr);
+    data.textureSlots.reserve(Texture::getMaxSlot());
 
-    for (int i = 0; i < Texture::GetMaxSlot(); ++i) {
+    for (int i = 0; i < Texture::getMaxSlot(); ++i) {
         data.textureSlots.push_back(i);
     }
 
@@ -74,8 +69,7 @@ void Renderer2D::InitializeTexturePool()
     data.whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
 }
 
-void Renderer2D::InitializeShader() 
-{
+void Renderer2D::initializeShader() {
     data.shader = std::make_shared<Shader>();
     data.shader->setVertexSource(R"(
         #version 330 core
@@ -119,52 +113,43 @@ void Renderer2D::InitializeShader()
     data.shader->Compile();
 }
 
-void Renderer2D::SetBatchChunk(size_t vertex, size_t indexMultiplier) 
-{
+void Renderer2D::setBatchChunk(size_t vertex, size_t indexMultiplier) {
     data.batchVertex = vertex;
     data.batchIndexMultiplier = indexMultiplier;
 }
 
-void Renderer2D::Clear(const Vector4& color) 
-{
+void Renderer2D::clear(const Vector4& color) {
     glClearColor(color.x, color.y, color.z, color.w);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
-void Renderer2D::SetViewport(const Vector2& position, const Vector2& size)
-{
+void Renderer2D::setViewport(const Vector2& position, const Vector2& size) {
     glViewport(position.x, position.y, size.x, size.y);
 }
 
-void Renderer2D::Begin() 
-{
+void Renderer2D::begin() {
     data.renderCount = 0;
 
-    FlushData();
+    flushData();
 }
 
-void Renderer2D::Begin(const Matrix3& newViewProjection) 
-{
+void Renderer2D::begin(const Matrix3& newViewProjection) {
     data.viewProjection = newViewProjection;
 
-    Begin();
+    begin();
 }
 
-void Renderer2D::End() 
-{
-    Flush();
+void Renderer2D::end() {
+    flush();
 }
 
-void Renderer2D::Flush() 
-{
-    if (data.vertexOffset == 0) 
-    {
+void Renderer2D::flush() {
+    if (data.vertexOffset == 0) {
         return;
     }
 
-    for (size_t i = 0; i < data.textureOffset; ++i) 
-    {
+    for (size_t i = 0; i < data.textureOffset; ++i) {
         data.textures[i]->Bind(i);
     }
 
@@ -182,31 +167,27 @@ void Renderer2D::Flush()
 
     glDrawElements(GL_TRIANGLES, data.indexOffset, GL_UNSIGNED_INT, nullptr);
 
-    FlushData();
+    flushData();
 
     ++data.renderCount;
 }
 
-void Renderer2D::FlushData()
-{
+void Renderer2D::flushData() {
     data.vertexOffset = 0;
     data.indexOffset = 0;
 	data.textureOffset = 0;
 }
 
-bool Renderer2D::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) 
-{
+bool Renderer2D::isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) {
     return 
         data.vertexOffset + newVertexSize > data.vertices.size() ||
         data.indexOffset + newIndexSize > data.indices.size() ||
         data.textureOffset + newTextureSize > data.textures.size();
 }
 
-void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) 
-{
-    if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1)) 
-    {
-        Flush();
+void Renderer2D::render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) {
+    if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1)) {
+        flush();
     }
 
     // Find or add new texture slot 
@@ -221,16 +202,14 @@ void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vecto
         data.textureOffset += 1;
     }
 
-    for (size_t i = 0; i < newVertices.size(); ++i) 
-    {
+    for (size_t i = 0; i < newVertices.size(); ++i) {
         auto& vertex = data.vertices[i + data.vertexOffset];
 
         vertex = newVertices[i];
         vertex.textureSlot = textureSlot;
     }
 
-    for (size_t i = 0; i < newIndices.size(); ++i) 
-    {
+    for (size_t i = 0; i < newIndices.size(); ++i) {
         data.indices[i + data.indexOffset] = newIndices[i] + data.vertexOffset;
     }
 
@@ -238,17 +217,15 @@ void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vecto
     data.indexOffset += newIndices.size();
 }
 
-void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
-{
-    Render(
+void Renderer2D::renderRectangle(const Vector2& position, const Vector2& size, const Vector4& color) {
+    render(
         {
             // position                                               // color                                     // texCoord          
             Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(0.0f, 0.0f)),
             Vertex(Vector2(position.x + size.x, position.y),	      Vector4(color.x, color.y, color.z, color.w), Vector2(1.0f, 0.0f)),
             Vertex(Vector2(position.x,          position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0.0f, 1.0f)),
             Vertex(Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(1.0f, 1.0f)),
-        }, 
-        {
+        }, {
             0, 1, 2,
             2, 3, 1,
         }, 
@@ -256,17 +233,15 @@ void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, c
     );
 }
 
-void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
-{
-    Render(
+void Renderer2D::renderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) {
+    render(
         {
             // position                                               // color                                     // texCoord         
             Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y                )),
             Vertex(Vector2(position.x + size.x, position.y),	      Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y                )),
             Vertex(Vector2(position.x,          position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y + textureSize.y)),
             Vertex(Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
-        }, 
-        {
+        }, {
             0, 1, 2,
             2, 3, 1,
         }, 

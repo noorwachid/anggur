@@ -19,8 +19,9 @@ namespace Anggur {
 		}
 
 		void update() {
-			Renderer::begin();
+			Renderer::begin(Matrix4());
 
+			Renderer::renderCube();
 
 			Renderer::end();
 		}
