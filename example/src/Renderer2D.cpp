@@ -213,7 +213,7 @@ void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vecto
     int textureSlot = 0;
 
     // This code only create one branch
-    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
+    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->GetID() != texture->getId(); ++textureSlot);
 
     if (textureSlot == data.textureOffset) {
         textureSlot = data.textureOffset;

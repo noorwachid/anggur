@@ -14,22 +14,22 @@ namespace Anggur
 	Texture2D::Texture2D(const std::string& path, SamplerFilter filter) 
 	{
 		id = 0;
-		Load(path, filter);
+		load(path, filter);
 	}
 
 	Texture2D::Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
 	{
-		Load(data, width, height, channels, filter);
+		load(data, width, height, channels, filter);
 	}
 
 	Texture2D::~Texture2D() 
 	{
-		Unload();
+		unload();
 	}
 
-	void Texture2D::Load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
+	void Texture2D::load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
 	{
-		Unload();
+		unload();
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -73,27 +73,27 @@ namespace Anggur
 		}
 	}
 
-	void Texture2D::Load(const Image& image, SamplerFilter filter) 
+	void Texture2D::load(const Image& image, SamplerFilter filter) 
 	{
 		width = image.GetWidth();
 		height = image.GetHeight();
 		channels = image.GetChannels();
-		Load(image.GetData(), width, height, channels, filter);
+		load(image.GetData(), width, height, channels, filter);
 	}
 
-	void Texture2D::Load(const std::string& path, SamplerFilter filter) 
+	void Texture2D::load(const std::string& path, SamplerFilter filter) 
 	{
 		Image image(path);
-		Load(image, filter);
+		load(image, filter);
 	}
 
-	void Texture2D::Unload() 
+	void Texture2D::unload() 
 	{
 		if (id != 0)
 			glDeleteTextures(1, &id);
 	}
 
-	void Texture2D::Bind(uint32_t slot) 
+	void Texture2D::bind(uint32_t slot) 
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, id);
@@ -101,6 +101,6 @@ namespace Anggur
 
 	bool operator==(const Texture2D& a, const Texture2D& b) 
 	{
-		return a.GetID() == b.GetID();
+		return a.getId() == b.getId();
 	}
 }
