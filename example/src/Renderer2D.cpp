@@ -49,16 +49,16 @@ void Renderer2D::InitializeVertexPool()
     data.indices.assign(data.batchVertex * data.batchIndexMultiplier, 0);
 
     data.vertexBuffer = std::make_shared<VertexBuffer>();
-    data.vertexBuffer->SetCapacity(sizeof(Vertex) * data.vertices.size());
+    data.vertexBuffer->setCapacity(sizeof(Vertex) * data.vertices.size());
 
     data.vertexArray = std::make_shared<VertexArray>();
-    data.vertexArray->SetAttribute(0, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
-    data.vertexArray->SetAttribute(1, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
-    data.vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureCoord));
-    data.vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureSlot));
+    data.vertexArray->setAttribute(0, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
+    data.vertexArray->setAttribute(1, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+    data.vertexArray->setAttribute(2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureCoord));
+    data.vertexArray->setAttribute(3, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureSlot));
     
     data.indexBuffer = std::make_shared<IndexBuffer>();
-    data.indexBuffer->SetCapacity(sizeof(uint32_t) * data.indices.size());
+    data.indexBuffer->setCapacity(sizeof(uint32_t) * data.indices.size());
 }
 
 void Renderer2D::InitializeTexturePool() 
@@ -77,7 +77,7 @@ void Renderer2D::InitializeTexturePool()
 void Renderer2D::InitializeShader() 
 {
     data.shader = std::make_shared<Shader>();
-    data.shader->SetVertexSource(R"(
+    data.shader->setVertexSource(R"(
         #version 330 core
 
         layout (location = 0) in vec2 aPosition;
@@ -168,17 +168,17 @@ void Renderer2D::Flush()
         data.textures[i]->Bind(i);
     }
 
-    data.shader->Bind();
-    data.shader->SetUniformMatrix3("uViewProjection", data.viewProjection);
-    data.shader->SetUniformInt("uTextures", data.textureOffset, data.textureSlots.data());
+    data.shader->bind();
+    data.shader->setUniformMatrix3("uViewProjection", data.viewProjection);
+    data.shader->setUniformInt("uTextures", data.textureOffset, data.textureSlots.data());
 
-    data.vertexArray->Bind();
+    data.vertexArray->bind();
     
-    data.vertexBuffer->Bind();
-    data.vertexBuffer->SetData(sizeof(Vertex) * data.vertexOffset, data.vertices.data());
+    data.vertexBuffer->bind();
+    data.vertexBuffer->setData(sizeof(Vertex) * data.vertexOffset, data.vertices.data());
 
-    data.indexBuffer->Bind();
-    data.indexBuffer->SetData(sizeof(uint32_t) * data.indexOffset, data.indices.data());
+    data.indexBuffer->bind();
+    data.indexBuffer->setData(sizeof(uint32_t) * data.indexOffset, data.indices.data());
 
     glDrawElements(GL_TRIANGLES, data.indexOffset, GL_UNSIGNED_INT, nullptr);
 

@@ -3,27 +3,22 @@
 #include <Anggur/Utility/Log.h>
 #include <Anggur/Graphics/Image.h>
 
-namespace Anggur 
-{
-	Image::Image() 
-	{
+namespace Anggur {
+	Image::Image() {
 		data = nullptr;
 	}
 
-	Image::Image(const std::string& path) 
-	{
+	Image::Image(const std::string& path) {
 		data = nullptr;
-		Load(path);
+		load(path);
 	}
 
-	Image::~Image() 
-	{
-		Unload();
+	Image::~Image() {
+		unload();
 	}
 
-	void Image::Load(const std::string& path) 
-	{
-		Unload();
+	void Image::load(const std::string& path) {
+		unload();
 
 		int width;
 		int height;
@@ -38,10 +33,8 @@ namespace Anggur
 		this->channels = channels;
 	}
 
-	void Image::Unload() 
-	{
-		if (data) 
-		{
+	void Image::unload() {
+		if (data) {
 			stbi_image_free(data);
 		}
 	}

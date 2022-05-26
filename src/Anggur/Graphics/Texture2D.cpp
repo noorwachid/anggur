@@ -75,10 +75,10 @@ namespace Anggur
 
 	void Texture2D::load(const Image& image, SamplerFilter filter) 
 	{
-		width = image.GetWidth();
-		height = image.GetHeight();
-		channels = image.GetChannels();
-		load(image.GetData(), width, height, channels, filter);
+		width = image.getWidth();
+		height = image.getHeight();
+		channels = image.getChannels();
+		load(image.getData(), width, height, channels, filter);
 	}
 
 	void Texture2D::load(const std::string& path, SamplerFilter filter) 
