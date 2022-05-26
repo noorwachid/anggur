@@ -1,48 +1,47 @@
 #pragma once
 
-#include <Anggur/Window/Event/Common.h>
-#include <Anggur/System/String.h>
-#include <Anggur/System/Array.h>
+#include <Anggur/Math/Vector2.h>
+#include <string>
+#include <vector>
 
 struct GLFWwindow;
 
-namespace Anggur 
-{
+namespace Anggur {
 	using WindowHandler = GLFWwindow;
 
-	class Window 
-	{
+	class Window {
 	public:
-		Window(const Vector2& size = Vector2(800, 600), const String& title = "");
+		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
 
 		virtual ~Window();
 
-		void SetPosition(const Vector2& pos);
-		void SetSize(const Vector2& size);
-		void SetTitle(const String& title);
+		void setPosition(const Vector2& pos);
+		void setSize(const Vector2& size);
+		void setTitle(const std::string& title);
 
-		float GetAspectRatio();
-		const Vector2& GetPosition();
-		const Vector2& GetSize();
-		const String& GetTitle();
-		WindowHandler* GetHandler();
+		float getAspectRatio();
+		const Vector2& getPosition();
+		const Vector2& getSize();
+		const Vector2& getBufferSize();
+		const std::string& getTitle();
+		WindowHandler* getHandler();
 
-		bool IsOpen();
-		void Close();
-		void Bind();
+		bool isOpen();
+		void close();
+		void bind();
 		
-		void SwapBuffers();
+		void swapBuffers();
 
 	private:
-		void InitializeGraphicsFunctions();
-		void InitializeEventEmmiter();
-		void EmitEvent(Event& event);
+		void initializeGraphicsFunctions();
+		void initializeEventEmmiter();
 
 	private:
 		WindowHandler* handler = nullptr;
-		String title;
+		std::string title;
 
-		Vector2 size;
 		Vector2 position;
+		Vector2 size;
+		Vector2 bufferSize;
 	};
 }

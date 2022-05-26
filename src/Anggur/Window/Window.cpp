@@ -6,10 +6,8 @@
 #include <Anggur/Window/Internal.h>
 #include <Anggur/Math/Vector2.h>
 
-namespace Anggur 
-{
-	Window::Window(const Vector2& size, const String& title) 
-	{
+namespace Anggur {
+	Window::Window(const Vector2& size, const std::string& title) {
 		this->title = title;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -25,44 +23,38 @@ namespace Anggur
 
 		glfwSetWindowUserPointer(handler, static_cast<void*>(this));
 
-		Bind();
-		InitializeGraphicsFunctions();
-		InitializeEventEmmiter();
+		bind();
+		initializeGraphicsFunctions();
+		initializeEventEmmiter();
 	}
 
-	Window::~Window() 
-	{
+	Window::~Window() {
 		if (handler) {
 			glfwDestroyWindow(handler);
 		}
 	}
 
-	void Window::SetPosition(const Vector2& position) 
-	{
+	void Window::setPosition(const Vector2& position) {
 		glfwSetWindowPos(handler, position.x, position.y);
 	}
 
-	void Window::SetSize(const Vector2& size) 
-	{
+	void Window::setSize(const Vector2& size) {
 		glfwSetWindowSize(handler, size.x, size.y);
 	}
 
-	void Window::SetTitle(const String& title) 
-	{
+	void Window::setTitle(const std::string& title) {
 		glfwSetWindowTitle(handler, title.c_str());
 
 		this->title = title;
 	}
 
-	float Window::GetAspectRatio() 
-	{
-		const Vector2& size = GetSize();
+	float Window::getAspectRatio() {
+		const Vector2& size = getSize();
 
 		return size.y / size.x;
 	}
 
-	const Vector2& Window::GetPosition() 
-	{
+	const Vector2& Window::getPosition() {
 		int x, y;
 
 		glfwGetWindowPos(handler, &x, &y);
@@ -72,8 +64,7 @@ namespace Anggur
 		return position;
 	}
 
-	const Vector2& Window::GetSize() 
-	{
+	const Vector2& Window::getSize() {
 		int x, y;
 
 		glfwGetWindowSize(handler, &x, &y);
@@ -83,68 +74,45 @@ namespace Anggur
 		return size;
 	}
 
-	const String& Window::GetTitle() 
-	{
+	const Vector2& Window::getBufferSize() {
+		int x, y;
+
+		glfwGetFramebufferSize(handler, &x, &y);
+
+		bufferSize.set(x, y);
+
+		return bufferSize;
+	}
+
+	const std::string& Window::getTitle() {
 		return title;
 	}
 
-	bool Window::IsOpen() 
-	{
+	bool Window::isOpen() {
 		return !glfwWindowShouldClose(handler);
 	}
 
-	void Window::SwapBuffers() 
-	{
+	void Window::swapBuffers() {
 		glfwSwapBuffers(handler);
 	}
 
-	WindowHandler* Window::GetHandler() 
-	{
+	WindowHandler* Window::getHandler() {
 		return handler;
 	}
 
-	void Window::Close() 
-	{
+	void Window::close() {
 		glfwSetWindowShouldClose(handler, true);
 	}
 
-	void Window::Bind() 
-	{
+	void Window::bind() {
 		glfwMakeContextCurrent(handler);
 	}
 
-	void Window::InitializeGraphicsFunctions() 
-	{
+	void Window::initializeGraphicsFunctions() {
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
 	}
 
-	void Window::InitializeEventEmmiter() 
-	{
-		glfwSetWindowSizeCallback(handler, [](WindowHandler* handler, int width, int height) 
-		{
-			WindowSizeEvent event(Vector2(width, height));
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->EmitEvent(event);
-		});
-
-		glfwSetFramebufferSizeCallback(handler, [](WindowHandler* handler, int width, int height) 
-		{
-			FrameBufferSizeEvent event(Vector2(width, height));
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->EmitEvent(event);
-		});
-
-		glfwSetCharCallback(handler, [](WindowHandler* handler, uint32_t codepoint) 
-		{
-			CodepointEvent event(codepoint);
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handler));
-			window->EmitEvent(event);
-		});
-	}
-
-	void Window::EmitEvent(Event& event)
-	{
-		
+	void Window::initializeEventEmmiter() {
 	}
 }

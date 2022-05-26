@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Anggur/System/Array.h>
-#include <Anggur/System/String.h>
+#include <vector>
+#include <string>
 
-namespace Anggur::File 
-{
-	Array<uint8_t> Load(const String& path);
-	String LoadText(const String& path);
+namespace Anggur::File {
+	std::vector<uint8_t> load(const std::string& path);
+	std::string loadText(const std::string& path);
 }

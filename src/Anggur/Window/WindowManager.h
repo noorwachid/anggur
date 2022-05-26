@@ -1,21 +1,18 @@
 #pragma once
 
 #include <Anggur/Window/Window.h>
+#include <memory>
 
-namespace Anggur 
-{
-	class WindowManager 
-	{
+namespace Anggur {
+	class WindowManager {
 	public:
-		static void Initialize();
-		static void Add(const std::shared_ptr<Window>& window);
-		static std::shared_ptr<Window>& At(size_t index);
+		static void initialize();
+		static void set(const std::shared_ptr<Window>& window);
 
-		static void PollEvents();
-		static void SwapBuffers();
+		static const std::shared_ptr<Window>& get();
 
-		static bool IsOpen();
-		static void Close();
+		static void pollEvents();
+		static void swapBuffers();
 
 	private:
 		WindowManager();

@@ -2,6 +2,7 @@
 
 #include <initializer_list>
 #include <string>
+#include <vector>
 #include <Anggur/Math/Common.h>
 #include <Anggur/Math/Vector2.h>
 

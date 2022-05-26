@@ -11,14 +11,7 @@ namespace Anggur
 		id = 0;
 	}
 
-	Texture2D::Texture2D(uint32_t id, uint32_t width, uint32_t height) 
-	{
-		this->id = id;
-		this->width = width;
-		this->height = height;
-	}
-
-	Texture2D::Texture2D(const String& path, SamplerFilter filter) 
+	Texture2D::Texture2D(const std::string& path, SamplerFilter filter) 
 	{
 		id = 0;
 		Load(path, filter);
@@ -88,7 +81,7 @@ namespace Anggur
 		Load(image.GetData(), width, height, channels, filter);
 	}
 
-	void Texture2D::Load(const String& path, SamplerFilter filter) 
+	void Texture2D::Load(const std::string& path, SamplerFilter filter) 
 	{
 		Image image(path);
 		Load(image, filter);

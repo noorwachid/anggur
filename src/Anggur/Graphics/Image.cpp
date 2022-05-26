@@ -10,7 +10,7 @@ namespace Anggur
 		data = nullptr;
 	}
 
-	Image::Image(const String& path) 
+	Image::Image(const std::string& path) 
 	{
 		data = nullptr;
 		Load(path);
@@ -21,7 +21,7 @@ namespace Anggur
 		Unload();
 	}
 
-	void Image::Load(const String& path) 
+	void Image::Load(const std::string& path) 
 	{
 		Unload();
 

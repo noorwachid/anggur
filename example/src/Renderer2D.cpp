@@ -1,20 +1,23 @@
-#include "Renderer2D.h"
+#include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/VertexArray.h>
+#include <Anggur/Graphics/Shader.h>
 #include <Anggur/Math/Matrix3.h>
-#include <Anggur/System/Memory.h>
+#include "Renderer2D.h"
+#include <vector>
 
 struct Renderer2DData
 {
-	Shared<Shader> shader;
-	Shared<VertexArray> vertexArray;
-	Shared<VertexBuffer> vertexBuffer;
-	Shared<IndexBuffer> indexBuffer;
+	std::shared_ptr<Shader> shader;
+	std::shared_ptr<VertexArray> vertexArray;
+	std::shared_ptr<VertexBuffer> vertexBuffer;
+	std::shared_ptr<IndexBuffer> indexBuffer;
 
-	Array<Renderer2D::Vertex> vertices;
-	Array<uint32_t> indices;
-	Array<Shared<Texture2D>> textures;
-    Array<int> textureSlots;
+	std::vector<Renderer2D::Vertex> vertices;
+	std::vector<uint32_t> indices;
+	std::vector<std::shared_ptr<Texture2D>> textures;
+    std::vector<int> textureSlots;
 
-    Shared<Texture2D> whiteTexture;
+    std::shared_ptr<Texture2D> whiteTexture;
 
 	size_t vertexOffset = 0;
 	size_t indexOffset = 0;
@@ -68,7 +71,7 @@ void Renderer2D::InitializeTexturePool()
     }
 
     uint8_t whitePixel[] = {255, 255, 255, 255};
-    data.whiteTexture = CreateShared<Texture2D>(whitePixel, 1, 1, 4);
+    data.whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
 }
 
 void Renderer2D::InitializeShader() 
@@ -116,25 +119,22 @@ void Renderer2D::InitializeShader()
     data.shader->Compile();
 }
 
-void Renderer2D::SetClearColor(const Vector4& color) 
-{
-    glClearColor(color.x, color.y, color.z, color.w);
-}
-
 void Renderer2D::SetBatchChunk(size_t vertex, size_t indexMultiplier) 
 {
     data.batchVertex = vertex;
     data.batchIndexMultiplier = indexMultiplier;
 }
 
-void Renderer2D::Clear() 
+void Renderer2D::Clear(const Vector4& color) 
 {
+    glClearColor(color.x, color.y, color.z, color.w);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer2D::SetViewProjection(const Matrix3& newViewProjection) 
+
+void Renderer2D::SetViewport(const Vector2& position, const Vector2& size)
 {
-    data.viewProjection = newViewProjection;
+    glViewport(position.x, position.y, size.x, size.y);
 }
 
 void Renderer2D::Begin() 
@@ -142,6 +142,13 @@ void Renderer2D::Begin()
     data.renderCount = 0;
 
     FlushData();
+}
+
+void Renderer2D::Begin(const Matrix3& newViewProjection) 
+{
+    data.viewProjection = newViewProjection;
+
+    Begin();
 }
 
 void Renderer2D::End() 
@@ -195,7 +202,7 @@ bool Renderer2D::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, siz
         data.textureOffset + newTextureSize > data.textures.size();
 }
 
-void Renderer2D::Render(const Array<Vertex>& newVertices, const Array<uint32_t>& newIndices, const Shared<Texture2D>& texture) 
+void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) 
 {
     if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1)) 
     {
@@ -249,7 +256,7 @@ void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, c
     );
 }
 
-void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const Shared<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
+void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
 {
     Render(
         {

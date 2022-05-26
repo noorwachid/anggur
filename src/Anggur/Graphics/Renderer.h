@@ -108,7 +108,7 @@
 // 		static Texture* _textureData;
 // 		static Matrix3 _viewProjectionMatrix;
 
-// 		static VertexArray _vertexArray;
+// 		static VertexArray _vertexstd::vector;
 // 		static VertexBuffer _vertexBuffer;
 // 		static IndexBuffer _indexBuffer;
 // 	};

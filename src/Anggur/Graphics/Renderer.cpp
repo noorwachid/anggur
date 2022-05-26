@@ -36,7 +36,7 @@
 
 // 	Matrix3 Renderer::_viewProjectionMatrix;
 
-// 	VertexArray Renderer::_vertexArray;
+// 	VertexArray Renderer::_vertexstd::vector;
 
 // 	VertexBuffer Renderer::_vertexBuffer;
 
@@ -131,8 +131,8 @@
 // 		_maxVertices = _maxQuad * 4;
 // 		_maxIndices = _maxQuad * 6;
 
-// 		// _vertexArray.create();
-// 		// _vertexArray.bind();
+// 		// _vertexstd::vector.create();
+// 		// _vertexstd::vector.bind();
 // 		// _vertexData = new float[_maxVertices * Vertex::length];
 // 		// _indexData = new uint32_t[_maxIndices];
 
@@ -140,10 +140,10 @@
 // 		// _vertexBuffer.bind();
 // 		// _vertexBuffer.setCapacity(sizeof(float) * _maxVertices * Vertex::length);
 
-// 		// _vertexArray.setAttribute(0, 2, sizeof(Vertex), (void*)offsetof(Vertex, position));
-// 		// _vertexArray.setAttribute(1, 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
-// 		// _vertexArray.setAttribute(2, 2, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
-// 		// _vertexArray.setAttribute(3, 1, sizeof(Vertex), (void*)offsetof(Vertex, texIndex));
+// 		// _vertexstd::vector.setAttribute(0, 2, sizeof(Vertex), (void*)offsetof(Vertex, position));
+// 		// _vertexstd::vector.setAttribute(1, 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
+// 		// _vertexstd::vector.setAttribute(2, 2, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+// 		// _vertexstd::vector.setAttribute(3, 1, sizeof(Vertex), (void*)offsetof(Vertex, texIndex));
 
 // 		// _indexBuffer.create();
 // 		// _indexBuffer.bind();
@@ -167,7 +167,7 @@
 
 // 		// _indexBuffer.destroy();
 // 		// _vertexBuffer.destroy();
-// 		// _vertexArray.destroy();
+// 		// _vertexstd::vector.destroy();
 // 		// _batchShader.destroy();
 // 	}
 
@@ -261,7 +261,7 @@
 // 		// _indexBuffer.bind();
 // 		// _indexBuffer.setData(sizeof(uint32_t) * _maxIndices, _indexData);
 
-// 		_vertexArray.bind();
+// 		_vertexstd::vector.bind();
 // 		glDrawElements(GL_TRIANGLES, _indexCounter, GL_UNSIGNED_INT, nullptr);
 
 // 		clearData();

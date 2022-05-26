@@ -17,12 +17,12 @@ namespace Anggur
 		Terminate();
 	}
 
-	void Shader::SetVertexSource(const String& source) 
+	void Shader::SetVertexSource(const std::string& source) 
 	{
 		vertexSource = source;
 	}
 
-	void Shader::SetFragmentSource(const String& source) 
+	void Shader::SetFragmentSource(const std::string& source) 
 	{
 		fragmentSource = source;
 	}
@@ -88,42 +88,42 @@ namespace Anggur
 		}
 	}
 
-	int Shader::GetLocation(const String& name) 
+	int Shader::GetLocation(const std::string& name) 
 	{
 		return glGetUniformLocation(id, name.c_str());
 	}
 
-	void Shader::SetUniformVector2(const String& name, const Vector2& vec) 
+	void Shader::SetUniformVector2(const std::string& name, const Vector2& vec) 
 	{
 		glUniform2f(GetLocation(name), vec.x, vec.y);
 	}
 
-	void Shader::SetUniformMatrix3(const String& name, const Matrix3& mat) 
+	void Shader::SetUniformMatrix3(const std::string& name, const Matrix3& mat) 
 	{
 		glUniformMatrix3fv(GetLocation(name), 1, GL_FALSE, mat.toPointer());
 	}
 
-	void Shader::SetUniformMatrix4(const String& name, const Matrix4& matrix) 
+	void Shader::SetUniformMatrix4(const std::string& name, const Matrix4& matrix) 
 	{
 		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, matrix.toPointer());
 	}
 
-	void Shader::SetUniformInt(const String& name, int value) 
+	void Shader::SetUniformInt(const std::string& name, int value) 
 	{
 		glUniform1i(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformInt(const String& name, size_t size, int* values) 
+	void Shader::SetUniformInt(const std::string& name, size_t size, int* values) 
 	{
 		glUniform1iv(GetLocation(name), size, values);
 	}
 
-	void Shader::SetUniformFloat(const String& name, float value) 
+	void Shader::SetUniformFloat(const std::string& name, float value) 
 	{
 		glUniform1f(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformFloat(const String& name, size_t size, float* values) 
+	void Shader::SetUniformFloat(const std::string& name, size_t size, float* values) 
 	{
 		glUniform1fv(GetLocation(name), size, values);
 	}

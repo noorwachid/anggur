@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Anggur/System/String.h>
+#include <string>
 
 namespace Anggur 
 {
@@ -8,7 +8,7 @@ namespace Anggur
 	{
 	public:
 		Image();
-		Image(const String& path);
+		Image(const std::string& path);
 
 		~Image();
 
@@ -17,7 +17,7 @@ namespace Anggur
 		inline uint32_t GetChannels() const { return channels; }
 		inline uint8_t* GetData() const { return data; }
 
-		void Load(const String& path);
+		void Load(const std::string& path);
 		void Unload();
 
 	private:
