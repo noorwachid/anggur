@@ -1,36 +1,15 @@
 #pragma once
 
-#include <cstddef>
+#include <string>
 
-namespace Anggur 
-{
-	using EventType = size_t;
+namespace Anggur {
+    struct Event {
+        std::string name;
 
-	static EventType CreateEventType()
-	{
-		static EventType typeIncrement = 0;
+        Event(const std::string& newName): name(newName) {
+        }
 
-		return ++typeIncrement;
-	}
-
-	template <typename T>
-	EventType GetEventType()
-	{
-		static EventType type = CreateEventType();
-
-		return type;
-	}
-
-	#define ANGGUR_EVENT(T)                     \
-		::Anggur::EventType GetType() override  \
-		{                                       \
-			return ::Anggur::GetEventType<T>(); \
-		}
-
-	struct Event 
-	{
-		virtual ~Event() {}
-
-		virtual EventType GetType() = 0;	
-	};
+        virtual ~Event() {
+        }
+    };
 }

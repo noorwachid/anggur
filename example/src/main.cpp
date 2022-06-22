@@ -1,22 +1,24 @@
-#include <Anggur/Scene/SceneManager.h>
-#include "FirstScene.h"
+#include <Anggur/Window/Window.h>
+#include <Anggur/Window/Input.h>
+#include <iostream>
+#include "Renderer2D.h"
+#include "VP2D.h"
 
-
-int main() {
+int main() 
+{
 	using namespace Anggur;
 
-	WindowManager::initialize();
-	WindowManager::set(std::make_shared<Window>(Vector2(800, 600), "Anggur Demo"));
+	Window::Initialize(Vector2(400, 300));
 
-	Renderer::initialize();
-	
-	SceneManager::set(std::make_shared<FirstScene>());
+	while (Window::IsOpen()) 
+	{
+		Window::BeginFrame();
 
-	while (WindowManager::get()->isOpen()) {
-		if (SceneManager::get()) 
-			SceneManager::get()->update();
+		if (Input::IsKeyPressed(Key::Space)) 
+		{
+			std::cout << "Space is pressed\n";
+		}
 
-		WindowManager::get()->swapBuffers();
-		WindowManager::pollEvents();
+		Window::EndFrame();
 	}
 }

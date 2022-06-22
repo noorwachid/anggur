@@ -18,16 +18,16 @@ add_library(anggur STATIC
 )
 
 # Local libraries
-add_subdirectory(vendor/glad)
-add_subdirectory(vendor/glfw)
-add_subdirectory(vendor/stb)
+add_subdirectory(vendor/davidde/glad)
+add_subdirectory(vendor/glfw/glfw)
+add_subdirectory(vendor/nothings/stbimage)
 
-target_include_directories(anggur PUBLIC src PRIVATE ${SDL2_INCLUDE_DIRS})
+target_include_directories(anggur PUBLIC src)
 target_link_libraries(anggur
 
-    glad
 	glfw
-    stb
+	glad
+	StbImage
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

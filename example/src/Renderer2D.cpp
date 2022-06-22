@@ -94,7 +94,7 @@ void Renderer2D::initializeShader() {
         }
     )");
 
-    data.shader->SetFragmentSource(R"(
+    data.shader->setFragmentSource(R"(
         #version 330 core
         
         in vec4 vColor;
@@ -103,14 +103,14 @@ void Renderer2D::initializeShader() {
 
         out vec4 fColor;
 
-        uniform sampler2D uTextures[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
+        uniform sampler2D uTextures[)" + std::to_string(Texture::getMaxSlot()) + R"(];
         
         void main() {
             fColor = texture(uTextures[int(vTexSlot)], vTexCoord) * vColor;
         }
     )");
 
-    data.shader->Compile();
+    data.shader->compile();
 }
 
 void Renderer2D::setBatchChunk(size_t vertex, size_t indexMultiplier) {
@@ -150,7 +150,7 @@ void Renderer2D::flush() {
     }
 
     for (size_t i = 0; i < data.textureOffset; ++i) {
-        data.textures[i]->Bind(i);
+        data.textures[i]->bind(i);
     }
 
     data.shader->bind();
@@ -194,7 +194,7 @@ void Renderer2D::render(const std::vector<Vertex>& newVertices, const std::vecto
     int textureSlot = 0;
 
     // This code only create one branch
-    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->GetID() != texture->getId(); ++textureSlot);
+    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->getId() != texture->getId(); ++textureSlot);
 
     if (textureSlot == data.textureOffset) {
         textureSlot = data.textureOffset;

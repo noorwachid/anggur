@@ -4,44 +4,33 @@
 #include <string>
 #include <vector>
 
-struct GLFWwindow;
-
-namespace Anggur {
-	using WindowHandler = GLFWwindow;
-
-	class Window {
+namespace Anggur 
+{
+	class Window 
+	{
 	public:
-		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
+		static void Initialize(const Vector2& size = Vector2(800, 600), const std::string& title = "");
+		static void SetPosition(const Vector2& pos);
+		static void SetSize(const Vector2& size);
+		static void SetTitle(const std::string& title);
 
-		virtual ~Window();
-
-		void setPosition(const Vector2& pos);
-		void setSize(const Vector2& size);
-		void setTitle(const std::string& title);
-
-		float getAspectRatio();
-		const Vector2& getPosition();
-		const Vector2& getSize();
-		const Vector2& getBufferSize();
-		const std::string& getTitle();
-		WindowHandler* getHandler();
-
-		bool isOpen();
-		void close();
-		void bind();
+		static float GetAspectRatio();
+		static const Vector2& GetPosition();
+		static const Vector2& GetSize();
+		static const Vector2& GetBufferSize();
+		static const std::string& GetTitle();
 		
-		void swapBuffers();
+		static bool IsOpen();
+		static void Close();
+		static void Bind();
 
+		static void BeginFrame();
+		static void EndFrame();
+	
 	private:
-		void initializeGraphicsFunctions();
-		void initializeEventEmmiter();
-
-	private:
-		WindowHandler* handler = nullptr;
-		std::string title;
-
-		Vector2 position;
-		Vector2 size;
-		Vector2 bufferSize;
+		static void SwapBuffers();
+		static void PollEvents();
+		static void InitializeGraphicsFunctions();
+		static void InitializeEventEmmiter();
 	};
 }

@@ -2,13 +2,32 @@
 #include <Anggur/Graphics/Image.h>
 #include <Anggur/Utility/Assert.h>
 #include <Anggur/Utility/Log.h>
+#include <Anggur/Event/EventManager.h>
 #include <Anggur/Window/Window.h>
 #include <Anggur/Window/Internal.h>
+#include <Anggur/Window/WindowEvent.h>
 #include <Anggur/Math/Vector2.h>
+#include "Input.h"
 
-namespace Anggur {
-	Window::Window(const Vector2& size, const std::string& title) {
-		this->title = title;
+namespace Anggur 
+{
+	struct WindowData 
+	{
+		GLFWwindow* handler = nullptr;
+		std::string title;
+
+		Vector2 position;
+		Vector2 size;
+		Vector2 bufferSize;
+	} data;
+
+	void Window::Initialize(const Vector2& size, const std::string& title) 
+	{
+		int systemInitialization = glfwInit();
+		ANGGUR_ASSERT(systemInitialization, "[Window] Failed to initalize window system");
+
+		data.title = title;
+		data.size = size;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -18,101 +37,113 @@ namespace Anggur {
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		#endif
 
-		handler = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
-		ANGGUR_ASSERT(handler, "[Core.Window] Failed to create a window");
+		data.handler = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
+		ANGGUR_ASSERT(data.handler, "[Core.Window] Failed to create a window");
 
-		glfwSetWindowUserPointer(handler, static_cast<void*>(this));
-
-		bind();
-		initializeGraphicsFunctions();
-		initializeEventEmmiter();
+		Bind();
+		InitializeGraphicsFunctions();
+		InitializeEventEmmiter();
 	}
 
-	Window::~Window() {
-		if (handler) {
-			glfwDestroyWindow(handler);
-		}
+	void Window::SetPosition(const Vector2& position) 
+	{
+		glfwSetWindowPos(data.handler, position.x, position.y);
 	}
 
-	void Window::setPosition(const Vector2& position) {
-		glfwSetWindowPos(handler, position.x, position.y);
+	void Window::SetSize(const Vector2& size) 
+	{
+		glfwSetWindowSize(data.handler, size.x, size.y);
 	}
 
-	void Window::setSize(const Vector2& size) {
-		glfwSetWindowSize(handler, size.x, size.y);
+	void Window::SetTitle(const std::string& title) 
+	{
+		glfwSetWindowTitle(data.handler, title.c_str());
+
+		data.title = title;
 	}
 
-	void Window::setTitle(const std::string& title) {
-		glfwSetWindowTitle(handler, title.c_str());
-
-		this->title = title;
+	float Window::GetAspectRatio() 
+	{
+		return data.size.y / data.size.x;
 	}
 
-	float Window::getAspectRatio() {
-		const Vector2& size = getSize();
-
-		return size.y / size.x;
+	const Vector2& Window::GetPosition() 
+	{
+		return data.position;
 	}
 
-	const Vector2& Window::getPosition() {
-		int x, y;
-
-		glfwGetWindowPos(handler, &x, &y);
-
-		position.set(x, y);
-
-		return position;
+	const Vector2& Window::GetSize() 
+	{
+		return data.size;
 	}
 
-	const Vector2& Window::getSize() {
-		int x, y;
-
-		glfwGetWindowSize(handler, &x, &y);
-
-		size.set(x, y);
-
-		return size;
+	const Vector2& Window::GetBufferSize() 
+	{
+		return data.bufferSize;
 	}
 
-	const Vector2& Window::getBufferSize() {
-		int x, y;
-
-		glfwGetFramebufferSize(handler, &x, &y);
-
-		bufferSize.set(x, y);
-
-		return bufferSize;
+	const std::string& Window::GetTitle() 
+	{
+		return data.title;
 	}
 
-	const std::string& Window::getTitle() {
-		return title;
+	bool Window::IsOpen() 
+	{
+		return !glfwWindowShouldClose(data.handler);
 	}
 
-	bool Window::isOpen() {
-		return !glfwWindowShouldClose(handler);
+	void Window::SwapBuffers() 
+	{
+		glfwSwapBuffers(data.handler);
 	}
 
-	void Window::swapBuffers() {
-		glfwSwapBuffers(handler);
+	void Window::Close() 
+	{
+		glfwSetWindowShouldClose(data.handler, true);
 	}
 
-	WindowHandler* Window::getHandler() {
-		return handler;
+	void Window::Bind() 
+	{
+		glfwMakeContextCurrent(data.handler);
 	}
 
-	void Window::close() {
-		glfwSetWindowShouldClose(handler, true);
+	void Window::PollEvents()
+	{
+		glfwPollEvents();
 	}
 
-	void Window::bind() {
-		glfwMakeContextCurrent(handler);
+	void Window::BeginFrame() 
+	{
+		Input::Update();
 	}
 
-	void Window::initializeGraphicsFunctions() {
+	void Window::EndFrame()
+	{
+		SwapBuffers();
+		PollEvents();
+	}
+	
+
+	void Window::InitializeGraphicsFunctions() 
+	{
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
 	}
 
-	void Window::initializeEventEmmiter() {
+	void Window::InitializeEventEmmiter() 
+	{
+		glfwSetKeyCallback(data.handler, [](GLFWwindow* handler, int vkeyCode, int scanCode, int action, int modidefrKey) 
+		{
+			Key key = static_cast<Key>(vkeyCode);
+
+			if (action == GLFW_PRESS || action == GLFW_REPEAT) 
+			{
+				Input::SetKeyState(key, true);
+			} 
+			else 
+			{
+				Input::SetKeyState(key, false);
+			}
+		});
 	}
 }
