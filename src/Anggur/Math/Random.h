@@ -1,25 +1,29 @@
 #pragma once
 
 #include <random>
-#include <Anggur/Math/Common.h>
+#include "Math.h"
 
-namespace Anggur {
-	class RandomGenerator {
+namespace Anggur 
+{
+	class RandomGenerator 
+	{
 	public:
-		RandomGenerator()
-			:
-			generator(device()) {
+		RandomGenerator(): generator(device()) 
+		{
 		}
 
-		void setSeed(float n) {
+		void SetSeed(float n) 
+		{
 			generator.seed(n);
 		}
 
-		float generate() {
+		float Generate() 
+		{
 			return generator();
 		}
 
-		float range(float lower, float upper) {
+		float Range(float lower, float upper) 
+		{
 			std::uniform_real_distribution<float> distribution(lower, upper);
 			return distribution(generator);
 		}
@@ -32,28 +36,34 @@ namespace Anggur {
 
 	class Random {
 	public:
-		static float generate() {
-			return generator.generate();
+		static float Generate() 
+		{
+			return generator.Generate();
 		}
 
-		static float range(float lower, float upper) {
-			return generator.range(lower, upper);
+		static float Range(float lower, float upper) 
+		{
+			return generator.Range(lower, upper);
 		}
 
-		static float getNormal() {
-			return generator.range(0.f, 1.f);
+		static float GetNormal() 
+		{
+			return generator.Range(0.f, 1.f);
 		}
 
-		static float getSigned() {
-			return generator.range(-1.f, 1.f);
+		static float GetSigned() 
+		{
+			return generator.Range(-1.f, 1.f);
 		}
 
-		static float getAngle() {
-			return generator.range(0.f, Math::twoPi);
+		static float GetAngle() 
+		{
+			return generator.Range(0.f, Math::twoPi);
 		}
 
-		static bool getBoolean() {
-			return getNormal() > 0.5;
+		static bool GetBoolean() 
+		{
+			return GetNormal() > 0.5;
 		}
 
 
