@@ -70,14 +70,6 @@ namespace Anggur
 		return Vector2(x / scalar, y / scalar);
 	}
 
-	Vector2 Vector2::operator*(const Matrix3& m) const 
-	{
-		return Vector2(
-			m.a * x + m.d * y + m.g,
-			m.b * x + m.e * y + m.h
-		);
-	}
-
 	Vector2 Vector2::operator-() const 
 	{
 		return Vector2(-x, -y);
@@ -122,12 +114,6 @@ namespace Anggur
 	{
 		x -= other.x;
 		y -= other.y;
-		return *this;
-	}
-
-	Vector2& Vector2::operator*=(const Matrix3& m) 
-	{
-		*this = *this * m;
 		return *this;
 	}
 

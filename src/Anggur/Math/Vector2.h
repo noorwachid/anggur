@@ -34,7 +34,6 @@ namespace Anggur {
 		Vector2 operator-(float scalar) const;
 		Vector2 operator*(float scalar) const;
 		Vector2 operator/(float scalar) const;
-		Vector2 operator*(const Matrix3& m) const;
 
 		Vector2 operator-() const;
 
@@ -45,7 +44,6 @@ namespace Anggur {
 
 		Vector2& operator+=(const Vector2& v);
 		Vector2& operator-=(const Vector2& v);
-		Vector2& operator*=(const Matrix3& m);
 
 		float GetLengthSquared() const;
 		float GetLength() const;
