@@ -1,5 +1,5 @@
-#include <Anggur/Window/Window.h>
-#include <Anggur/Window/Input.h>
+#include <Anggur/System/Window.h>
+#include <Anggur/System/Input.h>
 #include <iostream>
 #include "Renderer2D.h"
 #include "VP2D.h"

@@ -1,7 +1,7 @@
 #pragma once
 
-namespace Anggur {
-	
+namespace Anggur 
+{	
 	struct Vector2;
 	struct Vector3;
 	struct Vector4;
@@ -10,7 +10,8 @@ namespace Anggur {
 	struct Matrix3;
 	struct Matrix4;
 
-	namespace Math {
+	namespace Math 
+	{
 		extern const float pi;
 		extern const float twoPi;
 		extern const float infinity;

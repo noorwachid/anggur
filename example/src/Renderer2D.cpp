@@ -45,23 +45,23 @@ void Renderer2D::InitializeVertexPool() {
     data.indices.assign(data.batchVertex * data.batchIndexMultiplier, 0);
 
     data.vertexBuffer = std::make_shared<VertexBuffer>();
-    data.vertexBuffer->setCapacity(sizeof(Vertex) * data.vertices.size());
+    data.vertexBuffer->SetCapacity(sizeof(Vertex) * data.vertices.size());
 
     data.vertexArray = std::make_shared<VertexArray>();
-    data.vertexArray->setAttribute(0, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
-    data.vertexArray->setAttribute(1, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
-    data.vertexArray->setAttribute(2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureCoord));
-    data.vertexArray->setAttribute(3, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureSlot));
+    data.vertexArray->SetAttribute(0, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
+    data.vertexArray->SetAttribute(1, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+    data.vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureCoord));
+    data.vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureSlot));
     
     data.indexBuffer = std::make_shared<IndexBuffer>();
-    data.indexBuffer->setCapacity(sizeof(uint32_t) * data.indices.size());
+    data.indexBuffer->SetCapacity(sizeof(uint32_t) * data.indices.size());
 }
 
 void Renderer2D::InitializeTexturePool() {
-    data.textures.assign(Texture::getMaxSlot(), nullptr);
-    data.textureSlots.reserve(Texture::getMaxSlot());
+    data.textures.assign(Texture::GetMaxSlot(), nullptr);
+    data.textureSlots.reserve(Texture::GetMaxSlot());
 
-    for (int i = 0; i < Texture::getMaxSlot(); ++i) {
+    for (int i = 0; i < Texture::GetMaxSlot(); ++i) {
         data.textureSlots.push_back(i);
     }
 
@@ -71,7 +71,7 @@ void Renderer2D::InitializeTexturePool() {
 
 void Renderer2D::InitializeShader() {
     data.shader = std::make_shared<Shader>();
-    data.shader->setVertexSource(R"(
+    data.shader->SetVertexSource(R"(
         #version 330 core
 
         layout (location = 0) in vec2 aPosition;
@@ -94,7 +94,7 @@ void Renderer2D::InitializeShader() {
         }
     )");
 
-    data.shader->setFragmentSource(R"(
+    data.shader->SetFragmentSource(R"(
         #version 330 core
         
         in vec4 vColor;
@@ -103,14 +103,14 @@ void Renderer2D::InitializeShader() {
 
         out vec4 fColor;
 
-        uniform sampler2D uTextures[)" + std::to_string(Texture::getMaxSlot()) + R"(];
+        uniform sampler2D uTextures[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
         
         void main() {
             fColor = texture(uTextures[int(vTexSlot)], vTexCoord) * vColor;
         }
     )");
 
-    data.shader->compile();
+    data.shader->Compile();
 }
 
 void Renderer2D::SetBatchChunk(size_t vertex, size_t indexMultiplier) {
@@ -158,20 +158,20 @@ void Renderer2D::Flush() {
     }
 
     for (size_t i = 0; i < data.textureOffset; ++i) {
-        data.textures[i]->bind(i);
+        data.textures[i]->Bind(i);
     }
 
-    data.shader->bind();
-    data.shader->setUniformMatrix3("uViewProjection", data.viewProjection);
-    data.shader->setUniformInt("uTextures", data.textureOffset, data.textureSlots.data());
+    data.shader->Bind();
+    data.shader->SetUniformMatrix3("uViewProjection", data.viewProjection);
+    data.shader->SetUniformInt("uTextures", data.textureOffset, data.textureSlots.data());
 
-    data.vertexArray->bind();
+    data.vertexArray->Bind();
     
-    data.vertexBuffer->bind();
-    data.vertexBuffer->setData(sizeof(Vertex) * data.vertexOffset, data.vertices.data());
+    data.vertexBuffer->Bind();
+    data.vertexBuffer->SetData(sizeof(Vertex) * data.vertexOffset, data.vertices.data());
 
-    data.indexBuffer->bind();
-    data.indexBuffer->setData(sizeof(uint32_t) * data.indexOffset, data.indices.data());
+    data.indexBuffer->Bind();
+    data.indexBuffer->SetData(sizeof(uint32_t) * data.indexOffset, data.indices.data());
 
     glDrawElements(GL_TRIANGLES, data.indexOffset, GL_UNSIGNED_INT, nullptr);
 
@@ -202,7 +202,7 @@ void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vecto
     int textureSlot = 0;
 
     // This code only create one branch
-    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->getId() != texture->getId(); ++textureSlot);
+    for (; textureSlot < data.textureOffset && data.textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
 
     if (textureSlot == data.textureOffset) {
         textureSlot = data.textureOffset;

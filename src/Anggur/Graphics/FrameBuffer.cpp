@@ -10,7 +10,7 @@ namespace Anggur {
 
 	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height) {
 		Initialize();
-		recreate(width, height);
+		Recreate(width, height);
 	}
 
 	FrameBuffer::~FrameBuffer() {
@@ -22,7 +22,7 @@ namespace Anggur {
 		texture = std::make_shared<Texture2D>();
 	}
 
-	void FrameBuffer::recreate(uint32_t width, uint32_t height) {
+	void FrameBuffer::Recreate(uint32_t width, uint32_t height) {
 		this->width = width;
 		this->height = height;
 
@@ -51,11 +51,11 @@ namespace Anggur {
 		texture->height = height;
 	}
 
-	void FrameBuffer::bind() {
+	void FrameBuffer::Bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 	}
 
-	void FrameBuffer::unbind() {
+	void FrameBuffer::Unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
