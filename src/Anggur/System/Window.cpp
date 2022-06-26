@@ -23,6 +23,10 @@ namespace Anggur
 
 	void Window::Initialize(const Vector2& size, const std::string& title) 
 	{
+		#ifdef ANGGUR_OS_X
+			glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, 0);
+		#endif
+
 		int systemInitialization = glfwInit();
 		ANGGUR_ASSERT(systemInitialization, "[Window] Failed to initalize window system");
 
@@ -33,7 +37,7 @@ namespace Anggur
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		#ifdef ANGGUR_OS_APPLE
+		#ifdef ANGGUR_OS_X
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		#endif
 

@@ -5,7 +5,7 @@
 #endif
 
 #ifdef __APPLE__
-	#define ANGGUR_OS_APPLE
+	#define ANGGUR_OS_X
 #endif
 
 #ifdef _WIN32
