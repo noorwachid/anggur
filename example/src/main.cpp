@@ -69,13 +69,13 @@ int main()
 
 	Transform transform;
 	transform.rotation.z = Math::pi / 4;
-	transform.translation.x = 1;
+	transform.translation.z = -1;
 
 	while (App::IsOpen()) 
 	{
 		App::BeginFrame();
 
-		// Renderer::Begin(CreatePerspectiveFOV(Math::pi / 4.0f, 400.0f, 400.0f, 0.0f, 100.f));
+		// Renderer::Begin(CreatePerspectiveFOV(Math::pi / 9, 4.0f, 4.0f, -10.0f, 10.f));
 
 		Renderer::Begin(CreateOrtho(5.0f, 5.0f, 0.0f, 100.0f));
 
