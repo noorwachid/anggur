@@ -2,18 +2,21 @@
 
 #include <vector>
 #include <string>
-#include <Anggur/Math/Common.h>
-#include <Anggur/Math/Vector3.h>
+#include "Math.h"
+#include "Vector3.h"
 
-namespace Anggur {
-    struct Matrix4 {
+namespace Anggur 
+{
+    struct Matrix4 
+    {
         float a, b, c, d;
         float e, f, g, h;
         float i, j, k, l;
         float m, n, o, p;
 
-        Matrix4() {
-            set({
+        Matrix4() 
+        {
+            Set({
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
@@ -21,22 +24,25 @@ namespace Anggur {
             });
         }
 
-        Matrix4(const std::vector<float>& cells) {
-            set(cells);
+        Matrix4(const std::vector<float>& cells) 
+        {
+            Set(cells);
         }
 
-        void set(const std::vector<float>& cells) {
+        void Set(const std::vector<float>& cells) 
+        {
             a = cells[0]; b = cells[1]; c = cells[2]; d = cells[3];
             e = cells[4]; f = cells[5]; g = cells[6]; h = cells[7];
             i = cells[8]; j = cells[9]; k = cells[10]; l = cells[11];
             m = cells[12]; n = cells[13]; o = cells[14]; p = cells[15];
         }
 
-        const float* toPointer() const {
+        const float* ToPointer() const {
             return &a;
         }
 
-        std::string toString() {
+        std::string ToString() 
+        {
             std::string buffer;
 
             buffer += std::to_string(a) + ", " + std::to_string(b) + ", " + std::to_string(c) + ", " + std::to_string(d) + "\n";
@@ -47,7 +53,8 @@ namespace Anggur {
             return buffer;
         }
 
-        static Matrix4 createTranslation(const Vector3& translation) {
+        static Matrix4 CreateTranslation(const Vector3& translation) 
+        {
             return Matrix4({
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
@@ -56,11 +63,13 @@ namespace Anggur {
             });
         }
 
-        static Matrix4 createRotation(const Vector3& rotation) {
+        static Matrix4 CreateRotation(const Vector3& rotation) 
+        {
             return Matrix4();
         }
 
-        static Matrix4 createRotationZ(float rotation) {
+        static Matrix4 CreateRotationZ(float rotation) 
+        {
             return Matrix4({
                 Math::Cos(rotation), -Math::Sin(rotation), 0.0f, 0.0f,
                 Math::Sin(rotation), Math::Cos(rotation), 0.0f, 0.0f,
@@ -69,7 +78,8 @@ namespace Anggur {
             });
         }
 
-        static Matrix4 createScale(const Vector3& scale) {
+        static Matrix4 CreateScale(const Vector3& scale) 
+        {
             return Matrix4({
                 scale.x, 0.0f, 0.0f, 0.0f,
                 0.0f, scale.y, 0.0f, 0.0f,
@@ -78,7 +88,8 @@ namespace Anggur {
             });
         }
 
-        friend Matrix4 operator*(const Matrix4& l, const Matrix4& r) {
+        friend Matrix4 operator*(const Matrix4& l, const Matrix4& r) 
+        {
             return Matrix4({
                 l.a * r.a + l.b * r.e + l.c * r.i + l.d * r.m,  l.a * r.b + l.b * r.f + l.c * r.j + l.d * r.n,  l.a * r.c + l.b * r.g + l.c * r.k + l.d * r.o,  l.a * r.d + l.b * r.h + l.c * r.l + l.d * r.p, 
                 l.e * r.a + l.f * r.e + l.g * r.i + l.h * r.m,  l.e * r.b + l.f * r.f + l.g * r.j + l.h * r.n,  l.e * r.c + l.f * r.g + l.g * r.k + l.h * r.o,  l.e * r.d + l.f * r.h + l.g * r.l + l.h * r.p, 

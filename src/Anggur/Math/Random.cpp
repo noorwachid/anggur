@@ -1,5 +1,6 @@
 #include <Anggur/Math/Random.h>
 
-namespace Anggur {
+namespace Anggur 
+{
 	RandomGenerator Random::generator;
 }

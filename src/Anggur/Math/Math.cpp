@@ -1,5 +1,5 @@
-#include <math.h>
-#include <Anggur/Math/Common.h>
+#include "Math.h"
+#include <cmath>
 
 namespace Anggur::Math 
 {

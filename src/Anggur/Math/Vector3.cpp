@@ -1,5 +1,5 @@
-#include <Anggur/Math/Common.h>
-#include <Anggur/Math/Vector3.h>
+#include "Math.h"
+#include "Vector3.h"
 
 namespace Anggur 
 {

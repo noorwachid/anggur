@@ -46,7 +46,7 @@ namespace Anggur
 		int frameBufferWidth = 0;
 		int frameBufferHeight = 0;
 		glfwGetFramebufferSize(windowData.handler, &frameBufferWidth, &frameBufferHeight);
-		windowData.frameBufferSize.set(frameBufferWidth, frameBufferHeight);
+		windowData.frameBufferSize.Set(frameBufferWidth, frameBufferHeight);
 
 		glfwSetWindowSizeCallback(windowData.handler, [](GLFWwindow* handler, int width, int height)
 		{

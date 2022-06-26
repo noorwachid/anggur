@@ -114,12 +114,12 @@ namespace Anggur
 
 	void Shader::SetUniformMatrix3(const std::string& name, const Matrix3& matrix) 
 	{
-		glUniformMatrix3fv(GetLocation(name), 1, GL_FALSE, matrix.toPointer());
+		glUniformMatrix3fv(GetLocation(name), 1, GL_FALSE, matrix.ToPointer());
 	}
 
 	void Shader::SetUniformMatrix4(const std::string& name, const Matrix4& matrix) 
 	{
-		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, matrix.toPointer());
+		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, matrix.ToPointer());
 	}
 
 	void Shader::SetUniformInt(const std::string& name, int value) 
