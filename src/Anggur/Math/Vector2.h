@@ -7,15 +7,23 @@ namespace Anggur {
 		float x;
 		float y;
 
-		Vector2();
-		Vector2(float v);
-		Vector2(float x, float y);
+		Vector2(): x(0.0f), y(0.0f)
+		{
+		}
+
+		Vector2(float scalar): x(scalar), y(scalar)
+		{
+		}
+
+		Vector2(float newX, float newY): x(newX), y(newY)
+		{
+		}
 
 		const float* toPointer() const;
 		float* toPointer();
 
-		void set(float v);
-		void set(float x, float y);
+		void set(float scalar);
+		void set(float newX, float newY);
 		void setPolar(float length, float angle);
 
 		Vector2 operator+(const Vector2& v) const;

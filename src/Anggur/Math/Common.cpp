@@ -1,114 +1,140 @@
 #include <math.h>
 #include <Anggur/Math/Common.h>
 
-namespace Anggur::Math {
-
+namespace Anggur::Math 
+{
 	const float pi = 3.1415926535f;
 	const float twoPi = pi * 2;
 	const float infinity = INFINITY;
 	const float epsilon = 0.0001f;
 
-	float max(float a, float b) {
+	float Max(float a, float b) 
+	{
 		return fmaxf(a, b);
 	}
 
-	float min(float a, float b) {
+	float Min(float a, float b) 
+	{
 		return fminf(a, b);
 	}
 
-	float clamp(float x, float lower, float upper) {
-		return min(upper, max(lower, x));
+	float Clamp(float x, float lower, float upper) 
+	{
+		return Min(upper, Max(lower, x));
 	}
 
-	float abs(float x) {
+	float Abs(float x) 
+	{
 		return fabsf(x);
 	}
 
-	float cos(float x) {
+	float Cos(float x) 
+	{
 		return cosf(x);
 	}
 
-	float sin(float x) {
+	float Sin(float x) 
+	{
 		return sinf(x);
 	}
 
-	float tan(float x) {
+	float Tan(float x) 
+	{
 		return tanf(x);
 	}
 
-	float acos(float x) {
+	float Acos(float x) 
+	{
 		return acosf(x);
 	}
 
-	float asin(float x) {
+	float Asin(float x) 
+	{
 		return asinf(x);
 	}
 
-	float atan(float x) {
+	float Atan(float x) 
+	{
 		return atanf(x);
 	}
 
-	float atan(float y, float x) {
+	float Atan(float y, float x) 
+	{
 		return atan2f(y, x);
 	}
 
-	float cot(float x) {
-		return 1.f / tan(x);
+	float Cot(float x) 
+	{
+		return 1.f / Tan(x);
 	}
 
-	float pow(float x, float p) {
+	float Pow(float x, float p) 
+	{
 		return powf(x, p);
 	}
 
-	float sqrt(float x) {
+	float Sqrt(float x) 
+	{
 		return sqrtf(x);
 	}
 
-	float mod(float x, float d) {
+	float Mod(float x, float d) 
+	{
 		return fmodf(x, d);
 	}
 
-	float floor(float x) {
+	float Floor(float x) 
+	{
 		return floorf(x);
 	}
 
-	float ceil(float x) {
+	float Ceil(float x) 
+	{
 		return ceilf(x);
 	}
 
-	float trunc(float x) {
+	float Truncate(float x) 
+	{
 		return truncf(x);
 	}
 
-	float round(float x) {
+	float Round(float x) 
+	{
 		return roundf(x);
 	}
 
-	float roundNearest(float x, float step) {
-		return round(x / step) * step;
+	float RoundNearest(float x, float step) 
+	{
+		return Round(x / step) * step;
 	}
 
-	float normalize(float x, float lower, float upper) {
+	float Normalize(float x, float lower, float upper) 
+	{
 		return (x - lower) / (upper - lower);
 	}
 
-	float lerp(float lower, float upper, float amount) {
+	float Lerp(float lower, float upper, float amount) 
+	{
 		return lower + amount * (upper - lower);
 	}
 
-	float remap(float x, float lowerA, float upperA, float lowerB, float upperB) {
-		return lerp(lowerB, upperB, normalize(x, lowerA, upperA));
+	float Map(float x, float lowerA, float upperA, float lowerB, float upperB) 
+	{
+		return Lerp(lowerB, upperB, Normalize(x, lowerA, upperA));
 	}
 
-	float degreeToRadian(float x) {
+	float DegreeToRadian(float x) 
+	{
 		return x * pi / 180.0f;
 	}
 
-	float radianToDegree(float x) {
+	float RadianToDegree(float x) 
+	{
 		return x * 180.0f / pi;
 	}
 
-	float isNearZero(float x, float epsilon) {
-		return (abs(x) <= epsilon);
+	float IsNearZero(float x, float epsilon) 
+	{
+		return (Abs(x) <= epsilon);
 	}
 }

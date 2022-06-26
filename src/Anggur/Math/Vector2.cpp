@@ -9,18 +9,6 @@ namespace Anggur {
 
 	Vector2 Vector2::one(1, 1);
 
-	Vector2::Vector2() {
-		set(0.f);
-	}
-
-	Vector2::Vector2(float v) {
-		set(v);
-	}
-
-	Vector2::Vector2(float x, float y) {
-		set(x, y);
-	}
-
 	const float* Vector2::toPointer() const {
 		return &x;
 	}
@@ -139,7 +127,7 @@ namespace Anggur {
 	}
 
 	float Vector2::getAngle() const {
-		return Math::atan(y, x);
+		return Math::Atan(y, x);
 	}
 
 	Vector2& Vector2::setAngle(float theta) {

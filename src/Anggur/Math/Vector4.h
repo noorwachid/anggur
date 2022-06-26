@@ -2,25 +2,32 @@
 
 #include <cinttypes>
 
-namespace Anggur {
-	struct Vector4 {
+namespace Anggur 
+{
+	struct Vector4 
+	{
 		float x;
 		float y;
 		float z;
 		float w;
 
-		Vector4();
-		Vector4(float x, float y, float z, float w = 1.0f);
+		Vector4(): x(0.0f), y(0.0f), z(0.0f), w(1.0f) 
+		{
+		};
 
-		void set(float x, float y, float z, float w = 1.0f);
+		Vector4(float newX, float newY, float newZ, float newW = 1.0f): x(newX), y(newY), z(newZ), w(newW)
+		{
+		}
 
-		const float* toPointer() const;
+		void Set(float newX, float newY, float newZ, float newW = 1.0f);
 
-		float* toPointer();
+		const float* ToPointer() const;
 
-		static Vector4 createHex(uint64_t hex);
+		float* ToPointer();
 
-		static Vector4 lerp(const Vector4& a, const Vector4& b, float amount);
+		static Vector4 CreateHex(uint64_t hex);
+
+		static Vector4 Lerp(const Vector4& a, const Vector4& b, float amount);
 
 		static const Vector4 transparent;
 

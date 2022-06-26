@@ -54,8 +54,8 @@ namespace Anggur {
 
         static Matrix3 createRotation(float rotation) {
             return Matrix3({
-                Math::cos(rotation), -Math::sin(rotation), 0.0f,
-                Math::sin(rotation), Math::cos(rotation), 0.0f, 
+                Math::Cos(rotation), -Math::Sin(rotation), 0.0f,
+                Math::Sin(rotation), Math::Cos(rotation), 0.0f, 
                 0.0f, 0.0f, 1.0f,
             });
         }
