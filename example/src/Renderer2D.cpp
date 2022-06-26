@@ -123,6 +123,11 @@ void Renderer2D::Clear(const Vector4& color) {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Renderer2D::SetViewport(const Vector2& size) 
+{
+    glViewport(0, 0, size.x, size.y);
+}
+
 void Renderer2D::SetViewport(const Vector2& position, const Vector2& size) {
     glViewport(position.x, position.y, size.x, size.y);
 }

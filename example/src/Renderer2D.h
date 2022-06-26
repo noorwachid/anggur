@@ -30,7 +30,7 @@ public:
 
 	static void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
 	static void Clear(const Vector4& color = Vector4::black);
-
+	static void SetViewport(const Vector2& size);
 	static void SetViewport(const Vector2& position, const Vector2& size);
 	static void SetViewProjection(const Matrix3& newViewProjection);
 
