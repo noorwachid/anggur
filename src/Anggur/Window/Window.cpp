@@ -1,12 +1,9 @@
-#include <Anggur/Graphics/Function.h>
-#include <Anggur/Graphics/Image.h>
-#include <Anggur/Utility/Assert.h>
-#include <Anggur/Utility/Log.h>
-#include <Anggur/Event/EventManager.h>
-#include <Anggur/Window/Window.h>
-#include <Anggur/Window/Internal.h>
-#include <Anggur/Window/WindowEvent.h>
-#include <Anggur/Math/Vector2.h>
+#include "Anggur/Graphics/Function.h"
+#include "Anggur/Graphics/Image.h"
+#include "Anggur/Utility/Assert.h"
+#include "Anggur/Utility/Log.h"
+#include "Window.h"
+#include "Internal.h"
 #include <iostream>
 
 namespace Anggur 

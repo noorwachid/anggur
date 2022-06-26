@@ -32,24 +32,13 @@ public:
 	}
 };
 
-void SetRenderingFB()
-{
-	Renderer2D::SetViewport(Window::GetFrameBufferSize());
-	Renderer2D::SetViewProjection(CreateScreenVP(Window::GetSize()));
-}
-
 int main() 
 {
 	using namespace Anggur;
 
 	App::Initialize(Vector2(400, 300));
 
-	Window::GetEventManager().AddListener("WindowResize", [](Event& event)
-	{
-		SetRenderingFB();
-	});
-
-	SetRenderingFB();
+	Renderer2D::SetViewProjection(CreateScreenVP(Window::GetSize()));
 
 	while (App::IsOpen()) 
 	{
