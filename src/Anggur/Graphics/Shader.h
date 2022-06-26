@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Math/Common.h"
+#include "Anggur/Math/Math.h"
 #include <string>
 
 namespace Anggur 
