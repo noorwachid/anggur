@@ -1,7 +1,7 @@
 #include <Anggur/System/Window.h>
 #include <Anggur/System/Input.h>
 #include <iostream>
-#include "Renderer2D.h"
+#include "Renderer.h"
 #include "VP2D.h"
 
 class App 
@@ -12,7 +12,7 @@ public:
 		Window::Initialize(windowSize);
 		Input::Initialize();
 
-		Renderer2D::Initialize();
+		Renderer::Initialize();
 	}
 
 	static bool IsOpen()
@@ -38,19 +38,19 @@ int main()
 
 	App::Initialize(Vector2(400, 300));
 
-	Renderer2D::SetViewProjection(CreateScreenVP(Window::GetSize()));
+	Renderer::SetViewProjection(CreateScreenVP(Window::GetSize()));
 
 	while (App::IsOpen()) 
 	{
 		App::BeginFrame();
 
-		Renderer2D::Begin();
+		Renderer::Begin();
 
-			Renderer2D::Clear();
+			Renderer::Clear();
 			
-			Renderer2D::RenderRectangle(Input::GetMousePosition() - Vector2(25, 25), Vector2(50, 50));
+			Renderer::RenderRectangle(Vector2(100, 100), 50, Vector4::red);
 
-		Renderer2D::End();
+		Renderer::End();
 
 		App::EndFrame();
 	}

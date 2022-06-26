@@ -11,7 +11,7 @@ namespace Anggur
 		float z;
 		float w;
 
-		Vector4(): x(0.0f), y(0.0f), z(0.0f), w(1.0f) 
+		Vector4(): x(0.0f), y(0.0f), z(0.0f), w(0.0f) 
 		{
 		};
 
