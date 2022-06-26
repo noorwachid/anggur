@@ -1,11 +1,12 @@
 #pragma once
 
-#include <Anggur/Utility/Log.h>
-#include <Anggur/Math/Vector2.h>
-#include <Anggur/Math/Vector3.h>
-#include <Anggur/Math/Vector4.h>
-#include <Anggur/Math/Matrix3.h>
-#include <Anggur/Graphics/Texture2D.h>
+#include "Anggur/Utility/Log.h"
+#include "Anggur/Math/Vector2.h"
+#include "Anggur/Math/Vector3.h"
+#include "Anggur/Math/Vector4.h"
+#include "Anggur/Math/Matrix3.h"
+#include "Anggur/Graphics/Texture2D.h"
+#include "Transform.h"
 #include <vector>
 #include <memory>
 
@@ -35,10 +36,10 @@ namespace Anggur
 		static void Clear(const Vector4& color = Vector4::black);
 		static void SetViewport(const Vector2& size);
 		static void SetViewport(const Vector2& position, const Vector2& size);
-		static void SetViewProjection(const Matrix3& newViewProjection);
+		static void SetViewProjection(const Matrix4& newViewProjection);
 
 		static void Begin();
-		static void Begin(const Matrix3& viewProjection);
+		static void Begin(const Matrix4& viewProjection);
 		static void End();
 
 		static bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
@@ -46,8 +47,7 @@ namespace Anggur
 		static void FlushData();
 
 		static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
-		static void RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
-		static void RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
+		static void RenderRectangle(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
 
 		static void RenderPolygon(const Vector2& position, int segment, float length, float angle, const Vector4& color = Vector4::white);
 		static void RenderCircle(const Vector2& position, float length, const Vector4& color = Vector4::white);

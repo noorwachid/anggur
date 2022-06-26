@@ -65,14 +65,34 @@ namespace Anggur
 
         static Matrix4 CreateRotation(const Vector3& rotation) 
         {
-            return Matrix4();
+            return CreateRotationX(rotation.x) * CreateRotationY(rotation.y) * CreateRotationZ(rotation.z);
         }
 
-        static Matrix4 CreateRotationZ(float rotation) 
+        static Matrix4 CreateRotationX(float angle)
         {
             return Matrix4({
-                Math::Cos(rotation), -Math::Sin(rotation), 0.0f, 0.0f,
-                Math::Sin(rotation), Math::Cos(rotation), 0.0f, 0.0f,
+                1.0f, 0.0f, 0.0f , 0.0f,
+                0.0f, Math::Cos(angle), Math::Sin(angle), 0.0f,
+                0.0f, -Math::Sin(angle), Math::Cos(angle), 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f,
+            });
+        }
+
+        static Matrix4 CreateRotationY(float angle)
+        {
+            return Matrix4({
+                Math::Cos(angle), 0.0f, -Math::Sin(angle), 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                Math::Sin(angle), 0.0f, Math::Cos(angle), 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f,
+            });
+        }
+
+        static Matrix4 CreateRotationZ(float angle) 
+        {
+            return Matrix4({
+                Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f,
+                -Math::Sin(angle), Math::Cos(angle), 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f,
             });
@@ -96,6 +116,15 @@ namespace Anggur
                 l.i * r.a + l.j * r.e + l.k * r.i + l.l * r.m,  l.i * r.b + l.j * r.f + l.k * r.j + l.l * r.n,  l.i * r.c + l.j * r.g + l.k * r.k + l.l * r.o,  l.i * r.d + l.j * r.h + l.k * r.l + l.l * r.p, 
                 l.m * r.a + l.n * r.e + l.o * r.i + l.p * r.m,  l.m * r.b + l.n * r.f + l.o * r.j + l.p * r.n,  l.m * r.c + l.n * r.g + l.o * r.k + l.p * r.o,  l.m * r.d + l.n * r.h + l.o * r.l + l.p * r.p, 
             });
+        }
+
+        friend Vector3 operator*(const Vector3& l, const Matrix4& r)
+        {
+            return Vector3(
+                r.a * l.x + r.e * l.y + r.i + r.d * l.z + r.m,
+                r.b * l.x + r.f * l.y + r.j + r.e * l.z + r.n,
+                r.c * l.x + r.g * l.y + r.k + r.f * l.z + r.o
+            );
         }
     };
 }

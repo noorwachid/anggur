@@ -1,7 +1,7 @@
 #include <Anggur/Graphics/Function.h>
 #include <Anggur/Graphics/VertexArray.h>
 #include <Anggur/Graphics/Shader.h>
-#include <Anggur/Math/Matrix3.h>
+#include <Anggur/Math/Matrix4.h>
 #include "Renderer.h"
 #include <vector>
 #include <iostream>
@@ -30,7 +30,7 @@ namespace Anggur
         size_t batchVertex = 128;
         size_t batchIndexMultiplier = 2;
 
-        Matrix3 viewProjection;
+        Matrix4 viewProjection;
     };
 
     static RendererData rendererData;
@@ -44,6 +44,8 @@ namespace Anggur
         InitializeVertexPool();
         InitializeTexturePool();
         InitializeShader();
+
+        glEnable(GL_DEPTH_TEST);
     }
 
     void Renderer::InitializeVertexPool() 
@@ -95,10 +97,10 @@ namespace Anggur
             out vec2 vTexCoord;
             out float vTexSlot;
 
-            uniform mat3 uViewProjection;
+            uniform mat4 uViewProjection;
 
             void main() {
-                gl_Position = vec4(uViewProjection * aPosition, 1.0f);
+                gl_Position = uViewProjection * vec4(aPosition, 1.0f);
 
                 vColor = aColor;
                 vTexCoord = aTexCoord;
@@ -134,7 +136,7 @@ namespace Anggur
     void Renderer::Clear(const Vector4& color) 
     {
         glClearColor(color.x, color.y, color.z, color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     }
 
     void Renderer::SetViewport(const Vector2& size) 
@@ -147,7 +149,7 @@ namespace Anggur
         glViewport(position.x, position.y, size.x, size.y);
     }
 
-    void Renderer::SetViewProjection(const Matrix3& newViewProjection)
+    void Renderer::SetViewProjection(const Matrix4& newViewProjection)
     {
         rendererData.viewProjection = newViewProjection;
     }
@@ -159,7 +161,7 @@ namespace Anggur
         FlushData();
     }
 
-    void Renderer::Begin(const Matrix3& viewProjection) 
+    void Renderer::Begin(const Matrix4& viewProjection) 
     {
         SetViewProjection(viewProjection);
         Begin();
@@ -183,7 +185,7 @@ namespace Anggur
         }
 
         rendererData.shader->Bind();
-        rendererData.shader->SetUniformMatrix3("uViewProjection", rendererData.viewProjection);
+        rendererData.shader->SetUniformMatrix4("uViewProjection", rendererData.viewProjection);
         rendererData.shader->SetUniformInt("uTextures", rendererData.textureOffset, rendererData.textureSlots.data());
 
         rendererData.vertexArray->Bind();
@@ -253,26 +255,23 @@ namespace Anggur
         rendererData.indexOffset += newIndices.size();
     }
 
-    void Renderer::RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
+    void Renderer::RenderRectangle(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
     {
+        Matrix4 model = transform.ToMatrix4();
+
         Render(
             {
-                // position                                               // normal                  // color                                     // texCoord         
-                Vertex(Vector3(position.x,          position.y),          Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y                )),
-                Vertex(Vector3(position.x + size.x, position.y),	      Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y                )),
-                Vertex(Vector3(position.x,          position.y + size.y), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y + textureSize.y)),
-                Vertex(Vector3(position.x + size.x, position.y + size.y), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+                // position                                 // normal                  // color                                     // texCoord         
+                Vertex(Vector3(-0.5f, -0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y)),
+                Vertex(Vector3( 0.5f, -0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
+                Vertex(Vector3( 0.5f,  0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+                Vertex(Vector3(-0.5f,  0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
             }, {
                 0, 1, 2,
-                2, 3, 1,
+                2, 3, 0,
             }, 
             texture
         );
-    }
-
-    void Renderer::RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color) 
-    {
-        RenderRectangle(position, size, rendererData.whiteTexture, Vector2::zero, Vector2::one, color);
     }
 
     void Renderer::RenderPolygon(const Vector2& position, int segment, float length, float angle, const Vector4& color)

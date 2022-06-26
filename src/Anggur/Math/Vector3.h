@@ -1,7 +1,11 @@
 #pragma once
 
+
+
 namespace Anggur 
 {
+	struct Matrix4;
+
 	struct Vector3 
 	{
 		float x;
@@ -19,5 +23,8 @@ namespace Anggur
 		void Set(float newX, float newY, float newZ);
 
 		static Vector3 Lerp(const Vector3& a, const Vector3& b, float amount);
+
+		static Vector3 zero;
+		static Vector3 one;
 	};
 }
