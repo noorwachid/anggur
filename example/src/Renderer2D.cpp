@@ -34,13 +34,13 @@ static Renderer2DData data;
 Renderer2D::Renderer2D() {
 }
 
-void Renderer2D::initialize() {
-    initializeVertexPool();
-    initializeTexturePool();
-    initializeShader();
+void Renderer2D::Initialize() {
+    InitializeVertexPool();
+    InitializeTexturePool();
+    InitializeShader();
 }
 
-void Renderer2D::initializeVertexPool() {
+void Renderer2D::InitializeVertexPool() {
     data.vertices.assign(data.batchVertex, Vertex(Vector2(0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
     data.indices.assign(data.batchVertex * data.batchIndexMultiplier, 0);
 
@@ -57,7 +57,7 @@ void Renderer2D::initializeVertexPool() {
     data.indexBuffer->setCapacity(sizeof(uint32_t) * data.indices.size());
 }
 
-void Renderer2D::initializeTexturePool() {
+void Renderer2D::InitializeTexturePool() {
     data.textures.assign(Texture::getMaxSlot(), nullptr);
     data.textureSlots.reserve(Texture::getMaxSlot());
 
@@ -69,7 +69,7 @@ void Renderer2D::initializeTexturePool() {
     data.whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
 }
 
-void Renderer2D::initializeShader() {
+void Renderer2D::InitializeShader() {
     data.shader = std::make_shared<Shader>();
     data.shader->setVertexSource(R"(
         #version 330 core
@@ -113,38 +113,41 @@ void Renderer2D::initializeShader() {
     data.shader->compile();
 }
 
-void Renderer2D::setBatchChunk(size_t vertex, size_t indexMultiplier) {
+void Renderer2D::SetBatchChunk(size_t vertex, size_t indexMultiplier) {
     data.batchVertex = vertex;
     data.batchIndexMultiplier = indexMultiplier;
 }
 
-void Renderer2D::clear(const Vector4& color) {
+void Renderer2D::Clear(const Vector4& color) {
     glClearColor(color.x, color.y, color.z, color.w);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-
-void Renderer2D::setViewport(const Vector2& position, const Vector2& size) {
+void Renderer2D::SetViewport(const Vector2& position, const Vector2& size) {
     glViewport(position.x, position.y, size.x, size.y);
 }
 
-void Renderer2D::begin() {
+void Renderer2D::SetViewProjection(const Matrix3& newViewProjection)
+{
+    data.viewProjection = newViewProjection;
+}
+
+void Renderer2D::Begin() {
     data.renderCount = 0;
 
-    flushData();
+    FlushData();
 }
 
-void Renderer2D::begin(const Matrix3& newViewProjection) {
-    data.viewProjection = newViewProjection;
-
-    begin();
+void Renderer2D::Begin(const Matrix3& viewProjection) {
+    SetViewProjection(viewProjection);
+    Begin();
 }
 
-void Renderer2D::end() {
-    flush();
+void Renderer2D::End() {
+    Flush();
 }
 
-void Renderer2D::flush() {
+void Renderer2D::Flush() {
     if (data.vertexOffset == 0) {
         return;
     }
@@ -167,27 +170,27 @@ void Renderer2D::flush() {
 
     glDrawElements(GL_TRIANGLES, data.indexOffset, GL_UNSIGNED_INT, nullptr);
 
-    flushData();
+    FlushData();
 
     ++data.renderCount;
 }
 
-void Renderer2D::flushData() {
+void Renderer2D::FlushData() {
     data.vertexOffset = 0;
     data.indexOffset = 0;
 	data.textureOffset = 0;
 }
 
-bool Renderer2D::isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) {
+bool Renderer2D::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) {
     return 
         data.vertexOffset + newVertexSize > data.vertices.size() ||
         data.indexOffset + newIndexSize > data.indices.size() ||
         data.textureOffset + newTextureSize > data.textures.size();
 }
 
-void Renderer2D::render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) {
-    if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1)) {
-        flush();
+void Renderer2D::Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) {
+    if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1)) {
+        Flush();
     }
 
     // Find or add new texture slot 
@@ -217,8 +220,8 @@ void Renderer2D::render(const std::vector<Vertex>& newVertices, const std::vecto
     data.indexOffset += newIndices.size();
 }
 
-void Renderer2D::renderRectangle(const Vector2& position, const Vector2& size, const Vector4& color) {
-    render(
+void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color) {
+    Render(
         {
             // position                                               // color                                     // texCoord          
             Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(0.0f, 0.0f)),
@@ -233,8 +236,8 @@ void Renderer2D::renderRectangle(const Vector2& position, const Vector2& size, c
     );
 }
 
-void Renderer2D::renderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) {
-    render(
+void Renderer2D::RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) {
+    Render(
         {
             // position                                               // color                                     // texCoord         
             Vertex(Vector2(position.x,          position.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x,                 texturePosition.y                )),

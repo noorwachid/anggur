@@ -4,21 +4,62 @@
 #include "Renderer2D.h"
 #include "VP2D.h"
 
-int main() 
+class App 
 {
+public:
+	static void Initialize(const Vector2& windowSize)
+	{
+		Window::Initialize(windowSize);
+		Input::Initialize();
+
+		Renderer2D::Initialize();
+	}
+
+	static bool IsOpen()
+	{
+		return Window::IsOpen();
+	}
+
+	static void BeginFrame() 
+	{
+		Window::PollEvents();
+	}
+
+	static void EndFrame()
+	{
+		Window::SwapBuffers();
+		Input::Update();
+	}
+};
+
+int main() 
+{\
 	using namespace Anggur;
 
-	Window::Initialize(Vector2(400, 300));
+	App::Initialize(Vector2(400, 300));
 
-	while (Window::IsOpen()) 
+	Window::GetEventManager().AddListener("FrameBufferResize", [](Event& event)
 	{
-		Window::BeginFrame();
+		auto size = static_cast<FrameBufferSizeEvent&>(event).size;
+		std::cout << size.x << "x" << size.y << "\n";
+		Renderer2D::SetViewport({0, 0}, size);
+		Renderer2D::SetViewProjection(CreateScreenVP(Window::GetSize()));
+	});
 
-		if (Input::IsKeyPressed(Key::Space)) 
-		{
-			std::cout << "Space is pressed\n";
-		}
+	Renderer2D::SetViewProjection(CreateScreenVP(Window::GetSize()));
 
-		Window::EndFrame();
+	while (App::IsOpen()) 
+	{
+		App::BeginFrame();
+
+		Renderer2D::Begin();
+
+			Renderer2D::Clear();
+			
+			Renderer2D::RenderRectangle(Input::GetMousePosition() - Vector2(25, 25), Vector2(50, 50));
+
+		Renderer2D::End();
+
+		App::EndFrame();
 	}
 }

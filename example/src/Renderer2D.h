@@ -10,9 +10,11 @@
 
 using namespace Anggur;
 
-class Renderer2D {
+class Renderer2D 
+{
 public:
-	struct Vertex {
+	struct Vertex 
+	{
 		Vector2 position;
 		Vector4 color;
 		Vector2 textureCoord;
@@ -24,29 +26,30 @@ public:
 		}
 	};
 
-	static void initialize();
+	static void Initialize();
 
-	static void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-	static void clear(const Vector4& color = Vector4::black);
+	static void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+	static void Clear(const Vector4& color = Vector4::black);
 
-	static void setViewport(const Vector2& position, const Vector2& size);
+	static void SetViewport(const Vector2& position, const Vector2& size);
+	static void SetViewProjection(const Matrix3& newViewProjection);
 
-	static void begin();
-	static void begin(const Matrix3& newViewProjection);
-	static void end();
+	static void Begin();
+	static void Begin(const Matrix3& viewProjection);
+	static void End();
 
-	static bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
-	static void flush();
-	static void flushData();
+	static bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
+	static void Flush();
+	static void FlushData();
 
-	static void render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
-	static void renderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
-	static void renderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
+	static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+	static void RenderRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
+	static void RenderRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
 
 private:
 	Renderer2D();
 
-	static void initializeVertexPool();
-	static void initializeTexturePool();
-	static void initializeShader();
+	static void InitializeVertexPool();
+	static void InitializeTexturePool();
+	static void InitializeShader();
 };

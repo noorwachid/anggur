@@ -7,7 +7,7 @@
 #include <Anggur/Window/Internal.h>
 #include <Anggur/Window/WindowEvent.h>
 #include <Anggur/Math/Vector2.h>
-#include "Input.h"
+#include <iostream>
 
 namespace Anggur 
 {
@@ -18,8 +18,11 @@ namespace Anggur
 
 		Vector2 position;
 		Vector2 size;
-		Vector2 bufferSize;
-	} data;
+		Vector2 frameBufferSize;
+		EventManager eventManager;
+	};
+
+	WindowData data;
 
 	void Window::Initialize(const Vector2& size, const std::string& title) 
 	{
@@ -42,17 +45,42 @@ namespace Anggur
 
 		Bind();
 		InitializeGraphicsFunctions();
-		InitializeEventEmmiter();
+
+		glfwSetWindowSizeCallback(data.handler, [](GLFWwindow* handler, int width, int height)
+		{
+			Vector2 size(width, height);
+			WindowSizeEvent event("WindowResize", size);
+			data.eventManager.Emit(event);
+			data.size = size;
+		});
+
+		glfwSetWindowPosCallback(data.handler, [](GLFWwindow* handler, int x, int y)
+		{
+			Vector2 position(x, y);
+			WindowSizeEvent event("WindowMove", position);
+			data.eventManager.Emit(event);
+			data.position = position;
+		});
+
+		glfwSetFramebufferSizeCallback(data.handler, [](GLFWwindow* handler, int width, int height)
+		{
+			Vector2 size(width, height);
+			FrameBufferSizeEvent event("FrameBufferResize", size);
+			data.eventManager.Emit(event);
+			data.frameBufferSize = size;
+		});
 	}
 
 	void Window::SetPosition(const Vector2& position) 
 	{
 		glfwSetWindowPos(data.handler, position.x, position.y);
+		data.position = position;
 	}
 
 	void Window::SetSize(const Vector2& size) 
 	{
 		glfwSetWindowSize(data.handler, size.x, size.y);
+		data.size = size;
 	}
 
 	void Window::SetTitle(const std::string& title) 
@@ -60,6 +88,11 @@ namespace Anggur
 		glfwSetWindowTitle(data.handler, title.c_str());
 
 		data.title = title;
+	}
+
+	void* Window::GetHandler()
+	{
+		return data.handler;
 	}
 
 	float Window::GetAspectRatio() 
@@ -77,9 +110,9 @@ namespace Anggur
 		return data.size;
 	}
 
-	const Vector2& Window::GetBufferSize() 
+	const Vector2& Window::GetFrameBufferSize() 
 	{
-		return data.bufferSize;
+		return data.frameBufferSize;
 	}
 
 	const std::string& Window::GetTitle() 
@@ -112,38 +145,14 @@ namespace Anggur
 		glfwPollEvents();
 	}
 
-	void Window::BeginFrame() 
+	EventManager& Window::GetEventManager()
 	{
-		Input::Update();
+		return data.eventManager;
 	}
-
-	void Window::EndFrame()
-	{
-		SwapBuffers();
-		PollEvents();
-	}
-	
 
 	void Window::InitializeGraphicsFunctions() 
 	{
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ANGGUR_ASSERT(result, "[Core.Window.load] Failed to load graphic functions");
-	}
-
-	void Window::InitializeEventEmmiter() 
-	{
-		glfwSetKeyCallback(data.handler, [](GLFWwindow* handler, int vkeyCode, int scanCode, int action, int modidefrKey) 
-		{
-			Key key = static_cast<Key>(vkeyCode);
-
-			if (action == GLFW_PRESS || action == GLFW_REPEAT) 
-			{
-				Input::SetKeyState(key, true);
-			} 
-			else 
-			{
-				Input::SetKeyState(key, false);
-			}
-		});
 	}
 }
