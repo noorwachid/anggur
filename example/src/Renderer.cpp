@@ -46,6 +46,9 @@ namespace Anggur
         InitializeShader();
 
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     void Renderer::InitializeVertexPool() 
@@ -197,6 +200,13 @@ namespace Anggur
         rendererData.indexBuffer->SetData(sizeof(uint32_t) * rendererData.indexOffset, rendererData.indices.data());
 
         glDrawElements(GL_TRIANGLES, rendererData.indexOffset, GL_UNSIGNED_INT, nullptr);
+
+        for (size_t i = 0; i < rendererData.vertexOffset; ++i) 
+        {
+            Vertex& vertex = rendererData.vertices[i];
+            std::printf("%.2f, %.2f, %.2f\n", vertex.position.x, vertex.position.y, vertex.position.z);
+        }
+        std::cout << "\n";
 
         FlushData();
 

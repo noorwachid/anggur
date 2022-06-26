@@ -132,9 +132,9 @@ namespace Anggur
         friend Vector3 operator*(const Vector3& l, const Matrix4& r)
         {
             return Vector3(
-                r.a * l.x + r.e * l.y + r.i + r.d * l.z + r.m,
-                r.b * l.x + r.f * l.y + r.j + r.e * l.z + r.n,
-                r.c * l.x + r.g * l.y + r.k + r.f * l.z + r.o
+                r.a * l.x + r.e * l.y + r.i * l.z + r.m * 1.0f,
+                r.b * l.x + r.f * l.y + r.j * l.z + r.n * 1.0f,
+                r.c * l.x + r.g * l.y + r.k * l.z + r.o * 1.0f
             );
         }
     };
