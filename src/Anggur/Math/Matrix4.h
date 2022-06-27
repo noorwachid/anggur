@@ -119,6 +119,30 @@ namespace Anggur
             );
         }
 
+
+        static Matrix4 CreatePerspective(float fovY, float width, float height, float near, float far)
+        {
+            float yScale = Math::Cot(fovY / 2.0f);
+            float xScale = yScale * height / width;
+            
+            return Matrix4(
+                xScale, 0.0f, 0.0f, 0.0f,
+                0.0f, yScale, 0.0f, 0.0f,
+                0.0f, 0.0f, far / (far - near), 1.0f,
+                0.0f, 0.0f, -near * far / (far - near), 0.0
+            );
+        }
+
+        static Matrix4 CreateOrtho(float width, float height, float near, float far)
+        {
+            return Matrix4(
+                2.0f / width, 0.0f, 0.0f, 0.0f,
+                0.0f, 2.0f / height, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f / (far - near), 0.0f,
+                0.0f, 0.0f, near / (near - far), 1.0
+            );
+        }
+
         friend Matrix4 operator*(const Matrix4& l, const Matrix4& r) 
         {
             return Matrix4(
