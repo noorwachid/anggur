@@ -46,9 +46,6 @@ namespace Anggur
         InitializeShader();
 
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     void Renderer::InitializeVertexPool() 
@@ -281,6 +278,51 @@ namespace Anggur
                 2, 3, 0,
             }, 
             texture
+        );
+    }
+
+    void Renderer::RenderCube(const Transform& transform, const Vector4& color)
+    {
+        Matrix4 model = transform.ToMatrix4();
+
+        Render(
+            {
+                // position                                 // normal                  // color                                     // texCoord         
+                Vertex(Vector3(-0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3(-0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                 
+                Vertex(Vector3( 0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3(-0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3(-0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+            }, {
+                // front
+                0, 1, 2,
+                2, 3, 0,
+
+                // back
+                4, 5, 6,
+                6, 7, 4,
+
+                // left
+                5, 0, 3,
+                3, 6, 5,
+
+                // right
+                1, 4, 7,
+                7, 2, 1,
+
+                // top
+                3, 2, 7,
+                7, 6, 3,
+
+                // bottom
+                1, 0, 5,
+                5, 4, 1,
+            }, 
+            rendererData.whiteTexture
         );
     }
 
