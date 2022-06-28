@@ -58,7 +58,7 @@ int main()
 		double currTP = glfwGetTime();
 		double delta = currTP - prevTP;
 
-		transform0.translation.z = 2;
+		transform0.translation.z = 1;
 
 		Renderer::Begin(Matrix4::CreatePerspective(2, 10, 10, 0.01, 10));
 
@@ -67,7 +67,7 @@ int main()
 
 			Renderer::Clear(Vector4(0.1, 0.1, 0.1, 1.0));
 
-			Renderer::RenderCube(transform0);
+			Renderer::RenderCube(transform0, wallTexture);
 
 		Renderer::End();
 

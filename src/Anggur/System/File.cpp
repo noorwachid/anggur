@@ -1,6 +1,4 @@
-#include "Anggur/Utility/Assert.h"
-#include "Anggur/Utility/Log.h"
-#include "Anggur/Utility/File.h"
+#include "File.h"
 #include <fstream>
 
 namespace Anggur::File 

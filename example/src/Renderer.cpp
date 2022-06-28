@@ -198,13 +198,6 @@ namespace Anggur
 
         glDrawElements(GL_TRIANGLES, rendererData.indexOffset, GL_UNSIGNED_INT, nullptr);
 
-        for (size_t i = 0; i < rendererData.vertexOffset; ++i) 
-        {
-            Vertex& vertex = rendererData.vertices[i];
-            std::printf("%.2f, %.2f, %.2f\n", vertex.position.x, vertex.position.y, vertex.position.z);
-        }
-        std::cout << "\n";
-
         FlushData();
 
         ++rendererData.renderCount;
@@ -281,7 +274,7 @@ namespace Anggur
         );
     }
 
-    void Renderer::RenderCube(const Transform& transform, const Vector4& color)
+    void Renderer::RenderCube(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector4& color)
     {
         Matrix4 model = transform.ToMatrix4();
 
@@ -289,14 +282,14 @@ namespace Anggur
             {
                 // position                                 // normal                  // color                                     // texCoord         
                 Vertex(Vector3(-0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3( 0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3( 0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3(-0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
+                Vertex(Vector3( 0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
+                Vertex(Vector3(-0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
                  
                 Vertex(Vector3( 0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3(-0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3(-0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3( 0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3(-0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
+                Vertex(Vector3(-0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
+                Vertex(Vector3( 0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
             }, {
                 // front
                 0, 1, 2,
@@ -322,7 +315,7 @@ namespace Anggur
                 1, 0, 5,
                 5, 4, 1,
             }, 
-            rendererData.whiteTexture
+            texture
         );
     }
 

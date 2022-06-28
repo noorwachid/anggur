@@ -1,4 +1,3 @@
-#include "Anggur/Utility/File.h"
 #include "Anggur/Utility/Log.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector3.h"
