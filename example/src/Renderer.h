@@ -48,7 +48,9 @@ namespace Anggur
 
 		static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
 		static void RenderRectangle(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
-		static void RenderCube(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector4& color = Vector4::white);
+		static void RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color = Vector4::white);
+		
+		static void RenderTestCube(const Matrix4& model);
 
 		static void RenderPolygon(const Vector2& position, int segment, float length, float angle, const Vector4& color = Vector4::white);
 		static void RenderCircle(const Vector2& position, float length, const Vector4& color = Vector4::white);

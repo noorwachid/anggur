@@ -24,7 +24,8 @@ namespace Anggur
 
     struct ScrollData
     {
-        Vector2 direction;
+        Vector2 currentDirection;
+        Vector2 previousDirection;
     };
 
     struct InputData 
@@ -125,7 +126,7 @@ namespace Anggur
 
     const Vector2& Input::GetScrollDirection()
     {
-        return inputData.scroll.direction;
+        return inputData.scroll.currentDirection;
     }
 
     void Input::SetScrollDirection(const Vector2& direction)
@@ -154,12 +155,20 @@ namespace Anggur
 		{
 			Input::DirectSetMousePosition(Vector2(x, y));
 		});
+
+        glfwSetScrollCallback(inputData.handler, [](GLFWwindow* window, double x, double y) 
+        {
+            Input::DirectSetScrollDirection(Vector2(x, y));
+        });
     }
 
     void Input::Update()
     {
         UpdateKeyboardData();
         UpdateMouseData();
+
+        inputData.scroll.previousDirection = inputData.scroll.currentDirection;
+        inputData.scroll.currentDirection.Set(0.0f, 0.0f);
     }
 
     EventManager& Input::GetEventManager()
@@ -213,7 +222,7 @@ namespace Anggur
 
     void Input::DirectSetScrollDirection(const Vector2& direction)
     {
-        inputData.scroll.direction = direction;
+        inputData.scroll.currentDirection = direction;
         ScrollEvent event("ScrollMove", direction);
        inputData.eventManager.Emit(event);
     }

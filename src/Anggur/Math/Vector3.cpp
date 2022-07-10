@@ -7,6 +7,10 @@ namespace Anggur
 	Vector3 Vector3::zero(0.0f, 0.0f, 0.0f);
 	Vector3 Vector3::one(1.0f, 1.0f, 1.0f);
 
+	Vector3 Vector3::unitX(1.0f, 0.0f, 0.0f);
+	Vector3 Vector3::unitY(0.0f, 1.0f, 0.0f);
+	Vector3 Vector3::unitZ(0.0f, 0.0f, 1.0f);
+
 	void Vector3::Set(float newX, float newY, float newZ)
 	{
 		x = newX;

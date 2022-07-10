@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
+#include <iostream>
 #include "Math.h"
 #include "Vector3.h"
+#include "Quaternion.h"
 
 namespace Anggur 
 {
@@ -64,6 +66,8 @@ namespace Anggur
             return buffer;
         }
 
+        // Model Matrices
+
         static Matrix4 CreateTranslation(const Vector3& translation) 
         {
             return Matrix4(
@@ -77,6 +81,31 @@ namespace Anggur
         static Matrix4 CreateRotation(const Vector3& rotation) 
         {
             return CreateRotationX(rotation.x) * CreateRotationY(rotation.y) * CreateRotationZ(rotation.z);
+        }
+
+        static Matrix4 CreateRotation(const Quaternion& q)
+        {
+            return Matrix4(
+                1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z,
+                2.0f * q.x * q.y + 2.0f * q.w * q.z,
+                2.0f * q.x * q.z - 2.0f * q.w * q.y,
+                0.0f,
+
+                2.0f * q.x * q.y - 2.0f * q.w * q.z,
+                1.0f - 2.0f * q.x * q.x - 2.0f * q.z * q.z,
+                2.0f * q.y * q.z + 2.0f * q.w * q.x,
+                0.0f,
+
+                2.0f * q.x * q.z + 2.0f * q.w * q.y,
+                2.0f * q.y * q.z - 2.0f * q.w * q.x,
+                1.0f - 2.0f * q.x * q.x - 2.0f * q.y * q.y,
+                0.0f,
+
+                0.0f,
+                0.0f,
+                0.0f,
+                1.0f
+            );
         }
 
         static Matrix4 CreateRotationX(float angle)
@@ -119,6 +148,33 @@ namespace Anggur
             );
         }
 
+        // View Matrices
+
+        static Matrix4 CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
+    	{
+            Vector3 zaxis = Vector3::Normalize(target - eye);
+            Vector3 xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
+            Vector3 yaxis = Vector3::Normalize(Vector3::Cross(zaxis, xaxis));
+
+            std::cout << "X:" << xaxis.ToString() << "\n";
+            std::cout << "Y:" << yaxis.ToString() << "\n";
+            std::cout << "Z:" << zaxis.ToString() << "\n\n";
+
+            Vector3 trans(
+                -Vector3::Dot(xaxis, eye),
+                -Vector3::Dot(yaxis, eye),
+                -Vector3::Dot(zaxis, eye)
+            );
+
+            return Matrix4(
+                xaxis.x, yaxis.x, zaxis.x, 0.0f,
+                xaxis.y, yaxis.y, zaxis.y, 0.0f,
+                xaxis.z, yaxis.z, zaxis.z, 0.0f,
+                trans.x, trans.y, trans.z, 1.0f
+            );
+        }
+
+        // Projection Matrices
 
         static Matrix4 CreatePerspective(float fovY, float width, float height, float near, float far)
         {
@@ -127,7 +183,7 @@ namespace Anggur
             
             return Matrix4(
                 xScale, 0.0f, 0.0f, 0.0f,
-                0.0f, yScale, 0.0f, 0.0f,
+                0.0f, -yScale, 0.0f, 0.0f,
                 0.0f, 0.0f, far / (far - near), 1.0f,
                 0.0f, 0.0f, -near * far / (far - near), 0.0
             );
@@ -137,7 +193,7 @@ namespace Anggur
         {
             return Matrix4(
                 2.0f / width, 0.0f, 0.0f, 0.0f,
-                0.0f, 2.0f / height, 0.0f, 0.0f,
+                0.0f, -2.0f / height, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f / (far - near), 0.0f,
                 0.0f, 0.0f, near / (near - far), 1.0
             );

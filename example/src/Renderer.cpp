@@ -274,10 +274,8 @@ namespace Anggur
         );
     }
 
-    void Renderer::RenderCube(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector4& color)
+    void Renderer::RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color)
     {
-        Matrix4 model = transform.ToMatrix4();
-
         Render(
             {
                 // position                                 // normal                  // color                                     // texCoord         
@@ -315,7 +313,51 @@ namespace Anggur
                 1, 0, 5,
                 5, 4, 1,
             }, 
-            texture
+            rendererData.whiteTexture
+        );
+    }
+
+
+    void Renderer::RenderTestCube(const Matrix4& model)
+    {
+        Render(
+            {
+                // position                                 // normal                  // color                                     // texCoord         
+                Vertex(Vector3(-0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(1, 1, 1, 1), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(1, 1, 0, 1), Vector2(1, 0)),
+                Vertex(Vector3( 0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(1, 0, 0, 1), Vector2(1, 1)),
+                Vertex(Vector3(-0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(1, 0, 1, 1), Vector2(0, 1)),
+                 
+                Vertex(Vector3( 0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(0, 1, 0, 1), Vector2(0, 0)),
+                Vertex(Vector3(-0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(0, 1, 1, 1), Vector2(1, 0)),
+                Vertex(Vector3(-0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(0, 0, 1, 1), Vector2(1, 1)),
+                Vertex(Vector3( 0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(0, 0, 0, 1), Vector2(0, 1)),
+            }, {
+                // front
+                0, 1, 2,
+                2, 3, 0,
+
+                // back
+                4, 5, 6,
+                6, 7, 4,
+
+                // left
+                5, 0, 3,
+                3, 6, 5,
+
+                // right
+                1, 4, 7,
+                7, 2, 1,
+
+                // top
+                3, 2, 7,
+                7, 6, 3,
+
+                // bottom
+                1, 0, 5,
+                5, 4, 1,
+            }, 
+            rendererData.whiteTexture
         );
     }
 
