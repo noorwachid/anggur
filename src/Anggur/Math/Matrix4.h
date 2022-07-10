@@ -156,10 +156,6 @@ namespace Anggur
             Vector3 xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
             Vector3 yaxis = Vector3::Normalize(Vector3::Cross(zaxis, xaxis));
 
-            std::cout << "X:" << xaxis.ToString() << "\n";
-            std::cout << "Y:" << yaxis.ToString() << "\n";
-            std::cout << "Z:" << zaxis.ToString() << "\n\n";
-
             Vector3 trans(
                 -Vector3::Dot(xaxis, eye),
                 -Vector3::Dot(yaxis, eye),
