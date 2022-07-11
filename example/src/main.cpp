@@ -5,7 +5,7 @@
 #include "Anggur/Graphics/Renderer.h"
 #include "Anggur/Scene/SceneManager.h"
 #include "Anggur/Application.h"
-#include "Scenes/ExampleScene2D.h"
+#include "Scenes/Scene2D.h"
 
 int main() 
 {
@@ -13,7 +13,7 @@ int main()
 
 	Application::Initialize(Vector2(400, 400));
 
-	SceneManager::SetActiveScene(std::make_shared<ExampleScene2D>());
+	SceneManager::SetRootNode(std::make_shared<Scene2D>());
 
 	Application::Run();
 	Application::Terminate();

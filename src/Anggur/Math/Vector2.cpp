@@ -166,6 +166,11 @@ namespace Anggur
 		return *this;
 	}
 
+	std::string Vector2::ToString() 
+	{
+		return std::to_string(x) + ", " + std::to_string(y);
+	}
+
 	float Vector2::Dot(const Vector2& a, const Vector2& b) 
 	{
 		return a.x * b.x + a.y * b.y;

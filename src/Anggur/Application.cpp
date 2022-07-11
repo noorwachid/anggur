@@ -1,7 +1,7 @@
 #include "System/Input.h"
 #include "System/Internal.h"
 #include "Graphics/Renderer.h"
-#include "Scene/SceneManager.h"
+#include "Scene/NodeManager.h"
 #include "Application.h"
 #include <iostream>
 #include <chrono>
@@ -54,7 +54,7 @@ namespace Anggur
         {
             Application::BeginFrame();
 
-            SceneManager::Update(applicationData.currentTime - applicationData.previousTime);
+            NodeManager::Update(applicationData.currentTime - applicationData.previousTime);
 
             Application::EndFrame();
         }

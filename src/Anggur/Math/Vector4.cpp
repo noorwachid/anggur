@@ -52,6 +52,11 @@ namespace Anggur
 	{
 		return &x;
 	}
+	
+	std::string Vector4::ToString() 
+	{
+		return std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ", " + std::to_string(w);
+	}
 
 	Vector4 Vector4::CreateHex(uint64_t hex) 
 	{

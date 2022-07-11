@@ -185,11 +185,16 @@ namespace Anggur
             );
         }
 
-        static Matrix4 CreateOrtho(float width, float height, float near, float far)
+        static Matrix4 CreateOrtographic(float left, float right, float top, float bottom, float near, float far)
+        {
+            return Matrix4();
+        }
+
+        static Matrix4 CreateOrthographic(float width, float height, float near, float far)
         {
             return Matrix4(
                 2.0f / width, 0.0f, 0.0f, 0.0f,
-                0.0f, -2.0f / height, 0.0f, 0.0f,
+                0.0f, 2.0f / height, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f / (far - near), 0.0f,
                 0.0f, 0.0f, near / (near - far), 1.0
             );

@@ -1,7 +1,7 @@
 #pragma once
 
 #if 0
-#include "Anggur/Scene/Scene.h"
+#include "Anggur/Scene/Node.h"
 
 using namespace Anggur;
 
@@ -22,7 +22,7 @@ struct Camera
 };
 
 
-class ExampleScene3D: public Scene
+class Scene: public Node
 {
 public:
     void Initialize() override

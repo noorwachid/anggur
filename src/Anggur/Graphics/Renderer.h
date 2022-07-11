@@ -27,6 +27,19 @@ namespace Anggur
 				position(newPosition), normal(newNormal), color(newColor), textureCoord(newTextureCoord), textureSlot(newTextureSlot) 
 			{
 			}
+
+			std::string ToString()
+			{
+				std::string temp;
+
+				temp += "position: " + position.ToString() + "\n";
+				temp += "normal: " + normal.ToString() + "\n";
+				temp += "color: " + color.ToString() + "\n";
+				temp += "textureCoord: " + textureCoord.ToString() + "\n";
+				temp += "textureSlot: " + std::to_string(textureSlot) + "\n"; 
+
+				return temp;
+			}
 		};
 
 		static void Initialize();
@@ -46,13 +59,38 @@ namespace Anggur
 		static void FlushData();
 
 		static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
-		// static void RenderRectangle(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition = Vector2::zero, const Vector2& textureSize = Vector2::one, const Vector4& color = Vector4::white);
+
+		// 3D Primitives
 		static void RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color = Vector4::white);
 		
+		// 3D Primitive Tests
 		static void RenderTestCube(const Matrix4& model);
 
-		static void RenderPolygon(const Vector2& position, int segment, float length, float angle, const Vector4& color = Vector4::white);
-		static void RenderCircle(const Vector2& position, float length, const Vector4& color = Vector4::white);
+		// 2D Primitives
+		static void RenderTriangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector3& point2, const Vector4& color = Vector4::white);
+		static void RenderQuad(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector4& color = Vector4::white);
+		static void RenderRectangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector4& color = Vector4::white);
+
+		static void RenderPolygon(const Matrix4& model, int segment, const Vector4& color = Vector4::white);
+		static void RenderCircle(const Matrix4& model, const Vector4& color = Vector4::white);
+
+		// 2D Lines
+		static void RenderLineTerminator(const Matrix4& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
+		static void RenderLineAnchor(const Matrix4& model, const Vector2& point0, const Vector2& point1, const Vector2& p2, float thickness = 0.5, const Vector4& color = Vector4::white);
+		static void RenderLine(const Matrix4& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
+		static void RenderPolyLine(const Matrix4& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
+		static void RenderPolyLineConnected(const Matrix4& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
+
+		// 2D Texts
+		enum class TextAlign
+		{
+			Left,
+			Center,
+			Right,
+			Justify,
+		};
+
+		static void RenderText(const Matrix4& model, const Vector2& point0, const Vector2& point1, const std::string& textBuffer, TextAlign textVerticalAlign, TextAlign textHorizontalAlign, const Vector4& color = Vector4::white);
 
 	private:
 		Renderer();

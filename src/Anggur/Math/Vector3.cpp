@@ -56,6 +56,10 @@ namespace Anggur
 	{
 		float length = a.GetLength();
 
+		if (length == 0) {
+			return Vector3::zero;
+		}
+
 		return Vector3(a.x / length, a.y / length, a.z / length);
 	}
 

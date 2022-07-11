@@ -148,7 +148,7 @@ namespace Anggur
 
 	void Window::PollEvents()
 	{
-		glfwPollEvents();
+		glfwWaitEvents();
 	}
 
 	EventManager& Window::GetEventManager()

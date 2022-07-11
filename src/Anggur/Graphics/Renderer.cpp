@@ -255,25 +255,6 @@ namespace Anggur
         rendererData.indexOffset += newIndices.size();
     }
 
-    // void Renderer::RenderRectangle(const Transform& transform, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color) 
-    // {
-    //     Matrix4 model = transform.ToMatrix4();
-
-    //     Render(
-    //         {
-    //             // position                                 // normal                  // color                                     // texCoord         
-    //             Vertex(Vector3(-0.5f, -0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y)),
-    //             Vertex(Vector3( 0.5f, -0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
-    //             Vertex(Vector3( 0.5f,  0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
-    //             Vertex(Vector3(-0.5f,  0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
-    //         }, {
-    //             0, 1, 2,
-    //             2, 3, 0,
-    //         }, 
-    //         texture
-    //     );
-    // }
-
     void Renderer::RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color)
     {
         Render(
@@ -313,7 +294,7 @@ namespace Anggur
                 1, 0, 5,
                 5, 4, 1,
             }, 
-            rendererData.whiteTexture
+            texture
         );
     }
 
@@ -361,18 +342,72 @@ namespace Anggur
         );
     }
 
-    void Renderer::RenderPolygon(const Vector2& position, int segment, float length, float angle, const Vector4& color)
+    // 2D primitives
+
+    void Renderer::RenderTriangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector3& point2, const Vector4& color) 
+    {
+        Render(
+            {
+                // position            // normal                  // color                                     // texCoord         
+                Vertex(point0 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(point1 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(point2 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+            }, {
+                0, 1, 2,
+            }, 
+            rendererData.whiteTexture
+        );
+    }
+
+    void Renderer::RenderQuad(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector4& color) 
+    {
+        Render(
+            {
+                // position            // normal                  // color                                     // texCoord         
+                Vertex(point0 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(point1 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(point2 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(point3 * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+            }, {
+                0, 1, 2,
+                2, 3, 0,
+            }, 
+            rendererData.whiteTexture
+        );
+    }
+
+
+    void Renderer::RenderRectangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector4& color) 
+    {
+        Render(
+            {
+                // position                                 // normal                  // color                                     // texCoord         
+                Vertex(Vector3(-0.5f, -0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f, -0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3( 0.5f,  0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                Vertex(Vector3(-0.5f,  0.5f, 0.0f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+            }, {
+                0, 1, 2,
+                2, 3, 0,
+            }, 
+            rendererData.whiteTexture
+        );
+    }
+
+
+    void Renderer::RenderPolygon(const Matrix4& model, int segment, const Vector4& color)
     {
         if (segment < 3)
             segment = 3;
 
+        Vector3 position(0, 0, 0);
         size_t triangleSize = segment - 2;
 
         float theta = (Math::twoPi / segment);
         float tangetialFactor = Math::Tan(theta);
         float radialFactor = Math::Cos(theta);
 
-        float x = length;
+        float x = 1;
         float y = 0;
 
         std::vector<Vertex> vertices;
@@ -384,7 +419,7 @@ namespace Anggur
         for (size_t i = 0; i < segment; i++) 
         {
             Vertex vertex;
-            vertex.position = Vector3(position.x + x, position.y + y);
+            vertex.position = Vector3(position.x + x, position.y + y, 0.0f) * model;
             // vertex.textureCoord = Vector2(x / length, y / length);
             vertex.color = color;
 
@@ -411,8 +446,8 @@ namespace Anggur
         Render(vertices, indices, rendererData.whiteTexture);
     }
 
-    void Renderer::RenderCircle(const Vector2& position, float length, const Vector4& color)
+    void Renderer::RenderCircle(const Matrix4& model, const Vector4& color)
     {
-        RenderPolygon(position, length * 0.025, length, 0.0f, color);
+        RenderPolygon(model, 16, color);
     }
 }

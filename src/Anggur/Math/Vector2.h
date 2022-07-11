@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Anggur {
 	struct Matrix3;
 
@@ -55,6 +57,8 @@ namespace Anggur {
 		Vector2& SetLength(float x);
 		Vector2& SetAngle(float theta);
 		Vector2& Normalize();
+		
+		std::string ToString();
 
 		static Vector2 Normalize(const Vector2& vec);
 		static Vector2 Lerp(const Vector2& a, const Vector2& b, float amount);

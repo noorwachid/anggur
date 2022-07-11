@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cinttypes>
+#include <string>
 
 namespace Anggur 
 {
@@ -24,6 +24,8 @@ namespace Anggur
 		const float* ToPointer() const;
 
 		float* ToPointer();
+
+		std::string ToString();
 
 		static Vector4 CreateHex(uint64_t hex);
 
