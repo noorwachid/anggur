@@ -3,7 +3,7 @@
 #include "Key.h"
 #include "MouseButton.h"
 #include "Anggur/Math/Vector2.h"
-#include "Anggur/Event/Event.h"
+#include "Anggur/Event.h"
 
 namespace Anggur
 {

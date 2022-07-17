@@ -11,37 +11,37 @@
 
 namespace Anggur 
 {
+	struct MeshVertex 
+	{
+		Vector3 position;
+		Vector3 normal;
+		Vector4 color;
+		Vector2 textureCoord;
+		float textureSlot;
+
+		MeshVertex() = default;
+		MeshVertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newTextureCoord, float newTextureSlot = 0.0f): 
+			position(newPosition), normal(newNormal), color(newColor), textureCoord(newTextureCoord), textureSlot(newTextureSlot) 
+		{
+		}
+
+		std::string ToString()
+		{
+			std::string temp;
+
+			temp += "position: " + position.ToString() + "\n";
+			temp += "normal: " + normal.ToString() + "\n";
+			temp += "color: " + color.ToString() + "\n";
+			temp += "textureCoord: " + textureCoord.ToString() + "\n";
+			temp += "textureSlot: " + std::to_string(textureSlot) + "\n"; 
+
+			return temp;
+		}
+	};
+
 	class MeshRenderer 
 	{
 	public:
-		struct Vertex 
-		{
-			Vector3 position;
-			Vector3 normal;
-			Vector4 color;
-			Vector2 textureCoord;
-			float textureSlot;
-
-			Vertex() = default;
-			Vertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newTextureCoord, float newTextureSlot = 0.0f): 
-				position(newPosition), normal(newNormal), color(newColor), textureCoord(newTextureCoord), textureSlot(newTextureSlot) 
-			{
-			}
-
-			std::string ToString()
-			{
-				std::string temp;
-
-				temp += "position: " + position.ToString() + "\n";
-				temp += "normal: " + normal.ToString() + "\n";
-				temp += "color: " + color.ToString() + "\n";
-				temp += "textureCoord: " + textureCoord.ToString() + "\n";
-				temp += "textureSlot: " + std::to_string(textureSlot) + "\n"; 
-
-				return temp;
-			}
-		};
-
 		static void Initialize();
 
 		static void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
@@ -58,7 +58,7 @@ namespace Anggur
 		static void Flush();
 		static void FlushData();
 
-		static void Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+		static void Render(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
 
 		// 3D Primitives
 		static void RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color = Vector4::white);

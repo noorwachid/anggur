@@ -1,54 +1,102 @@
 #pragma once
 
+#include "Anggur/EventManager.h"
 #include "InputEvent.h"
-#include "Anggur/Event/EventManager.h"
+#include "WindowContext.h"
+#include <array>
 
 namespace Anggur 
 {
+    struct Keyboard 
+    {
+        std::array<bool, maxKeyValue> currentState;
+        std::array<bool, maxKeyValue> previousState; 
+
+        void Update();
+    };
+
+    struct Mouse 
+    {
+        Vector2 currentPosition;
+        Vector2 previousPosition;
+        Vector2 direction;
+
+        std::array<bool, maxMouseButtonValue> currentButtonState;
+        std::array<bool, maxMouseButtonValue> previousButtonState;
+        
+        void Update();
+    };
+
+    struct Scroll
+    {
+        Vector2 currentDirection;
+        Vector2 previousDirection;
+
+        void Update();
+    };
+
     class Input 
     {
     public:
-        // Keyboard
-        static bool IsKeyPressed(Key key);
-        static bool IsKeyReleased(Key key);
-        static bool IsKeyDown(Key key);
-        static bool IsKeyUp(Key key);
+        // Key device
 
-        static void SetKeyState(Key key, bool state);
+        bool IsKeyPressed(Key key);
+        
+        bool IsKeyReleased(Key key);
+        
+        bool IsKeyDown(Key key);
+        
+        bool IsKeyUp(Key key);
 
-        // Mouse
-        static bool IsMouseButtonPressed(MouseButton button);
-        static bool IsMouseButtonReleased(MouseButton button);
-        static bool IsMouseButtonDown(MouseButton button);
-        static bool IsMouseButtonUp(MouseButton button);
+        void SetKeyState(Key key, bool state);
 
-        static void SetMouseButtonState(MouseButton button, bool state);
 
-        static const Vector2& GetMousePosition();
-        static const Vector2& GetMouseDirection();
+        // Mouse device
 
-        static void SetMousePosition(const Vector2& position);
+        bool IsMouseButtonPressed(MouseButton button);
+        
+        bool IsMouseButtonReleased(MouseButton button);
+        
+        bool IsMouseButtonDown(MouseButton button);
+        
+        bool IsMouseButtonUp(MouseButton button);
 
-        // Scroll
-        static const Vector2& GetScrollDirection();
+        const Vector2& GetMousePosition();
 
-        static void SetScrollDirection(const Vector2& direction);
+        const Vector2& GetMouseDirection();
 
-        static void Initialize();
-        static void Update();
+        void SetMouseButtonState(MouseButton button, bool state);
 
-        static EventManager& GetEventManager();
+        void SetMousePosition(const Vector2& position);
+
+        // Scroll device
+
+        const Vector2& GetScrollDirection();
+
+        void SetScrollDirection(const Vector2& direction);
+        
+        // Data management
+
+        void BindContext(WindowContext* context);
+        void Update();
 
     private:
-        static void UpdateKeyboardData();
-        static void UpdateMouseData();
+        Keyboard keyboard;
+        Mouse mouse;
+        Scroll scroll;
 
-        static void DirectSetKeyState(Key key, bool state);
+        EventManager eventManager;
 
-        static void DirectSetMouseButtonState(MouseButton button, bool state);
-        static void DirectSetMousePosition(const Vector2& position);
+        WindowContext* context = nullptr;
 
-        static void DirectSetScrollDirection(const Vector2& direction);
+    private:
+        void DirectSetKeyState(Key key, bool state);
+
+        void DirectSetMouseButtonState(MouseButton button, bool state);
+
+        void DirectSetMousePosition(const Vector2& position);
+
+        void DirectSetScrollDirection(const Vector2& direction);
 
         friend class Window;
     };

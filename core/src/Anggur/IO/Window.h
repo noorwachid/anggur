@@ -2,23 +2,21 @@
 
 #include "Anggur/EventManager.h"
 #include "WindowEvent.h"
-
-struct GLFWwindow;
+#include "WindowContext.h"
+#include "Input.h"
 
 namespace Anggur 
 {
-	using WindowContext = GLFWwindow;
-
 	class Window 
 	{
 	public:
 		EventManager eventManager;
+		Input input;
 
 	public:
 		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
 		
 		~Window();
-
 
 		WindowContext* GetContext();
 
@@ -41,14 +39,17 @@ namespace Anggur
 		bool IsOpen();
 
 		void Close();
-		
-		void Bind();
-		
-		void SwapBuffers();
+
+		void Update();
 
 	private:
 		void InitializeGraphics();
+
+		void BindGraphics();
+
 		void BindContext();
+
+		void SwapFrameBuffers();
 
 	private:
 		WindowContext* context;

@@ -14,9 +14,6 @@ namespace Anggur
 			glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, 0);
 		#endif
 
-		int systemInitialization = glfwInit();
-		ANGGUR_ASSERT(systemInitialization, "[Window] Failed to initalize window system");
-
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -26,10 +23,12 @@ namespace Anggur
 		#endif
 
 		context = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
-		ANGGUR_ASSERT(context, "[Core.Window] Failed to create a window");
+		assert(context && "[Window] Failed to create a window");
+
+		input.BindContext(context);
 
 		BindContext();
-		Bind();
+		BindGraphics();
 
 		InitializeGraphics();
 
@@ -64,6 +63,12 @@ namespace Anggur
 			window->eventManager.Emit(event);
 			window->frameBufferSize = size;
 		});
+	}
+
+	Window::~Window()
+	{
+		if (context)
+			glfwDestroyWindow(context);
 	}
 
 	WindowContext* Window::GetContext()
@@ -117,25 +122,34 @@ namespace Anggur
 		return !glfwWindowShouldClose(context);
 	}
 
-	void Window::SwapBuffers() 
-	{
-		glfwSwapBuffers(context);
-	}
-
 	void Window::Close() 
 	{
 		glfwSetWindowShouldClose(context, true);
 	}
 
-	void Window::Bind() 
+	void Window::Update() 
 	{
-		glfwMakeContextCurrent(context);
-	}
+		BindGraphics();
+		SwapFrameBuffers();
 
+		input.Update();
+	}
+	
 	void Window::InitializeGraphics() 
 	{
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		assert(result && "[Window] Failed to load graphic functions");
+	}
+
+	void Window::BindGraphics() 
+	{
+		glfwMakeContextCurrent(context);
+	}
+
+
+	void Window::SwapFrameBuffers() 
+	{
+		glfwSwapBuffers(context);
 	}
 
 	void Window::BindContext()

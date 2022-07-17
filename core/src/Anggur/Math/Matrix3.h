@@ -95,7 +95,7 @@ namespace Anggur
             );
         }
 
-        friend Vector2 operator*=(const Matrix3& a, const Vector2& b)
+        friend Vector2 operator* (const Matrix3& a, const Vector2& b)
         {
             return Vector2(
                 a.a * b.x + a.d * b.y + a.g,
