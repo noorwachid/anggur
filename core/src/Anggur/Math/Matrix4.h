@@ -200,22 +200,22 @@ namespace Anggur
             );
         }
 
-        friend Matrix4 operator*(const Matrix4& l, const Matrix4& r) 
+        friend Matrix4 operator*(const Matrix4& a, const Matrix4& b) 
         {
             return Matrix4(
-                l.a * r.a + l.b * r.e + l.c * r.i + l.d * r.m,  l.a * r.b + l.b * r.f + l.c * r.j + l.d * r.n,  l.a * r.c + l.b * r.g + l.c * r.k + l.d * r.o,  l.a * r.d + l.b * r.h + l.c * r.l + l.d * r.p, 
-                l.e * r.a + l.f * r.e + l.g * r.i + l.h * r.m,  l.e * r.b + l.f * r.f + l.g * r.j + l.h * r.n,  l.e * r.c + l.f * r.g + l.g * r.k + l.h * r.o,  l.e * r.d + l.f * r.h + l.g * r.l + l.h * r.p, 
-                l.i * r.a + l.j * r.e + l.k * r.i + l.l * r.m,  l.i * r.b + l.j * r.f + l.k * r.j + l.l * r.n,  l.i * r.c + l.j * r.g + l.k * r.k + l.l * r.o,  l.i * r.d + l.j * r.h + l.k * r.l + l.l * r.p, 
-                l.m * r.a + l.n * r.e + l.o * r.i + l.p * r.m,  l.m * r.b + l.n * r.f + l.o * r.j + l.p * r.n,  l.m * r.c + l.n * r.g + l.o * r.k + l.p * r.o,  l.m * r.d + l.n * r.h + l.o * r.l + l.p * r.p
+                a.a * b.a + a.b * b.e + a.c * b.i + a.d * b.m,  a.a * b.b + a.b * b.f + a.c * b.j + a.d * b.n,  a.a * b.c + a.b * b.g + a.c * b.k + a.d * b.o,  a.a * b.d + a.b * b.h + a.c * b.l + a.d * b.p, 
+                a.e * b.a + a.f * b.e + a.g * b.i + a.h * b.m,  a.e * b.b + a.f * b.f + a.g * b.j + a.h * b.n,  a.e * b.c + a.f * b.g + a.g * b.k + a.h * b.o,  a.e * b.d + a.f * b.h + a.g * b.l + a.h * b.p, 
+                a.i * b.a + a.j * b.e + a.k * b.i + a.l * b.m,  a.i * b.b + a.j * b.f + a.k * b.j + a.l * b.n,  a.i * b.c + a.j * b.g + a.k * b.k + a.l * b.o,  a.i * b.d + a.j * b.h + a.k * b.l + a.l * b.p, 
+                a.m * b.a + a.n * b.e + a.o * b.i + a.p * b.m,  a.m * b.b + a.n * b.f + a.o * b.j + a.p * b.n,  a.m * b.c + a.n * b.g + a.o * b.k + a.p * b.o,  a.m * b.d + a.n * b.h + a.o * b.l + a.p * b.p
             );
         }
 
-        friend Vector3 operator*(const Vector3& l, const Matrix4& r)
+        friend Vector3 operator*(const Matrix4& a, const Vector3& b)
         {
             return Vector3(
-                r.a * l.x + r.e * l.y + r.i * l.z + r.m * 1.0f,
-                r.b * l.x + r.f * l.y + r.j * l.z + r.n * 1.0f,
-                r.c * l.x + r.g * l.y + r.k * l.z + r.o * 1.0f
+                a.a * b.x + a.e * b.y + a.i * b.z + a.m * 1.0f,
+                a.b * b.x + a.f * b.y + a.j * b.z + a.n * 1.0f,
+                a.c * b.x + a.g * b.y + a.k * b.z + a.o * 1.0f
             );
         }
     };

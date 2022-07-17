@@ -86,20 +86,20 @@ namespace Anggur
             );
         }
 
-        friend Matrix3 operator*(const Matrix3& l, const Matrix3& r) 
+        friend Matrix3 operator* (const Matrix3& a, const Matrix3& b) 
         {
             return Matrix3(
-                l.a * r.a + l.b * r.d + l.c * r.g,  l.a * r.b + l.b * r.e + l.c * r.h,  l.a * r.c + l.b * r.f + l.c * r.i,
-                l.d * r.a + l.e * r.d + l.f * r.g,  l.d * r.b + l.e * r.e + l.f * r.h,  l.d * r.c + l.e * r.f + l.f * r.i,
-                l.g * r.a + l.h * r.d + l.i * r.g,  l.g * r.b + l.h * r.e + l.i * r.h,  l.g * r.c + l.h * r.f + l.i * r.i
+                a.a * b.a + a.b * b.d + a.c * b.g,  a.a * b.b + a.b * b.e + a.c * b.h,  a.a * b.c + a.b * b.f + a.c * b.i,
+                a.d * b.a + a.e * b.d + a.f * b.g,  a.d * b.b + a.e * b.e + a.f * b.h,  a.d * b.c + a.e * b.f + a.f * b.i,
+                a.g * b.a + a.h * b.d + a.i * b.g,  a.g * b.b + a.h * b.e + a.i * b.h,  a.g * b.c + a.h * b.f + a.i * b.i
             );
         }
 
-        friend Vector2 operator*=(const Vector2& l, const Matrix3& r)
+        friend Vector2 operator*=(const Matrix3& a, const Vector2& b)
         {
             return Vector2(
-                r.a * l.x + r.d * l.y + r.g,
-                r.b * l.x + r.e * l.y + r.h
+                a.a * b.x + a.d * b.y + a.g,
+                a.b * b.x + a.e * b.y + a.h
             );
         }
     };
