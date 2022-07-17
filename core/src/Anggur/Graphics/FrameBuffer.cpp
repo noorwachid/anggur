@@ -1,16 +1,15 @@
-#include <Anggur/Utility/Assert.h>
-#include <Anggur/Utility/Log.h>
-#include <Anggur/Graphics/Function.h>
-#include <Anggur/Graphics/FrameBuffer.h>
+#include "Function.h"
+#include "FrameBuffer.h"
+#include <cassert>
 
 namespace Anggur {
 	FrameBuffer::FrameBuffer() {
-		Initialize();
+		initialize();
 	}
 
 	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height) {
-		Initialize();
-		Recreate(width, height);
+		initialize();
+		recreate(width, height);
 	}
 
 	FrameBuffer::~FrameBuffer() {
@@ -18,11 +17,11 @@ namespace Anggur {
 		glDeleteTextures(1, &colorAttachment);
 	}
 
-	void FrameBuffer::Initialize() {
+	void FrameBuffer::initialize() {
 		texture = std::make_shared<Texture2D>();
 	}
 
-	void FrameBuffer::Recreate(uint32_t width, uint32_t height) {
+	void FrameBuffer::recreate(uint32_t width, uint32_t height) {
 		this->width = width;
 		this->height = height;
 
@@ -42,7 +41,7 @@ namespace Anggur {
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
 
-		ANGGUR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
+		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "[FrameBuffer] FrameBuffer is incomplete");
 
 		glViewport(0, 0, width, height);
 
@@ -51,11 +50,11 @@ namespace Anggur {
 		texture->height = height;
 	}
 
-	void FrameBuffer::Bind() {
+	void FrameBuffer::bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 	}
 
-	void FrameBuffer::Unbind() {
+	void FrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }

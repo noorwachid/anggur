@@ -3,10 +3,8 @@
 #include "Anggur/Math/Math.h"
 #include <string>
 
-namespace Anggur 
-{
-	class Shader 
-	{
+namespace Anggur {
+	class Shader {
 	public:
 		Shader();
 		~Shader();

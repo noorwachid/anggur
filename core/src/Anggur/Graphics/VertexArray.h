@@ -3,20 +3,18 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace Anggur 
-{
-	class IndexBuffer 
-	{
+namespace Anggur {
+	class IndexBuffer {
 	public:
 		IndexBuffer();
 		~IndexBuffer();
 
-		uint32_t GetID() { return id; }
+		uint32_t getId() { return id; }
 
-		void Bind();
-		void Unbind();
-		void SetCapacity(size_t byteSize);
-		void SetData(size_t byteSize, void* byteData);
+		void bind();
+		void unbind();
+		void setCapacity(size_t byteSize);
+		void setData(size_t byteSize, void* byteData);
 
 	private:
 		uint32_t id = 0;
@@ -27,12 +25,12 @@ namespace Anggur
 		VertexBuffer();
 		~VertexBuffer();
 
-		uint32_t GetID() { return id; }
+		uint32_t getId() { return id; }
 
-		void Bind();
-		void Unbind();
-		void SetCapacity(size_t byteSize);
-		void SetData(size_t byteSize, void* byteData);
+		void bind();
+		void unbind();
+		void setCapacity(size_t byteSize);
+		void setData(size_t byteSize, void* byteData);
 
 	private:
 		uint32_t id;
@@ -43,11 +41,11 @@ namespace Anggur
 		VertexArray();
 		~VertexArray();
 
-		uint32_t GetID() { return id; }
+		uint32_t getId() { return id; }
 
-		void Bind();
-		void Unbind();
-		void SetAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset);
+		void bind();
+		void unbind();
+		void setAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset);
 
 	private:
 		uint32_t id;

@@ -2,23 +2,21 @@
 
 #include <string>
 
-namespace Anggur 
-{
-	class Image 
-	{
+namespace Anggur {
+	class Image {
 	public:
 		Image();
 		Image(const std::string& path);
 
 		~Image();
 
-		inline uint32_t GetWidth() const { return width; }
-		inline uint32_t GetHeight() const { return height; }
-		inline uint32_t GetChannels() const { return channels; }
-		inline uint8_t* GetData() const { return data; }
+		inline uint32_t getWidth() const { return width; }
+		inline uint32_t getHeight() const { return height; }
+		inline uint32_t getChannels() const { return channels; }
+		inline uint8_t* getData() const { return data; }
 
-		void Load(const std::string& path);
-		void Unload();
+		void load(const std::string& path);
+		void unload();
 
 	private:
 		uint32_t width;

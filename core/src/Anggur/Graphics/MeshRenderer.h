@@ -63,36 +63,6 @@ namespace Anggur
 		// 3D Primitives
 		static void RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color = Vector4::white);
 		
-		// 3D Primitive Tests
-		static void RenderTestCube(const Matrix4& model);
-
-		// 2D Primitives
-		static void RenderTriangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector3& point2, const Vector4& color = Vector4::white);
-		static void RenderQuad(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector4& color = Vector4::white);
-		static void RenderRectangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const Vector4& color = Vector4::white);
-		static void RenderTexturedRectangle(const Matrix4& model, const Vector3& point0, const Vector3& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0 = Vector2::zero, const Vector2& texturePoint1 = Vector2::one, const Vector4& color = Vector4::white);
-
-		static void RenderArc(const Matrix4& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi, int segment = 16, const Vector4& color = Vector4::white);
-		static void RenderCircle(const Matrix4& model, float radius = 1.0f, int segment = 32, const Vector4& color = Vector4::white);
-
-		// 2D Lines
-		static void RenderLineTerminator(const Matrix4& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
-		static void RenderLineAnchor(const Matrix4& model, const Vector2& point0, const Vector2& point1, const Vector2& p2, float thickness = 0.5, const Vector4& color = Vector4::white);
-		static void RenderLine(const Matrix4& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
-		static void RenderPolyLine(const Matrix4& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
-		static void RenderPolyLineConnected(const Matrix4& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
-
-		// 2D Texts
-		enum class TextAlign
-		{
-			Left,
-			Center,
-			Right,
-			Justify,
-		};
-
-		static void RenderText(const Matrix4& model, const Vector2& point0, const Vector2& point1, const std::string& textBuffer, TextAlign textVerticalAlign, TextAlign textHorizontalAlign, const Vector4& color = Vector4::white);
-
 	private:
 		MeshRenderer();
 

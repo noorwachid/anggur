@@ -22,23 +22,23 @@ namespace Anggur
         indices.assign(batchVertex * batchIndexMultiplier, 0);
 
         vertexBuffer = std::make_shared<VertexBuffer>();
-        vertexBuffer->SetCapacity(sizeof(CanvasVertex) * vertices.size());
+        vertexBuffer->setCapacity(sizeof(CanvasVertex) * vertices.size());
 
         vertexArray = std::make_shared<VertexArray>();
-        vertexArray->SetAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
-        vertexArray->SetAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
-        vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
-        vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
+        vertexArray->setAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
+        vertexArray->setAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
+        vertexArray->setAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
+        vertexArray->setAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
         
         indexBuffer = std::make_shared<IndexBuffer>();
-        indexBuffer->SetCapacity(sizeof(uint32_t) * indices.size());
+        indexBuffer->setCapacity(sizeof(uint32_t) * indices.size());
     }
 
     void CanvasRenderer::initializeTexturePool() {
-        textures.assign(Texture::GetMaxSlot(), nullptr);
-        slots.reserve(Texture::GetMaxSlot());
+        textures.assign(Texture::getMaxSlot(), nullptr);
+        slots.reserve(Texture::getMaxSlot());
 
-        for (int i = 0; i < Texture::GetMaxSlot(); ++i) {
+        for (int i = 0; i < Texture::getMaxSlot(); ++i) {
             slots.push_back(i);
         }
 
@@ -80,7 +80,7 @@ namespace Anggur
 
             out vec4 fColor;
 
-            uniform sampler2D uSlots[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
+            uniform sampler2D uSlots[)" + std::to_string(Texture::getMaxSlot()) + R"(];
             
             void main() {
                 fColor = texture(uSlots[int(vSlot)], vUV) * vColor;
@@ -135,20 +135,20 @@ namespace Anggur
 
         for (size_t i = 0; i < textureOffset; ++i) 
         {
-            textures[i]->Bind(i);
+            textures[i]->bind(i);
         }
 
         shader->Bind();
         shader->SetUniformMatrix3("uViewProjection", viewProjection);
         shader->SetUniformInt("uSlots", textureOffset, slots.data());
 
-        vertexArray->Bind();
+        vertexArray->bind();
         
-        vertexBuffer->Bind();
-        vertexBuffer->SetData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
+        vertexBuffer->bind();
+        vertexBuffer->setData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
 
-        indexBuffer->Bind();
-        indexBuffer->SetData(sizeof(uint32_t) * indexOffset, indices.data());
+        indexBuffer->bind();
+        indexBuffer->setData(sizeof(uint32_t) * indexOffset, indices.data());
 
         glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
@@ -178,7 +178,7 @@ namespace Anggur
         int textureSlot = 0;
 
         // This code only create one branch
-        for (; textureSlot < textureOffset && textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
+        for (; textureSlot < textureOffset && textures[textureSlot]->getID() != texture->getID(); ++textureSlot);
 
         if (textureSlot == textureOffset) {
             textureSlot = textureOffset;
