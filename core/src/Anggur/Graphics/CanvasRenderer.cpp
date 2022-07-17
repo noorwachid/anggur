@@ -298,7 +298,7 @@ namespace Anggur
         size_t triangleSize = segment - 2;
 
         float theta = (Math::twoPi / segment);
-        float tangetialFactor = Math::Tan(theta);
+        float tangetialFactor = Math::tan(theta);
         float radialFactor = Math::cos(theta);
 
         float x = radius;
@@ -351,7 +351,7 @@ namespace Anggur
         // // TODO: simplify this equation
         float theta = Math::twoPi / ((segment - 1) / (sweepAngle / Math::twoPi));
 
-        float tangetialFactor = Math::Tan(theta);
+        float tangetialFactor = Math::tan(theta);
         float radialFactor = Math::cos(theta);
 
         Vector2 walker = Vector2::createPolar(radius, beginAngle);

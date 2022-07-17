@@ -19,78 +19,78 @@ namespace Anggur {
 
 		// Casters
 
-		static float DegreeToRadian(float x);
+		static float degreeToRadian(float x);
 
-		static float RadianToDegree(float x);
+		static float radianToDegree(float x);
 
 		// Conditional manipulations
 
-		static float Max(float a, float b);
+		static float max(float a, float b);
 
-		static float Min(float a, float b);
+		static float min(float a, float b);
 
-		static float Clamp(float x, float lower = -1, float upper = 1);
+		static float clamp(float x, float lower = -1, float upper = 1);
 
-		static float Abs(float x);
+		static float abs(float x);
 
-		static float IsNearZero(float x, float epsilon = ::Anggur::Math::epsilon);
+		static float isNearZero(float x, float epsilon = ::Anggur::Math::epsilon);
 
 		// Mapping manipulations
 
-		static float Normalize(float x, float lower, float upper);
+		static float normalize(float x, float lower, float upper);
 
 		static float lerp(float lower, float upper, float amount);
 
-		static float Map(float x, float lowerA, float upperA, float lowerB, float upperB);
+		static float map(float x, float lowerA, float upperA, float lowerB, float upperB);
 
 		// Floating point manipulations
 
-		static float Mod(float x, float d);
+		static float mod(float x, float d);
 
-		static float Floor(float x);
+		static float floor(float x);
 
-		static float Ceil(float x);
+		static float ceil(float x);
 
-		static float Truncate(float x);
+		static float truncate(float x);
 
-		static float Round(float x);
+		static float round(float x);
 
-		static float RoundNearest(float x, float step);
+		static float roundNearest(float x, float step);
 
 		// Exponent manipulations
 
-		static float Pow(float x, float p);
+		static float pow(float x, float p);
 		
-		static float Sqrt(float x);
+		static float sqrt(float x);
 
 		// Trigonometry manipulations
 
 		static float sin(float x);
 
-		static float Tan(float x);
+		static float tan(float x);
 
-		static float Sec(float x);
+		static float sec(float x);
 
 		static float cos(float x);
 
-		static float Cot(float x);
+		static float cot(float x);
 
-		static float Csc(float x);
+		static float csc(float x);
 
 		// Trigonometry arc manipulations
 
-		static float Asin(float x);
+		static float asin(float x);
 
-		static float Atan(float x);
+		static float atan(float x);
 
-		static float Atan(float y, float x);
+		static float atan(float y, float x);
 		
-		static float Asec(float x);
+		static float asec(float x);
 
-		static float Acos(float x);
+		static float acos(float x);
 
-		static float Acot(float x);
+		static float acot(float x);
 
-		static float Acsc(float x);
+		static float acsc(float x);
 	};
 }

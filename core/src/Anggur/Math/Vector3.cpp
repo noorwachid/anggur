@@ -45,7 +45,7 @@ namespace Anggur {
 	}
 
 	float Vector3::getLength() {
-		return (Math::Sqrt(getLengthSquared()));
+		return (Math::sqrt(getLengthSquared()));
 	}
 
 	// Setters

@@ -21,7 +21,7 @@ namespace Anggur {
     }
 
     float Quaternion::getLength() {
-        return Math::Sqrt(getLengthSquared());
+        return Math::sqrt(getLengthSquared());
     }
 
     // Setters
@@ -76,7 +76,7 @@ namespace Anggur {
         float scale0, scale1;
 
         if (cosom < 0.9999f) {
-            const float omega = Math::Acos(cosom);
+            const float omega = Math::acos(cosom);
             const float invSin = 1.f / Math::sin(omega);
             scale0 = Math::sin((1.f - amount) * omega) * invSin;
             scale1 = Math::sin(amount * omega) * invSin;

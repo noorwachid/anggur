@@ -52,11 +52,11 @@ namespace Anggur {
 	}
 
 	float Vector2::getLength() {
-		return Math::Sqrt(getLengthSquared());
+		return Math::sqrt(getLengthSquared());
 	}
 
 	float Vector2::getAngle() {
-		return Math::Atan(y, x);
+		return Math::atan(y, x);
 	}
 
 	// Setters

@@ -90,7 +90,7 @@ namespace Anggur {
 	}
 
 	float Vector4::getLength() {
-		return (Math::Sqrt(getLengthSquared()));
+		return (Math::sqrt(getLengthSquared()));
 	}
 
 
