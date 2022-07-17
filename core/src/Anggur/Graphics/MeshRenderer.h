@@ -29,10 +29,10 @@ namespace Anggur
 		{
 			std::string temp;
 
-			temp += "position: " + position.ToString() + "\n";
-			temp += "normal: " + normal.ToString() + "\n";
-			temp += "color: " + color.ToString() + "\n";
-			temp += "textureCoord: " + textureCoord.ToString() + "\n";
+			temp += "position: " + position.toString() + "\n";
+			temp += "normal: " + normal.toString() + "\n";
+			temp += "color: " + color.toString() + "\n";
+			temp += "textureCoord: " + textureCoord.toString() + "\n";
 			temp += "textureSlot: " + std::to_string(textureSlot) + "\n"; 
 
 			return temp;

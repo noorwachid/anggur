@@ -3,8 +3,8 @@
 #include "Vector2.h"
 #include "Matrix3.h"
 
-namespace Anggur 
-{	// Constants
+namespace Anggur {	
+	// Constants
 
 	Vector2 Vector2::zero(0.0f, 0.0f);
 	Vector2 Vector2::one(1.0f, 1.0f);
@@ -14,113 +14,94 @@ namespace Anggur
 
 	// Initializers
 	
-	Vector2::Vector2(): x(0.0f), y(0.0f)
-	{
+	Vector2::Vector2(): x(0.0f), y(0.0f) {
 	}
 
-	Vector2::Vector2(float scalar): x(scalar), y(scalar)
-	{
+	Vector2::Vector2(float scalar): x(scalar), y(scalar) {
 	}
 
-	Vector2::Vector2(float newX, float newY): x(newX), y(newY)
-	{
+	Vector2::Vector2(float newX, float newY): x(newX), y(newY) {
 	}
 
 	// 2nd class initializers
 
-	Vector2 Vector2::CreatePolar(float length, float angle) 
-	{
+	Vector2 Vector2::createPolar(float length, float angle)  {
 		Vector2 temp;
-		temp.SetPolar(length, angle);
+		temp.setPolar(length, angle);
 		return temp;
 	}
 
 	// Casters
 
-	const float* Vector2::ToPointer() const 
-	{
+	const float* Vector2::toPointer() const {
 		return &x;
 	}
 
-	float* Vector2::ToPointer() 
-	{
+	float* Vector2::toPointer() {
 		return &x;
 	}
 
-	std::string Vector2::ToString() 
-	{
+	std::string Vector2::toString() {
 		return std::to_string(x) + ", " + std::to_string(y);
 	}
 
 	// Getters
 
-	float Vector2::GetLengthSquared() const 
-	{
+	float Vector2::getLengthSquared() {
 		return (x * x + y * y);
 	}
 
-	float Vector2::GetLength() const 
-	{
-		return Math::Sqrt(GetLengthSquared());
+	float Vector2::getLength() {
+		return Math::Sqrt(getLengthSquared());
 	}
 
-	float Vector2::GetAngle() const 
-	{
+	float Vector2::getAngle() {
 		return Math::Atan(y, x);
 	}
 
 	// Setters
 
-	void Vector2::Set(float scalar) 
-	{
+	void Vector2::set(float scalar) {
 		x = scalar;
 		y = scalar;
 	}
 
-	void Vector2::Set(float newX, float newY) 
-	{
+	void Vector2::set(float newX, float newY) {
 		x = newX;
 		y = newY;
 	}
 
-	void Vector2::SetPolar(float length, float angle) 
-	{
-		x = Math::Cos(angle) * length;
-		y = Math::Sin(angle) * length;
+	void Vector2::setPolar(float length, float angle) {
+		x = Math::cos(angle) * length;
+		y = Math::sin(angle) * length;
 	}
 
-	void Vector2::SetLength(float length) 
-	{
-		*this = length * Normalize(*this);
+	void Vector2::setLength(float length)  {
+		*this = length * normalize(*this);
 	}
 
 
-	void Vector2::SetLengthLimit(float x) 
-	{
-		if (GetLengthSquared() > (x * x))
-			SetLength(x);
+	void Vector2::setLengthLimit(float x)  {
+		if (getLengthSquared() > (x * x))
+			setLength(x);
 	}
 
-	void Vector2::SetAngle(float theta) 
-	{
-		SetPolar(theta, GetLength());
+	void Vector2::SetAngle(float theta)  {
+		setPolar(theta, getLength());
 	}
 
 	// 2nd class manipulations
 
-	float Vector2::Dot(const Vector2& a, const Vector2& b) 
-	{
+	float Vector2::dot(const Vector2& a, const Vector2& b)  {
 		return a.x * b.x + a.y * b.y;
 	}
 
-	float Vector2::Cross(const Vector2& a, const Vector2& b) 
-	{
+	float Vector2::cross(const Vector2& a, const Vector2& b)  {
 		return a.x * b.y - a.y * b.x;
 	}
 
-	Vector2 Vector2::Normalize(const Vector2& a)
-	{
-		float length = a.GetLength();
+	Vector2 Vector2::normalize(const Vector2& a) {
+		float length = a.getLength();
 
 		if (length == 0) 
 			return a;
@@ -128,40 +109,33 @@ namespace Anggur
 		return Vector2(a.x / length, a.y / length);
 	}
 
-	Vector2 Vector2::Lerp(const Vector2& a, const Vector2& b, float amount) 
-	{
+	Vector2 Vector2::lerp(const Vector2& a, const Vector2& b, float amount)  {
 		return Vector2(a + (b - a) * amount);
 	}
 
 	// 3rd class manipulations
 
-	Vector2 operator+ (const Vector2& a, const Vector2& b)
-	{
+	Vector2 operator+ (const Vector2& a, const Vector2& b) {
 		return Vector2(a.x + b.y, a.y + b.y);
 	}
 
-	Vector2 operator- (const Vector2& a, const Vector2& b)
-	{
+	Vector2 operator- (const Vector2& a, const Vector2& b) {
 		return Vector2(a.x - b.y, a.y - b.y);
 	}
 
-	Vector2 operator* (const Vector2& a, const Vector2& b)
-	{
+	Vector2 operator* (const Vector2& a, const Vector2& b) {
 		return Vector2(a.x * b.y, a.y * b.y);
 	}
 
-	Vector2 operator+ (float a, const Vector2& b)
-	{
+	Vector2 operator+ (float a, const Vector2& b) {
 		return Vector2(a + b.x, a + b.y);
 	}
 
-	Vector2 operator- (float a, const Vector2& b)
-	{
+	Vector2 operator- (float a, const Vector2& b) {
 		return Vector2(a - b.x, a - b.y);
 	}
 
-	Vector2 operator* (float a, const Vector2& b)
-	{
+	Vector2 operator* (float a, const Vector2& b) {
 		return Vector2(a * b.x, a * b.y);
 	}
 }

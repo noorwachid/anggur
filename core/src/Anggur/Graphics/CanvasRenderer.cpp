@@ -299,7 +299,7 @@ namespace Anggur
 
         float theta = (Math::twoPi / segment);
         float tangetialFactor = Math::Tan(theta);
-        float radialFactor = Math::Cos(theta);
+        float radialFactor = Math::cos(theta);
 
         float x = radius;
         float y = 0;
@@ -352,9 +352,9 @@ namespace Anggur
         float theta = Math::twoPi / ((segment - 1) / (sweepAngle / Math::twoPi));
 
         float tangetialFactor = Math::Tan(theta);
-        float radialFactor = Math::Cos(theta);
+        float radialFactor = Math::cos(theta);
 
-        Vector2 walker = Vector2::CreatePolar(radius, beginAngle);
+        Vector2 walker = Vector2::createPolar(radius, beginAngle);
 
         std::vector<CanvasVertex> vertices;
         std::vector<uint32_t> indices;

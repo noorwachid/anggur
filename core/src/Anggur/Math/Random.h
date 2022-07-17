@@ -3,30 +3,28 @@
 #include <random>
 #include "Math.h"
 
-namespace Anggur 
-{
-	class Random
-	{
+namespace Anggur {
+	class Random {
 	public:
 		Random();
 
 		// Getters
 
-		float Generate();
+		float generate();
 
-		float GetRange(float lower, float upper);
+		float getRange(float lower, float upper);
 
-		float GetNormal();
+		float getNormal();
 
-		float GetSigned();
+		float getSigned();
 
-		float GetAngle();
+		float getAngle();
 
-		bool GetBoolean();
+		bool getBoolean();
 
 		// Setters
 
-		void SetSeed(float n);
+		void setSeed(float n);
 
 	private:
 		std::random_device device;

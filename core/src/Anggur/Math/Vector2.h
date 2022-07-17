@@ -2,12 +2,10 @@
 
 #include <string>
 
-namespace Anggur 
-{
+namespace Anggur {
 	struct Matrix3;
 
-	struct Vector2 
-	{
+	struct Vector2 {
 		// Fields
 
 		float x;
@@ -31,47 +29,47 @@ namespace Anggur
 
 		// 2nd class initializer
 
-		static Vector2 CreatePolar(float length, float angle);
+		static Vector2 createPolar(float length, float angle);
 
 		// Casters
 
-		const float* ToPointer() const;
+		const float* toPointer() const;
 
-		float* ToPointer();
+		float* toPointer();
 
-		std::string ToString();
+		std::string toString();
 
 		// Getters
 
-		float GetLengthSquared() const;
+		float getLengthSquared();
 
-		float GetLength() const;
+		float getLength();
 
-		float GetAngle() const;
+		float getAngle();
 
 		// Setters
 
-		void Set(float scalar);
+		void set(float scalar);
 
-		void Set(float newX, float newY);
+		void set(float newX, float newY);
 
-		void SetPolar(float length, float angle);
+		void setPolar(float length, float angle);
 
-		void SetLength(float length);
+		void setLength(float length);
 
-		void SetLengthLimit(float length);
+		void setLengthLimit(float length);
 
 		void SetAngle(float angle);
 
 		// 2nd class manipulations
 
-		static float Dot(const Vector2& a, const Vector2& b);
+		static float dot(const Vector2& a, const Vector2& b);
 
-		static float Cross(const Vector2& a, const Vector2& b);
+		static float cross(const Vector2& a, const Vector2& b);
 		
-		static Vector2 Normalize(const Vector2& a);
+		static Vector2 normalize(const Vector2& a);
 
-		static Vector2 Lerp(const Vector2& a, const Vector2& b, float amount);
+		static Vector2 lerp(const Vector2& a, const Vector2& b, float amount);
 
 
 		// 3rd class manipulations

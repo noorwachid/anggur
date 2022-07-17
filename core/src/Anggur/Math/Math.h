@@ -1,7 +1,6 @@
 #pragma once
 
-namespace Anggur 
-{	
+namespace Anggur {	
 	struct Vector2;
 	struct Vector3;
 	struct Vector4;
@@ -10,8 +9,7 @@ namespace Anggur
 	struct Matrix3;
 	struct Matrix4;
 
-	struct Math 
-	{
+	struct Math {
 		// Constants
 
 		static const float pi;
@@ -41,7 +39,7 @@ namespace Anggur
 
 		static float Normalize(float x, float lower, float upper);
 
-		static float Lerp(float lower, float upper, float amount);
+		static float lerp(float lower, float upper, float amount);
 
 		static float Map(float x, float lowerA, float upperA, float lowerB, float upperB);
 
@@ -67,13 +65,13 @@ namespace Anggur
 
 		// Trigonometry manipulations
 
-		static float Sin(float x);
+		static float sin(float x);
 
 		static float Tan(float x);
 
 		static float Sec(float x);
 
-		static float Cos(float x);
+		static float cos(float x);
 
 		static float Cot(float x);
 

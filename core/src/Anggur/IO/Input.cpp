@@ -35,7 +35,7 @@ namespace Anggur
     void Scroll::Update()
     {
         previousDirection = currentDirection;
-        currentDirection.Set(0.0f, 0.0f);
+        currentDirection.set(0.0f, 0.0f);
     }
 
     // Input keyboard device

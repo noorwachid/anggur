@@ -56,14 +56,14 @@ namespace Anggur
 		return (x - lower) / (upper - lower);
 	}
 
-	float Math::Lerp(float lower, float upper, float amount) 
+	float Math::lerp(float lower, float upper, float amount) 
 	{
 		return lower + amount * (upper - lower);
 	}
 
 	float Math::Map(float x, float lowerA, float upperA, float lowerB, float upperB) 
 	{
-		return Lerp(lowerB, upperB, Normalize(x, lowerA, upperA));
+		return lerp(lowerB, upperB, Normalize(x, lowerA, upperA));
 	}
 
 	// Floating point manipulations
@@ -112,7 +112,7 @@ namespace Anggur
 
 	// Trigonometry manipulations
 
-	float Math::Sin(float x) 
+	float Math::sin(float x) 
 	{
 		return sinf(x);
 	}
@@ -127,7 +127,7 @@ namespace Anggur
 		return 0;
 	}
 
-	float Math::Cos(float x) 
+	float Math::cos(float x) 
 	{
 		return cosf(x);
 	}
