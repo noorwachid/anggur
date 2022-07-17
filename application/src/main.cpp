@@ -18,11 +18,11 @@ int main()
 		if (window.input.isKeyPressed(Key::Escape))
 			window.close();
 
-		renderer.Begin();
+		renderer.begin();
 
-		renderer.Clear(Vector4::charcoal);
+		renderer.clear(Vector4::charcoal);
 
-		renderer.DrawRectangle(Matrix3(), {0, 0}, {0.5, 0.5});
+		renderer.drawRectangle(Matrix3(), {0, 0}, {0.5, 0.5});
 
 		renderer.end();
 

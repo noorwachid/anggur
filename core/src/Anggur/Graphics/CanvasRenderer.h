@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/Utility/Log.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
@@ -11,10 +10,8 @@
 #include <vector>
 #include <memory>
 
-namespace Anggur 
-{
-	struct CanvasVertex 
-	{
+namespace Anggur {
+	struct CanvasVertex {
 		Vector2 position;
 		Vector4 color;
 		Vector2 uv;
@@ -22,12 +19,10 @@ namespace Anggur
 
 		CanvasVertex() = default;
 		CanvasVertex(const Vector2& newPosition, const Vector4& newColor, const Vector2& newUV, float newSlot = 0.0f): 
-			position(newPosition), color(newColor), uv(newUV), slot(newSlot) 
-		{
+			position(newPosition), color(newColor), uv(newUV), slot(newSlot) {
 		}
 
-		std::string ToString()
-		{
+		std::string toString() {
 			std::string temp;
 
 			temp += "position: " + position.toString() + "\n";
@@ -39,57 +34,55 @@ namespace Anggur
 		}
 	};
 
-	class CanvasRenderer 
-	{
+	class CanvasRenderer {
 	public:
         CanvasRenderer();
 
         ~CanvasRenderer();
 
-		void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-		void Clear(const Vector4& color = Vector4::black);
-		void SetViewport(const Vector2& size);
-		void SetViewport(const Vector2& position, const Vector2& size);
-		void SetViewProjection(const Matrix3& newViewProjection);
+		void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+		void clear(const Vector4& color = Vector4::black);
+		void setViewport(const Vector2& size);
+		void setViewport(const Vector2& position, const Vector2& size);
+		void setViewProjection(const Matrix3& newViewProjection);
 
-		void Begin();
-		void Begin(const Matrix3& viewProjection);
+		void begin();
+		void begin(const Matrix3& viewProjection);
 		void end();
 
-		bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
-		void Flush();
-		void FlushData();
+		bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
+		void flush();
+		void flushInternalBuffer();
 
-		void Draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+		void draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
 
 		// 2D Primitives
-		void DrawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector4& color = Vector4::white);
-		void DrawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color = Vector4::white);
-		void DrawRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector4& color = Vector4::white);
+		void drawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector4& color = Vector4::white);
+		void drawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color = Vector4::white);
+		void drawRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector4& color = Vector4::white);
 		
-        void DrawTexturedRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0 = Vector2::zero, const Vector2& texturePoint1 = Vector2::one, const Vector4& color = Vector4::white);
+        void drawTexturedRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0 = Vector2::zero, const Vector2& texturePoint1 = Vector2::one, const Vector4& color = Vector4::white);
 
         // 2D Circles
-		void DrawArc(const Matrix3& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi, int segment = 16, const Vector4& color = Vector4::white);
-		void DrawCircle(const Matrix3& model, float radius = 1.0f, int segment = 32, const Vector4& color = Vector4::white);
+		void drawArc(const Matrix3& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi, int segment = 16, const Vector4& color = Vector4::white);
+		void drawCircle(const Matrix3& model, float radius = 1.0f, int segment = 32, const Vector4& color = Vector4::white);
 
 		// 2D Lines
-		void DrawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
-		void DrawLineAnchor(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& p2, float thickness = 0.5, const Vector4& color = Vector4::white);
-		void DrawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
-		void DrawPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
-		void DrawClosedPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
+		void drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
+		void drawLineAnchor(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& p2, float thickness = 0.5, const Vector4& color = Vector4::white);
+		void drawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);
+		void drawPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
+		void drawClosedPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
 
 		// 2D Texts
-		enum class TextAlign
-		{
-			Left,
-			Center,
-			Right,
-			Justify,
+		enum class TextAlign {
+			left,
+			center,
+			right,
+			justify,
 		};
 
-		void RenderText(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::string& textBuffer, TextAlign textVerticalAlign, TextAlign textHorizontalAlign, const Vector4& color = Vector4::white);
+		void drawText(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::string& textBuffer, TextAlign textVerticalAlign, TextAlign textHorizontalAlign, const Vector4& color = Vector4::white);
 
     private:
         std::shared_ptr<Shader> shader;
@@ -115,9 +108,9 @@ namespace Anggur
         Matrix3 viewProjection;
 
 	private:
-		void InitializeVertexPool();
-		void InitializeTexturePool();
-		void InitializeShader();
+		void initializeVertexPool();
+		void initializeTexturePool();
+		void initializeShader();
 
 	};
 }
