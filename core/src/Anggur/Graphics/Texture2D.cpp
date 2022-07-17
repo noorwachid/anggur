@@ -89,6 +89,6 @@ namespace Anggur {
 	}
 
 	bool operator==(const Texture2D& a, const Texture2D& b) {
-		return a.getID() == b.getID();
+		return a.getId() == b.getId();
 	}
 }
