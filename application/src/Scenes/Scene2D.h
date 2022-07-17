@@ -16,15 +16,15 @@ public:
     {
         position = position + (velocity * deltaTime * GetInputDirection());
 
-        Renderer::Begin(Matrix4::CreateOrthographic(20, 20, 0, 1));
+        renderer.canvas.Begin(Matrix4::CreateOrthographic(20, 20, 0, 1));
 
-            Renderer::Clear(Vector4(0.1, 0.1, 0.1, 1.0));
+            Renderer::GetCanvas().Clear(Vector4(0.1, 0.1, 0.1, 1.0));
             
-            Renderer::RenderRectangle(Matrix4::CreateTranslation(position), Vector3(0, 0, 0), Vector3(3, 5, 0));
+            Renderer::GetCanvas().RenderRectangle(Matrix4::CreateTranslation(position), Vector3(0, 0, 0), Vector3(3, 5, 0));
 
-            Renderer::RenderArc(Matrix4::CreateTranslation(Vector3(-5, -5, 0)), 1, Math::pi, Math::pi / 2, 3);
+            Renderer::GetCanvas().RenderArc(Matrix4::CreateTranslation(Vector3(-5, -5, 0)), 1, Math::pi, Math::pi / 2, 3);
             
-        Renderer::End();
+        Renderer::GetCanvas().End();
 
         elapsedTime += deltaTime;
     }

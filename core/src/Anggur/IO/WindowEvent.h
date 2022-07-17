@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Event/Event.h"
+#include "Anggur/Event.h"
 #include "Anggur/Math/Vector2.h"
 
 namespace Anggur 

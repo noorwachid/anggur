@@ -1,20 +1,15 @@
-#include "Anggur/Math/Matrix4.h"
-#include "Anggur/System/Window.h"
-#include "Anggur/System/Input.h"
-#include "Anggur/System/Internal.h"
-#include "Anggur/Graphics/Renderer.h"
-#include "Anggur/Scene/EntityHierarchy.h"
-#include "Anggur/Application.h"
-#include "Scenes/Scene2D.h"
+#include "Anggur/IO/WindowSystem.h"
+#include "Anggur/IO/Window.h"
 
 int main() 
 {
 	using namespace Anggur;
 
-	Application::Initialize(Vector2(400, 400), "Anggur.Example");
+	WindowSystem windowSystem;
+	Window window(Vector2(600, 400), "A");
 
-	EntityHierarchy::SetRootEntity(std::make_shared<Scene2D>());
-
-	Application::Run();
-	Application::Terminate();
+	while (window.IsOpen())
+	{
+		windowSystem;
+	}
 }

@@ -21,7 +21,7 @@ namespace Anggur
         Window::Initialize(windowSize, windowTitle);
         Input::Initialize();
         
-        Renderer::Initialize();
+        MeshRenderer::Initialize();
     }
 
     void Application::Terminate()
