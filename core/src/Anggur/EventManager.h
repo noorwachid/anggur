@@ -5,25 +5,20 @@
 #include <unordered_map>
 #include <vector>
 
-namespace Anggur 
-{
+namespace Anggur {
     using EventListener = std::function<void (Event&)>;
     using EventListenerMap = std::unordered_map<std::string, std::vector<EventListener> >;
 
-    class EventManager 
-    {
+    class EventManager {
     public:
-        void AddListener(const std::string& name, const EventListener& listener) 
-        {
+        void addListener(const std::string& name, const EventListener& listener) {
             map[name].push_back(listener);
         }
 
-        void RemoveListener(const EventListener& listener) 
-        {
+        void removeListener(const EventListener& listener) {
         }
 
-        void Emit(Event& event) 
-        {   
+        void Emit(Event& event) {
             if (map.count(event.name)) {
                 std::vector<EventListener>& listeners = map[event.name];
 

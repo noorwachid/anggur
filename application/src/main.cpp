@@ -15,7 +15,7 @@ int main()
 	{
 		windowSystem.PollEvents();
 
-		if (window.input.IsKeyPressed(Key::Space))
+		if (window.input.IsKeyPressed(Key::Escape))
 			window.Close();
 
 		renderer.Begin();
