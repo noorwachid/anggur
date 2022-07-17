@@ -41,11 +41,11 @@ namespace Anggur {
 
 		// Getters
 
-		float getLengthSquared();
+		float getLengthSquared() const;
 
-		float getLength();
+		float getLength() const;
 
-		float getAngle();
+		float getAngle() const;
 
 		// Setters
 

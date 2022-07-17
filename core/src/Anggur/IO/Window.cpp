@@ -1,7 +1,4 @@
 #include "Anggur/Graphics/Function.h"
-#include "Anggur/Graphics/Image.h"
-#include "Anggur/Utility/Assert.h"
-#include "Anggur/Utility/Log.h"
 #include "Window.h"
 #include "Internal.h"
 #include <cassert>
@@ -23,7 +20,7 @@ namespace Anggur {
 		context = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
 		assert(context && "[Window] Failed to create a window");
 
-		input.BindContext(context);
+		input.bindContext(context);
 
 		bindContext();
 		bindGraphics();

@@ -40,11 +40,11 @@ namespace Anggur {
 
 	// Getters
 
-	float Vector3::getLengthSquared() {
+	float Vector3::getLengthSquared() const {
 		return (x*x + y*y + z*z);
 	}
 
-	float Vector3::getLength() {
+	float Vector3::getLength() const {
 		return (Math::sqrt(getLengthSquared()));
 	}
 

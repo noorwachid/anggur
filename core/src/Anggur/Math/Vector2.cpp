@@ -47,15 +47,15 @@ namespace Anggur {
 
 	// Getters
 
-	float Vector2::getLengthSquared() {
+	float Vector2::getLengthSquared() const {
 		return (x * x + y * y);
 	}
 
-	float Vector2::getLength() {
+	float Vector2::getLength() const {
 		return Math::sqrt(getLengthSquared());
 	}
 
-	float Vector2::getAngle() {
+	float Vector2::getAngle() const {
 		return Math::atan(y, x);
 	}
 

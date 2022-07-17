@@ -67,7 +67,7 @@ namespace Anggur {
 		tab = 258,
 		backspace = 259,
 		insert = 260,
-		delete = 261,
+		delete_ = 261,
 		right = 262,
 		left = 263,
 		down = 264,

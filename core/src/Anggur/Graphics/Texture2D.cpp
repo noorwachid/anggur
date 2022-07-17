@@ -1,5 +1,4 @@
 #include <stb_image.h>
-#include <Anggur/Utility/Log.h>
 #include <Anggur/Graphics/Function.h>
 #include <Anggur/Graphics/Texture2D.h>
 #include <vector>
@@ -62,7 +61,7 @@ namespace Anggur {
 			glTexImage2D(GL_TEXTURE_2D, 0, iformat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		} else {
-			ANGGUR_LOG("[Graphic.Texture.loadBitmap] Data is empty");
+			assert(false && "[Graphic.Texture.loadBitmap] Data is empty");
 		}
 	}
 
