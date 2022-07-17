@@ -25,10 +25,10 @@ namespace Anggur {
 
 		input.BindContext(context);
 
-		BindContext();
-		BindGraphics();
+		bindContext();
+		bindGraphics();
 
-		InitializeGraphics();
+		initializeGraphics();
 
 		int frameBufferWidth = 0;
 		int frameBufferHeight = 0;
@@ -65,73 +65,73 @@ namespace Anggur {
 			glfwDestroyWindow(context);
 	}
 
-	WindowContext* Window::GetContext() {
+	WindowContext* Window::getContext() {
 		return context;
 	}
 
-	float Window::GetAspectRatio() {
+	float Window::getAspectRatio() {
 		return size.y / size.x;
 	}
 
-	const Vector2& Window::GetPosition() {
+	const Vector2& Window::getPosition() {
 		return position;
 	}
 
-	const Vector2& Window::GetSize() {
+	const Vector2& Window::getSize() {
 		return size;
 	}
 
-	const Vector2& Window::GetFrameBufferSize() {
+	const Vector2& Window::getFrameBufferSize() {
 		return frameBufferSize;
 	}
 
-	const std::string& Window::GetTitle() {
+	const std::string& Window::getTitle() {
 		return title;
 	}
 
-	void Window::SetPosition(const Vector2& position) {
+	void Window::setPosition(const Vector2& position) {
 		glfwSetWindowPos(context, position.x, position.y);
 	}
 
-	void Window::SetSize(const Vector2& size) {
+	void Window::setSize(const Vector2& size) {
 		glfwSetWindowSize(context, size.x, size.y);
 	}
 
-	void Window::SetTitle(const std::string& newTitle) {
+	void Window::setTitle(const std::string& newTitle) {
 		glfwSetWindowTitle(context, newTitle.c_str());
 		title = newTitle;
 	}
 
-	bool Window::IsOpen() {
+	bool Window::isOpen() {
 		return !glfwWindowShouldClose(context);
 	}
 
-	void Window::Close() {
+	void Window::close() {
 		glfwSetWindowShouldClose(context, true);
 	}
 
-	void Window::Update() {
-		BindGraphics();
-		SwapFrameBuffers();
+	void Window::update() {
+		bindGraphics();
+		swapFrameBuffers();
 
-		input.Update();
+		input.update();
 	}
 	
-	void Window::InitializeGraphics() {
+	void Window::initializeGraphics() {
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		assert(result && "[Window] Failed to load graphic functions");
 	}
 
-	void Window::BindGraphics() {
+	void Window::bindGraphics() {
 		glfwMakeContextCurrent(context);
 	}
 
 
-	void Window::SwapFrameBuffers() {
+	void Window::swapFrameBuffers() {
 		glfwSwapBuffers(context);
 	}
 
-	void Window::BindContext() {
+	void Window::bindContext() {
 		glfwSetWindowUserPointer(context, this);
 	}
 }

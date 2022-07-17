@@ -11,12 +11,12 @@ int main()
 
 	CanvasRenderer renderer;
 
-	while (window.IsOpen())
+	while (window.isOpen())
 	{
 		windowSystem.pollEvents();
 
-		if (window.input.IsKeyPressed(Key::Escape))
-			window.Close();
+		if (window.input.isKeyPressed(Key::Escape))
+			window.close();
 
 		renderer.Begin();
 
@@ -24,8 +24,8 @@ int main()
 
 		renderer.DrawRectangle(Matrix3(), {0, 0}, {0.5, 0.5});
 
-		renderer.End();
+		renderer.end();
 
-		window.Update();
+		window.update();
 	}
 }

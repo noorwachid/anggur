@@ -54,7 +54,7 @@ namespace Anggur
 
 		void Begin();
 		void Begin(const Matrix3& viewProjection);
-		void End();
+		void end();
 
 		bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
 		void Flush();

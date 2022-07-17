@@ -136,7 +136,7 @@ namespace Anggur
         Begin();
     }
 
-    void CanvasRenderer::End() 
+    void CanvasRenderer::end() 
     {
         Flush();
     }
