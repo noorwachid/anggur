@@ -20,9 +20,9 @@ public:
 
             Renderer::Clear(Vector4(0.1, 0.1, 0.1, 1.0));
             
-            Renderer::RenderRectangle(Matrix4::CreateTranslation(position), Vector3(0, 0), Vector3(3, 5));
+            Renderer::RenderRectangle(Matrix4::CreateTranslation(position), Vector3(0, 0, 0), Vector3(3, 5, 0));
 
-            Renderer::RenderArc(Matrix4::CreateTranslation(Vector3(-5, -5)), 1, Math::pi, Math::pi / 2, 3);
+            Renderer::RenderArc(Matrix4::CreateTranslation(Vector3(-5, -5, 0)), 1, Math::pi, Math::pi / 2, 3);
             
         Renderer::End();
 

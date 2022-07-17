@@ -50,7 +50,7 @@ namespace Anggur
 
     void Renderer::InitializeVertexPool() 
     {
-        rendererData.vertices.assign(rendererData.batchVertex, Vertex(Vector3(0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
+        rendererData.vertices.assign(rendererData.batchVertex, Vertex(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
         rendererData.indices.assign(rendererData.batchVertex * rendererData.batchIndexMultiplier, 0);
 
         rendererData.vertexBuffer = std::make_shared<VertexBuffer>();
