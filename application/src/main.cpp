@@ -1,6 +1,7 @@
 #include "Anggur/IO/WindowSystem.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/Graphics/CanvasRenderer.h"
+#include "Anggur/Graphics/MeshRenderer.h"
 
 int main() 
 {
@@ -9,7 +10,8 @@ int main()
 	WindowSystem windowSystem;
 	Window window(Vector2(600, 400), "An Empty Window");
 
-	CanvasRenderer renderer;
+	// CanvasRenderer renderer;
+	MeshRenderer renderer;
 
 	while (window.isOpen())
 	{
@@ -22,7 +24,9 @@ int main()
 
 		renderer.clear(Vector4::charcoal);
 
-		renderer.drawRectangle(Matrix3(), {0, 0}, {0.5, 0.5});
+		float rotation = Math::map(window.input.getMousePosition().x, 0, window.getSize().x, 0, Math::twoPi);
+
+		renderer.drawCube(Matrix4::createScale(0.3));
 
 		renderer.end();
 
