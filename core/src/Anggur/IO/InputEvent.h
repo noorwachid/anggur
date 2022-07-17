@@ -18,7 +18,7 @@ namespace Anggur
 
     struct MouseButtonEvent: public Event
     {
-        MouseButton button = MouseButton::Unknown;
+        MouseButton button = MouseButton::unknown;
 
         MouseButtonEvent(const std::string& name, MouseButton newButton): Event(name), button(newButton)
         {

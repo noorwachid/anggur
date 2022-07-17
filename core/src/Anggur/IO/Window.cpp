@@ -6,10 +6,8 @@
 #include "Internal.h"
 #include <cassert>
 
-namespace Anggur 
-{
-	Window::Window(const Vector2& size, const std::string& title) 
-	{
+namespace Anggur {
+	Window::Window(const Vector2& size, const std::string& title) {
 		#ifdef ANGGUR_OS_X
 			glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, 0);
 		#endif
@@ -37,8 +35,7 @@ namespace Anggur
 		glfwGetFramebufferSize(context, &frameBufferWidth, &frameBufferHeight);
 		frameBufferSize.set(frameBufferWidth, frameBufferHeight);
 
-		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height)
-		{
+		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
 			WindowSizeEvent event("WindowResize", size);
@@ -46,8 +43,7 @@ namespace Anggur
 			window->size = size;
 		});
 
-		glfwSetWindowPosCallback(context, [](GLFWwindow* context, int x, int y)
-		{
+		glfwSetWindowPosCallback(context, [](GLFWwindow* context, int x, int y) {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 position(x, y);
 			WindowSizeEvent event("WindowMove", position);
@@ -55,8 +51,7 @@ namespace Anggur
 			window->position = position;
 		});
 
-		glfwSetFramebufferSizeCallback(context, [](GLFWwindow* context, int width, int height)
-		{
+		glfwSetFramebufferSizeCallback(context, [](GLFWwindow* context, int width, int height) {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
 			FrameBufferSizeEvent event("FrameBufferResize", size);
@@ -65,95 +60,78 @@ namespace Anggur
 		});
 	}
 
-	Window::~Window()
-	{
+	Window::~Window() {
 		if (context)
 			glfwDestroyWindow(context);
 	}
 
-	WindowContext* Window::GetContext()
-	{
+	WindowContext* Window::GetContext() {
 		return context;
 	}
 
-	float Window::GetAspectRatio() 
-	{
+	float Window::GetAspectRatio() {
 		return size.y / size.x;
 	}
 
-	const Vector2& Window::GetPosition() 
-	{
+	const Vector2& Window::GetPosition() {
 		return position;
 	}
 
-	const Vector2& Window::GetSize() 
-	{
+	const Vector2& Window::GetSize() {
 		return size;
 	}
 
-	const Vector2& Window::GetFrameBufferSize() 
-	{
+	const Vector2& Window::GetFrameBufferSize() {
 		return frameBufferSize;
 	}
 
-	const std::string& Window::GetTitle() 
-	{
+	const std::string& Window::GetTitle() {
 		return title;
 	}
 
-	void Window::SetPosition(const Vector2& position) 
-	{
+	void Window::SetPosition(const Vector2& position) {
 		glfwSetWindowPos(context, position.x, position.y);
 	}
 
-	void Window::SetSize(const Vector2& size) 
-	{
+	void Window::SetSize(const Vector2& size) {
 		glfwSetWindowSize(context, size.x, size.y);
 	}
 
-	void Window::SetTitle(const std::string& newTitle) 
-	{
+	void Window::SetTitle(const std::string& newTitle) {
 		glfwSetWindowTitle(context, newTitle.c_str());
 		title = newTitle;
 	}
 
-	bool Window::IsOpen() 
-	{
+	bool Window::IsOpen() {
 		return !glfwWindowShouldClose(context);
 	}
 
-	void Window::Close() 
-	{
+	void Window::Close() {
 		glfwSetWindowShouldClose(context, true);
 	}
 
-	void Window::Update() 
-	{
+	void Window::Update() {
 		BindGraphics();
 		SwapFrameBuffers();
 
 		input.Update();
 	}
 	
-	void Window::InitializeGraphics() 
-	{
+	void Window::InitializeGraphics() {
 		bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		assert(result && "[Window] Failed to load graphic functions");
 	}
 
-	void Window::BindGraphics() 
-	{
+	void Window::BindGraphics() {
 		glfwMakeContextCurrent(context);
 	}
 
 
-	void Window::SwapFrameBuffers() 
-	{
+	void Window::SwapFrameBuffers() {
 		glfwSwapBuffers(context);
 	}
 
-	void Window::BindContext()
-	{
+	void Window::BindContext() {
 		glfwSetWindowUserPointer(context, this);
 	}
 }

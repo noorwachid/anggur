@@ -5,10 +5,8 @@
 #include "WindowContext.h"
 #include "Input.h"
 
-namespace Anggur 
-{
-	class Window 
-	{
+namespace Anggur {
+	class Window {
 	public:
 		EventManager eventManager;
 		Input input;

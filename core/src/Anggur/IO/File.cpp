@@ -1,10 +1,8 @@
 #include "File.h"
 #include <fstream>
 
-namespace Anggur::File 
-{
-	std::vector<uint8_t> Load(const std::string& path) 
-	{
+namespace Anggur::File {
+	std::vector<uint8_t> load(const std::string& path) {
 		std::ifstream file(path, std::ios::in | std::ios::binary);
 		std::vector<uint8_t> bytes;
 
@@ -16,8 +14,7 @@ namespace Anggur::File
 		return bytes;
 	}
 
-	std::string LoadText(const std::string& path) 
-	{
+	std::string loadText(const std::string& path) {
 		std::ifstream file(path, std::ios::in | std::ios::binary);
 		std::string text;
 

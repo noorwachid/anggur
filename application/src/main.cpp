@@ -13,7 +13,7 @@ int main()
 
 	while (window.IsOpen())
 	{
-		windowSystem.PollEvents();
+		windowSystem.pollEvents();
 
 		if (window.input.IsKeyPressed(Key::Escape))
 			window.Close();
