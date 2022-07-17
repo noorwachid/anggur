@@ -15,7 +15,7 @@ int main()
 	{
 		windowSystem.pollEvents();
 
-		if (window.input.isKeyPressed(Key::Escape))
+		if (window.input.isKeyPressed(Key::escape))
 			window.close();
 
 		renderer.begin();

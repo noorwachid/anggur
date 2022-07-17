@@ -97,7 +97,7 @@ namespace Anggur
 
     void CanvasRenderer::clear(const Vector4& color) {
         glClearColor(color.x, color.y, color.z, color.w);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 
     void CanvasRenderer::setViewport(const Vector2& size) {

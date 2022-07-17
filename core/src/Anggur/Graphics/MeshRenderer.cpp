@@ -8,39 +8,7 @@
 
 namespace Anggur 
 {
-    struct RendererData 
-    {
-        std::shared_ptr<Shader> shader;
-        std::shared_ptr<VertexArray> vertexArray;
-        std::shared_ptr<VertexBuffer> vertexBuffer;
-        std::shared_ptr<IndexBuffer> indexBuffer;
-
-        std::vector<MeshVertex> vertices;
-        std::vector<uint32_t> indices;
-        std::vector<std::shared_ptr<Texture2D>> textures;
-        std::vector<int> textureSlots;
-
-        std::shared_ptr<Texture2D> whiteTexture;
-
-        size_t vertexOffset = 0;
-        size_t indexOffset = 0;
-        size_t textureOffset = 0;
-
-        size_t renderCount = 0;
-        size_t batchVertex = 128;
-        size_t batchIndexMultiplier = 2;
-
-        Matrix4 viewProjection;
-    };
-
-    static RendererData rendererData;
-
-    MeshRenderer::MeshRenderer() 
-    {
-    }
-
-    void MeshRenderer::Initialize() 
-    {
+    MeshRenderer::MeshRenderer() {
         InitializeVertexPool();
         InitializeTexturePool();
         InitializeShader();
@@ -48,43 +16,43 @@ namespace Anggur
         glEnable(GL_DEPTH_TEST);
     }
 
-    void MeshRenderer::InitializeVertexPool() 
-    {
-        rendererData.vertices.assign(rendererData.batchVertex, Vertex(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
-        rendererData.indices.assign(rendererData.batchVertex * rendererData.batchIndexMultiplier, 0);
-
-        rendererData.vertexBuffer = std::make_shared<VertexBuffer>();
-        rendererData.vertexBuffer->SetCapacity(sizeof(Vertex) * rendererData.vertices.size());
-
-        rendererData.vertexArray = std::make_shared<VertexArray>();
-        rendererData.vertexArray->setAttribute(0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
-        rendererData.vertexArray->setAttribute(1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, normal));
-        rendererData.vertexArray->setAttribute(2, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
-        rendererData.vertexArray->setAttribute(3, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureCoord));
-        rendererData.vertexArray->setAttribute(4, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, textureSlot));
-        
-        rendererData.indexBuffer = std::make_shared<IndexBuffer>();
-        rendererData.indexBuffer->SetCapacity(sizeof(uint32_t) * rendererData.indices.size());
+    MeshRenderer::~MeshRenderer() {
     }
 
-    void MeshRenderer::InitializeTexturePool() 
-    {
-        rendererData.textures.assign(Texture::GetMaxSlot(), nullptr);
-        rendererData.textureSlots.reserve(Texture::GetMaxSlot());
+    void MeshRenderer::InitializeVertexPool() {
+        vertices.assign(batchVertex, MeshVertex(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
+        indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-        for (int i = 0; i < Texture::GetMaxSlot(); ++i) 
+        vertexBuffer = std::make_shared<VertexBuffer>();
+        vertexBuffer->setCapacity(sizeof(MeshVertex) * vertices.size());
+
+        vertexArray = std::make_shared<VertexArray>();
+        vertexArray->setAttribute(0, 3, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, position));
+        vertexArray->setAttribute(1, 3, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, normal));
+        vertexArray->setAttribute(2, 4, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, color));
+        vertexArray->setAttribute(3, 2, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, uv));
+        vertexArray->setAttribute(4, 1, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, slot));
+        
+        indexBuffer = std::make_shared<IndexBuffer>();
+        indexBuffer->setCapacity(sizeof(uint32_t) * indices.size());
+    }
+
+    void MeshRenderer::InitializeTexturePool() {
+        textures.assign(Texture::getMaxSlot(), nullptr);
+        textureSlots.reserve(Texture::getMaxSlot());
+
+        for (int i = 0; i < Texture::getMaxSlot(); ++i) 
         {
-            rendererData.textureSlots.push_back(i);
+            textureSlots.push_back(i);
         }
 
         uint8_t whitePixel[] = {255, 255, 255, 255};
-        rendererData.whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
+        whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
     }
 
-    void MeshRenderer::InitializeShader() 
-    {
-        rendererData.shader = std::make_shared<Shader>();
-        rendererData.shader->setVertexSource(R"(
+    void MeshRenderer::InitializeShader() {
+        shader = std::make_shared<Shader>();
+        shader->setVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec3 aPosition;
@@ -108,7 +76,7 @@ namespace Anggur
             }
         )");
 
-        rendererData.shader->setFragmentSource(R"(
+        shader->setFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -117,158 +85,139 @@ namespace Anggur
 
             out vec4 fColor;
 
-            uniform sampler2D uTextures[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
+            uniform sampler2D uTextures[)" + std::to_string(Texture::getMaxSlot()) + R"(];
             
             void main() {
                 fColor = texture(uTextures[int(vTexSlot)], vTexCoord) * vColor;
             }
         )");
 
-        rendererData.shader->compile();
+        shader->compile();
     }
 
-    void MeshRenderer::SetBatchChunk(size_t vertex, size_t indexMultiplier) 
-    {
-        rendererData.batchVertex = vertex;
-        rendererData.batchIndexMultiplier = indexMultiplier;
+    void MeshRenderer::setBatchChunk(size_t vertex, size_t indexMultiplier) {
+        batchVertex = vertex;
+        batchIndexMultiplier = indexMultiplier;
     }
 
-    void MeshRenderer::Clear(const Vector4& color) 
-    {
+    void MeshRenderer::clear(const Vector4& color) {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     }
 
-    void MeshRenderer::SetViewport(const Vector2& size) 
-    {
+    void MeshRenderer::setViewport(const Vector2& size) {
         glViewport(0, 0, size.x, size.y);
     }
 
-    void MeshRenderer::SetViewport(const Vector2& position, const Vector2& size) 
-    {
+    void MeshRenderer::setViewport(const Vector2& position, const Vector2& size) {
         glViewport(position.x, position.y, size.x, size.y);
     }
 
-    void MeshRenderer::SetViewProjection(const Matrix4& newViewProjection)
+    void MeshRenderer::setViewProjection(const Matrix4& newViewProjection)
     {
-        rendererData.viewProjection = newViewProjection;
+        viewProjection = newViewProjection;
     }
 
-    void MeshRenderer::Begin() 
-    {
-        rendererData.renderCount = 0;
+    void MeshRenderer::begin() {
+        renderCount = 0;
 
-        FlushData();
+        flushInternalBuffer();
     }
 
-    void MeshRenderer::Begin(const Matrix4& viewProjection) 
-    {
-        SetViewProjection(viewProjection);
-        Begin();
+    void MeshRenderer::begin(const Matrix4& viewProjection) {
+        setViewProjection(viewProjection);
+        begin();
     }
 
-    void MeshRenderer::End() 
-    {
-        Flush();
+    void MeshRenderer::end() {
+        flush();
     }
 
-    void MeshRenderer::Flush() 
-    {
-        if (rendererData.vertexOffset == 0) 
-        {
+    void MeshRenderer::flush() {
+        if (vertexOffset == 0) 
             return;
-        }
 
-        for (size_t i = 0; i < rendererData.textureOffset; ++i) 
-        {
-            rendererData.textures[i]->Bind(i);
-        }
+        for (size_t i = 0; i < textureOffset; ++i) 
+            textures[i]->bind(i);
 
-        rendererData.shader->bind();
-        rendererData.shader->setUniformMatrix4("uViewProjection", rendererData.viewProjection);
-        rendererData.shader->setUniformInt("uTextures", rendererData.textureOffset, rendererData.textureSlots.data());
+        shader->bind();
+        shader->setUniformMatrix4("uViewProjection", viewProjection);
+        shader->setUniformInt("uTextures", textureOffset, textureSlots.data());
 
-        rendererData.vertexArray->Bind();
+        vertexArray->bind();
         
-        rendererData.vertexBuffer->Bind();
-        rendererData.vertexBuffer->SetData(sizeof(Vertex) * rendererData.vertexOffset, rendererData.vertices.data());
+        vertexBuffer->bind();
+        vertexBuffer->setData(sizeof(MeshVertex) * vertexOffset, vertices.data());
 
-        rendererData.indexBuffer->Bind();
-        rendererData.indexBuffer->SetData(sizeof(uint32_t) * rendererData.indexOffset, rendererData.indices.data());
+        indexBuffer->bind();
+        indexBuffer->setData(sizeof(uint32_t) * indexOffset, indices.data());
 
-        glDrawElements(GL_TRIANGLES, rendererData.indexOffset, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
-        FlushData();
+        flushInternalBuffer();
 
-        ++rendererData.renderCount;
+        ++renderCount;
     }
 
-    void MeshRenderer::FlushData() 
-    {
-        rendererData.vertexOffset = 0;
-        rendererData.indexOffset = 0;
-        rendererData.textureOffset = 0;
+    void MeshRenderer::flushInternalBuffer() {
+        vertexOffset = 0;
+        indexOffset = 0;
+        textureOffset = 0;
     }
 
-    bool MeshRenderer::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) 
-    {
+    bool MeshRenderer::isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) {
         return 
-            rendererData.vertexOffset + newVertexSize > rendererData.vertices.size() ||
-            rendererData.indexOffset + newIndexSize > rendererData.indices.size() ||
-            rendererData.textureOffset + newTextureSize > rendererData.textures.size();
+            vertexOffset + newVertexSize > vertices.size() ||
+            indexOffset + newIndexSize > indices.size() ||
+            textureOffset + newTextureSize > textures.size();
     }
 
-    void MeshRenderer::Render(const std::vector<Vertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) 
-    {
-        if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1)) 
-        {
-            Flush();
+    void MeshRenderer::draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) {
+        if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1)) {
+            flush();
         }
 
         // Find or add new texture slot 
         int textureSlot = 0;
 
         // This code only create one branch
-        for (; textureSlot < rendererData.textureOffset && rendererData.textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
+        for (; textureSlot < textureOffset && textures[textureSlot]->getId() != texture->getId(); ++textureSlot);
 
-        if (textureSlot == rendererData.textureOffset) 
-        {
-            textureSlot = rendererData.textureOffset;
-            rendererData.textures[rendererData.textureOffset] = texture;
-            rendererData.textureOffset += 1;
+        if (textureSlot == textureOffset) {
+            textureSlot = textureOffset;
+            textures[textureOffset] = texture;
+            textureOffset += 1;
         }
 
-        for (size_t i = 0; i < newVertices.size(); ++i) 
-        {
-            auto& vertex = rendererData.vertices[i + rendererData.vertexOffset];
+        for (size_t i = 0; i < newVertices.size(); ++i) {
+            auto& vertex = vertices[i + vertexOffset];
 
             vertex = newVertices[i];
-            vertex.textureSlot = textureSlot;
+            vertex.slot = textureSlot;
         }
 
-        for (size_t i = 0; i < newIndices.size(); ++i) 
-        {
-            rendererData.indices[i + rendererData.indexOffset] = newIndices[i] + rendererData.vertexOffset;
+        for (size_t i = 0; i < newIndices.size(); ++i) {
+            indices[i + indexOffset] = newIndices[i] + vertexOffset;
         }
 
-        rendererData.vertexOffset += newVertices.size();
-        rendererData.indexOffset += newIndices.size();
+        vertexOffset += newVertices.size();
+        indexOffset += newIndices.size();
     }
 
-    void MeshRenderer::RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color)
+    void MeshRenderer::drawCube(const Matrix4& model, const Vector4& color)
     {
-        Render(
+        draw(
             {
                 // position                                 // normal                  // color                                     // texCoord         
-                Vertex(Vector3(-0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3( 0.5f, -0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
-                Vertex(Vector3( 0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
-                Vertex(Vector3(-0.5f,  0.5f, -0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
+                MeshVertex(model * Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                MeshVertex(model * Vector3( 0.5f, -0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
+                MeshVertex(model * Vector3( 0.5f,  0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
+                MeshVertex(model * Vector3(-0.5f,  0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
                  
-                Vertex(Vector3( 0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                Vertex(Vector3(-0.5f, -0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
-                Vertex(Vector3(-0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
-                Vertex(Vector3( 0.5f,  0.5f, 0.5f) * model, Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
+                MeshVertex(model * Vector3( 0.5f, -0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                MeshVertex(model * Vector3(-0.5f, -0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
+                MeshVertex(model * Vector3(-0.5f,  0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
+                MeshVertex(model * Vector3( 0.5f,  0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
             }, {
                 // front
                 0, 1, 2,
@@ -294,7 +243,7 @@ namespace Anggur
                 1, 0, 5,
                 5, 4, 1,
             }, 
-            texture
+            whiteTexture
         );
     }
 }

@@ -15,24 +15,22 @@ namespace Anggur
 		Vector3 position;
 		Vector3 normal;
 		Vector4 color;
-		Vector2 textureCoord;
-		float textureSlot;
+		Vector2 uv;
+		float slot;
 
 		MeshVertex() = default;
-		MeshVertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newTextureCoord, float newTextureSlot = 0.0f): 
-			position(newPosition), normal(newNormal), color(newColor), textureCoord(newTextureCoord), textureSlot(newTextureSlot) 
-		{
+		MeshVertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newUV, float newSlot = 0.0f): 
+			position(newPosition), normal(newNormal), color(newColor), uv(newUV), slot(newSlot) {
 		}
 
-		std::string ToString()
-		{
+		std::string toString() {
 			std::string temp;
 
 			temp += "position: " + position.toString() + "\n";
 			temp += "normal: " + normal.toString() + "\n";
 			temp += "color: " + color.toString() + "\n";
-			temp += "textureCoord: " + textureCoord.toString() + "\n";
-			temp += "textureSlot: " + std::to_string(textureSlot) + "\n"; 
+			temp += "textureCoord: " + uv.toString() + "\n";
+			temp += "textureSlot: " + std::to_string(slot) + "\n"; 
 
 			return temp;
 		}
@@ -41,32 +39,55 @@ namespace Anggur
 	class MeshRenderer 
 	{
 	public:
-		static void Initialize();
-
-		static void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-		static void Clear(const Vector4& color = Vector4::black);
-		static void SetViewport(const Vector2& size);
-		static void SetViewport(const Vector2& position, const Vector2& size);
-		static void SetViewProjection(const Matrix4& newViewProjection);
-
-		static void Begin();
-		static void Begin(const Matrix4& viewProjection);
-		static void End();
-
-		static bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
-		static void Flush();
-		static void FlushData();
-
-		static void Render(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
-
-		// 3D Primitives
-		static void RenderCube(const Matrix4& model, const std::shared_ptr<Texture2D>& texture, const Vector4& color = Vector4::white);
-		
-	private:
 		MeshRenderer();
 
-		static void InitializeVertexPool();
-		static void InitializeTexturePool();
-		static void InitializeShader();
+		~MeshRenderer();
+
+		void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+		void clear(const Vector4& color = Vector4::black);
+		void setViewport(const Vector2& size);
+		void setViewport(const Vector2& position, const Vector2& size);
+		void setViewProjection(const Matrix4& newViewProjection);
+
+		void begin();
+		void begin(const Matrix4& viewProjection);
+		void end();
+
+		bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
+		void flush();
+		void flushInternalBuffer();
+
+		void draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+
+		// 3D Primitives
+		void drawCube(const Matrix4& model, const Vector4& color = Vector4::white);
+
+	private:
+        std::shared_ptr<Shader> shader;
+        std::shared_ptr<VertexArray> vertexArray;
+        std::shared_ptr<VertexBuffer> vertexBuffer;
+        std::shared_ptr<IndexBuffer> indexBuffer;
+
+        std::vector<MeshVertex> vertices;
+        std::vector<uint32_t> indices;
+        std::vector<std::shared_ptr<Texture2D>> textures;
+        std::vector<int> textureSlots;
+
+        std::shared_ptr<Texture2D> whiteTexture;
+
+        size_t vertexOffset = 0;
+        size_t indexOffset = 0;
+        size_t textureOffset = 0;
+
+        size_t renderCount = 0;
+        size_t batchVertex = 128;
+        size_t batchIndexMultiplier = 2;
+
+        Matrix4 viewProjection;
+
+	private:
+		void InitializeVertexPool();
+		void InitializeTexturePool();
+		void InitializeShader();
 	};
 }
