@@ -5,18 +5,15 @@
 #include "WindowContext.h"
 #include <array>
 
-namespace Anggur 
-{
-    struct Keyboard 
-    {
+namespace Anggur {
+    struct Keyboard {
         std::array<bool, maxKeyValue> currentState;
         std::array<bool, maxKeyValue> previousState; 
 
         void Update();
     };
 
-    struct Mouse 
-    {
+    struct Mouse {
         Vector2 currentPosition;
         Vector2 previousPosition;
         Vector2 direction;
@@ -27,16 +24,14 @@ namespace Anggur
         void Update();
     };
 
-    struct Scroll
-    {
+    struct Scroll {
         Vector2 currentDirection;
         Vector2 previousDirection;
 
         void Update();
     };
 
-    class Input 
-    {
+    class Input {
     public:
         // Key device
 
