@@ -1,5 +1,7 @@
 #pragma once
-#include <Anggur/Graphics/Texture.h>
+
+#include "Texture.h"
+#include "Image.h"
 
 namespace Anggur {
 	class Texture2D {

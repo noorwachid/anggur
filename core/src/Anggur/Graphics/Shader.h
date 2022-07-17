@@ -9,29 +9,29 @@ namespace Anggur {
 		Shader();
 		~Shader();
 
-		inline uint32_t GetID() const { return id; }
+		inline uint32_t getId() const { return id; }
 
-		void SetVertexSource(const std::string& source);
-		void SetFragmentSource(const std::string& source);
+		void setVertexSource(const std::string& source);
+		void setFragmentSource(const std::string& source);
 
-		void Compile();
-		void Bind();
-		void Terminate();
+		void compile();
+		void bind();
+		void terminate();
 
-		int GetLocation(const std::string& name);
+		int getLocation(const std::string& name);
 
-		void SetUniformMatrix3(const std::string& name, const Matrix3& matrix);
-		void SetUniformMatrix4(const std::string& name, const Matrix4& matrix);
+		void setUniformMatrix3(const std::string& name, const Matrix3& matrix);
+		void setUniformMatrix4(const std::string& name, const Matrix4& matrix);
 
-		void SetUniformVector2(const std::string& name, const Vector2& vector);
-		void SetUniformVector3(const std::string& name, const Vector3& vector);
-		void SetUniformVector4(const std::string& name, const Vector4& vector);
+		void setUniformVector2(const std::string& name, const Vector2& vector);
+		void setUniformVector3(const std::string& name, const Vector3& vector);
+		void setUniformVector4(const std::string& name, const Vector4& vector);
 
-		void SetUniformInt(const std::string& name, int value);
-		void SetUniformInt(const std::string& name, size_t size, int* values);
+		void setUniformInt(const std::string& name, int value);
+		void setUniformInt(const std::string& name, size_t size, int* values);
 
-		void SetUniformFloat(const std::string& name, float value);
-		void SetUniformFloat(const std::string& name, size_t size, float* values);
+		void setUniformFloat(const std::string& name, float value);
+		void setUniformFloat(const std::string& name, size_t size, float* values);
 
 	private:
 		uint32_t id;

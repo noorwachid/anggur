@@ -48,7 +48,7 @@ namespace Anggur
 
     void CanvasRenderer::initializeShader() {
         shader = std::make_shared<Shader>();
-        shader->SetVertexSource(R"(
+        shader->setVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec2 aPosition;
@@ -71,7 +71,7 @@ namespace Anggur
             }
         )");
 
-        shader->SetFragmentSource(R"(
+        shader->setFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -87,7 +87,7 @@ namespace Anggur
             }
         )");
 
-        shader->Compile();
+        shader->compile();
     }
 
     void CanvasRenderer::setBatchChunk(size_t vertex, size_t indexMultiplier) {
@@ -138,9 +138,9 @@ namespace Anggur
             textures[i]->bind(i);
         }
 
-        shader->Bind();
-        shader->SetUniformMatrix3("uViewProjection", viewProjection);
-        shader->SetUniformInt("uSlots", textureOffset, slots.data());
+        shader->bind();
+        shader->setUniformMatrix3("uViewProjection", viewProjection);
+        shader->setUniformInt("uSlots", textureOffset, slots.data());
 
         vertexArray->bind();
         
