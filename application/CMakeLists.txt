@@ -5,7 +5,7 @@ project(application)
 
 file(GLOB application_sources
     "src/*.cpp"
-    "src/Scenes/*.cpp"
+    "src/*/*.cpp"
 )
 
 add_executable(application ${application_sources})
