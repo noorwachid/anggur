@@ -9,7 +9,7 @@ namespace Anggur {
 		Shader();
 		~Shader();
 
-		inline uint32_t getId() const { return id; }
+		inline uint32_t getID() const { return id; }
 
 		void setVertexSource(const std::string& source);
 		void setFragmentSource(const std::string& source);

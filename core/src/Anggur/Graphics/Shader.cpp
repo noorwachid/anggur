@@ -36,7 +36,7 @@ namespace Anggur {
 		glGetShaderiv(vertexId, GL_COMPILE_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetShaderInfoLog(vertexId, 512, NULL, message);
-			assert(false && "[Graphic.Shader.compile] Failed to compile vertex shader");
+			assert("[Graphic.Shader.compile] Failed to compile vertex shader" && message && false);
 		}
 
 		uint32_t fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -46,7 +46,7 @@ namespace Anggur {
 		glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetShaderInfoLog(fragmentId, 512, NULL, message);
-			assert(false && "[Graphic.Shader.compile] failed to compile fragment shader");
+			assert("[Graphic.Shader.compile] failed to compile fragment shader" && message && false);
 		}
 
 		terminate(); // in case shader already created
@@ -59,7 +59,7 @@ namespace Anggur {
 		glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetProgramInfoLog(id, 512, NULL, message);
-			assert(false && "[Graphic.Shader.compile] failed to link shader program");
+			assert("[Graphic.Shader.compile] failed to link shader program" && message && false);
 		}
 		
 		glDeleteShader(vertexId);

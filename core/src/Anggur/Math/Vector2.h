@@ -37,7 +37,7 @@ namespace Anggur {
 
 		float* toPointer();
 
-		std::string toString();
+		std::string toString() const;
 
 		// Getters
 
@@ -46,6 +46,8 @@ namespace Anggur {
 		float getLength() const;
 
 		float getAngle() const;
+
+		Vector2 getPerpendicular() const;
 
 		// Setters
 
@@ -73,6 +75,8 @@ namespace Anggur {
 
 
 		// 3rd class manipulations
+
+		friend Vector2 operator- (const Vector2& a);
 
 		friend Vector2 operator+ (const Vector2& a, const Vector2& b);
 

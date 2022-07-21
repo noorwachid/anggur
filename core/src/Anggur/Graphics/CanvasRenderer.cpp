@@ -178,7 +178,7 @@ namespace Anggur
         int textureSlot = 0;
 
         // This code only create one branch
-        for (; textureSlot < textureOffset && textures[textureSlot]->getId() != texture->getId(); ++textureSlot);
+        for (; textureSlot < textureOffset && textures[textureSlot]->getID() != texture->getID(); ++textureSlot);
 
         if (textureSlot == textureOffset) {
             textureSlot = textureOffset;
@@ -365,4 +365,244 @@ namespace Anggur
 
         draw(vertices, indices, whiteTexture);
     }
+
+    // 2D lines
+
+	void CanvasRenderer::drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) {
+		Vector2 offsetPoint = thickness * Vector2::normalize((point0 - point1));
+		Vector2 perpenPoint = thickness * Vector2::normalize((point1 - point0).getPerpendicular());
+
+		drawQuad(model, 
+            point1 + perpenPoint, 
+            point0 + perpenPoint + offsetPoint, 
+            point0 - perpenPoint + offsetPoint, 
+            point1 - perpenPoint, 
+            color
+        );
+	}
+
+	void CanvasRenderer::drawLineAnchor(const Matrix3& transform,
+		const Vector2& p0,
+		const Vector2& p1,
+		const Vector2& p2,
+		float w,
+		const Vector4& c) {
+		Vector2 i0 = transform * Vector2::zero;
+		Vector2 l0 = transform * p0;
+		Vector2 l1 = transform * p1;
+		Vector2 l2 = transform * p2;
+		Vector2 t0 = (l1 - l0).getPerpendicular();
+		Vector2 t2 = (l2 - l1).getPerpendicular();
+
+		if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y))) {
+			t0 = -t0;
+			t2 = -t2;
+		}
+
+		t0.setLength(w);
+		t2.setLength(w);
+
+		Vector2 u0 = (l0 + t0);
+		Vector2 u1 = (l2 + t2);
+		Vector2 n0 = (l0 - t0);
+		Vector2 n1 = (l2 - t2);
+		Vector2 c0 = (l1 + t0);
+		Vector2 c1 = (l1 + t2);
+		Vector2 d0 = (l1 - t0);
+		Vector2 d1 = (l1 - t2);
+        Vector2 e0c = (l1 - l0);
+        e0c.setLength(w * 2);
+		Vector2 e0 = (e0c + c0);
+        Vector2 e1c = (l1 - l2);
+        e1c.setLength(w * 2);
+		Vector2 e1 = (e1c + c1);
+
+		auto areLinesIntersected = [](
+			const Vector2& p0,
+			const Vector2& p1,
+			const Vector2& p2,
+			const Vector2& p3,
+			Vector2& p4) -> bool {
+			float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
+			float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
+			float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
+
+			float denomAbs = Math::abs(denom);
+			float numeaAbs = Math::abs(numea);
+			float numebAbs = Math::abs(numeb);
+
+			if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon) {
+				p4 = Vector2::lerp(p0, p1, 0.5);
+				return true;
+			}
+
+			if (denomAbs < Math::epsilon)
+				return false;
+
+			float mua = numea / denom;
+			float mub = numeb / denom;
+
+			if (mua < 0 || mua > 1 || mub < 0 || mub > 1) {
+				return false;
+			}
+
+			float muax = numea / denom;
+			p4 = muax * (p1 - p0);
+			p4 = p4 + p0;
+			return true;
+		};
+
+		bool intersected = areLinesIntersected(c0, e0, c1, e1, i0);
+
+        std::vector<CanvasVertex> vertices = {
+			CanvasVertex{{e0.x, e0.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 0
+			CanvasVertex{{e1.x, e1.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 1
+			CanvasVertex{{u0.x, u0.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 2
+			CanvasVertex{{u1.x, u1.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 3
+			CanvasVertex{{n0.x, n0.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 4
+			CanvasVertex{{n1.x, n1.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 5
+			CanvasVertex{{c0.x, c0.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 6
+			CanvasVertex{{c1.x, c1.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 7
+			CanvasVertex{{d0.x, d0.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 8
+			CanvasVertex{{d1.x, d1.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 9
+			CanvasVertex{{i0.x, i0.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 10
+			CanvasVertex{{l1.x, l1.y}, {c.x, c.y, c.z, c.w}, {0, 0}}, // 11
+		};
+
+		std::vector<uint32_t> indices = {
+			2, 6, 8,
+			8, 4, 2,
+			7, 3, 5,
+			5, 9, 7,
+			6, 7, 11, // mid
+			6, 0, 1,
+			1, 7, 6,
+		};
+
+		if (intersected) {
+			indices.resize(18);
+			indices[15] = 6;
+			indices[16] = 10;
+			indices[17] = 7;
+		}
+
+		draw(vertices, indices, whiteTexture);
+	}
+
+	void CanvasRenderer::drawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) {
+		Vector2 midPoint = Vector2::lerp(point0, point1, 0.5);
+
+		drawLineTerminator(model, point0, midPoint, thickness, color);
+		drawLineTerminator(model, point1, midPoint, thickness, color);
+	}
+
+	void CanvasRenderer::drawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
+		if (ps.size() > 1) {
+			std::vector<Vector2> ms;
+
+			for (size_t i = 0; i < ps.size() - 1; ++i)
+				ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
+
+			for (size_t i = 1; i < ms.size(); ++i)
+				drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+
+			drawLineTerminator(transform, ps.front(), ms.front(), w, c);
+			drawLineTerminator(transform, ps.back(), ms.back(), w, c);
+		}
+	}
+
+	// void CanvasRenderer::drawPolyLineConnected(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
+	// 	if (ps.size() > 1) {
+	// 		std::vector<Vector2> ms;
+
+	// 		for (size_t i = 0; i < ps.size() - 1; ++i)
+	// 			ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
+
+	// 		for (size_t i = 1; i < ms.size(); ++i)
+	// 			drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+
+	// 		Vector2 m = Vector2::lerp(ps.front(), ps.back(), 0.5);
+
+	// 		drawLineAnchor(transform, m, ps.front(), ms.front(), w, c);
+	// 		drawLineAnchor(transform, ms.back(), ps.back(), m, w, c);
+	// 	}
+	// }
+
+	// void CanvasRenderer::drawQuadraticBezier(const Matrix3& transform,
+	// 	const Vector2& p0,
+	// 	const Vector2& p1,
+	// 	const Vector2& p2,
+	// 	float w,
+	// 	const Vector4& c) {
+	// 	auto GetLerped = [](const Vector2& p0, const Vector2& p1, const Vector2& p2, float t) {
+	// 		Vector2 pt;
+
+	// 		float t2 = t * 2;
+	// 		float tq = t * t;
+	// 		float ti = 1.f - t;
+	// 		float tiq = ti * ti;
+
+	// 		pt.x = tiq * p0.x +
+	// 			ti * t2 * p1.x +
+	// 			tq * p2.x;
+	// 		pt.y = tiq * p0.y +
+	// 			ti * t2 * p1.y +
+	// 			tq * p2.y;
+
+	// 		return pt;
+	// 	};
+
+	// 	std::vector<Vector2> points;
+
+	// 	for (int i = 0; i <= 10; ++i)
+	// 		points.push_back(GetLerped(p0, p1, p2, i / 10.f));
+
+	// 	drawPolyLine(transform, points, w, c);
+	// }
+
+	// void CanvasRenderer::drawQuadraticBezierAlt(const Matrix3& transform,
+	// 	const Vector2& p0,
+	// 	const Vector2& p1,
+	// 	const Vector2& p2,
+	// 	float w,
+	// 	const Vector4& c) {
+	// 	Vector2 px = p1 * 2 - (p0 + p2) / 2;
+	// 	drawQuadraticBezier(transform, p0, px, p2, w, c);
+	// }
+
+	// void CanvasRenderer::drawQubicBezier(const Matrix3& transform,
+	// 	const Vector2& p0,
+	// 	const Vector2& p1,
+	// 	const Vector2& p2,
+	// 	const Vector2& p3,
+	// 	float w,
+	// 	const Vector4& c) {
+	// 	auto GetLerped = [](const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector2& p3, float t) {
+	// 		Vector2 pt;
+
+	// 		float t3 = t * 3;
+	// 		float tc = t * t * t;
+	// 		float ti = 1.f - t;
+	// 		float tiq = ti * ti;
+	// 		float tic = ti * ti * ti;
+
+	// 		pt.x = tic * p0.x +
+	// 			tiq * t3 * p1.x +
+	// 			ti * t3 * t * p2.x +
+	// 			tc * p3.x;
+	// 		pt.y = tic * p0.y +
+	// 			tiq * t3 * p1.y +
+	// 			ti * t3 * t * p2.y +
+	// 			tc * p3.y;
+
+	// 		return pt;
+	// 	};
+
+	// 	std::vector<Vector2> points;
+
+	// 	for (int i = 0; i <= 10; ++i)
+	// 		points.push_back(GetLerped(p0, p1, p2, p3, i / 10.f));
+
+	// 	drawPolyLine(transform, points, w, c);
+	// }
 }

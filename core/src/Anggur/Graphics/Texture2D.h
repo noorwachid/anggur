@@ -12,7 +12,7 @@ namespace Anggur {
 
 		~Texture2D();
 
-		inline uint32_t getId() const { return id; }
+		inline uint32_t getID() const { return id; }
 		inline uint32_t getWidth() const { return width; }
 		inline uint32_t getHeight() const { return height; }
 		inline uint32_t getChannels() const { return channels; }

@@ -1,5 +1,6 @@
 #include "Anggur/IO/WindowSystem.h"
 #include "Anggur/IO/Window.h"
+#include "Anggur/IO/Internal.h"
 #include "Anggur/Graphics/CanvasRenderer.h"
 #include "Anggur/Graphics/MeshRenderer.h"
 
@@ -8,10 +9,13 @@ int main()
 	using namespace Anggur;
 
 	WindowSystem windowSystem;
-	Window window(Vector2(600, 400), "An Empty Window");
+	Window window(Vector2(600, 600), "An Empty Window");
 
-	// CanvasRenderer renderer;
-	MeshRenderer renderer;
+	CanvasRenderer renderer;
+	Matrix3 model;
+
+	Vector2 p0 = {-1, -0.5};
+	Vector2 p1 = {1, 1};
 
 	while (window.isOpen())
 	{
@@ -24,9 +28,9 @@ int main()
 
 		renderer.clear(Vector4::charcoal);
 
-		float rotation = Math::map(window.input.getMousePosition().x, 0, window.getSize().x, 0, Math::twoPi);
+		renderer.drawLine(model, {0, 0}, {0.5, 0.25}, 0.1);
 
-		renderer.drawCube(Matrix4::createScale(0.3));
+		// renderer.drawQuad(model, {-0.5, -0.5}, {0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5});
 
 		renderer.end();
 

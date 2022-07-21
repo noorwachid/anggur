@@ -41,7 +41,7 @@ namespace Anggur {
 		return &x;
 	}
 
-	std::string Vector2::toString() {
+	std::string Vector2::toString() const {
 		return std::to_string(x) + ", " + std::to_string(y);
 	}
 
@@ -57,6 +57,10 @@ namespace Anggur {
 
 	float Vector2::getAngle() const {
 		return Math::atan(y, x);
+	}
+
+	Vector2 Vector2::getPerpendicular() const {
+		return Vector2(-y, x);
 	}
 
 	// Setters
@@ -110,21 +114,28 @@ namespace Anggur {
 	}
 
 	Vector2 Vector2::lerp(const Vector2& a, const Vector2& b, float amount)  {
-		return Vector2(a + (b - a) * amount);
+		return Vector2(
+			Math::lerp(a.x, b.x, amount), 
+			Math::lerp(a.y, b.y, amount)
+		);
 	}
 
 	// 3rd class manipulations
 
+	Vector2 operator- (const Vector2& a) {
+		return Vector2(-a.x, -a.y);
+	}
+
 	Vector2 operator+ (const Vector2& a, const Vector2& b) {
-		return Vector2(a.x + b.y, a.y + b.y);
+		return Vector2(a.x + b.x, a.y + b.y);
 	}
 
 	Vector2 operator- (const Vector2& a, const Vector2& b) {
-		return Vector2(a.x - b.y, a.y - b.y);
+		return Vector2(a.x - b.x, a.y - b.y);
 	}
 
 	Vector2 operator* (const Vector2& a, const Vector2& b) {
-		return Vector2(a.x * b.y, a.y * b.y);
+		return Vector2(a.x * b.x, a.y * b.y);
 	}
 
 	Vector2 operator+ (float a, const Vector2& b) {

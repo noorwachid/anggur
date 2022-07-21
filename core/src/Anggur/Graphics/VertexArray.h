@@ -9,7 +9,7 @@ namespace Anggur {
 		IndexBuffer();
 		~IndexBuffer();
 
-		uint32_t getId() { return id; }
+		uint32_t getID() { return id; }
 
 		void bind();
 		void unbind();
@@ -25,7 +25,7 @@ namespace Anggur {
 		VertexBuffer();
 		~VertexBuffer();
 
-		uint32_t getId() { return id; }
+		uint32_t getID() { return id; }
 
 		void bind();
 		void unbind();
@@ -41,7 +41,7 @@ namespace Anggur {
 		VertexArray();
 		~VertexArray();
 
-		uint32_t getId() { return id; }
+		uint32_t getID() { return id; }
 
 		void bind();
 		void unbind();

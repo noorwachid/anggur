@@ -181,7 +181,7 @@ namespace Anggur
         int textureSlot = 0;
 
         // This code only create one branch
-        for (; textureSlot < textureOffset && textures[textureSlot]->getId() != texture->getId(); ++textureSlot);
+        for (; textureSlot < textureOffset && textures[textureSlot]->getID() != texture->getID(); ++textureSlot);
 
         if (textureSlot == textureOffset) {
             textureSlot = textureOffset;
