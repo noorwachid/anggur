@@ -21,6 +21,8 @@ int main()
 	Vector2 p0 = {-1, -0.5};
 	Vector2 p1 = {1, 1};
 
+	auto letterFTexture = std::make_shared<Texture2D>("resources/images/f.png");
+
 	std::cout << window.getSize().toString() << "\n";
 
 	window.emmiter.listen("frameBufferResized", [&renderer](Event& event) {
@@ -72,15 +74,16 @@ int main()
 
 		ballPosition += ballVelocity * deltaTime * getInputAxis();
 
+		camera.update();
+		
 		renderer.begin(camera.getViewProjection());
 
 		renderer.clear(Vector4::charcoal);
 
-		renderer.drawCircle(Matrix3::createTranslation(ballPosition), 10);
+		renderer.drawTexturedRectangle(Matrix3::createTranslation(ballPosition), {0, 0}, {20, 20}, letterFTexture, {0, 0}, {1, 1});
 
 		renderer.end();
 
 		window.update();
-		camera.update();
 	}
 }
