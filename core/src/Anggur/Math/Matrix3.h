@@ -28,7 +28,7 @@ namespace Anggur {
              g(newG), h(newH), i(newI) {
         }
 
-        void Set(
+        void set(
             float newA, float newB, float newC,
             float newD, float newE, float newF,
             float newG, float newH, float newI

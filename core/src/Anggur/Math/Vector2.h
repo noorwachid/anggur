@@ -89,5 +89,17 @@ namespace Anggur {
 		friend Vector2 operator- (float a, const Vector2& b);
 
 		friend Vector2 operator* (float a, const Vector2& b);
+
+		friend Vector2& operator+= (Vector2& a, const Vector2& b);
+
+		friend Vector2& operator-= (Vector2& a, const Vector2& b);
+
+		friend Vector2& operator*= (Vector2& a, const Vector2& b);
+
+		friend Vector2& operator+= (Vector2& a, float b);
+
+		friend Vector2& operator-= (Vector2& a, float b);
+
+		friend Vector2& operator*= (Vector2& a, float b);
 	};
 }

@@ -9,16 +9,16 @@ namespace Anggur {
     using EventListener = std::function<void (Event&)>;
     using EventListenerMap = std::unordered_map<std::string, std::vector<EventListener> >;
 
-    class EventManager {
+    class EventEmitter {
     public:
-        void addListener(const std::string& name, const EventListener& listener) {
+        void listen(const std::string& name, const EventListener& listener) {
             map[name].push_back(listener);
         }
 
-        void removeListener(const EventListener& listener) {
+        void dismiss(const EventListener& listener) {
         }
 
-        void Emit(Event& event) {
+        void emit(Event& event) {
             if (map.count(event.name)) {
                 std::vector<EventListener>& listeners = map[event.name];
 

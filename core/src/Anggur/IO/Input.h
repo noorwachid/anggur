@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/EventManager.h"
+#include "Anggur/EventEmitter.h"
 #include "InputEvent.h"
 #include "WindowContext.h"
 #include <array>
@@ -80,7 +80,7 @@ namespace Anggur {
         Mouse mouse;
         Scroll scroll;
 
-        EventManager eventManager;
+        EventEmitter emitter;
 
         WindowContext* context = nullptr;
 

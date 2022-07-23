@@ -100,7 +100,7 @@ namespace Anggur {
         glfwSetCursorPos(context, position.x, position.y);
         mouse.currentPosition = position;
         MousePositionEvent event("MousePositionMove", position);
-        eventManager.Emit(event);
+        emitter.emit(event);
     }
 
     // Input scroll virtual device
@@ -153,25 +153,25 @@ namespace Anggur {
     void Input::directSetKeyState(Key key, bool state) {
         int index = static_cast<int>(key);
         keyboard.currentState[index] = state;
-        KeyEvent event(state ? "KeyPressed" : "KeyRelease", key);
-        eventManager.Emit(event);
+        KeyEvent event(state ? "keyPressed" : "keyReleased", key);
+        emitter.emit(event);
     }
 
     void Input::directSetMouseButtonState(MouseButton button, bool state) {
         mouse.currentButtonState[static_cast<int>(button)] = state;
-        MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonRelease", button);
-        eventManager.Emit(event);
+        MouseButtonEvent event(state ? "mouseButtonPressed" : "wouseButtonReleased", button);
+        emitter.emit(event);
     }
 
     void Input::directSetMousePosition(const Vector2& position) {
         mouse.currentPosition = position;
-        MousePositionEvent event("MousePositionMove", position);
-        eventManager.Emit(event);
+        MousePositionEvent event("mousePositionMoved", position);
+        emitter.emit(event);
     }
 
     void Input::directSetScrollDirection(const Vector2& direction) {
         scroll.currentDirection = direction;
-        ScrollEvent event("ScrollMove", direction);
-        eventManager.Emit(event);
+        ScrollEvent event("scrollMoved", direction);
+        emitter.emit(event);
     }
 }

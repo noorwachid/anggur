@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/EventManager.h"
+#include "Anggur/EventEmitter.h"
 #include "WindowEvent.h"
 #include "WindowContext.h"
 #include "Input.h"
@@ -8,7 +8,7 @@
 namespace Anggur {
 	class Window {
 	public:
-		EventManager eventManager;
+		EventEmitter emmiter;
 		Input input;
 
 	public:
