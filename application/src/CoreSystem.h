@@ -10,6 +10,9 @@ using namespace Anggur;
 
 class CoreSystem {
 public:
+	CoreSystem() {
+	}
+
 	void initialize() {
 		previousTime = clock.getElapsed();
 	}
@@ -17,29 +20,22 @@ public:
 	void run() {
         initialize();
         
-		while (window->isOpen()) {
+		while (window.isOpen()) {
 			windowSystem.pollEvents();
 
 			update();
 
-			window->update();
+			window.update();
 		}
 	}
 
-	void setWindow(const std::shared_ptr<Window>& newWindow) {
-		window = newWindow;
-		renderer = std::make_shared<Renderer>();
-	}
-
-	void setRootEntity(const std::shared_ptr<Entity>& newEntity) {
-		entity = newEntity;
-		entity->window = window;
-		entity->renderer = renderer;
+	template <typename E>
+	void setRootEntity() {
+		entity.reset(new E(window, renderer));
 		entity->initialize();
 	}
 
 	void update() {
-
 		float currentTime = clock.getElapsed();
 		float deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
@@ -51,13 +47,13 @@ public:
 private:
 	// Window system
 	WindowSystem windowSystem;
-	std::shared_ptr<Window> window = nullptr;
+	Window window;
+
+	// Rendering system
+	Renderer renderer;
 
 	// Hierarchy system
 	std::shared_ptr<Entity> entity = nullptr;
-
-	// Rendering system
-	std::shared_ptr<Renderer> renderer = nullptr;
 
 	// Time system
 	Clock clock;

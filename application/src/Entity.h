@@ -7,11 +7,13 @@ using namespace Anggur;
 
 class Entity {
 public:
+	Entity(Window& sharedWindow, Renderer& sharedRenderer): window(sharedWindow), renderer(sharedRenderer) {}
+
 	virtual void initialize() {};
 	virtual void update(float deltaTime) {};
 	virtual void terminate() {};
 
 public:
-	std::shared_ptr<Window> window;
-	std::shared_ptr<Renderer> renderer;
+	Window& window;
+	Renderer& renderer;
 };

@@ -7,8 +7,12 @@ using namespace Anggur;
 
 class TestEntity: public Entity {
 public:
+    TestEntity(Window& sharedWindow, Renderer& sharedRenderer):
+        Entity(sharedWindow, sharedRenderer) {
+    }
+
 	void initialize() {
-		camera.setFrameSize(window->getSize());
+		camera.setFrameSize(window.getSize());
 		camera.setFrameScale(0.5);
 	}
 
@@ -17,27 +21,27 @@ public:
 
 		camera.update();
 		
-		renderer->canvas.begin(camera.getViewProjection());
+		renderer.canvas.begin(camera.getViewProjection());
 
-			renderer->canvas.clear(Vector4::charcoal);
-			renderer->canvas.drawCircle(Matrix3::createTranslation(ballPosition), 10);
+			renderer.canvas.clear(Vector4::charcoal);
+			renderer.canvas.drawCircle(Matrix3::createTranslation(ballPosition), 10);
 
-		renderer->canvas.end();
+		renderer.canvas.end();
 	}
 
 	Vector2 getInputAxis() {
 		Vector2 direction;
 
-		if (window->input.isKeyDown(Key::left))
+		if (window.input.isKeyDown(Key::left))
 			direction.x -= 1;
 
-		if (window->input.isKeyDown(Key::right))
+		if (window.input.isKeyDown(Key::right))
 			direction.x += 1;
 
-		if (window->input.isKeyDown(Key::up))
+		if (window.input.isKeyDown(Key::up))
 			direction.y -= 1;
 
-		if (window->input.isKeyDown(Key::down))
+		if (window.input.isKeyDown(Key::down))
 			direction.y += 1;
 
 		return Vector2::normalize(direction);
