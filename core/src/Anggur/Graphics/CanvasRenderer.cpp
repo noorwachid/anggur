@@ -1,5 +1,5 @@
 #include "Function.h"
-#include "VertexArray.h"
+#include "VertexBuffer.h"
 #include "Shader.h"
 #include "CanvasRenderer.h"
 #include "Anggur/Math/Vector2.h"

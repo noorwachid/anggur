@@ -1,5 +1,5 @@
 #include <Anggur/Graphics/Function.h>
-#include <Anggur/Graphics/VertexArray.h>
+#include <Anggur/Graphics/VertexBuffer.h>
 
 namespace Anggur 
 {

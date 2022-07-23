@@ -1,5 +1,5 @@
 #include "Function.h"
-#include "VertexArray.h"
+#include "VertexBuffer.h"
 #include "Shader.h"
 #include "MeshRenderer.h"
 #include "Anggur/Math/Matrix4.h"
