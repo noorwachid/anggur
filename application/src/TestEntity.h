@@ -13,7 +13,7 @@ public:
 	}
 
 	void update(float deltaTime) {
-		ballPosition += deltaTime * getInputAxis() * ballVelocity;
+		ballPosition += (deltaTime * getInputAxis()) * ballVelocity;
 
 		camera.update();
 		
@@ -47,5 +47,5 @@ private:
 	CanvasCamera camera;
 
 	Vector2 ballPosition;
-	Vector2 ballVelocity = 100;
+	Vector2 ballVelocity = Vector2(100, 100);
 };

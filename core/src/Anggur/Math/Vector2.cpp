@@ -108,7 +108,7 @@ namespace Anggur {
 		float length = a.getLength();
 
 		if (length == 0) 
-			return a;
+			return Vector2::zero;
 
 		return Vector2(a.x / length, a.y / length);
 	}
