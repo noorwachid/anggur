@@ -165,4 +165,34 @@ namespace Anggur {
 	Vector4 operator* (float a, const Vector4& b) {
 		return Vector4(a * b.x, a * b.y, a * b.z, a + b.w);
 	}
+
+	Vector4& operator+= (Vector4& a, const Vector4& b) {
+		a = a + b;
+		return a;
+	}
+
+	Vector4& operator-= (Vector4& a, const Vector4& b) {
+		a = a - b;
+		return a;
+	}
+
+	Vector4& operator*= (Vector4& a, const Vector4& b) {
+		a = a * b;
+		return a;
+	}
+
+	Vector4& operator+= (Vector4& a, float b) {
+		a = b + a;
+		return a;
+	}
+
+	Vector4& operator-= (Vector4& a, float b) {
+		a = b - a;
+		return a;
+	}
+
+	Vector4& operator*= (Vector4& a, float b) {
+		a = b * a;
+		return a;
+	}
 }
