@@ -26,7 +26,7 @@ namespace Anggur {
 			std::string temp;
 
 			temp += "position: " + position.toString() + "\n";
-			temp += "color: " + color.toString() + "\n";
+			temp += "color: " + color.ToString() + "\n";
 			temp += "uv: " + uv.toString() + "\n";
 			temp += "slot: " + std::to_string(slot) + "\n"; 
 

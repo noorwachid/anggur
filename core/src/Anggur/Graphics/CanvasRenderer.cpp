@@ -323,7 +323,7 @@ namespace Anggur
         float tangetialFactor = Math::Tan(theta);
         float radialFactor = Math::Cos(theta);
 
-        Vector2 walker = Vector2::createPolar(radius, beginAngle);
+        Vector2 walker = Vector2::CreatePolar(radius, beginAngle);
 
         std::vector<CanvasVertex> vertices;
         std::vector<uint32_t> indices;
@@ -370,7 +370,7 @@ namespace Anggur
 
 	void CanvasRenderer::drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) {
 		Vector2 offsetPoint = thickness * Vector2::Normalize((point0 - point1));
-		Vector2 perpenPoint = thickness * Vector2::Normalize((point1 - point0).getPerpendicular());
+		Vector2 perpenPoint = thickness * Vector2::Normalize((point1 - point0).GetPerpendicular());
 
 		drawQuad(model, 
             point1 + perpenPoint, 
@@ -391,16 +391,16 @@ namespace Anggur
 		Vector2 l0 = transform * p0;
 		Vector2 l1 = transform * p1;
 		Vector2 l2 = transform * p2;
-		Vector2 t0 = (l1 - l0).getPerpendicular();
-		Vector2 t2 = (l2 - l1).getPerpendicular();
+		Vector2 t0 = (l1 - l0).GetPerpendicular();
+		Vector2 t2 = (l2 - l1).GetPerpendicular();
 
 		if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y))) {
 			t0 = -t0;
 			t2 = -t2;
 		}
 
-		t0.setLength(w);
-		t2.setLength(w);
+		t0.SetLength(w);
+		t2.SetLength(w);
 
 		Vector2 u0 = (l0 + t0);
 		Vector2 u1 = (l2 + t2);
@@ -411,10 +411,10 @@ namespace Anggur
 		Vector2 d0 = (l1 - t0);
 		Vector2 d1 = (l1 - t2);
         Vector2 e0c = (l1 - l0);
-        e0c.setLength(w * 2);
+        e0c.SetLength(w * 2);
 		Vector2 e0 = (e0c + c0);
         Vector2 e1c = (l1 - l2);
-        e1c.setLength(w * 2);
+        e1c.SetLength(w * 2);
 		Vector2 e1 = (e1c + c1);
 
 		auto areLinesIntersected = [](

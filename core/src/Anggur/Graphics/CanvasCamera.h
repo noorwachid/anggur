@@ -26,12 +26,12 @@ namespace Anggur {
 
         void SetFrameSize(const Vector2& newFrameSize) {
             markDirty();
-            frameSize.set(Math::Max(1.0f, newFrameSize.x), Math::Max(1.0f, newFrameSize.y));
+            frameSize.Set(Math::Max(1.0f, newFrameSize.x), Math::Max(1.0f, newFrameSize.y));
         }
 
         void SetFrameScale(const Vector2& scale) {
             markDirty();
-            frameScale.set(scale.x, scale.y);
+            frameScale.Set(scale.x, scale.y);
         }
 
         void setTargetPosition(const Vector2& position) {

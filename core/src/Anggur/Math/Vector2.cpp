@@ -25,87 +25,87 @@ namespace Anggur {
 
 	// 2nd class initializers
 
-	Vector2 Vector2::createPolar(float length, float angle)  {
+	Vector2 Vector2::CreatePolar(float length, float angle)  {
 		Vector2 temp;
-		temp.setPolar(length, angle);
+		temp.SetPolar(length, angle);
 		return temp;
 	}
 
 	// Casters
 
-	const float* Vector2::toPointer() const {
+	const float* Vector2::ToPointer() const {
 		return &x;
 	}
 
-	float* Vector2::toPointer() {
+	float* Vector2::ToPointer() {
 		return &x;
 	}
 
-	std::string Vector2::toString() const {
+	std::string Vector2::ToString() const {
 		return std::to_string(x) + ", " + std::to_string(y);
 	}
 
 	// Getters
 
-	float Vector2::getLengthSquared() const {
+	float Vector2::GetLengthSquared() const {
 		return (x * x + y * y);
 	}
 
-	float Vector2::getLength() const {
-		return Math::Sqrt(getLengthSquared());
+	float Vector2::GetLength() const {
+		return Math::Sqrt(GetLengthSquared());
 	}
 
-	float Vector2::getAngle() const {
+	float Vector2::GetAngle() const {
 		return Math::Atan(y, x);
 	}
 
-	Vector2 Vector2::getPerpendicular() const {
+	Vector2 Vector2::GetPerpendicular() const {
 		return Vector2(-y, x);
 	}
 
 	// Setters
 
-	void Vector2::set(float scalar) {
+	void Vector2::Set(float scalar) {
 		x = scalar;
 		y = scalar;
 	}
 
-	void Vector2::set(float newX, float newY) {
+	void Vector2::Set(float newX, float newY) {
 		x = newX;
 		y = newY;
 	}
 
-	void Vector2::setPolar(float length, float angle) {
+	void Vector2::SetPolar(float length, float angle) {
 		x = Math::Cos(angle) * length;
 		y = Math::Sin(angle) * length;
 	}
 
-	void Vector2::setLength(float length)  {
+	void Vector2::SetLength(float length)  {
 		*this = length * Normalize(*this);
 	}
 
 
-	void Vector2::setLengthLimit(float x)  {
-		if (getLengthSquared() > (x * x))
-			setLength(x);
+	void Vector2::SetLengthLimit(float x)  {
+		if (GetLengthSquared() > (x * x))
+			SetLength(x);
 	}
 
 	void Vector2::SetAngle(float theta)  {
-		setPolar(theta, getLength());
+		SetPolar(theta, GetLength());
 	}
 
 	// 2nd class manipulations
 
-	float Vector2::dot(const Vector2& a, const Vector2& b)  {
+	float Vector2::Dot(const Vector2& a, const Vector2& b)  {
 		return a.x * b.x + a.y * b.y;
 	}
 
-	float Vector2::cross(const Vector2& a, const Vector2& b)  {
+	float Vector2::Cross(const Vector2& a, const Vector2& b)  {
 		return a.x * b.y - a.y * b.x;
 	}
 
 	Vector2 Vector2::Normalize(const Vector2& a) {
-		float length = a.getLength();
+		float length = a.GetLength();
 
 		if (length == 0) 
 			return Vector2::zero;
@@ -113,7 +113,7 @@ namespace Anggur {
 		return Vector2(a.x / length, a.y / length);
 	}
 
-	Vector2 Vector2::lerp(const Vector2& a, const Vector2& b, float amount)  {
+	Vector2 Vector2::Lerp(const Vector2& a, const Vector2& b, float amount)  {
 		return Vector2(
 			Math::Lerp(a.x, b.x, amount), 
 			Math::Lerp(a.y, b.y, amount)

@@ -29,7 +29,7 @@ namespace Anggur {
 		int frameBufferWidth = 0;
 		int frameBufferHeight = 0;
 		glfwGetFramebufferSize(context, &frameBufferWidth, &frameBufferHeight);
-		frameBufferSize.set(frameBufferWidth, frameBufferHeight);
+		frameBufferSize.Set(frameBufferWidth, frameBufferHeight);
 
 		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
