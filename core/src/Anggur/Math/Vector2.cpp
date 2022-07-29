@@ -52,11 +52,11 @@ namespace Anggur {
 	}
 
 	float Vector2::getLength() const {
-		return Math::sqrt(getLengthSquared());
+		return Math::Sqrt(getLengthSquared());
 	}
 
 	float Vector2::getAngle() const {
-		return Math::atan(y, x);
+		return Math::Atan(y, x);
 	}
 
 	Vector2 Vector2::getPerpendicular() const {
@@ -76,12 +76,12 @@ namespace Anggur {
 	}
 
 	void Vector2::setPolar(float length, float angle) {
-		x = Math::cos(angle) * length;
-		y = Math::sin(angle) * length;
+		x = Math::Cos(angle) * length;
+		y = Math::Sin(angle) * length;
 	}
 
 	void Vector2::setLength(float length)  {
-		*this = length * normalize(*this);
+		*this = length * Normalize(*this);
 	}
 
 
@@ -104,7 +104,7 @@ namespace Anggur {
 		return a.x * b.y - a.y * b.x;
 	}
 
-	Vector2 Vector2::normalize(const Vector2& a) {
+	Vector2 Vector2::Normalize(const Vector2& a) {
 		float length = a.getLength();
 
 		if (length == 0) 
@@ -115,8 +115,8 @@ namespace Anggur {
 
 	Vector2 Vector2::lerp(const Vector2& a, const Vector2& b, float amount)  {
 		return Vector2(
-			Math::lerp(a.x, b.x, amount), 
-			Math::lerp(a.y, b.y, amount)
+			Math::Lerp(a.x, b.x, amount), 
+			Math::Lerp(a.y, b.y, amount)
 		);
 	}
 

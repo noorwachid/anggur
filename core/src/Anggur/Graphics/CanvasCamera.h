@@ -6,30 +6,30 @@
 namespace Anggur {
 	class CanvasCamera {
     public:
-        void update() {
+        void Update() {
             if (!isDirty()) {
                 return;
             }
 
             clean();
             
-            viewProjection.set(
+            viewProjection.Set(
                 2.0f / (frameSize.x * frameScale.x), 0.0f, 0.0f,
                 0.0f, -2.0f / (frameSize.y * frameScale.y), 0.0f,
                 0.0f, 0.0f, 1.0f
             );
         }
 
-        const Matrix3& getViewProjection() const {
+        const Matrix3& GetViewProjection() const {
             return viewProjection;
         }
 
-        void setFrameSize(const Vector2& newFrameSize) {
+        void SetFrameSize(const Vector2& newFrameSize) {
             markDirty();
-            frameSize.set(Math::max(1.0f, newFrameSize.x), Math::max(1.0f, newFrameSize.y));
+            frameSize.set(Math::Max(1.0f, newFrameSize.x), Math::Max(1.0f, newFrameSize.y));
         }
 
-        void setFrameScale(const Vector2& scale) {
+        void SetFrameScale(const Vector2& scale) {
             markDirty();
             frameScale.set(scale.x, scale.y);
         }

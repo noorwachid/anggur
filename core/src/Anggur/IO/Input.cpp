@@ -46,7 +46,7 @@ namespace Anggur {
         return keyboard.currentState[index] == false && keyboard.previousState[index];
     }
 
-    bool Input::isKeyDown(Key key) {
+    bool Input::IsKeyDown(Key key) {
         int index = static_cast<int>(key);
         return keyboard.currentState[index];
     }
@@ -100,7 +100,7 @@ namespace Anggur {
         glfwSetCursorPos(context, position.x, position.y);
         mouse.currentPosition = position;
         MousePositionEvent event("MousePositionMove", position);
-        emitter.emit(event);
+        emitter.Emit(event);
     }
 
     // Input scroll virtual device
@@ -115,7 +115,7 @@ namespace Anggur {
 
     // Context management
 
-    void Input::bindContext(WindowContext* newContext) {
+    void Input::setContext(WindowContext* newContext) {
         context = newContext;
 
 		glfwSetKeyCallback(context, [](GLFWwindow* context, int vkeyCode, int scanCode, int action, int modidefrKey) {
@@ -154,24 +154,24 @@ namespace Anggur {
         int index = static_cast<int>(key);
         keyboard.currentState[index] = state;
         KeyEvent event(state ? "keyPressed" : "keyReleased", key);
-        emitter.emit(event);
+        emitter.Emit(event);
     }
 
     void Input::directSetMouseButtonState(MouseButton button, bool state) {
         mouse.currentButtonState[static_cast<int>(button)] = state;
         MouseButtonEvent event(state ? "mouseButtonPressed" : "wouseButtonReleased", button);
-        emitter.emit(event);
+        emitter.Emit(event);
     }
 
     void Input::directSetMousePosition(const Vector2& position) {
         mouse.currentPosition = position;
         MousePositionEvent event("mousePositionMoved", position);
-        emitter.emit(event);
+        emitter.Emit(event);
     }
 
     void Input::directSetScrollDirection(const Vector2& direction) {
         scroll.currentDirection = direction;
         ScrollEvent event("scrollMoved", direction);
-        emitter.emit(event);
+        emitter.Emit(event);
     }
 }

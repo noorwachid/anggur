@@ -39,7 +39,7 @@ namespace Anggur {
         
         bool isKeyReleased(Key key);
         
-        bool isKeyDown(Key key);
+        bool IsKeyDown(Key key);
         
         bool isKeyUp(Key key);
 
@@ -72,7 +72,7 @@ namespace Anggur {
         
         // Data management
 
-        void bindContext(WindowContext* context);
+        void setContext(WindowContext* context);
         void update();
 
     private:

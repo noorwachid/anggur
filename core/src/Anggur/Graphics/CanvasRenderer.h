@@ -41,14 +41,14 @@ namespace Anggur {
         ~CanvasRenderer();
 
 		void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-		void clear(const Vector4& color = Vector4::black);
+		void Clear(const Vector4& color = Vector4::black);
 		void setViewport(const Vector2& size);
 		void setViewport(const Vector2& position, const Vector2& size);
 		void setViewProjection(const Matrix3& newViewProjection);
 
 		void begin();
-		void begin(const Matrix3& viewProjection);
-		void end();
+		void Begin(const Matrix3& viewProjection);
+		void End();
 
 		bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
 		void flush();
@@ -65,7 +65,7 @@ namespace Anggur {
 
         // 2D Circles
 		void drawArc(const Matrix3& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi, int segment = 16, const Vector4& color = Vector4::white);
-		void drawCircle(const Matrix3& model, float radius = 1.0f, int segment = 32, const Vector4& color = Vector4::white);
+		void DrawCircle(const Matrix3& model, float radius = 1.0f, int segment = 32, const Vector4& color = Vector4::white);
 
 		// 2D Lines
 		void drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5, const Vector4& color = Vector4::white);

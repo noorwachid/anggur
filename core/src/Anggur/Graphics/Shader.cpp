@@ -6,6 +6,7 @@
 #include "Function.h"
 #include "Shader.h"
 #include <cassert>
+#include <stdexcept>
 
 namespace Anggur {
 	Shader::Shader() {
@@ -36,7 +37,8 @@ namespace Anggur {
 		glGetShaderiv(vertexId, GL_COMPILE_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetShaderInfoLog(vertexId, 512, NULL, message);
-			assert("[Graphic.Shader.compile] Failed to compile vertex shader" && message && false);
+
+			throw std::runtime_error(std::string("Failed to compile vertex shader: ") + message);
 		}
 
 		uint32_t fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -46,7 +48,8 @@ namespace Anggur {
 		glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetShaderInfoLog(fragmentId, 512, NULL, message);
-			assert("[Graphic.Shader.compile] failed to compile fragment shader" && message && false);
+
+			throw std::runtime_error(std::string("Failed to compile fragment shader: ") + message);
 		}
 
 		terminate(); // in case shader already created
@@ -59,7 +62,8 @@ namespace Anggur {
 		glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
 		if (!isSucceed) {
 			glGetProgramInfoLog(id, 512, NULL, message);
-			assert("[Graphic.Shader.compile] failed to link shader program" && message && false);
+
+			throw std::runtime_error(std::string("Failed to link shader program: ") + message);
 		}
 		
 		glDeleteShader(vertexId);
@@ -92,7 +96,7 @@ namespace Anggur {
 	}
 
 	void Shader::setUniformMatrix3(const std::string& name, const Matrix3& matrix) {
-		glUniformMatrix3fv(getLocation(name), 1, GL_FALSE, matrix.toPointer());
+		glUniformMatrix3fv(getLocation(name), 1, GL_FALSE, matrix.ToPointer());
 	}
 
 	void Shader::setUniformMatrix4(const std::string& name, const Matrix4& matrix) {

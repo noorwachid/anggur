@@ -95,7 +95,7 @@ namespace Anggur
         batchIndexMultiplier = indexMultiplier;
     }
 
-    void CanvasRenderer::clear(const Vector4& color) {
+    void CanvasRenderer::Clear(const Vector4& color) {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT);
     }
@@ -118,12 +118,12 @@ namespace Anggur
         flushInternalBuffer();
     }
 
-    void CanvasRenderer::begin(const Matrix3& viewProjection) {
+    void CanvasRenderer::Begin(const Matrix3& viewProjection) {
         setViewProjection(viewProjection);
         begin();
     }
 
-    void CanvasRenderer::end() {
+    void CanvasRenderer::End() {
         flush();
     }
 
@@ -262,7 +262,7 @@ namespace Anggur
         );
     }
 
-    void CanvasRenderer::drawCircle(const Matrix3& model, float radius, int segment, const Vector4& color) {
+    void CanvasRenderer::DrawCircle(const Matrix3& model, float radius, int segment, const Vector4& color) {
         if (segment < 3)
             segment = 3;
 
@@ -270,8 +270,8 @@ namespace Anggur
         size_t triangleSize = segment - 2;
 
         float theta = (Math::twoPi / segment);
-        float tangetialFactor = Math::tan(theta);
-        float radialFactor = Math::cos(theta);
+        float tangetialFactor = Math::Tan(theta);
+        float radialFactor = Math::Cos(theta);
 
         float x = radius;
         float y = 0;
@@ -320,8 +320,8 @@ namespace Anggur
         // // TODO: simplify this equation
         float theta = Math::twoPi / ((segment - 1) / (sweepAngle / Math::twoPi));
 
-        float tangetialFactor = Math::tan(theta);
-        float radialFactor = Math::cos(theta);
+        float tangetialFactor = Math::Tan(theta);
+        float radialFactor = Math::Cos(theta);
 
         Vector2 walker = Vector2::createPolar(radius, beginAngle);
 
@@ -369,8 +369,8 @@ namespace Anggur
     // 2D lines
 
 	void CanvasRenderer::drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) {
-		Vector2 offsetPoint = thickness * Vector2::normalize((point0 - point1));
-		Vector2 perpenPoint = thickness * Vector2::normalize((point1 - point0).getPerpendicular());
+		Vector2 offsetPoint = thickness * Vector2::Normalize((point0 - point1));
+		Vector2 perpenPoint = thickness * Vector2::Normalize((point1 - point0).getPerpendicular());
 
 		drawQuad(model, 
             point1 + perpenPoint, 
@@ -427,9 +427,9 @@ namespace Anggur
 			float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
 			float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
 
-			float denomAbs = Math::abs(denom);
-			float numeaAbs = Math::abs(numea);
-			float numebAbs = Math::abs(numeb);
+			float denomAbs = Math::Abs(denom);
+			float numeaAbs = Math::Abs(numea);
+			float numebAbs = Math::Abs(numeb);
 
 			if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon) {
 				p4 = Vector2::lerp(p0, p1, 0.5);

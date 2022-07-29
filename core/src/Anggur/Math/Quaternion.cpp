@@ -21,7 +21,7 @@ namespace Anggur {
     }
 
     float Quaternion::getLength() {
-        return Math::sqrt(getLengthSquared());
+        return Math::Sqrt(getLengthSquared());
     }
 
     // Setters
@@ -34,11 +34,11 @@ namespace Anggur {
     }
 
     void Quaternion::set(const Vector3& axis, float angle) {
-        float scalar = Math::sin(angle / 2.0f);
+        float scalar = Math::Sin(angle / 2.0f);
         x = axis.x * scalar;
         y = axis.y * scalar;
         z = axis.z * scalar;
-        w = Math::cos(angle / 2.0f);
+        w = Math::Cos(angle / 2.0f);
     }
 
     // 1st class manipulations
@@ -58,10 +58,10 @@ namespace Anggur {
     Quaternion Quaternion::lerp(const Quaternion& a, const Quaternion& b, float amount) {
         Quaternion newValue;
 
-        newValue.x = Math::lerp(a.x, b.x, amount);
-        newValue.y = Math::lerp(a.y, b.y, amount);
-        newValue.z = Math::lerp(a.z, b.z, amount);
-        newValue.w = Math::lerp(a.w, b.w, amount);
+        newValue.x = Math::Lerp(a.x, b.x, amount);
+        newValue.y = Math::Lerp(a.y, b.y, amount);
+        newValue.z = Math::Lerp(a.z, b.z, amount);
+        newValue.w = Math::Lerp(a.w, b.w, amount);
 
         return normalize(newValue);
     }
@@ -76,10 +76,10 @@ namespace Anggur {
         float scale0, scale1;
 
         if (cosom < 0.9999f) {
-            const float omega = Math::acos(cosom);
-            const float invSin = 1.f / Math::sin(omega);
-            scale0 = Math::sin((1.f - amount) * omega) * invSin;
-            scale1 = Math::sin(amount * omega) * invSin;
+            const float omega = Math::Acos(cosom);
+            const float invSin = 1.f / Math::Sin(omega);
+            scale0 = Math::Sin((1.f - amount) * omega) * invSin;
+            scale1 = Math::Sin(amount * omega) * invSin;
         } else {
             // Use linear interpolation if the quaternions
             // are collinear

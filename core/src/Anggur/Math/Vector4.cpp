@@ -90,7 +90,7 @@ namespace Anggur {
 	}
 
 	float Vector4::getLength() const {
-		return (Math::sqrt(getLengthSquared()));
+		return (Math::Sqrt(getLengthSquared()));
 	}
 
 
@@ -133,10 +133,10 @@ namespace Anggur {
 	
 	Vector4 Vector4::lerp(const Vector4& a, const Vector4& b, float amount)  {
 		return Vector4(
-			Math::lerp(a.x, b.x, amount),
-			Math::lerp(a.y, b.y, amount),
-			Math::lerp(a.z, b.z, amount),
-			Math::lerp(a.w, b.w, amount)
+			Math::Lerp(a.x, b.x, amount),
+			Math::Lerp(a.y, b.y, amount),
+			Math::Lerp(a.z, b.z, amount),
+			Math::Lerp(a.w, b.w, amount)
 		);
 	}
 

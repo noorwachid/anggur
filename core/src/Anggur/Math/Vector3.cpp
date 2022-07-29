@@ -45,7 +45,7 @@ namespace Anggur {
 	}
 
 	float Vector3::getLength() const {
-		return (Math::sqrt(getLengthSquared()));
+		return (Math::Sqrt(getLengthSquared()));
 	}
 
 	// Setters
@@ -89,9 +89,9 @@ namespace Anggur {
 	
 	Vector3 Vector3::lerp(const Vector3& a, const Vector3& b, float amount) {
 		return Vector3(
-			Math::lerp(a.x, b.x, amount),
-			Math::lerp(a.y, b.y, amount),
-			Math::lerp(a.z, b.z, amount)
+			Math::Lerp(a.x, b.x, amount),
+			Math::Lerp(a.y, b.y, amount),
+			Math::Lerp(a.z, b.z, amount)
 		);
 	}
 

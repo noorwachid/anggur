@@ -101,25 +101,25 @@ namespace Anggur {
         static Matrix4 createRotationX(float angle) {
             return Matrix4(
                 1.0f, 0.0f, 0.0f , 0.0f,
-                0.0f, Math::cos(angle), Math::sin(angle), 0.0f,
-                0.0f, -Math::sin(angle), Math::cos(angle), 0.0f,
+                0.0f, Math::Cos(angle), Math::Sin(angle), 0.0f,
+                0.0f, -Math::Sin(angle), Math::Cos(angle), 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f
             );
         }
 
         static Matrix4 createRotationY(float angle) {
             return Matrix4(
-                Math::cos(angle), 0.0f, -Math::sin(angle), 0.0f,
+                Math::Cos(angle), 0.0f, -Math::Sin(angle), 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
-                Math::sin(angle), 0.0f, Math::cos(angle), 0.0f,
+                Math::Sin(angle), 0.0f, Math::Cos(angle), 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f
             );
         }
 
         static Matrix4 createRotationZ(float angle) {
             return Matrix4(
-                Math::cos(angle), Math::sin(angle), 0.0f, 0.0f,
-                -Math::sin(angle), Math::cos(angle), 0.0f, 0.0f,
+                Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f,
+                -Math::Sin(angle), Math::Cos(angle), 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f
             );
@@ -158,7 +158,7 @@ namespace Anggur {
         // Projection Matrices
 
         static Matrix4 createPerspective(float fovY, float width, float height, float near, float far) {
-            float yScale = Math::cot(fovY / 2.0f);
+            float yScale = Math::Cot(fovY / 2.0f);
             float xScale = yScale * height / width;
             
             return Matrix4(

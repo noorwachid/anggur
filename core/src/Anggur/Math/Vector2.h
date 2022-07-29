@@ -69,7 +69,7 @@ namespace Anggur {
 
 		static float cross(const Vector2& a, const Vector2& b);
 		
-		static Vector2 normalize(const Vector2& a);
+		static Vector2 Normalize(const Vector2& a);
 
 		static Vector2 lerp(const Vector2& a, const Vector2& b, float amount);
 

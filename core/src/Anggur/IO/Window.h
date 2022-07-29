@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Anggur/EventEmitter.h"
+#include "Anggur/Graphics/Renderer.h"
 #include "WindowEvent.h"
 #include "WindowContext.h"
 #include "Input.h"
@@ -22,7 +23,7 @@ namespace Anggur {
 
 		const Vector2& getPosition();
 
-		const Vector2& getSize();
+		const Vector2& GetSize();
 
 		const Vector2& getFrameBufferSize();
 
@@ -45,7 +46,7 @@ namespace Anggur {
 
 		void bindGraphics();
 
-		void bindContext();
+		void bindNativeContext();
 
 		void swapFrameBuffers();
 
