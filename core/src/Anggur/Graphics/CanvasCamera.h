@@ -3,15 +3,19 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Matrix3.h"
 
-namespace Anggur {
-	class CanvasCamera {
+namespace Anggur 
+{
+	class CanvasCamera 
+    {
     public:
-        void Update() {
-            if (!isDirty()) {
+        void Update() 
+        {
+            if (!IsDirty()) 
+            {
                 return;
             }
 
-            clean();
+            Clean();
             
             viewProjection.Set(
                 2.0f / (frameSize.x * frameScale.x), 0.0f, 0.0f,
@@ -20,37 +24,45 @@ namespace Anggur {
             );
         }
 
-        const Matrix3& GetViewProjection() const {
+        const Matrix3& GetViewProjection() const 
+        {
             return viewProjection;
         }
 
-        void SetFrameSize(const Vector2& newFrameSize) {
-            markDirty();
+        void SetFrameSize(const Vector2& newFrameSize) 
+        {
+            MarkDirty();
             frameSize.Set(Math::Max(1.0f, newFrameSize.x), Math::Max(1.0f, newFrameSize.y));
         }
 
-        void SetFrameScale(const Vector2& scale) {
-            markDirty();
+        void SetFrameScale(const Vector2& scale) 
+        {
+            MarkDirty();
             frameScale.Set(scale.x, scale.y);
         }
 
-        void setTargetPosition(const Vector2& position) {
-            markDirty();
+        void SetTargetPosition(const Vector2& position) 
+        {
+            MarkDirty();
         }
 
-        void setTargetOffset(const Vector2& offset) {
-            markDirty();
+        void SetTargetOffset(const Vector2& offset) 
+        {
+            MarkDirty();
         }
 
-        bool isDirty() {
+        bool IsDirty() 
+        {
             return dirty;
         }
 
-        void markDirty() {
+        void MarkDirty() 
+        {
             dirty = true;
         }
 
-        void clean() {
+        void Clean() 
+        {
             dirty = false;
         }
 

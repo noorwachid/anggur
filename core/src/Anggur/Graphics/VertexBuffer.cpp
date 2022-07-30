@@ -3,75 +3,92 @@
 
 namespace Anggur 
 {
-	VertexBuffer::VertexBuffer() {
+	VertexBuffer::VertexBuffer() 
+	{
 		glGenBuffers(1, &id);
-		bind();
+		Bind();
 	}
 
-	VertexBuffer::~VertexBuffer() {
+	VertexBuffer::~VertexBuffer() 
+	{
 		if (id > 0) 
 			glDeleteBuffers(1, &id);
 	}
 
-	void VertexBuffer::bind() {
+	void VertexBuffer::Bind() 
+	{
 		glBindBuffer(GL_ARRAY_BUFFER, id);
 	}
 
-	void VertexBuffer::unbind() {
+	void VertexBuffer::Unbind() 
+	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void VertexBuffer::setCapacity(size_t byteSize) {
+	void VertexBuffer::SetCapacity(size_t byteSize) 
+	{
 		glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void VertexBuffer::setData(size_t byteSize, void* byteData) {
+	void VertexBuffer::SetData(size_t byteSize, void* byteData) 
+	{
 		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	IndexBuffer::IndexBuffer() {
+	IndexBuffer::IndexBuffer() 
+	{
 		glGenBuffers(1, &id);
-		bind();
+		Bind();
 	}
 
-	IndexBuffer::~IndexBuffer() {
+	IndexBuffer::~IndexBuffer() 
+	{
 		glDeleteBuffers(1, &id);
 	}
 
-	void IndexBuffer::bind() {
+	void IndexBuffer::Bind() 
+	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 
-	void IndexBuffer::unbind() {
+	void IndexBuffer::Unbind() 
+	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void IndexBuffer::setCapacity(size_t byteSize) {
+	void IndexBuffer::SetCapacity(size_t byteSize) 
+	{
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void IndexBuffer::setData(size_t byteSize, void* byteData) {
+	void IndexBuffer::SetData(size_t byteSize, void* byteData) 
+	{
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	VertexArray::VertexArray() {
+	VertexArray::VertexArray() 
+	{
 		glGenVertexArrays(1, &id);
-		bind();
+		Bind();
 	}
 
-	VertexArray::~VertexArray() {
+	VertexArray::~VertexArray() 
+	{
 		glDeleteVertexArrays(1, &id);
 	}
 
-	void VertexArray::bind() {
+	void VertexArray::Bind() 
+	{
 		glBindVertexArray(id);
 	}
 
-	void VertexArray::unbind() {
+	void VertexArray::Unbind() 
+	{
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::setAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset) {
+	void VertexArray::SetAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset) 
+	{
 		glVertexAttribPointer(index, size, type, GL_FALSE, byteStride, (void*) byteOffset);
 		glEnableVertexAttribArray(index);
 	}

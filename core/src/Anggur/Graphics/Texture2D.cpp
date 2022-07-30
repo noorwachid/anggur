@@ -3,26 +3,32 @@
 #include <Anggur/Graphics/Texture2D.h>
 #include <vector>
 
-namespace Anggur {
-	Texture2D::Texture2D() {
+namespace Anggur 
+{
+	Texture2D::Texture2D() 
+	{
 		id = 0;
 	}
 
-	Texture2D::Texture2D(const std::string& path, SamplerFilter filter) {
+	Texture2D::Texture2D(const std::string& path, SamplerFilter filter) 
+	{
 		id = 0;
-		load(path, filter);
+		Load(path, filter);
 	}
 
-	Texture2D::Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) {
-		load(data, width, height, channels, filter);
+	Texture2D::Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
+	{
+		Load(data, width, height, channels, filter);
 	}
 
-	Texture2D::~Texture2D() {
-		unload();
+	Texture2D::~Texture2D() 
+	{
+		Unload();
 	}
 
-	void Texture2D::load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) {
-		unload();
+	void Texture2D::Load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
+	{
+		Unload();
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -40,11 +46,13 @@ namespace Anggur {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(filter));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(filter));
 
-		if (data) {
+		if (data) 
+		{
 			int iformat;
 			int format;
 
-			switch (channels) {
+			switch (channels) 
+			{
 				case 1:
 					iformat = GL_R8;
 					format = GL_RED;
@@ -60,34 +68,41 @@ namespace Anggur {
 
 			glTexImage2D(GL_TEXTURE_2D, 0, iformat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
-		} else {
+		} 
+		else 
+		{
 			assert(false && "[Graphic.Texture.loadBitmap] Data is empty");
 		}
 	}
 
-	void Texture2D::load(const Image& image, SamplerFilter filter) {
-		width = image.getWidth();
-		height = image.getHeight();
-		channels = image.getChannels();
-		load(image.getData(), width, height, channels, filter);
+	void Texture2D::Load(const Image& image, SamplerFilter filter) 
+	{
+		width = image.GetWidth();
+		height = image.GetHeight();
+		channels = image.GetChannels();
+		Load(image.GetData(), width, height, channels, filter);
 	}
 
-	void Texture2D::load(const std::string& path, SamplerFilter filter) {
+	void Texture2D::Load(const std::string& path, SamplerFilter filter) 
+	{
 		Image image(path);
-		load(image, filter);
+		Load(image, filter);
 	}
 
-	void Texture2D::unload() {
+	void Texture2D::Unload() 
+	{
 		if (id != 0)
 			glDeleteTextures(1, &id);
 	}
 
-	void Texture2D::bind(uint32_t slot) {
+	void Texture2D::Bind(uint32_t slot) 
+	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	bool operator==(const Texture2D& a, const Texture2D& b) {
-		return a.getID() == b.getID();
+	bool operator==(const Texture2D& a, const Texture2D& b) 
+	{
+		return a.GetID() == b.GetID();
 	}
 }

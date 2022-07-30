@@ -3,26 +3,28 @@
 #include "Texture.h"
 #include "Image.h"
 
-namespace Anggur {
-	class Texture2D {
+namespace Anggur 
+{
+	class Texture2D 
+	{
 	public:
 		Texture2D();
-		Texture2D(const std::string& path, SamplerFilter filter = SamplerFilter::linear);
-		Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::linear);
+		Texture2D(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
+		Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::Linear);
 
 		~Texture2D();
 
-		inline uint32_t getID() const { return id; }
-		inline uint32_t getWidth() const { return width; }
-		inline uint32_t getHeight() const { return height; }
-		inline uint32_t getChannels() const { return channels; }
+		inline uint32_t GetID() const { return id; }
+		inline uint32_t GetWidth() const { return width; }
+		inline uint32_t GetHeight() const { return height; }
+		inline uint32_t GetChannels() const { return channels; }
 
-		void load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::linear);
-		void load(const Image& image, SamplerFilter filter = SamplerFilter::linear);
-		void load(const std::string& path, SamplerFilter filter = SamplerFilter::linear);
-		void unload();
+		void Load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::Linear);
+		void Load(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
+		void Load(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
+		void Unload();
 
-		void bind(uint32_t slot = 0);
+		void Bind(uint32_t slot = 0);
 
 		friend bool operator==(const Texture2D& a, const Texture2D& b);
 		friend class FrameBuffer;

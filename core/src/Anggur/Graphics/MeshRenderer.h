@@ -20,16 +20,18 @@ namespace Anggur
 
 		MeshVertex() = default;
 		MeshVertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newUV, float newSlot = 0.0f): 
-			position(newPosition), normal(newNormal), color(newColor), uv(newUV), slot(newSlot) {
+			position(newPosition), normal(newNormal), color(newColor), uv(newUV), slot(newSlot) 
+		{
 		}
 
-		std::string toString() {
+		std::string ToString() 
+		{
 			std::string temp;
 
-			temp += "position: " + position.toString() + "\n";
-			temp += "normal: " + normal.toString() + "\n";
+			temp += "position: " + position.ToString() + "\n";
+			temp += "normal: " + normal.ToString() + "\n";
 			temp += "color: " + color.ToString() + "\n";
-			temp += "textureCoord: " + uv.toString() + "\n";
+			temp += "textureCoord: " + uv.ToString() + "\n";
 			temp += "textureSlot: " + std::to_string(slot) + "\n"; 
 
 			return temp;
@@ -43,24 +45,24 @@ namespace Anggur
 
 		~MeshRenderer();
 
-		void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-		void clear(const Vector4& color = Vector4::black);
-		void setViewport(const Vector2& size);
-		void setViewport(const Vector2& position, const Vector2& size);
-		void setViewProjection(const Matrix4& newViewProjection);
+		void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+		void Clear(const Vector4& color = Vector4::black);
+		void SetViewport(const Vector2& size);
+		void SetViewport(const Vector2& position, const Vector2& size);
+		void SetViewProjection(const Matrix4& newViewProjection);
 
-		void begin();
-		void begin(const Matrix4& viewProjection);
-		void end();
+		void Begin();
+		void Begin(const Matrix4& viewProjection);
+		void End();
 
-		bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
-		void flush();
-		void flushInternalBuffer();
+		bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
+		void Flush();
+		void FlushInternalBuffer();
 
-		void draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
+		void Draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture);
 
 		// 3D Primitives
-		void drawCube(const Matrix4& model, const Vector4& color = Vector4::white);
+		void DrawCube(const Matrix4& model, const Vector4& color = Vector4::white);
 
 	private:
         std::shared_ptr<Shader> shader;

@@ -8,37 +8,42 @@
 
 namespace Anggur 
 {
-    CanvasRenderer::CanvasRenderer() {
-        initializeVertexPool();
-        initializeTexturePool();
-        initializeShader();
+    CanvasRenderer::CanvasRenderer() 
+    {
+        InitializeVertexPool();
+        InitializeTexturePool();
+        InitializeShader();
     }
 
-    CanvasRenderer::~CanvasRenderer() {
+    CanvasRenderer::~CanvasRenderer() 
+    {
     }
 
-    void CanvasRenderer::initializeVertexPool() {
+    void CanvasRenderer::InitializeVertexPool() 
+    {
         vertices.assign(batchVertex, CanvasVertex(Vector2(0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
         indices.assign(batchVertex * batchIndexMultiplier, 0);
 
         vertexBuffer = std::make_shared<VertexBuffer>();
-        vertexBuffer->setCapacity(sizeof(CanvasVertex) * vertices.size());
+        vertexBuffer->SetCapacity(sizeof(CanvasVertex) * vertices.size());
 
         vertexArray = std::make_shared<VertexArray>();
-        vertexArray->setAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
-        vertexArray->setAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
-        vertexArray->setAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
-        vertexArray->setAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
+        vertexArray->SetAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
+        vertexArray->SetAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
+        vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
+        vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
         
         indexBuffer = std::make_shared<IndexBuffer>();
-        indexBuffer->setCapacity(sizeof(uint32_t) * indices.size());
+        indexBuffer->SetCapacity(sizeof(uint32_t) * indices.size());
     }
 
-    void CanvasRenderer::initializeTexturePool() {
-        textures.assign(Texture::getMaxSlot(), nullptr);
-        slots.reserve(Texture::getMaxSlot());
+    void CanvasRenderer::InitializeTexturePool() 
+    {
+        textures.assign(Texture::GetMaxSlot(), nullptr);
+        slots.reserve(Texture::GetMaxSlot());
 
-        for (int i = 0; i < Texture::getMaxSlot(); ++i) {
+        for (int i = 0; i < Texture::GetMaxSlot(); ++i) 
+        {
             slots.push_back(i);
         }
 
@@ -46,9 +51,10 @@ namespace Anggur
         whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
     }
 
-    void CanvasRenderer::initializeShader() {
+    void CanvasRenderer::InitializeShader() 
+    {
         shader = std::make_shared<Shader>();
-        shader->setVertexSource(R"(
+        shader->SetVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec2 aPosition;
@@ -71,7 +77,7 @@ namespace Anggur
             }
         )");
 
-        shader->setFragmentSource(R"(
+        shader->SetFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -80,54 +86,63 @@ namespace Anggur
 
             out vec4 fColor;
 
-            uniform sampler2D uSlots[)" + std::to_string(Texture::getMaxSlot()) + R"(];
+            uniform sampler2D uSlots[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
             
             void main() {
                 fColor = texture(uSlots[int(vSlot)], vUV) * vColor;
             }
         )");
 
-        shader->compile();
+        shader->Compile();
     }
 
-    void CanvasRenderer::setBatchChunk(size_t vertex, size_t indexMultiplier) {
+    void CanvasRenderer::SetBatchChunk(size_t vertex, size_t indexMultiplier) 
+    {
         batchVertex = vertex;
         batchIndexMultiplier = indexMultiplier;
     }
 
-    void CanvasRenderer::Clear(const Vector4& color) {
+    void CanvasRenderer::Clear(const Vector4& color) 
+    {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void CanvasRenderer::setViewport(const Vector2& size) {
+    void CanvasRenderer::SetViewport(const Vector2& size) 
+    {
         glViewport(0, 0, size.x, size.y);
     }
 
-    void CanvasRenderer::setViewport(const Vector2& position, const Vector2& size) {
+    void CanvasRenderer::SetViewport(const Vector2& position, const Vector2& size) 
+    {
         glViewport(position.x, position.y, size.x, size.y);
     }
 
-    void CanvasRenderer::setViewProjection(const Matrix3& newViewProjection) {
+    void CanvasRenderer::SetViewProjection(const Matrix3& newViewProjection) 
+    {
         viewProjection = newViewProjection;
     }
 
-    void CanvasRenderer::begin() {
+    void CanvasRenderer::Begin() 
+    {
         renderCount = 0;
 
-        flushInternalBuffer();
+        FlushInternalBuffer();
     }
 
-    void CanvasRenderer::Begin(const Matrix3& viewProjection) {
-        setViewProjection(viewProjection);
-        begin();
+    void CanvasRenderer::Begin(const Matrix3& viewProjection) 
+    {
+        SetViewProjection(viewProjection);
+        Begin();
     }
 
-    void CanvasRenderer::End() {
-        flush();
+    void CanvasRenderer::End() 
+    {
+        Flush();
     }
 
-    void CanvasRenderer::flush() {
+    void CanvasRenderer::Flush() 
+    {
         if (vertexOffset == 0) 
         {
             return;
@@ -135,65 +150,71 @@ namespace Anggur
 
         for (size_t i = 0; i < textureOffset; ++i) 
         {
-            textures[i]->bind(i);
+            textures[i]->Bind(i);
         }
 
-        shader->bind();
-        shader->setUniformMatrix3("uViewProjection", viewProjection);
-        shader->setUniformInt("uSlots", textureOffset, slots.data());
+        shader->Bind();
+        shader->SetUniformMatrix3("uViewProjection", viewProjection);
+        shader->SetUniformInt("uSlots", textureOffset, slots.data());
 
-        vertexArray->bind();
+        vertexArray->Bind();
         
-        vertexBuffer->bind();
-        vertexBuffer->setData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
+        vertexBuffer->Bind();
+        vertexBuffer->SetData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
 
-        indexBuffer->bind();
-        indexBuffer->setData(sizeof(uint32_t) * indexOffset, indices.data());
+        indexBuffer->Bind();
+        indexBuffer->SetData(sizeof(uint32_t) * indexOffset, indices.data());
 
         glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
-        flushInternalBuffer();
+        FlushInternalBuffer();
 
         ++renderCount;
     }
 
-    void CanvasRenderer::flushInternalBuffer() {
+    void CanvasRenderer::FlushInternalBuffer() 
+    {
         vertexOffset = 0;
         indexOffset = 0;
         textureOffset = 0;
     }
 
-    bool CanvasRenderer::isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) {
+    bool CanvasRenderer::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize) 
+    {
         return 
             vertexOffset + newVertexSize > vertices.size() ||
             indexOffset + newIndexSize > indices.size() ||
             textureOffset + newTextureSize > textures.size();
     }
 
-    void CanvasRenderer::draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) {
-        if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1)) 
-            flush();
+    void CanvasRenderer::Draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices, const std::shared_ptr<Texture2D>& texture) 
+    {
+        if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1)) 
+            Flush();
 
         // Find or add new texture slot 
         int textureSlot = 0;
 
         // This code only create one branch
-        for (; textureSlot < textureOffset && textures[textureSlot]->getID() != texture->getID(); ++textureSlot);
+        for (; textureSlot < textureOffset && textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot);
 
-        if (textureSlot == textureOffset) {
+        if (textureSlot == textureOffset) 
+        {
             textureSlot = textureOffset;
             textures[textureOffset] = texture;
             textureOffset += 1;
         }
 
-        for (size_t i = 0; i < newVertices.size(); ++i) {
+        for (size_t i = 0; i < newVertices.size(); ++i) 
+        {
             auto& vertex = vertices[i + vertexOffset];
 
             vertex = newVertices[i];
             vertex.slot = textureSlot;
         }
 
-        for (size_t i = 0; i < newIndices.size(); ++i) {
+        for (size_t i = 0; i < newIndices.size(); ++i) 
+        {
             indices[i + indexOffset] = newIndices[i] + vertexOffset;
         }
 
@@ -203,8 +224,9 @@ namespace Anggur
 
     // 2D primitives
 
-    void CanvasRenderer::drawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector4& color) {
-        draw(
+    void CanvasRenderer::DrawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector4& color) 
+    {
+        Draw(
             { 
                 CanvasVertex(model * point0, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
                 CanvasVertex(model * point1, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
@@ -216,8 +238,9 @@ namespace Anggur
         );
     }
 
-    void CanvasRenderer::drawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color) {
-        draw(
+    void CanvasRenderer::DrawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color) 
+    {
+        Draw(
             {     
                 CanvasVertex(model * point0, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
                 CanvasVertex(model * point1, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
@@ -232,8 +255,9 @@ namespace Anggur
     }
 
 
-    void CanvasRenderer::drawRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector4& color) {
-        draw(
+    void CanvasRenderer::DrawRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector4& color) 
+    {
+        Draw(
             {    
                 CanvasVertex(model * point0,                      Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
                 CanvasVertex(model * Vector2(point1.x, point0.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
@@ -247,8 +271,9 @@ namespace Anggur
         );
     }
 
-    void CanvasRenderer::drawTexturedRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0, const Vector2& texturePoint1, const Vector4& color) {
-        draw(
+    void CanvasRenderer::DrawTexturedRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0, const Vector2& texturePoint1, const Vector4& color) 
+    {
+        Draw(
             {    
                 CanvasVertex(model * point0,                      Vector4(color.x, color.y, color.z, color.w), texturePoint0),
                 CanvasVertex(model * Vector2(point1.x, point0.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePoint1.x, texturePoint0.y)),
@@ -262,7 +287,8 @@ namespace Anggur
         );
     }
 
-    void CanvasRenderer::DrawCircle(const Matrix3& model, float radius, int segment, const Vector4& color) {
+    void CanvasRenderer::DrawCircle(const Matrix3& model, float radius, int segment, const Vector4& color) 
+    {
         if (segment < 3)
             segment = 3;
 
@@ -282,7 +308,8 @@ namespace Anggur
         vertices.reserve(segment);
         indices.reserve(triangleSize * 3);
 
-        for (size_t i = 0; i < segment; i++) {
+        for (size_t i = 0; i < segment; i++) 
+        {
             CanvasVertex vertex;
             vertex.position = model * Vector2(position.x + x, position.y + y);
             // vertex.textureCoord = Vector2(x / length, y / length);
@@ -300,18 +327,20 @@ namespace Anggur
             vertices.push_back(std::move(vertex));
         }
 
-        for (size_t i = 0, offset = 0; i < triangleSize; ++i) {
+        for (size_t i = 0, offset = 0; i < triangleSize; ++i) 
+        {
             indices.push_back(0);
             indices.push_back(i + 1);
             indices.push_back(i + 2);
             offset += 3;
         }
 
-        draw(vertices, indices, whiteTexture);
+        Draw(vertices, indices, whiteTexture);
     }
 
 
-    void CanvasRenderer::drawArc(const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment, const Vector4& color) {
+    void CanvasRenderer::DrawArc(const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment, const Vector4& color) 
+    {
         if (segment < 3)
             segment = 3;
 
@@ -336,7 +365,8 @@ namespace Anggur
         vertex.color = color;
         vertices.push_back(vertex);
 
-        for (size_t i = 0; i < segment; i++) {
+        for (size_t i = 0; i < segment; i++) 
+        {
             CanvasVertex vertex;
             vertex.position = model * Vector2(position.x + walker.x, position.y + walker.y);
             vertex.color = color;
@@ -353,7 +383,8 @@ namespace Anggur
             vertices.push_back(std::move(vertex));
         }
 
-        for (size_t i = 0; i < segment - 1; ++i) {
+        for (size_t i = 0; i < segment - 1; ++i) 
+        {
             indices.push_back(0);
             indices.push_back(i + 1);
             indices.push_back(i + 2);
@@ -363,16 +394,17 @@ namespace Anggur
         indices.push_back(segment);
         indices.push_back(1);
 
-        draw(vertices, indices, whiteTexture);
+        Draw(vertices, indices, whiteTexture);
     }
 
     // 2D lines
 
-	void CanvasRenderer::drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) {
+	void CanvasRenderer::DrawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) 
+    {
 		Vector2 offsetPoint = thickness * Vector2::Normalize((point0 - point1));
 		Vector2 perpenPoint = thickness * Vector2::Normalize((point1 - point0).GetPerpendicular());
 
-		drawQuad(model, 
+		DrawQuad(model, 
             point1 + perpenPoint, 
             point0 + perpenPoint + offsetPoint, 
             point0 - perpenPoint + offsetPoint, 
@@ -381,12 +413,13 @@ namespace Anggur
         );
 	}
 
-	void CanvasRenderer::drawLineAnchor(const Matrix3& transform,
+	void CanvasRenderer::DrawLineAnchor(const Matrix3& transform,
 		const Vector2& p0,
 		const Vector2& p1,
 		const Vector2& p2,
 		float w,
-		const Vector4& c) {
+		const Vector4& c) 
+    {
 		Vector2 i0 = transform * Vector2::zero;
 		Vector2 l0 = transform * p0;
 		Vector2 l1 = transform * p1;
@@ -394,7 +427,8 @@ namespace Anggur
 		Vector2 t0 = (l1 - l0).GetPerpendicular();
 		Vector2 t2 = (l2 - l1).GetPerpendicular();
 
-		if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y))) {
+		if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y))) 
+        {
 			t0 = -t0;
 			t2 = -t2;
 		}
@@ -422,7 +456,8 @@ namespace Anggur
 			const Vector2& p1,
 			const Vector2& p2,
 			const Vector2& p3,
-			Vector2& p4) -> bool {
+			Vector2& p4) -> bool 
+        {
 			float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
 			float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
 			float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
@@ -431,8 +466,9 @@ namespace Anggur
 			float numeaAbs = Math::Abs(numea);
 			float numebAbs = Math::Abs(numeb);
 
-			if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon) {
-				p4 = Vector2::lerp(p0, p1, 0.5);
+			if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon) 
+            {
+				p4 = Vector2::Lerp(p0, p1, 0.5);
 				return true;
 			}
 
@@ -442,7 +478,8 @@ namespace Anggur
 			float mua = numea / denom;
 			float mub = numeb / denom;
 
-			if (mua < 0 || mua > 1 || mub < 0 || mub > 1) {
+			if (mua < 0 || mua > 1 || mub < 0 || mub > 1) 
+            {
 				return false;
 			}
 
@@ -486,28 +523,31 @@ namespace Anggur
 			indices[17] = 7;
 		}
 
-		draw(vertices, indices, whiteTexture);
+		Draw(vertices, indices, whiteTexture);
 	}
 
-	void CanvasRenderer::drawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) {
-		Vector2 midPoint = Vector2::lerp(point0, point1, 0.5);
+	void CanvasRenderer::DrawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) 
+    {
+		Vector2 midPoint = Vector2::Lerp(point0, point1, 0.5);
 
-		drawLineTerminator(model, point0, midPoint, thickness, color);
-		drawLineTerminator(model, point1, midPoint, thickness, color);
+		DrawLineTerminator(model, point0, midPoint, thickness, color);
+		DrawLineTerminator(model, point1, midPoint, thickness, color);
 	}
 
-	void CanvasRenderer::drawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) {
-		if (ps.size() > 1) {
+	void CanvasRenderer::DrawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) 
+    {
+		if (ps.size() > 1) 
+        {
 			std::vector<Vector2> ms;
 
 			for (size_t i = 0; i < ps.size() - 1; ++i)
-				ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
+				ms.push_back(Vector2::Lerp(ps[i], ps[i + 1], 0.5));
 
 			for (size_t i = 1; i < ms.size(); ++i)
-				drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+				DrawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
 
-			drawLineTerminator(transform, ps.front(), ms.front(), w, c);
-			drawLineTerminator(transform, ps.back(), ms.back(), w, c);
+			DrawLineTerminator(transform, ps.front(), ms.front(), w, c);
+			DrawLineTerminator(transform, ps.back(), ms.back(), w, c);
 		}
 	}
 
@@ -519,12 +559,12 @@ namespace Anggur
 	// 			ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
 
 	// 		for (size_t i = 1; i < ms.size(); ++i)
-	// 			drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+	// 			DrawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
 
 	// 		Vector2 m = Vector2::lerp(ps.front(), ps.back(), 0.5);
 
-	// 		drawLineAnchor(transform, m, ps.front(), ms.front(), w, c);
-	// 		drawLineAnchor(transform, ms.back(), ps.back(), m, w, c);
+	// 		DrawLineAnchor(transform, m, ps.front(), ms.front(), w, c);
+	// 		DrawLineAnchor(transform, ms.back(), ps.back(), m, w, c);
 	// 	}
 	// }
 
@@ -557,7 +597,7 @@ namespace Anggur
 	// 	for (int i = 0; i <= 10; ++i)
 	// 		points.push_back(GetLerped(p0, p1, p2, i / 10.f));
 
-	// 	drawPolyLine(transform, points, w, c);
+	// 	DrawPolyLine(transform, points, w, c);
 	// }
 
 	// void CanvasRenderer::drawQuadraticBezierAlt(const Matrix3& transform,
@@ -603,6 +643,6 @@ namespace Anggur
 	// 	for (int i = 0; i <= 10; ++i)
 	// 		points.push_back(GetLerped(p0, p1, p2, p3, i / 10.f));
 
-	// 	drawPolyLine(transform, points, w, c);
+	// 	DrawPolyLine(transform, points, w, c);
 	// }
 }

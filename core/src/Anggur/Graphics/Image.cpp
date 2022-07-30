@@ -2,22 +2,27 @@
 #include "stb_image.h"
 #include <cassert>
 
-namespace Anggur {
-	Image::Image() {
+namespace Anggur 
+{
+	Image::Image() 
+	{
 		data = nullptr;
 	}
 
-	Image::Image(const std::string& path) {
+	Image::Image(const std::string& path) 
+	{
 		data = nullptr;
-		load(path);
+		Load(path);
 	}
 
-	Image::~Image() {
-		unload();
+	Image::~Image() 
+	{
+		Unload();
 	}
 
-	void Image::load(const std::string& path) {
-		unload();
+	void Image::Load(const std::string& path) 
+	{
+		Unload();
 
 		int width;
 		int height;
@@ -31,7 +36,8 @@ namespace Anggur {
 		this->channels = channels;
 	}
 
-	void Image::unload() {
+	void Image::Unload() 
+	{
 		if (data) 
 			stbi_image_free(data);
 	}
