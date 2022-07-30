@@ -16,7 +16,7 @@ public:
 
 	void Update(float deltaTime) 
 	{
-		ballPosition += (deltaTime * GetInputAxis()) * ballVelocity;
+		ballPosition += deltaTime * ballVelocity * GetInputAxis();
 
 		camera.Update();
 		
@@ -32,16 +32,16 @@ public:
 	{
 		Vector2 direction;
 
-		if (window.input.IsKeyDown(Key::left))
+		if (window.input.IsKeyDown(Key::Left))
 			direction.x -= 1;
 
-		if (window.input.IsKeyDown(Key::right))
+		if (window.input.IsKeyDown(Key::Right))
 			direction.x += 1;
 
-		if (window.input.IsKeyDown(Key::up))
+		if (window.input.IsKeyDown(Key::Up))
 			direction.y -= 1;
 
-		if (window.input.IsKeyDown(Key::down))
+		if (window.input.IsKeyDown(Key::Down))
 			direction.y += 1;
 
 		return Vector2::Normalize(direction);
@@ -51,5 +51,5 @@ private:
 	CanvasCamera camera;
 
 	Vector2 ballPosition;
-	Vector2 ballVelocity = Vector2(100, 100);
+	float ballVelocity = 200;
 };
