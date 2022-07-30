@@ -9,8 +9,8 @@ namespace Anggur
 {
     struct Keyboard 
     {
-        std::array<bool, maxKeyValue> currentState;
-        std::array<bool, maxKeyValue> previousState; 
+        std::array<bool, maxKeyValue> currentState{false};
+        std::array<bool, maxKeyValue> previousState{false}; 
 
         void Update();
     };
@@ -21,8 +21,8 @@ namespace Anggur
         Vector2 previousPosition;
         Vector2 direction;
 
-        std::array<bool, maxMouseButtonValue> currentButtonState;
-        std::array<bool, maxMouseButtonValue> previousButtonState;
+        std::array<bool, maxMouseButtonValue> currentButtonState{false};
+        std::array<bool, maxMouseButtonValue> previousButtonState{false};
         
         void Update();
     };
