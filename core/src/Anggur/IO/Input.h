@@ -5,15 +5,18 @@
 #include "WindowContext.h"
 #include <array>
 
-namespace Anggur {
-    struct Keyboard {
+namespace Anggur 
+{
+    struct Keyboard 
+    {
         std::array<bool, maxKeyValue> currentState;
         std::array<bool, maxKeyValue> previousState; 
 
-        void update();
+        void Update();
     };
 
-    struct Mouse {
+    struct Mouse 
+    {
         Vector2 currentPosition;
         Vector2 previousPosition;
         Vector2 direction;
@@ -21,59 +24,61 @@ namespace Anggur {
         std::array<bool, maxMouseButtonValue> currentButtonState;
         std::array<bool, maxMouseButtonValue> previousButtonState;
         
-        void update();
+        void Update();
     };
 
-    struct Scroll {
+    struct Scroll 
+    {
         Vector2 currentDirection;
         Vector2 previousDirection;
 
-        void update();
+        void Update();
     };
 
-    class Input {
+    class Input 
+    {
     public:
         // Key device
 
-        bool isKeyPressed(Key key);
+        bool IsKeyPressed(Key key);
         
-        bool isKeyReleased(Key key);
+        bool IsKeyReleased(Key key);
         
         bool IsKeyDown(Key key);
         
-        bool isKeyUp(Key key);
+        bool IsKeyUp(Key key);
 
-        void setKeyState(Key key, bool state);
+        void SetKeyState(Key key, bool state);
 
 
         // Mouse device
 
-        bool isMouseButtonPressed(MouseButton button);
+        bool IsMouseButtonPressed(MouseButton button);
         
-        bool isMouseButtonReleased(MouseButton button);
+        bool IsMouseButtonReleased(MouseButton button);
         
-        bool isMouseButtonDown(MouseButton button);
+        bool IsMouseButtonDown(MouseButton button);
         
-        bool isMouseButtonUp(MouseButton button);
+        bool IsMouseButtonUp(MouseButton button);
 
-        const Vector2& getMousePosition();
+        const Vector2& GetMousePosition();
 
-        const Vector2& getMouseDirection();
+        const Vector2& GetMouseDirection();
 
-        void setMouseButtonState(MouseButton button, bool state);
+        void SetMouseButtonState(MouseButton button, bool state);
 
-        void setMousePosition(const Vector2& position);
+        void SetMousePosition(const Vector2& position);
 
         // Scroll device
 
-        const Vector2& getScrollDirection();
+        const Vector2& GetScrollDirection();
 
-        void setScrollDirection(const Vector2& direction);
+        void SetScrollDirection(const Vector2& direction);
         
         // Data management
 
-        void setContext(WindowContext* context);
-        void update();
+        void SetContext(WindowContext* context);
+        void Update();
 
     private:
         Keyboard keyboard;
@@ -85,13 +90,13 @@ namespace Anggur {
         WindowContext* context = nullptr;
 
     private:
-        void directSetKeyState(Key key, bool state);
+        void DirectSetKeyState(Key key, bool state);
 
-        void directSetMouseButtonState(MouseButton button, bool state);
+        void DirectSetMouseButtonState(MouseButton button, bool state);
 
-        void directSetMousePosition(const Vector2& position);
+        void DirectSetMousePosition(const Vector2& position);
 
-        void directSetScrollDirection(const Vector2& direction);
+        void DirectSetScrollDirection(const Vector2& direction);
 
         friend class Window;
     };

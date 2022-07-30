@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Anggur/EventEmitter.h"
-#include "Anggur/Graphics/Renderer.h"
 #include "WindowEvent.h"
 #include "WindowContext.h"
 #include "Input.h"
 
-namespace Anggur {
-	class Window {
+namespace Anggur 
+{
+	class Window 
+	{
 	public:
 		EventEmitter emmiter;
 		Input input;
@@ -17,7 +18,7 @@ namespace Anggur {
 		
 		~Window();
 
-		WindowContext* getContext();
+		WindowContext* GetContext();
 
 		float getAspectRatio();
 

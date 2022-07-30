@@ -2,18 +2,21 @@
 
 #include <chrono>
 
-namespace Anggur {
+namespace Anggur 
+{
     using ClockContext = std::chrono::high_resolution_clock;
     using TimePoint = std::chrono::time_point<ClockContext>;
 
     class Clock
     {
     public:
-        Clock() {
+        Clock() 
+        {
             started = ClockContext::now();
         }
 
-        float GetElapsed() const {
+        float GetElapsed() const 
+        {
             TimePoint current = ClockContext::now();
             return std::chrono::duration_cast<std::chrono::milliseconds>(current - started).count() * 0.001;
         }

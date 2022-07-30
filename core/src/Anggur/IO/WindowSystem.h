@@ -9,6 +9,6 @@ namespace Anggur
 
         ~WindowSystem();
 
-		void pollEvents();
+		void PollEvents();
 	};
 }

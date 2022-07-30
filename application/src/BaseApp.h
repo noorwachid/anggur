@@ -33,7 +33,7 @@ public:
         {
             float currentTime = clock.GetElapsed();
 
-            windowSystem.pollEvents();
+            windowSystem.PollEvents();
 
             Update(currentTime - previousTime);
 
