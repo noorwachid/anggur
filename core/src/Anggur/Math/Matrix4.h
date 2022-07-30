@@ -153,8 +153,8 @@ namespace Anggur
         static Matrix4 CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up) 
         {
             Vector3 zaxis = Vector3::Normalize(target - eye);
-            Vector3 xaxis = Vector3::Normalize(Vector3::cross(up, zaxis));
-            Vector3 yaxis = Vector3::Normalize(Vector3::cross(zaxis, xaxis));
+            Vector3 xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
+            Vector3 yaxis = Vector3::Normalize(Vector3::Cross(zaxis, xaxis));
 
             Vector3 trans(
                 -Vector3::Dot(xaxis, eye),

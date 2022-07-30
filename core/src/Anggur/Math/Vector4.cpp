@@ -1,7 +1,8 @@
 #include "Math.h"
 #include "Vector4.h"
 
-namespace Anggur {
+namespace Anggur 
+{
 	// Constants
 
 	const Vector4 Vector4::zero(0.0f, 0.0f, 0.0f, 0.0f);
@@ -47,18 +48,22 @@ namespace Anggur {
 
 	// Initializers
 
-	Vector4::Vector4(): x(0.0f), y(0.0f), z(0.0f), w(0.0f) {
+	Vector4::Vector4(): x(0.0f), y(0.0f), z(0.0f), w(0.0f) 
+	{
 	};
 
-	Vector4::Vector4(float scalar): x(scalar), y(scalar), z(scalar), w(scalar) {
+	Vector4::Vector4(float scalar): x(scalar), y(scalar), z(scalar), w(scalar) 
+	{
 	}
 
-	Vector4::Vector4(float newX, float newY, float newZ, float newW): x(newX), y(newY), z(newZ), w(newW) {
+	Vector4::Vector4(float newX, float newY, float newZ, float newW): x(newX), y(newY), z(newZ), w(newW) 
+	{
 	}
 
 	// 2d class initializers
 
-	Vector4 Vector4::CreateHex(uint64_t hex) {
+	Vector4 Vector4::CreateHex(uint64_t hex) 
+	{
 		Vector4 v;
 
 		v.x = (hex >> 16 & 0xFF) / 255.f;
@@ -71,32 +76,38 @@ namespace Anggur {
 
 	// Casters
 
-	const float* Vector4::ToPointer() const {
+	const float* Vector4::ToPointer() const 
+	{
 		return &x;
 	}
 
-	float* Vector4::ToPointer() {
+	float* Vector4::ToPointer() 
+	{
 		return &x;
 	}
 	
-	std::string Vector4::ToString() {
+	std::string Vector4::ToString() 
+	{
 		return std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ", " + std::to_string(w);
 	}
 
 	// Getters
 
-	float Vector4::GetLengthSquared() const {
+	float Vector4::GetLengthSquared() const 
+	{
 		return (x*x + y*y + z*z + w*w);
 	}
 
-	float Vector4::GetLength() const {
+	float Vector4::GetLength() const 
+	{
 		return (Math::Sqrt(GetLengthSquared()));
 	}
 
 
 	// Setters
 
-	void Vector4::Set(float newX, float newY, float newZ, float newW) {
+	void Vector4::Set(float newX, float newY, float newZ, float newW) 
+	{
 		x = newX;
 		y = newY;
 		z = newZ;
@@ -106,7 +117,8 @@ namespace Anggur {
 	
 	// 2nd class manipulations
 
-	float Vector4::Dot(const Vector4& a, const Vector4& b) {
+	float Vector4::Dot(const Vector4& a, const Vector4& b) 
+	{
 		return (
 			a.x * b.x + 
 			a.y * b.y + 
@@ -115,23 +127,25 @@ namespace Anggur {
 		);
 	}
 
-	Vector4 Vector4::Cross(const Vector4& a, const Vector4& b) {
+	Vector4 Vector4::Cross(const Vector4& a, const Vector4& b) 
+	{
 		// TODO: implement this
 		return Vector4();
 	}
 
-	Vector4 Vector4::Normalize(const Vector4& a) {
+	Vector4 Vector4::Normalize(const Vector4& a) 
+	{
 		float length = a.GetLength();
 
-		if (length == 0) {
+		if (length == 0)
 			return Vector4::zero;
-		}
 
 		return Vector4(a.x / length, a.y / length, a.z / length, a.w / length);
 	}
 
 	
-	Vector4 Vector4::Lerp(const Vector4& a, const Vector4& b, float amount)  {
+	Vector4 Vector4::Lerp(const Vector4& a, const Vector4& b, float amount)  
+	{
 		return Vector4(
 			Math::Lerp(a.x, b.x, amount),
 			Math::Lerp(a.y, b.y, amount),
@@ -142,56 +156,68 @@ namespace Anggur {
 
 	// 3rd class manipulations
 
-	Vector4 operator+ (const Vector4& a, const Vector4& b) {
+	Vector4 operator+ (const Vector4& a, const Vector4& b) 
+	{
 		return Vector4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 	}
 
-	Vector4 operator- (const Vector4& a, const Vector4& b) {
+	Vector4 operator- (const Vector4& a, const Vector4& b) 
+	{
 		return Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 	}
 
-	Vector4 operator* (const Vector4& a, const Vector4& b) {
+	Vector4 operator* (const Vector4& a, const Vector4& b) 
+	{
 		return Vector4(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
 	}
 	
-	Vector4 operator+ (float a, const Vector4& b) {
+	Vector4 operator+ (float a, const Vector4& b) 
+	{
 		return Vector4(a + b.x, a + b.y, a + b.z, a + b.w);
 	}
 
-	Vector4 operator- (float a, const Vector4& b) {
+	Vector4 operator- (float a, const Vector4& b) 
+	{
 		return Vector4(a - b.x, a - b.y, a - b.z, a + b.w);
 	}
 
-	Vector4 operator* (float a, const Vector4& b) {
+	Vector4 operator* (float a, const Vector4& b) 
+	{
 		return Vector4(a * b.x, a * b.y, a * b.z, a + b.w);
 	}
 
-	Vector4& operator+= (Vector4& a, const Vector4& b) {
+	Vector4& operator+= (Vector4& a, const Vector4& b) 
+	{
 		a = a + b;
 		return a;
 	}
 
-	Vector4& operator-= (Vector4& a, const Vector4& b) {
+	Vector4& operator-= (Vector4& a, const Vector4& b) 
+	{
 		a = a - b;
 		return a;
 	}
 
-	Vector4& operator*= (Vector4& a, const Vector4& b) {
+	Vector4& operator*= (Vector4& a, const Vector4& b) 
+	{
 		a = a * b;
 		return a;
 	}
 
-	Vector4& operator+= (Vector4& a, float b) {
+	Vector4& operator+= (Vector4& a, float b) 
+	{
 		a = b + a;
 		return a;
 	}
 
-	Vector4& operator-= (Vector4& a, float b) {
+	Vector4& operator-= (Vector4& a, float b) 
+	{
 		a = b - a;
 		return a;
 	}
 
-	Vector4& operator*= (Vector4& a, float b) {
+	Vector4& operator*= (Vector4& a, float b) 
+	{
 		a = b * a;
 		return a;
 	}

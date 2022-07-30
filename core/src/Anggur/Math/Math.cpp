@@ -1,7 +1,8 @@
 #include "Math.h"
 #include <cmath>
 
-namespace Anggur {
+namespace Anggur 
+{
 	// Constants
 
 	const float Math::pi = 3.1415926535f;
@@ -11,73 +12,89 @@ namespace Anggur {
 
 	// Casters
 
-	float Math::DegreeToRadian(float x) {
+	float Math::DegreeToRadian(float x) 
+	{
 		return x * pi / 180.0f;
 	}
 
-	float Math::RadianToDegree(float x) {
+	float Math::RadianToDegree(float x) 
+	{
 		return x * 180.0f / pi;
 	}
 
 	// Conditional manipulations
 
-	float Math::Max(float a, float b) {
+	float Math::Max(float a, float b) 
+	{
 		return fmaxf(a, b);
 	}
 
-	float Math::Min(float a, float b) {
+	float Math::Min(float a, float b) 
+	{
 		return fminf(a, b);
 	}
 
-	float Math::Clamp(float x, float lower, float upper) {
+	float Math::Clamp(float x, float lower, float upper) 
+	{
 		return Min(upper, Max(lower, x));
 	}
 
-	float Math::Abs(float x) {
+	float Math::Abs(float x) 
+	{
 		return fabsf(x);
 	}
 
-	float Math::IsNearZero(float x, float epsilon) {
+	float Math::IsNearZero(float x, float epsilon) 
+	{
 		return (Abs(x) <= epsilon);
 	}
 
 	// Mapping manipulations
 
-	float Math::Normalize(float x, float lower, float upper) {
+	float Math::Normalize(float x, float lower, float upper) 
+	{
 		return (x - lower) / (upper - lower);
 	}
 
-	float Math::Lerp(float lower, float upper, float amount) {
+	float Math::Lerp(float lower, float upper, float amount) 
+	{
 		return lower + amount * (upper - lower);
 	}
 
-	float Math::Map(float x, float lowerA, float upperA, float lowerB, float upperB) {
+	float Math::Map(float x, float lowerA, float upperA, float lowerB, float upperB) 
+	{
 		return Lerp(lowerB, upperB, Normalize(x, lowerA, upperA));
 	}
 
 	// Floating point manipulations
 
-	float Math::Mod(float x, float d) {
+	float Math::Mod(float x, float d) 
+	{
 		return fmodf(x, d);
 	}
 
-	float Math::Floor(float x) {
+	float Math::Floor(float x) 
+	{
 		return floorf(x);
 	}
 
-	float Math::Ceil(float x) {
+	float Math::Ceil(float x) 
+	{
 		return ceilf(x);
 	}
 
-	float Math::Truncate(float x) {
+	float Math::Truncate(float x) 
+	{
 		return truncf(x);
 	}
 
-	float Math::Round(float x) {
+	float Math::Round(float x) 
+	{
 		return roundf(x);
 	}
 
-	float Math::RoundNearest(float x, float step) {
+	float Math::RoundNearest(float x, float step) 
+	{
 		return Round(x / step) * step;
 	}
 
@@ -95,23 +112,28 @@ namespace Anggur {
 
 	// Trigonometry manipulations
 
-	float Math::Sin(float x) {
+	float Math::Sin(float x) 
+	{
 		return sinf(x);
 	}
 
-	float Math::Tan(float x) {
+	float Math::Tan(float x) 
+	{
 		return tanf(x);
 	}
 
-	float Math::Sec(float x) {
+	float Math::Sec(float x) 
+	{
 		return 0;
 	}
 
-	float Math::Cos(float x) {
+	float Math::Cos(float x) 
+	{
 		return cosf(x);
 	}
 
-	float Math::Cot(float x) {
+	float Math::Cot(float x) 
+	{
 		return 0;
 	}
 
