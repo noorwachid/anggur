@@ -18,7 +18,6 @@ public:
 	void Update(float deltaTime) 
 	{
 		ballPosition += deltaTime * ballVelocity * GetInputAxis();
-		std::cout << GetInputAxis().ToString() << "\n";
 
 		camera.Update();
 		

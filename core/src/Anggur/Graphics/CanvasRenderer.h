@@ -91,10 +91,10 @@ namespace Anggur
 		void DrawText(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::string& textBuffer, TextAlign textVerticalAlign, TextAlign textHorizontalAlign, const Vector4& color = Vector4::white);
 
     private:
-        std::shared_ptr<Shader> shader;
-        std::shared_ptr<VertexArray> vertexArray;
-        std::shared_ptr<VertexBuffer> vertexBuffer;
-        std::shared_ptr<IndexBuffer> indexBuffer;
+        Shader shader;
+        VertexArray vertexArray;
+        VertexBuffer vertexBuffer;
+        IndexBuffer indexBuffer;
 
         std::vector<CanvasVertex> vertices;
         std::vector<uint32_t> indices;

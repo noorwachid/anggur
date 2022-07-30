@@ -24,17 +24,14 @@ namespace Anggur
         vertices.assign(batchVertex, CanvasVertex(Vector2(0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
         indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-        vertexBuffer = std::make_shared<VertexBuffer>();
-        vertexBuffer->SetCapacity(sizeof(CanvasVertex) * vertices.size());
+        vertexBuffer.SetCapacity(sizeof(CanvasVertex) * vertices.size());
 
-        vertexArray = std::make_shared<VertexArray>();
-        vertexArray->SetAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
-        vertexArray->SetAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
-        vertexArray->SetAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
-        vertexArray->SetAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
+        vertexArray.SetAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
+        vertexArray.SetAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
+        vertexArray.SetAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
+        vertexArray.SetAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
         
-        indexBuffer = std::make_shared<IndexBuffer>();
-        indexBuffer->SetCapacity(sizeof(uint32_t) * indices.size());
+        indexBuffer.SetCapacity(sizeof(uint32_t) * indices.size());
     }
 
     void CanvasRenderer::InitializeTexturePool() 
@@ -53,8 +50,7 @@ namespace Anggur
 
     void CanvasRenderer::InitializeShader() 
     {
-        shader = std::make_shared<Shader>();
-        shader->SetVertexSource(R"(
+        shader.SetVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec2 aPosition;
@@ -77,7 +73,7 @@ namespace Anggur
             }
         )");
 
-        shader->SetFragmentSource(R"(
+        shader.SetFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -93,7 +89,7 @@ namespace Anggur
             }
         )");
 
-        shader->Compile();
+        shader.Compile();
     }
 
     void CanvasRenderer::SetBatchChunk(size_t vertex, size_t indexMultiplier) 
@@ -153,17 +149,17 @@ namespace Anggur
             textures[i]->Bind(i);
         }
 
-        shader->Bind();
-        shader->SetUniformMatrix3("uViewProjection", viewProjection);
-        shader->SetUniformInt("uSlots", textureOffset, slots.data());
+        shader.Bind();
+        shader.SetUniformMatrix3("uViewProjection", viewProjection);
+        shader.SetUniformInt("uSlots", textureOffset, slots.data());
 
-        vertexArray->Bind();
+        vertexArray.Bind();
         
-        vertexBuffer->Bind();
-        vertexBuffer->SetData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
+        vertexBuffer.Bind();
+        vertexBuffer.SetData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
 
-        indexBuffer->Bind();
-        indexBuffer->SetData(sizeof(uint32_t) * indexOffset, indices.data());
+        indexBuffer.Bind();
+        indexBuffer.SetData(sizeof(uint32_t) * indexOffset, indices.data());
 
         glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
