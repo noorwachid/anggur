@@ -103,12 +103,11 @@ namespace Anggur
             }
         }
 
-        void Generate(uint32_t newCodePoint = 33, uint32_t next = 1)
+        void Generate(uint32_t newCodePoint = 'F', uint32_t next = 1)
         {
             if (glyphBuffers.empty() || glyphBuffers.back().occupied) 
                 glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
 
-            /* calculate font scaling */
             float scale = stbtt_ScaleForPixelHeight(font.context, glyphSamplingSize);
     
             int ascent, descent, lineGap;
@@ -126,17 +125,12 @@ namespace Anggur
                 int x1, y1, x2, y2;
                 stbtt_GetCodepointBitmapBox(font.context, codePoint, scale, scale, &x1, &y1, &x2, &y2);
 
-                x2 = x2 + abs(x1);
-                x1 = 0;
+                int glyphWidth = x2 - x1;
+                int glyphHeight = y2 - y1;
 
-                y2 = y2 + abs(y1);
-                y1 = 0;
-
-                if (glyphMaxHeight < y2)
-                    glyphMaxHeight = y2;
+                if (glyphMaxHeight < glyphHeight)
+                    glyphMaxHeight = glyphHeight;
                 
-                int pointerY = y1;
-
                 if (glyphBuffers.back().pointerX + roundf(ax * scale) > glyphBuffers.back().image.GetWidth())
                 {
                     glyphBuffers.back().pointerX = 0;
@@ -145,16 +139,16 @@ namespace Anggur
                     glyphMaxHeight = 0;
                 }
                 
-                int byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY + pointerY) * glyphBuffers.back().image.GetWidth());
+                int byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
 
-                if (glyphBuffers.back().pointerY + y2 > glyphBuffers.back().image.GetHeight())
+                if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
                 {
                     glyphBuffers.back().occupied = true; 
-                    glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize`));
-                    byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY + pointerY) * glyphBuffers.back().image.GetWidth());
+                    glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
+                    byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
                 }
 
-                stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().image.ToPointer() + byteOffset, x2 - x1, y2 - y1, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
+                stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().image.ToPointer() + byteOffset, glyphWidth, glyphHeight, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
 
                 glyphBuffers.back().pointerX += roundf(ax * scale);
                 
