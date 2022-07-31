@@ -59,8 +59,8 @@ namespace Anggur
         Vector2 offset;
         Vector2 size;
 
-        uint32_t ascent;
-        uint32_t descent;
+        float ascent;
+        float descent;
 
         size_t bufferIndex = 0;
     };
@@ -138,13 +138,6 @@ namespace Anggur
                 
                 int byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
 
-                float normal = 1.0f / glyphAtlasSize;
-
-                Glyph glyph;
-                glyph.offset.Set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
-                glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
-
-                glyphMap[codePoint] = glyph;
 
                 if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
                 {
@@ -152,6 +145,16 @@ namespace Anggur
                     glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
                     byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
                 }
+
+                float normal = 1.0f / glyphAtlasSize;
+
+                Glyph glyph;
+                glyph.offset.Set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
+                glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
+                glyph.ascent = (ascent + y1) * normal;
+                glyph.descent = -descent * normal;
+                glyph.bufferIndex = glyphBuffers.size() - 1;
+                glyphMap[codePoint] = glyph;
 
                 stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().image.ToPointer() + byteOffset, glyphWidth, glyphHeight, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
 

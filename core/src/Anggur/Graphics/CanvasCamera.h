@@ -18,20 +18,9 @@ namespace Anggur
             Clean();
             
             viewProjection = 
-                Matrix3::CreateRotation(frameRotation)
-                *
-                Matrix3(
-                    1.0f, 0.0f, 0.0f,
-                    0.0f, 1.0f, 0.0f,
-                    // 0.0f, 0.0f, 1.0f
-                    -targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y, 1.0f
-                )
-                *
-                Matrix3(
-                    2.0f / (frameSize.x * frameScale.x), 0.0f, 0.0f,
-                    0.0f, -2.0f / (frameSize.y * frameScale.y), 0.0f,
-                    0.0f, 0.0f, 1.0f
-                ) 
+                Matrix3::CreateTranslation(Vector2(-targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y)) *
+                Matrix3::CreateRotation(frameRotation) *
+                Matrix3::CreateScale(Vector2(2.0f / (frameSize.x * frameScale.x), -2.0f / (frameSize.y * frameScale.y)))
             ;
         }
 
