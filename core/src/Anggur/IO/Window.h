@@ -20,36 +20,36 @@ namespace Anggur
 
 		WindowContext* GetContext();
 
-		float getAspectRatio();
+		float GetAspectRatio();
 
-		const Vector2& getPosition();
+		const Vector2& GetPosition();
 
 		const Vector2& GetSize();
 
-		const Vector2& getFrameBufferSize();
+		const Vector2& GetFrameBufferSize();
 
-		const std::string& getTitle();
+		const std::string& GetTitle();
 
-		void setPosition(const Vector2& pos);
+		void SetPosition(const Vector2& pos);
 		
-		void setSize(const Vector2& size);
+		void SetSize(const Vector2& size);
 		
-		void setTitle(const std::string& title);
+		void SetTitle(const std::string& title);
 
-		bool isOpen();
+		bool IsOpen();
 
-		void close();
+		void Close();
 
-		void update();
+		void Update();
 
 	private:
-		void initializeGraphics();
+		void InitializeGraphics();
 
-		void bindGraphics();
+		void BindGraphics();
 
-		void bindNativeContext();
+		void BindNativeContext();
 
-		void swapFrameBuffers();
+		void SwapFrameBuffers();
 
 	private:
 		WindowContext* context;
