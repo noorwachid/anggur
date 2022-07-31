@@ -640,4 +640,24 @@ namespace Anggur
 
 	// 	DrawPolyLine(transform, points, w, c);
 	// }
+
+
+	void CanvasRenderer::DrawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font, const TextOptions& options)
+	{
+		Vector2 pointer;
+
+		for (char codePoint: text) 
+		{
+			if (codePoint == ' ') {
+				pointer.x += options.wordSpacing;
+				continue;
+			} else {
+				pointer.x += options.letterSpacing;
+			}
+
+			Glyph glyph = font->glyphMap[codePoint];
+			DrawTexturedRectangle(model, Vector2(pointer.x, pointer.y + (glyph.ascent * options.size)), options.size * glyph.size, font->glyphBuffers[glyph.bufferIndex].texture, glyph.offset, glyph.size);
+			pointer.x += glyph.size.x * options.size;
+		}
+	}
 }

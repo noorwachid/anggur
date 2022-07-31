@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "Texture2D.h"
+#include "Font.h"
 #include <vector>
 #include <memory>
 
@@ -36,6 +37,41 @@ namespace Anggur
 
 			return temp;
 		}
+	};
+
+	enum TextAlignment 
+	{
+		Beginning,
+		Middle,
+		End,
+
+		InBetween,
+		Even,
+	};
+
+	struct TextOptions
+	{
+		float size = 1.0f;
+
+		// Spacing
+		float letterSpacing = 0.0f;
+		float wordSpacing = 0.01f;
+		float lineSpacing = 0.01f;
+
+		// Alignment
+		TextAlignment horizontalAlignment = TextAlignment::Beginning;
+		TextAlignment verticalAlignment = TextAlignment::Beginning;
+
+		// Wrap
+		bool horizontalWrap = false;
+		bool verticalWrap = false;
+
+		// Bounding
+		Vector2 boxOffset = { 0, 0 };
+		Vector2 boxSize = { 1, 1 };
+
+		TextOptions() = default;
+		TextOptions(float newSize): size(newSize) {} 
 	};
 
 	class CanvasRenderer 
@@ -80,15 +116,7 @@ namespace Anggur
 		void DrawClosedPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5, const Vector4& color = Vector4::white);
 
 		// 2D Texts
-		enum class TextAlign 
-		{
-			Left,
-			Center,
-			Right,
-			Justify,
-		};
-
-		void DrawText(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::string& textBuffer, TextAlign textVerticalAlign, TextAlign textHorizontalAlign, const Vector4& color = Vector4::white);
+		void DrawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font, const TextOptions& options = TextOptions());
 
     private:
         Shader shader;

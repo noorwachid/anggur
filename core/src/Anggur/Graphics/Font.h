@@ -19,13 +19,49 @@ namespace Anggur
 {
     using FontContext = stbtt_fontinfo;
 
+    struct Glyph
+    {
+        Vector2 offset;
+        Vector2 size;
+
+        float ascent;
+        float descent;
+
+        size_t bufferIndex = 0;
+    };
+
+    struct GlyphBuffer
+    {
+        uint32_t pointerX = 0;
+        uint32_t pointerY = 0;
+
+        bool occupied = false;
+        bool dirty = true;
+
+        Image image;
+        std::shared_ptr<Texture2D> texture;
+
+        GlyphBuffer(uint32_t size)
+        {
+            image.SetSize(size, size);
+            image.SetChannels(1);
+            image.Resize();
+        }
+    };
+
     struct Font
     {
-        ~Font()
-        {
-        }
+        FontContext* context;
+        std::vector<uint8_t> data;
+        
+        uint32_t glyphSamplingSize;
+        uint32_t glyphAtlasSize;
+        uint32_t glyphMaxHeight = 0;
 
-        void Load(const std::string& path)
+        std::vector<GlyphBuffer> glyphBuffers;
+        std::unordered_map<uint32_t, Glyph> glyphMap;
+
+         void Load(const std::string& path)
         {
             FILE* fontFile = fopen(path.c_str(), "rb");
             fseek(fontFile, 0, SEEK_END);
@@ -50,50 +86,9 @@ namespace Anggur
                 throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
         }
 
-        FontContext* context;
-        std::vector<uint8_t> data;
-    };
-
-    struct Glyph
-    {
-        Vector2 offset;
-        Vector2 size;
-
-        float ascent;
-        float descent;
-
-        size_t bufferIndex = 0;
-    };
-
-    struct GlyphBuffer
-    {
-        uint32_t pointerX = 0;
-        uint32_t pointerY = 0;
-
-        bool occupied = false;
-
-        Image image;
-
-        GlyphBuffer(uint32_t size)
-        {
-            image.SetSize(size, size);
-            image.SetChannels(1);
-            image.Resize();
-        }
-    };
-
-    struct TextSystem
-    {
-        Font font;
-        uint32_t glyphSamplingSize;
-        uint32_t glyphAtlasSize;
-        uint32_t glyphMaxHeight = 0;
-        std::vector<GlyphBuffer> glyphBuffers;
-        std::unordered_map<uint32_t, Glyph> glyphMap;
-
         void SetFont(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
         {
-            font.Load(newPath);
+            Load(newPath);
             glyphSamplingSize = newGlyphSamplingSize;
             glyphAtlasSize = newGlyphAtlasSize;
 
@@ -107,10 +102,10 @@ namespace Anggur
             if (glyphBuffers.empty() || glyphBuffers.back().occupied) 
                 glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
 
-            float scale = stbtt_ScaleForPixelHeight(font.context, glyphSamplingSize);
+            float scale = stbtt_ScaleForPixelHeight(context, glyphSamplingSize);
     
             int ascent, descent, lineGap;
-            stbtt_GetFontVMetrics(font.context, &ascent, &descent, &lineGap);
+            stbtt_GetFontVMetrics(context, &ascent, &descent, &lineGap);
 
             ascent = roundf(ascent * scale);
             descent = roundf(descent * scale);
@@ -120,7 +115,7 @@ namespace Anggur
                 int codePoint = i + newCodePoint;
 
                 int x1, y1, x2, y2;
-                stbtt_GetCodepointBitmapBox(font.context, codePoint, scale, scale, &x1, &y1, &x2, &y2);
+                stbtt_GetCodepointBitmapBox(context, codePoint, scale, scale, &x1, &y1, &x2, &y2);
 
                 int glyphWidth = x2 - x1;
                 int glyphHeight = y2 - y1;
@@ -142,6 +137,13 @@ namespace Anggur
                 if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
                 {
                     glyphBuffers.back().occupied = true; 
+
+                    if (glyphBuffers.back().dirty)
+                    {
+                        glyphBuffers.back().texture = std::make_shared<Texture2D>(glyphBuffers.back().image);
+                        glyphBuffers.back().dirty = false;
+                    }
+
                     glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
                     byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
                 }
@@ -156,10 +158,12 @@ namespace Anggur
                 glyph.bufferIndex = glyphBuffers.size() - 1;
                 glyphMap[codePoint] = glyph;
 
-                stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().image.ToPointer() + byteOffset, glyphWidth, glyphHeight, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
+                stbtt_MakeCodepointBitmap(context, glyphBuffers.back().image.ToPointer() + byteOffset, glyphWidth, glyphHeight, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
 
                 glyphBuffers.back().pointerX += glyphWidth;
             }
+
+            glyphBuffers.back().texture = std::make_shared<Texture2D>(glyphBuffers.back().image);
         }
 
         void GenerateASCII()
