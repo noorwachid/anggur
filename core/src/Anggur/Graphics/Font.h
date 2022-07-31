@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Anggur/IO/File.h"
+#include "Texture2D.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -68,47 +69,47 @@ namespace Anggur
 
     struct GlyphBuffer
     {
-        uint32_t width = 512;
-        uint32_t height = 512;
-
         uint32_t pointerX = 0;
         uint32_t pointerY = 0;
 
         bool occupied = false;
 
-        std::vector<uint8_t> data;
+        Image image;
 
-        GlyphBuffer()
+        GlyphBuffer(uint32_t size)
         {
-            data.resize(width * height);
-        }
-
-        void Save(const std::string& path)
-        {
-            stbi_write_png((path + "_" + std::to_string(width) + "x" + std::to_string(height) + ".png").c_str(), width, height, 1, data.data(), width);
+            image.SetSize(size, size);
+            image.SetChannels(1);
+            image.Resize();
         }
     };
 
     struct TextSystem
     {
         Font font;
-        uint32_t glyphSize;
+        uint32_t glyphSamplingSize;
+        uint32_t glyphAtlasSize;
         uint32_t glyphMaxHeight = 0;
         std::vector<GlyphBuffer> glyphBuffers;
 
-        void SetFont(const std::string& newPath, uint32_t newGlyphSize)
+        void SetFont(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
         {
             font.Load(newPath);
-            glyphSize = newGlyphSize;
+            glyphSamplingSize = newGlyphSamplingSize;
+            glyphAtlasSize = newGlyphAtlasSize;
+
+            if (glyphAtlasSize < glyphSamplingSize) {
+                throw std::runtime_error("Glyph atlas size must be greater than sampling size");
+            }
         }
 
         void Generate(uint32_t newCodePoint = 33, uint32_t next = 1)
         {
             if (glyphBuffers.empty() || glyphBuffers.back().occupied) 
-                glyphBuffers.push_back(GlyphBuffer());
+                glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
 
             /* calculate font scaling */
-            float scale = stbtt_ScaleForPixelHeight(font.context, glyphSize);
+            float scale = stbtt_ScaleForPixelHeight(font.context, glyphSamplingSize);
     
             int ascent, descent, lineGap;
             stbtt_GetFontVMetrics(font.context, &ascent, &descent, &lineGap);
@@ -136,7 +137,7 @@ namespace Anggur
                 
                 int pointerY = y1;
 
-                if (glyphBuffers.back().pointerX + roundf(ax * scale) > glyphBuffers.back().width)
+                if (glyphBuffers.back().pointerX + roundf(ax * scale) > glyphBuffers.back().image.GetWidth())
                 {
                     glyphBuffers.back().pointerX = 0;
                     glyphBuffers.back().pointerY += glyphMaxHeight;
@@ -144,16 +145,16 @@ namespace Anggur
                     glyphMaxHeight = 0;
                 }
                 
-                int byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY + pointerY) * glyphBuffers.back().width);
+                int byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY + pointerY) * glyphBuffers.back().image.GetWidth());
 
-                if (glyphBuffers.back().pointerY + y2 > glyphBuffers.back().height)
+                if (glyphBuffers.back().pointerY + y2 > glyphBuffers.back().image.GetHeight())
                 {
                     glyphBuffers.back().occupied = true; 
-                    glyphBuffers.push_back(GlyphBuffer());
-                    byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY + pointerY) * glyphBuffers.back().width);
+                    glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize`));
+                    byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY + pointerY) * glyphBuffers.back().image.GetWidth());
                 }
 
-                stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().data.data() + byteOffset, x2 - x1, y2 - y1, glyphBuffers.back().width, scale, scale, codePoint);
+                stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().image.ToPointer() + byteOffset, x2 - x1, y2 - y1, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
 
                 glyphBuffers.back().pointerX += roundf(ax * scale);
                 
@@ -165,14 +166,6 @@ namespace Anggur
         void GenerateASCII()
         {
             Generate(33, 94);
-        }
-
-        void Save(const std::string& path)
-        {
-            for (size_t i = 0; i < glyphBuffers.size(); ++i) 
-            {
-                glyphBuffers[i].Save(path + "_" + std::to_string(i));
-            }
         }
     };
 }
