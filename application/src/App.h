@@ -31,7 +31,7 @@ public:
 		if (window.input.IsKeyDown(Key::LeftShift)) 
 			camera.NudgeFrameRotation(deltaTime * GetInputAxis().x);
 		else
-			camera.NudgeTargetPosition(deltaTime * GetInputAxis());
+			camera.NudgeTargetPosition(deltaTime * GetInputAxis() * 100);
 		
 
 		camera.NudgeFrameScale(deltaTime * window.input.GetScrollDirection().y);
@@ -46,6 +46,9 @@ public:
 
 				renderer.canvas.DrawTexturedRectangle(Matrix3(), Vector2(0, 200 * i), 200, textures[i], 0, 1);
 			}
+
+			Glyph glyph = textSystem.glyphMap['A'];
+			renderer.canvas.DrawTexturedRectangle(Matrix3(), Vector2(-100, 0), glyph.size * 100, textures[0], glyph.offset, glyph.size);
 
 		renderer.canvas.End();
 	}

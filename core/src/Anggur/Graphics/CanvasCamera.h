@@ -21,17 +21,17 @@ namespace Anggur
                 Matrix3::CreateRotation(frameRotation)
                 *
                 Matrix3(
-                    2.0f / (frameSize.x * frameScale.x), 0.0f, 0.0f,
-                    0.0f, -2.0f / (frameSize.y * frameScale.y), 0.0f,
-                    0.0f, 0.0f, 1.0f
-                ) 
-                *
-                Matrix3(
                     1.0f, 0.0f, 0.0f,
                     0.0f, 1.0f, 0.0f,
                     // 0.0f, 0.0f, 1.0f
                     -targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y, 1.0f
                 )
+                *
+                Matrix3(
+                    2.0f / (frameSize.x * frameScale.x), 0.0f, 0.0f,
+                    0.0f, -2.0f / (frameSize.y * frameScale.y), 0.0f,
+                    0.0f, 0.0f, 1.0f
+                ) 
             ;
         }
 

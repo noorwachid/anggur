@@ -56,10 +56,8 @@ namespace Anggur
 
     struct Glyph
     {
-        uint32_t x;
-        uint32_t y;
-        uint32_t width;
-        uint32_t height;
+        Vector2 offset;
+        Vector2 size;
 
         uint32_t ascent;
         uint32_t descent;
@@ -91,6 +89,7 @@ namespace Anggur
         uint32_t glyphAtlasSize;
         uint32_t glyphMaxHeight = 0;
         std::vector<GlyphBuffer> glyphBuffers;
+        std::unordered_map<uint32_t, Glyph> glyphMap;
 
         void SetFont(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
         {
@@ -119,8 +118,6 @@ namespace Anggur
             for (uint32_t i = 0; i < next; ++i)
             {
                 int codePoint = i + newCodePoint;
-                int ax, lsb;
-                stbtt_GetCodepointHMetrics(font.context, codePoint, &ax, &lsb);
 
                 int x1, y1, x2, y2;
                 stbtt_GetCodepointBitmapBox(font.context, codePoint, scale, scale, &x1, &y1, &x2, &y2);
@@ -131,7 +128,7 @@ namespace Anggur
                 if (glyphMaxHeight < glyphHeight)
                     glyphMaxHeight = glyphHeight;
                 
-                if (glyphBuffers.back().pointerX + roundf(ax * scale) > glyphBuffers.back().image.GetWidth())
+                if (glyphBuffers.back().pointerX + glyphWidth > glyphBuffers.back().image.GetWidth())
                 {
                     glyphBuffers.back().pointerX = 0;
                     glyphBuffers.back().pointerY += glyphMaxHeight;
@@ -139,21 +136,26 @@ namespace Anggur
                     glyphMaxHeight = 0;
                 }
                 
-                int byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
+                int byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
+
+                float normal = 1.0f / glyphAtlasSize;
+
+                Glyph glyph;
+                glyph.offset.Set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
+                glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
+
+                glyphMap[codePoint] = glyph;
 
                 if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
                 {
                     glyphBuffers.back().occupied = true; 
                     glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
-                    byteOffset = glyphBuffers.back().pointerX + roundf(lsb * scale) + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
+                    byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
                 }
 
                 stbtt_MakeCodepointBitmap(font.context, glyphBuffers.back().image.ToPointer() + byteOffset, glyphWidth, glyphHeight, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
 
-                glyphBuffers.back().pointerX += roundf(ax * scale);
-                
-                int kern = stbtt_GetCodepointKernAdvance(font.context, codePoint, codePoint + 1);
-                glyphBuffers.back().pointerX += roundf(kern * scale);
+                glyphBuffers.back().pointerX += glyphWidth;
             }
         }
 
