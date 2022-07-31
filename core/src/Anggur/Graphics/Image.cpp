@@ -1,17 +1,16 @@
 #include "Image.h"
 #include "stb_image.h"
+#include "stb_image_write.h"
 #include <cassert>
 
 namespace Anggur 
 {
 	Image::Image() 
 	{
-		data = nullptr;
 	}
 
 	Image::Image(const std::string& path) 
 	{
-		data = nullptr;
 		Load(path);
 	}
 
@@ -24,21 +23,29 @@ namespace Anggur
 	{
 		Unload();
 
-		int width;
-		int height;
-		int channels;
+		int newWidth;
+		int newHeight;
+		int newChannels;
 
-		data = stbi_load(path.c_str(), &width, &height, &channels, 4);
-		assert(data && "[Image] failed to load image");
+		uint8_t* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
+		assert(rawData && "Failed to load image");
 
-		this->width = width;
-		this->height = height;
-		this->channels = channels;
+		bytes.resize(newWidth * newHeight * newChannels);
+		std::memcpy(bytes.data(), rawData, bytes.size());
+
+		stbi_image_free(rawData);
+
+		width = newWidth;
+		height = newHeight;
+		channels = newChannels;
 	}
 
 	void Image::Unload() 
 	{
-		if (data) 
-			stbi_image_free(data);
+	}
+
+	void Image::Save(const std::string& path)
+	{
+        stbi_write_png((path + ".png").c_str(), width, height, 1, bytes.data(), width);
 	}
 }

@@ -9,8 +9,8 @@ namespace Anggur
 	{
 	public:
 		Texture2D();
-		Texture2D(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
-		Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::Linear);
+		Texture2D(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::Linear);
+		Texture2D(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
 
 		~Texture2D();
 
@@ -19,9 +19,8 @@ namespace Anggur
 		inline uint32_t GetHeight() const { return height; }
 		inline uint32_t GetChannels() const { return channels; }
 
-		void Load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::Linear);
+		void Load(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels = 8, SamplerFilter filter = SamplerFilter::Linear);
 		void Load(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
-		void Load(const std::string& path, SamplerFilter filter = SamplerFilter::Linear);
 		void Unload();
 
 		void Bind(uint32_t slot = 0);

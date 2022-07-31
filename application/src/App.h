@@ -19,11 +19,11 @@ public:
 		camera.SetFrameScale(0.5);
 		// camera.SetTargetPosition(Vector2(1, 1));
         
-        textSystem.SetFont("resources/fonts/OpenSans-Regular.ttf", 128);
+        textSystem.SetFont("resources/fonts/OpenSans-Regular.ttf", 128, 512);
         textSystem.GenerateASCII();
 
 		for (auto buffer: textSystem.glyphBuffers)
-			textures.push_back(std::make_shared<Texture2D>(buffer.data.data(), buffer.width, buffer.height, 1));
+			textures.push_back(std::make_shared<Texture2D>(buffer.image));
 	}
 
 	void Update(float deltaTime) 

@@ -43,9 +43,8 @@ namespace Anggur
         {
             slots.push_back(i);
         }
-
-        uint8_t whitePixel[] = {255, 255, 255, 255};
-        whiteTexture = std::make_shared<Texture2D>(whitePixel, 1, 1, 4);
+        std::vector<uint8_t> bytes = { {255, 255, 255, 255} };
+        whiteTexture = std::make_shared<Texture2D>(bytes, 1, 1, 4);
     }
 
     void CanvasRenderer::InitializeShader() 

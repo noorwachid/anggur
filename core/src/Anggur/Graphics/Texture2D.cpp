@@ -10,15 +10,16 @@ namespace Anggur
 		id = 0;
 	}
 
-	Texture2D::Texture2D(const std::string& path, SamplerFilter filter) 
+	Texture2D::Texture2D(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
 	{
 		id = 0;
-		Load(path, filter);
+		Load(bytes, width, height, channels, filter);
 	}
 
-	Texture2D::Texture2D(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
+	Texture2D::Texture2D(const Image& image, SamplerFilter filter) 
 	{
-		Load(data, width, height, channels, filter);
+		id = 0;
+		Load(image, filter);
 	}
 
 	Texture2D::~Texture2D() 
@@ -26,7 +27,7 @@ namespace Anggur
 		Unload();
 	}
 
-	void Texture2D::Load(uint8_t* data, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
+	void Texture2D::Load(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels, SamplerFilter filter) 
 	{
 		Unload();
 		glEnable(GL_TEXTURE_2D);
@@ -46,7 +47,11 @@ namespace Anggur
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(filter));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(filter));
 
-		if (data) 
+		if (bytes.empty()) 
+		{
+			assert(false && "Cannot load buffer to texture, data is empty");
+		}
+		else
 		{
 			int iformat;
 			int format;
@@ -66,13 +71,9 @@ namespace Anggur
 					break;
 			}
 
-			glTexImage2D(GL_TEXTURE_2D, 0, iformat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, iformat, width, height, 0, format, GL_UNSIGNED_BYTE, bytes.data());
 			glGenerateMipmap(GL_TEXTURE_2D);
 		} 
-		else 
-		{
-			assert(false && "[Graphic.Texture.loadBitmap] Data is empty");
-		}
 	}
 
 	void Texture2D::Load(const Image& image, SamplerFilter filter) 
@@ -80,13 +81,7 @@ namespace Anggur
 		width = image.GetWidth();
 		height = image.GetHeight();
 		channels = image.GetChannels();
-		Load(image.GetData(), width, height, channels, filter);
-	}
-
-	void Texture2D::Load(const std::string& path, SamplerFilter filter) 
-	{
-		Image image(path);
-		Load(image, filter);
+		Load(image.GetBytes(), width, height, channels, filter);
 	}
 
 	void Texture2D::Unload() 
