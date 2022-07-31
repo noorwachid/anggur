@@ -64,9 +64,9 @@ namespace Anggur
 		// 2D Primitives
 		void DrawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector4& color = Vector4::white);
 		void DrawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color = Vector4::white);
-		void DrawRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector4& color = Vector4::white);
+		void DrawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size, const Vector4& color = Vector4::white);
 		
-        void DrawTexturedRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0 = Vector2::zero, const Vector2& texturePoint1 = Vector2::one, const Vector4& color = Vector4::white);
+        void DrawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint = Vector2::zero, const Vector2& uvSize = Vector2::one, const Vector4& color = Vector4::white);
 
         // 2D Circles
 		void DrawArc(const Matrix3& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi, int segment = 16, const Vector4& color = Vector4::white);

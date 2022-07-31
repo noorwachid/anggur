@@ -251,14 +251,14 @@ namespace Anggur
     }
 
 
-    void CanvasRenderer::DrawRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector4& color) 
+    void CanvasRenderer::DrawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size, const Vector4& color) 
     {
         Draw(
             {    
-                CanvasVertex(model * point0,                      Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                CanvasVertex(model * Vector2(point1.x, point0.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                CanvasVertex(model * point1,                      Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-                CanvasVertex(model * Vector2(point0.x, point1.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                CanvasVertex(model * point,                                       Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                CanvasVertex(model * Vector2(point.x + size.x, point.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                CanvasVertex(model * Vector2(point.x + size.x, point.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+                CanvasVertex(model * Vector2(point.x,          point.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
             }, {
                 0, 1, 2,
                 2, 3, 0,
@@ -267,14 +267,14 @@ namespace Anggur
         );
     }
 
-    void CanvasRenderer::DrawTexturedRectangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePoint0, const Vector2& texturePoint1, const Vector4& color) 
+    void CanvasRenderer::DrawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint, const Vector2& uvSize, const Vector4& color) 
     {
         Draw(
             {    
-                CanvasVertex(model * point0,                      Vector4(color.x, color.y, color.z, color.w), texturePoint0),
-                CanvasVertex(model * Vector2(point1.x, point0.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePoint1.x, texturePoint0.y)),
-                CanvasVertex(model * point1,                      Vector4(color.x, color.y, color.z, color.w), texturePoint1),
-                CanvasVertex(model * Vector2(point0.x, point1.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePoint0.x, texturePoint1.y)),
+                CanvasVertex(model * point,                                       Vector4(color.x, color.y, color.z, color.w), uvPoint                                            ),
+                CanvasVertex(model * Vector2(point.x + size.x, point.y),          Vector4(color.x, color.y, color.z, color.w), Vector2(uvPoint.x + uvSize.x, uvPoint.y)           ),
+                CanvasVertex(model * Vector2(point.x + size.x, point.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(uvPoint.x + uvSize.x, uvPoint.y + uvSize.y)),
+                CanvasVertex(model * Vector2(point.x,          point.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(uvPoint.x,            uvPoint.y + uvSize.y)),
             }, {
                 0, 1, 2,
                 2, 3, 0,

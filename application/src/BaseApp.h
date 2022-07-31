@@ -29,7 +29,7 @@ public:
         
         float previousTime = clock.GetElapsed();
 
-        while (window.isOpen())
+        while (window.IsOpen())
         {
             float currentTime = clock.GetElapsed();
 
@@ -39,7 +39,7 @@ public:
 
             previousTime = currentTime;
 
-            window.update();
+            window.Update();
         }
     }
 
