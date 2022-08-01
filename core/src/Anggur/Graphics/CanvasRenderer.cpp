@@ -84,7 +84,9 @@ namespace Anggur
             uniform sampler2D uSlots[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
             
             void main() {
-                fColor = vec4(vColor.rgb, texture(uSlots[int(vSlot)], vUV).r);
+                float dist = texture(uSlots[int(vSlot)], vUV).r;
+                float alpha = smoothstep(0.1f, 0.9f, dist);
+                fColor = vec4(vColor.rgb, alpha * vColor.a);
             }
         )");
         textShader.Compile();
@@ -136,26 +138,6 @@ namespace Anggur
         {
             Flush();
             drawingMode = newMode;
-
-            std::cout << "HERE" << static_cast<int>(newMode) << "\n";
-
-            switch (drawingMode) {
-                case DrawingMode::Text:
-                    textShader.Bind();
-                    textShader.SetUniformMatrix3("uViewProjection", viewProjection);
-                    textShader.SetUniformInt("uSlots", textureOffset, slots.data());
-                    break;
-
-                case DrawingMode::Primitive:
-                default:
-                    // textShader.Bind();
-                    // textShader.SetUniformMatrix3("uViewProjection", viewProjection);
-                    // textShader.SetUniformInt("uSlots", textureOffset, slots.data());
-                    primitiveShader.Bind();
-                    primitiveShader.SetUniformMatrix3("uViewProjection", viewProjection);
-                    primitiveShader.SetUniformInt("uSlots", textureOffset, slots.data());
-                    break;
-            }
         }
     }
 
@@ -214,6 +196,21 @@ namespace Anggur
         for (size_t i = 0; i < textureOffset; ++i) 
         {
             textures[i]->Bind(i);
+        }
+
+        switch (drawingMode) {
+            case DrawingMode::Text:
+                textShader.Bind();
+                textShader.SetUniformMatrix3("uViewProjection", viewProjection);
+                textShader.SetUniformInt("uSlots", textureOffset, slots.data());
+                break;
+
+            case DrawingMode::Primitive:
+            default:
+                primitiveShader.Bind();
+                primitiveShader.SetUniformMatrix3("uViewProjection", viewProjection);
+                primitiveShader.SetUniformInt("uSlots", textureOffset, slots.data());
+                break;
         }
 
         vertexArray.Bind();

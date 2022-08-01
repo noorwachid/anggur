@@ -124,8 +124,6 @@ namespace Anggur
 
                 uint8_t* buffer = stbtt_GetCodepointSDF(context, scale, codePoint, padding, edgeValue, pixelDistanceScale, &glyphWidth, &glyphHeight, &glyphX, &glyphY);
 
-                std::cout << "Width: " << glyphWidth << ", Height: " << glyphHeight << ", X: " << glyphX << ", Y: " << glyphY << "\n";
-
                 if (glyphMaxHeight < glyphHeight)
                     glyphMaxHeight = glyphHeight;
                 

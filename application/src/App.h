@@ -37,12 +37,13 @@ public:
 
 			renderer.canvas.Clear(Vector4::charcoal);
 
-			for (size_t i = 0; i < font->glyphBuffers.size(); ++i) 
-			{
-				int space = 200;
-				auto& texture = font->glyphBuffers[i].texture;
-				renderer.canvas.DrawTexturedRectangle(Matrix3(), Vector2(0, i * space), space, texture, 0, 1);
-			}
+			// for (size_t i = 0; i < font->glyphBuffers.size(); ++i) 
+			// {
+			// 	int space = 200;
+			// 	auto& texture = font->glyphBuffers[i].texture;
+			// 	renderer.canvas.DrawTexturedRectangle(Matrix3(), Vector2(0, i * space), space, texture, 0, 1);
+			// }
+
 			TextOptions textOptions;
 			textOptions.size = 64;
 			textOptions.letterSpacing = 1;
