@@ -14,10 +14,10 @@ public:
 	{
 		camera.SetFrameSize(window.GetSize());
 		camera.SetFrameScale(0.5);
-		// camera.SetTargetPosition(Vector2(1, 1));
+		camera.SetTargetPosition(Vector2(100, -100));
 	
 		font = std::make_shared<Font>();
-        font->SetFont("resources/fonts/OpenSans-Regular.ttf", 128, 512);
+        font->SetSample("resources/fonts/OpenSans-Regular.ttf", 128, 512);
         font->GenerateASCII();
 	}
 
@@ -37,6 +37,12 @@ public:
 
 			renderer.canvas.Clear(Vector4::charcoal);
 
+			for (size_t i = 0; i < font->glyphBuffers.size(); ++i) 
+			{
+				int space = 200;
+				auto& texture = font->glyphBuffers[i].texture;
+				renderer.canvas.DrawTexturedRectangle(Matrix3(), Vector2(0, i * space), space, texture, 0, 1);
+			}
 			TextOptions textOptions;
 			textOptions.size = 64;
 			textOptions.letterSpacing = 1;

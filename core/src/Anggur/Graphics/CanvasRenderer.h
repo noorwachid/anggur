@@ -117,9 +117,20 @@ namespace Anggur
 
 		// 2D Texts
 		void DrawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font, const TextOptions& options = TextOptions());
+        void DrawTextGlyph(const Matrix3& model, const Vector2& point, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint = Vector2::zero, const Vector2& uvSize = Vector2::one, const Vector4& color = Vector4::white);
 
     private:
-        Shader shader;
+        Shader primitiveShader;
+		Shader textShader;
+
+		enum DrawingMode 
+		{
+			Primitive,
+			Text,
+		};
+
+		DrawingMode drawingMode = DrawingMode::Primitive;
+
         VertexArray vertexArray;
         VertexBuffer vertexBuffer;
         IndexBuffer indexBuffer;
@@ -146,5 +157,6 @@ namespace Anggur
 		void InitializeTexturePool();
 		void InitializeShader();
 
+		void SwitchDrawingMode(DrawingMode mode);
 	};
 }

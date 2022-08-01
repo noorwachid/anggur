@@ -86,7 +86,7 @@ namespace Anggur
                 throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
         }
 
-        void SetFont(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
+        void SetSample(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
         {
             Load(newPath);
             glyphSamplingSize = newGlyphSamplingSize;
@@ -110,15 +110,21 @@ namespace Anggur
             ascent = roundf(ascent * scale);
             descent = roundf(descent * scale);
 
+            float pixelDistanceScale = 64.0;  // trades off precision w/ ability to handle *smaller* sizes
+            int edgeValue = 128;
+            int padding = 3; // not used in shade
+
             for (uint32_t i = 0; i < next; ++i)
             {
                 int codePoint = i + newCodePoint;
+                int glyphWidth;
+                int glyphHeight;
+                int glyphX;
+                int glyphY;
 
-                int x1, y1, x2, y2;
-                stbtt_GetCodepointBitmapBox(context, codePoint, scale, scale, &x1, &y1, &x2, &y2);
+                uint8_t* buffer = stbtt_GetCodepointSDF(context, scale, codePoint, padding, edgeValue, pixelDistanceScale, &glyphWidth, &glyphHeight, &glyphX, &glyphY);
 
-                int glyphWidth = x2 - x1;
-                int glyphHeight = y2 - y1;
+                std::cout << "Width: " << glyphWidth << ", Height: " << glyphHeight << ", X: " << glyphX << ", Y: " << glyphY << "\n";
 
                 if (glyphMaxHeight < glyphHeight)
                     glyphMaxHeight = glyphHeight;
@@ -130,9 +136,6 @@ namespace Anggur
 
                     glyphMaxHeight = 0;
                 }
-                
-                int byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
-
 
                 if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
                 {
@@ -145,7 +148,6 @@ namespace Anggur
                     }
 
                     glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
-                    byteOffset = glyphBuffers.back().pointerX + ((glyphBuffers.back().pointerY) * glyphBuffers.back().image.GetWidth());
                 }
 
                 float normal = 1.0f / glyphAtlasSize;
@@ -153,12 +155,14 @@ namespace Anggur
                 Glyph glyph;
                 glyph.offset.Set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
                 glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
-                glyph.ascent = (ascent + y1) * normal;
+                glyph.ascent = (ascent + glyphY) * normal;
                 glyph.descent = -descent * normal;
                 glyph.bufferIndex = glyphBuffers.size() - 1;
                 glyphMap[codePoint] = glyph;
 
-                stbtt_MakeCodepointBitmap(context, glyphBuffers.back().image.ToPointer() + byteOffset, glyphWidth, glyphHeight, glyphBuffers.back().image.GetWidth(), scale, scale, codePoint);
+                for (int x = 0; x < glyphWidth; ++x) 
+                    for (int y = 0; y < glyphHeight; ++y)
+                        glyphBuffers.back().image.SetByte(x + glyphBuffers.back().pointerX, y + glyphBuffers.back().pointerY, buffer[y * glyphWidth + x]);
 
                 glyphBuffers.back().pointerX += glyphWidth;
             }
