@@ -6,6 +6,8 @@
 #include "Math.h"
 #include "Vector2.h"
 
+#include <iostream>
+
 namespace Anggur 
 {
     struct Matrix3 
@@ -48,7 +50,7 @@ namespace Anggur
             return &a;
         }
 
-        std::string ToString() 
+        std::string ToString() const
         {
             std::string buffer;
 
@@ -57,6 +59,64 @@ namespace Anggur
             buffer += std::to_string(g) + ", " + std::to_string(h) + ", " + std::to_string(i) + "\n";
 
             return buffer;
+        }
+
+        float GetDeterminant() const
+        {
+            float determinantA = a * ((e * i) - (f * h));
+            float determinantD = -d * ((b * i) - (h * c));
+            float determinantG = g * ((b * f) - (e * c));
+
+            return determinantA + determinantD + determinantG;
+        }
+
+        Matrix3 GetCofactor() const
+        {
+            Matrix3 cofactor;
+            cofactor.a = (e * i) - (f * h);
+            cofactor.d = -((b * i) - (h * c));
+            cofactor.g = (b * f) - (e * c);
+
+            cofactor.b = -((d * i) - (f * g));
+            cofactor.e = (a * i) - (c * g);
+            cofactor.h = -((a * f) - (c * d));
+
+            cofactor.c = (d * h) - (e * g);
+            cofactor.f = -((a * h) - (b * g));
+            cofactor.i = (a * e) - (b * d);
+
+            return cofactor;
+        }
+
+        Matrix3 GetAdjugate() const
+        {
+            return GetCofactor().GetTranspose();
+        }
+
+        Matrix3 GetInverse() const
+        {
+            float determinant = GetDeterminant();
+            
+            if (determinant == 0.0f) 
+                return Matrix3(
+                    0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f
+                );
+
+            float inverseDeterminant = 1.0f / GetDeterminant();
+            Matrix3 adjugate = GetAdjugate();
+            
+            return inverseDeterminant * adjugate;
+        }
+
+        Matrix3 GetTranspose() const
+        {
+            return Matrix3(
+                a, d, g, 
+                b, e, h,
+                c, f, i
+            );
         }
 
         static Matrix3 CreateTranslation(const Vector2& translation) 
@@ -82,7 +142,16 @@ namespace Anggur
             return Matrix3(
                 scale.x, 0.0f, 0.0f,
                 0.0f, scale.y, 0.0f,
-                0.0f, 0.0f, 0.0f
+                0.0f, 0.0f, 1.0f
+            );
+        }
+
+        friend Matrix3 operator* (float a, const Matrix3& b) 
+        {
+            return Matrix3(
+                a * b.a, a * b.b, a * b.c,
+                a * b.d, a * b.e, a * b.f,
+                a * b.g, a * b.h, a * b.i
             );
         }
 

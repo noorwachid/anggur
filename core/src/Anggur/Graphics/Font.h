@@ -110,9 +110,9 @@ namespace Anggur
             ascent = roundf(ascent * scale);
             descent = roundf(descent * scale);
 
-            float pixelDistanceScale = 64.0;  // trades off precision w/ ability to handle *smaller* sizes
-            int edgeValue = 128;
-            int padding = 3; // not used in shade
+            float pixelDistanceScale = 32.0;  // trades off precision w/ ability to handle *smaller* sizes
+            int edgeValue = 206;
+            int padding = 6; // not used in shade
 
             for (uint32_t i = 0; i < next; ++i)
             {

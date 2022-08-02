@@ -22,11 +22,18 @@ namespace Anggur
                 Matrix3::CreateRotation(frameRotation) *
                 Matrix3::CreateScale(Vector2(2.0f / (frameSize.x * frameScale.x), -2.0f / (frameSize.y * frameScale.y)))
             ;
+
+            screen = viewProjection.GetInverse();
         }
 
         const Matrix3& GetViewProjection() const 
         {
             return viewProjection;
+        }
+
+        const Matrix3& GetScreen() const
+        {
+            return screen;
         }
 
         void SetFrameSize(const Vector2& size) 
@@ -101,5 +108,6 @@ namespace Anggur
         float frameRotation = 0;
 
         Matrix3 viewProjection;
+        Matrix3 screen;
     };
 }

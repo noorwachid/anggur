@@ -84,9 +84,23 @@ namespace Anggur
             uniform sampler2D uSlots[)" + std::to_string(Texture::GetMaxSlot()) + R"(];
             
             void main() {
-                float dist = texture(uSlots[int(vSlot)], vUV).r;
-                float alpha = smoothstep(0.1f, 0.9f, dist);
-                fColor = vec4(vColor.rgb, alpha * vColor.a);
+                float distance = texture(uSlots[int(vSlot)], vUV).r;
+                float lowThreshold = 0.8f;
+                float highThreshold = 0.9f;
+                fColor.rgb = vColor.rgb;
+
+                if (distance > highThreshold) 
+                {
+                    fColor.a = 1.0f;
+                }
+                else if (distance > lowThreshold)
+                {
+                    fColor.a = smoothstep(0.0f, 1.0f, distance);
+                }
+                else 
+                {
+                    fColor.a = 0.0f;
+                }
             }
         )");
         textShader.Compile();
