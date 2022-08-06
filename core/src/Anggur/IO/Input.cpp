@@ -90,6 +90,12 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			window->GetInput<Mouse>().DirectSetPosition(Vector2(x, y));
 		});
+
+        glfwSetScrollCallback(window.GetContext(), [](GLFWwindow* context, double x, double y) 
+        {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+            window->GetInput<Mouse>().DirectSetWheelDirection(Vector2(x, y));
+        });
     }
 
     void Mouse::Update() 
@@ -101,6 +107,9 @@ namespace Anggur
 
         direction = currentPosition - previousPosition;
         previousPosition = currentPosition;
+
+        previousWheelDirection = currentWheelDirection;
+        currentWheelDirection.Set(0.0f, 0.0f);
     }
 
     bool Mouse::IsButtonPressed(MouseButton button) 
@@ -142,6 +151,11 @@ namespace Anggur
         return shape;
     }
 
+    const Vector2& Mouse::GetWheelDirection() 
+    {
+        return currentWheelDirection;
+    }
+
     void Mouse::SetButtonState(MouseButton button, bool state) 
     {
         DirectSetButtonState(button, state);
@@ -167,6 +181,11 @@ namespace Anggur
         window.emitter.Emit(event);
     }
 
+    void Mouse::SetWheelDirection(const Vector2& direction) 
+    {
+        DirectSetWheelDirection(direction);
+    }
+
     void Mouse::DirectSetButtonState(MouseButton button, bool state) {
         currentButtonState[static_cast<int>(button)] = state;
         MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonReleased", button);
@@ -179,35 +198,8 @@ namespace Anggur
         window.emitter.Emit(event);
     }
 
-    // Scroller
-
-    Scroller::Scroller(Window& window): Input(window)
-    {
-        glfwSetScrollCallback(window.GetContext(), [](GLFWwindow* context, double x, double y) 
-        {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-            window->GetInput<Scroller>().DirectSetDirection(Vector2(x, y));
-        });
-    }
-
-    void Scroller::Update() 
-    {
-        previousDirection = currentDirection;
-        currentDirection.Set(0.0f, 0.0f);
-    }
-
-    const Vector2& Scroller::GetDirection() 
-    {
-        return currentDirection;
-    }
-
-    void Scroller::SetDirection(const Vector2& direction) 
-    {
-        DirectSetDirection(direction);
-    }
-    
-    void Scroller::DirectSetDirection(const Vector2& direction) {
-        currentDirection = direction;
+    void Mouse::DirectSetWheelDirection(const Vector2& direction) {
+        currentWheelDirection = direction;
         ScrollEvent event("ScrollMoved", direction);
         window.emitter.Emit(event);
     }

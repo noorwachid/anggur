@@ -13,6 +13,10 @@ public:
     BaseApp()
     {
         Initialize();
+
+        // Initialize common inputs
+        window.GetInput<Keyboard>();
+        window.GetInput<Mouse>();
     }
 
     virtual void Initialize()

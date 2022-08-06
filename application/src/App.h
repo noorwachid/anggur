@@ -115,7 +115,7 @@ public:
 
 		attractorPosition += deltaTime * attractorVelocity * GetInputAxis();
 
-		worldCamera.NudgeViewScale(deltaTime * window.GetInput<Scroller>().GetDirection().y);
+		worldCamera.NudgeViewScale(deltaTime * window.GetInput<Mouse>().GetWheelDirection().y);
 		worldCamera.Update();
 
 		renderer.canvas.Clear(Vector4::charcoal);

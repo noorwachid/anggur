@@ -68,13 +68,17 @@ namespace Anggur
 
         MouseShape GetShape();
 
+        const Vector2& GetWheelDirection();
+
         void SetButtonState(MouseButton button, bool state);
         void SetPosition(const Vector2& position);
         void SetShape(MouseShape mode);
+        void SetWheelDirection(const Vector2& direction);
 
     private:
         void DirectSetButtonState(MouseButton button, bool state);
         void DirectSetPosition(const Vector2& position);
+        void DirectSetWheelDirection(const Vector2& direction);
     
     private:
         Vector2 currentPosition;
@@ -86,23 +90,8 @@ namespace Anggur
 
         MouseShape shape;
         std::array<void*, 8> shapeBuffers{nullptr};
-    };
 
-    class Scroller: public Input
-    {
-    public:
-        Scroller(Window& window);
-        void Update();
-
-        const Vector2& GetDirection();
-
-        void SetDirection(const Vector2& direction);
-
-    private:
-        void DirectSetDirection(const Vector2& direction);
-
-    private:
-        Vector2 currentDirection;
-        Vector2 previousDirection;
+        Vector2 currentWheelDirection;
+        Vector2 previousWheelDirection;
     };
 }
