@@ -11,7 +11,7 @@ namespace Anggur
 	{
 	public:
 		EventEmitter emmiter;
-		Input input;
+		InputSystem input;
 
 	public:
 		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");

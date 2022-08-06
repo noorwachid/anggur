@@ -18,9 +18,9 @@ namespace Anggur
             Clean();
             
             viewProjection = 
-                Matrix3::CreateTranslation(Vector2(-targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y)) *
-                Matrix3::CreateRotation(frameRotation) *
-                Matrix3::CreateScale(Vector2(2.0f / (frameSize.x * frameScale.x), -2.0f / (frameSize.y * frameScale.y)))
+                Matrix3::CreateTranslation(Vector2(targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y)) *
+                Matrix3::CreateRotation(viewRotation) *
+                Matrix3::CreateScale(Vector2(2.0f / (viewSize.x * viewScale.x), -2.0f / (viewSize.y * viewScale.y)))
             ;
 
             screen = viewProjection.GetInverse();
@@ -36,22 +36,34 @@ namespace Anggur
             return screen;
         }
 
-        void SetFrameSize(const Vector2& size) 
+        const Vector2& GetTargetPosition() const
         {
-            MarkDirty();
-            frameSize.Set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
+            return targetPosition;
         }
 
-        void SetFrameScale(const Vector2& scale) 
+
+        Vector2 ToWorldPoint(const Vector2& screenPoint) const
         {
-            MarkDirty();
-            frameScale.Set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
+			Vector2 normalizedScreenPoint = Vector2(screenPoint.x / screenSize.x * 2 - 1, -screenPoint.y / screenSize.y * 2 + 1);
+			return screen * normalizedScreenPoint;
         }
 
-        void SetFrameRotation(float rotation)
+        void SetViewSize(const Vector2& size) 
         {
             MarkDirty();
-            frameRotation = Math::Mod(rotation, Math::twoPi);
+            viewSize.Set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
+        }
+
+        void SetViewScale(const Vector2& scale) 
+        {
+            MarkDirty();
+            viewScale.Set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
+        }
+
+        void SetViewRotation(float rotation)
+        {
+            MarkDirty();
+            viewRotation = Math::Mod(rotation, Math::twoPi);
         }
 
         void SetTargetPosition(const Vector2& position) 
@@ -65,16 +77,22 @@ namespace Anggur
             MarkDirty();
         }
 
-        void NudgeFrameScale(const Vector2& amount)
+        void SetScreenSize(const Vector2& size) 
         {
             MarkDirty();
-            SetFrameScale(frameScale + amount);
+            screenSize.Set(size.x, size.y);
         }
 
-        void NudgeFrameRotation(float rotation)
+        void NudgeViewScale(const Vector2& amount)
         {
             MarkDirty();
-            SetFrameRotation(frameRotation + rotation);
+            SetViewScale(viewScale + amount);
+        }
+
+        void NudgeViewRotation(float rotation)
+        {
+            MarkDirty();
+            SetViewRotation(viewRotation + rotation);
         }
 
         void NudgeTargetPosition(const Vector2& amount)
@@ -103,11 +121,13 @@ namespace Anggur
 
         Vector2 targetPosition;
         Vector2 targetOffset;
-        Vector2 frameSize;
-        Vector2 frameScale = Vector2(1.0f);
-        float frameRotation = 0;
-
+        float viewRotation = 0;
+        Vector2 viewSize;
+        Vector2 viewScale = Vector2(1.0f);
         Matrix3 viewProjection;
+
+
+        Vector2 screenSize;
         Matrix3 screen;
     };
 }

@@ -105,8 +105,8 @@ namespace Anggur
         )");
         textShader.Compile();
 
-        primitiveShader.Bind();
-        primitiveShader.SetVertexSource(R"(
+        geometryShader.Bind();
+        geometryShader.SetVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec2 aPosition;
@@ -128,7 +128,7 @@ namespace Anggur
                 vSlot = aSlot;
             }
         )");
-        primitiveShader.SetFragmentSource(R"(
+        geometryShader.SetFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -143,7 +143,7 @@ namespace Anggur
                 fColor = texture(uSlots[int(vSlot)], vUV) * vColor;
             }
         )");
-        primitiveShader.Compile();
+        geometryShader.Compile();
     }
 
     void CanvasRenderer::SwitchDrawingMode(DrawingMode newMode)
@@ -184,7 +184,7 @@ namespace Anggur
 
     void CanvasRenderer::Begin() 
     {
-        renderCount = 0;
+        drawCount = 0;
 
         FlushInternalBuffer();
     }
@@ -219,11 +219,11 @@ namespace Anggur
                 textShader.SetUniformInt("uSlots", textureOffset, slots.data());
                 break;
 
-            case DrawingMode::Primitive:
+            case DrawingMode::Geometry:
             default:
-                primitiveShader.Bind();
-                primitiveShader.SetUniformMatrix3("uViewProjection", viewProjection);
-                primitiveShader.SetUniformInt("uSlots", textureOffset, slots.data());
+                geometryShader.Bind();
+                geometryShader.SetUniformMatrix3("uViewProjection", viewProjection);
+                geometryShader.SetUniformInt("uSlots", textureOffset, slots.data());
                 break;
         }
 
@@ -239,7 +239,7 @@ namespace Anggur
 
         FlushInternalBuffer();
 
-        ++renderCount;
+        ++drawCount;
     }
 
     void CanvasRenderer::FlushInternalBuffer() 
@@ -296,7 +296,7 @@ namespace Anggur
 
     void CanvasRenderer::DrawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         Draw(
             { 
@@ -312,7 +312,7 @@ namespace Anggur
 
     void CanvasRenderer::DrawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         Draw(
             {     
@@ -331,7 +331,7 @@ namespace Anggur
 
     void CanvasRenderer::DrawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         Draw(
             {    
@@ -349,7 +349,7 @@ namespace Anggur
 
     void CanvasRenderer::DrawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint, const Vector2& uvSize, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         Draw(
             {    
@@ -367,7 +367,7 @@ namespace Anggur
 
     void CanvasRenderer::DrawCircle(const Matrix3& model, float radius, int segment, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         if (segment < 3)
             segment = 3;
@@ -421,7 +421,7 @@ namespace Anggur
 
     void CanvasRenderer::DrawArc(const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         if (segment < 3)
             segment = 3;
@@ -483,7 +483,7 @@ namespace Anggur
 
 	void CanvasRenderer::DrawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
 		Vector2 offsetPoint = thickness * Vector2::Normalize((point0 - point1));
 		Vector2 perpenPoint = thickness * Vector2::Normalize((point1 - point0).GetPerpendicular());
@@ -504,7 +504,7 @@ namespace Anggur
 		float w,
 		const Vector4& c) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
 		Vector2 i0 = transform * Vector2::zero;
 		Vector2 l0 = transform * p0;
@@ -614,7 +614,7 @@ namespace Anggur
 
 	void CanvasRenderer::DrawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness, const Vector4& color) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
 		Vector2 midPoint = Vector2::Lerp(point0, point1, 0.5);
 
@@ -624,7 +624,7 @@ namespace Anggur
 
 	void CanvasRenderer::DrawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c) 
     {
-        SwitchDrawingMode(DrawingMode::Primitive);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
 		if (ps.size() > 1) 
         {

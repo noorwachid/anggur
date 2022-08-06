@@ -129,7 +129,7 @@ namespace Anggur
 
     void MeshRenderer::Begin() 
     {
-        renderCount = 0;
+        drawCount = 0;
 
         FlushInternalBuffer();
     }
@@ -169,7 +169,7 @@ namespace Anggur
 
         FlushInternalBuffer();
 
-        ++renderCount;
+        ++drawCount;
     }
 
     void MeshRenderer::FlushInternalBuffer() 

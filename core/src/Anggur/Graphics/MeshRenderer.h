@@ -81,7 +81,7 @@ namespace Anggur
         size_t indexOffset = 0;
         size_t textureOffset = 0;
 
-        size_t renderCount = 0;
+        size_t drawCount = 0;
         size_t batchVertex = 128;
         size_t batchIndexMultiplier = 2;
 

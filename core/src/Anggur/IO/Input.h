@@ -7,97 +7,111 @@
 
 namespace Anggur 
 {
-    struct Keyboard 
-    {
-        std::array<bool, maxKeyValue> currentState{false};
-        std::array<bool, maxKeyValue> previousState{false}; 
+    class InputSystem;
 
-        void Update();
+    class Input
+    {
+    protected:
+        InputSystem* system;
+
+    public:
+        Input(InputSystem* system);
+
+        virtual void Update();
     };
 
-    struct Mouse 
-    {
-        Vector2 currentPosition;
-        Vector2 previousPosition;
-        Vector2 direction;
-
-        std::array<bool, maxMouseButtonValue> currentButtonState{false};
-        std::array<bool, maxMouseButtonValue> previousButtonState{false};
-        
-        void Update();
-    };
-
-    struct Scroll 
-    {
-        Vector2 currentDirection;
-        Vector2 previousDirection;
-
-        void Update();
-    };
-
-    class Input 
+    class InputSystem 
     {
     public:
-        // Key device
+        WindowContext* context = nullptr;
+        std::vector<Input*> references;
+        EventEmitter emitter;
 
-        bool IsKeyPressed(Key key);
-        
-        bool IsKeyReleased(Key key);
-        
-        bool IsKeyDown(Key key);
-        
-        bool IsKeyUp(Key key);
+        template <class Input>
+        Input& Get() 
+        {
+            static Input input(this);
 
-        void SetKeyState(Key key, bool state);
+            return input;
+        }
 
-
-        // Mouse device
-
-        bool IsMouseButtonPressed(MouseButton button);
-        
-        bool IsMouseButtonReleased(MouseButton button);
-        
-        bool IsMouseButtonDown(MouseButton button);
-        
-        bool IsMouseButtonUp(MouseButton button);
-
-        const Vector2& GetMousePosition();
-
-        const Vector2& GetMouseDirection();
-
-        void SetMouseButtonState(MouseButton button, bool state);
-
-        void SetMousePosition(const Vector2& position);
-
-        // Scroll device
-
-        const Vector2& GetScrollDirection();
-
-        void SetScrollDirection(const Vector2& direction);
-        
         // Data management
 
         void SetContext(WindowContext* context);
         void Update();
 
     private:
-        Keyboard keyboard;
-        Mouse mouse;
-        Scroll scroll;
+        friend class Window;
+    };
 
-        EventEmitter emitter;
+    // Common Devices
 
-        WindowContext* context = nullptr;
+    class Keyboard: public Input
+    {
+    public:
+        Keyboard(InputSystem* system);
+        void Update();
+
+        bool IsKeyPressed(Key key);
+        bool IsKeyReleased(Key key);
+        bool IsKeyDown(Key key);
+        bool IsKeyUp(Key key);
+
+        void SetKeyState(Key key, bool state);
 
     private:
         void DirectSetKeyState(Key key, bool state);
 
-        void DirectSetMouseButtonState(MouseButton button, bool state);
+    private:
+        std::array<bool, maxKeyValue> currentState{false};
+        std::array<bool, maxKeyValue> previousState{false}; 
+    };
 
-        void DirectSetMousePosition(const Vector2& position);
+    class Mouse: public Input
+    {
+    public:
+        Mouse(InputSystem* system);
+        void Update();
 
-        void DirectSetScrollDirection(const Vector2& direction);
+        bool IsButtonPressed(MouseButton button);
+        bool IsButtonReleased(MouseButton button);
+        bool IsButtonDown(MouseButton button);
+        bool IsButtonUp(MouseButton button);
 
-        friend class Window;
+        const Vector2& GetPosition();
+        const Vector2& GetDirection();
+
+        void SetButtonState(MouseButton button, bool state);
+        void SetPosition(const Vector2& position);
+
+    private:
+        void DirectSetButtonState(MouseButton button, bool state);
+        void DirectSetPosition(const Vector2& position);
+    
+    private:
+        Vector2 currentPosition;
+        Vector2 previousPosition;
+        Vector2 direction;
+
+        std::array<bool, maxMouseButtonValue> currentButtonState{false};
+        std::array<bool, maxMouseButtonValue> previousButtonState{false};
+    };
+
+    class Scroller: public Input
+    {
+    public:
+        Scroller(InputSystem* system);
+        void Update();
+
+        const Vector2& GetDirection();
+
+        void SetDirection(const Vector2& direction);
+
+    private:
+        void DirectSetDirection(const Vector2& direction);
+
+    private:
+        Vector2 currentDirection;
+        Vector2 previousDirection;
     };
 }

@@ -97,7 +97,7 @@ namespace Anggur
 
 	void Vector2::SetLength(float length)  
 	{
-		*this = length * Normalize(*this);
+		SetPolar(length, GetAngle());
 	}
 
 	void Vector2::SetLengthLimit(float x)  

@@ -6,7 +6,48 @@
 
 namespace Anggur 
 {
-    // Keyboard device
+    // Input
+        
+    Input::Input(InputSystem* systemRef): system(systemRef)
+    {
+        system->references.push_back(this);
+    }
+
+    void Input::Update()
+    {
+    }
+
+    // Input System
+
+    void InputSystem::SetContext(WindowContext* newContext) 
+    {
+        context = newContext;
+
+        // glfwSetCharCallback(context, [](GLFWwindow* context, unsigned int codePoint) 
+        // {
+        //     auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+        //     CodePointEvent event(codePoint);
+        //     window->input.emitter.Emit(event);
+        // });
+    }
+
+    void InputSystem::Update() {
+        for (Input* input: references) {
+            input->Update();
+        }
+    }
+
+    // Keyboard
+
+    Keyboard::Keyboard(InputSystem* system): Input(system)
+    {
+		glfwSetKeyCallback(system->context, [](GLFWwindow* context, int vkeyCode, int scanCode, int action, int modidefrKey) 
+        {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+			Key key = static_cast<Key>(vkeyCode);
+            window->input.Get<Keyboard>().DirectSetKeyState(key, action == GLFW_PRESS || action == GLFW_REPEAT);
+		});
+    }
 
     void Keyboard::Update() 
     {
@@ -16,7 +57,60 @@ namespace Anggur
         }
     }
 
-    // Mouse device
+    bool Keyboard::IsKeyPressed(Key key) 
+    {
+        int index = static_cast<int>(key);
+        return currentState[index] && previousState[index] == false;
+    }
+
+    bool Keyboard::IsKeyReleased(Key key) 
+    {
+        int index = static_cast<int>(key);
+        return currentState[index] == false && previousState[index];
+    }
+
+    bool Keyboard::IsKeyDown(Key key) 
+    {
+        int index = static_cast<int>(key);
+        return currentState[index];
+    }
+
+    bool Keyboard::IsKeyUp(Key key) 
+    {
+        int index = static_cast<int>(key);
+        return currentState[index] == false;   
+    }
+
+    void Keyboard::SetKeyState(Key key, bool state) 
+    {
+        DirectSetKeyState(key, state);
+    }
+
+    void Keyboard::DirectSetKeyState(Key key, bool state) {
+        int index = static_cast<int>(key);
+        currentState[index] = state;
+        KeyEvent event(state ? "KeyPressed" : "KeyReleased", key);
+        system->emitter.Emit(event);
+    }
+
+
+    // Input mouse device
+
+    Mouse::Mouse(InputSystem* system): Input(system) 
+    {
+		glfwSetMouseButtonCallback(system->context, [](GLFWwindow* context, int button, int action, int modidefrKey) 
+        {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+			MouseButton b = static_cast<MouseButton>(button);
+            window->input.Get<Mouse>().DirectSetButtonState(b, action == GLFW_PRESS);
+		});
+
+		glfwSetCursorPosCallback(system->context, [](GLFWwindow* context, double x, double y) 
+        {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+			window->input.Get<Mouse>().DirectSetPosition(Vector2(x, y));
+		});
+    }
 
     void Mouse::Update() 
     {
@@ -29,179 +123,97 @@ namespace Anggur
         previousPosition = currentPosition;
     }
 
+    bool Mouse::IsButtonPressed(MouseButton button) 
+    {
+        int index = static_cast<int>(button);
+        return currentButtonState[index] && previousButtonState[index] == false;
+    }
 
-    // Scroll device
+    bool Mouse::IsButtonReleased(MouseButton button) 
+    {
+        int index = static_cast<int>(button);
+        return currentButtonState[index] == false && previousButtonState[index];
+    }
 
-    void Scroll::Update() 
+    bool Mouse::IsButtonDown(MouseButton button) 
+    {
+        int index = static_cast<int>(button);
+        return currentButtonState[index];
+    }
+
+    bool Mouse::IsButtonUp(MouseButton button) 
+    {
+        int index = static_cast<int>(button);
+        return currentButtonState[index] == false;
+    }
+
+    void Mouse::SetButtonState(MouseButton button, bool state) 
+    {
+        DirectSetButtonState(button, state);
+    }
+
+    const Vector2& Mouse::GetPosition() 
+    {
+        return currentPosition;
+    }
+
+    const Vector2& Mouse::GetDirection() 
+    {
+        return direction;
+    }
+
+    void Mouse::SetPosition(const Vector2& position) 
+    {
+        // Not calling direct function because it modifies the data differently
+
+        glfwSetCursorPos(system->context, position.x, position.y);
+        currentPosition = position;
+        MousePositionEvent event("MousePositionMove", position);
+        system->emitter.Emit(event);
+    }
+
+    void Mouse::DirectSetButtonState(MouseButton button, bool state) {
+        currentButtonState[static_cast<int>(button)] = state;
+        MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonReleased", button);
+        system->emitter.Emit(event);
+    }
+
+    void Mouse::DirectSetPosition(const Vector2& position) {
+        currentPosition = position;
+        MousePositionEvent event("MousePositionMoved", position);
+        system->emitter.Emit(event);
+    }
+
+    // Scroller
+
+    Scroller::Scroller(InputSystem* system): Input(system)
+    {
+        glfwSetScrollCallback(system->context, [](GLFWwindow* context, double x, double y) 
+        {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+            window->input.Get<Scroller>().DirectSetDirection(Vector2(x, y));
+        });
+    }
+
+    void Scroller::Update() 
     {
         previousDirection = currentDirection;
         currentDirection.Set(0.0f, 0.0f);
     }
 
-    // Input keyboard device
-
-    bool Input::IsKeyPressed(Key key) 
+    const Vector2& Scroller::GetDirection() 
     {
-        int index = static_cast<int>(key);
-        return keyboard.currentState[index] && keyboard.previousState[index] == false;
+        return currentDirection;
     }
 
-    bool Input::IsKeyReleased(Key key) 
+    void Scroller::SetDirection(const Vector2& direction) 
     {
-        int index = static_cast<int>(key);
-        return keyboard.currentState[index] == false && keyboard.previousState[index];
+        DirectSetDirection(direction);
     }
-
-    bool Input::IsKeyDown(Key key) 
-    {
-        int index = static_cast<int>(key);
-        return keyboard.currentState[index];
-    }
-
-    bool Input::IsKeyUp(Key key) 
-    {
-        int index = static_cast<int>(key);
-        return keyboard.currentState[index] == false;   
-    }
-
-    void Input::SetKeyState(Key key, bool state) 
-    {
-        DirectSetKeyState(key, state);
-    }
-
-    // Input mouse device
-
-    bool Input::IsMouseButtonPressed(MouseButton button) 
-    {
-        int index = static_cast<int>(button);
-        return mouse.currentButtonState[index] && mouse.previousButtonState[index] == false;
-    }
-
-    bool Input::IsMouseButtonReleased(MouseButton button) 
-    {
-        int index = static_cast<int>(button);
-        return mouse.currentButtonState[index] == false && mouse.previousButtonState[index];
-    }
-
-    bool Input::IsMouseButtonDown(MouseButton button) 
-    {
-        int index = static_cast<int>(button);
-        return mouse.currentButtonState[index];
-    }
-
-    bool Input::IsMouseButtonUp(MouseButton button) 
-    {
-        int index = static_cast<int>(button);
-        return mouse.currentButtonState[index] == false;
-    }
-
-    void Input::SetMouseButtonState(MouseButton button, bool state) 
-    {
-        DirectSetMouseButtonState(button, state);
-    }
-
-    const Vector2& Input::GetMousePosition() 
-    {
-        return mouse.currentPosition;
-    }
-
-    const Vector2& Input::GetMouseDirection() 
-    {
-        return mouse.direction;
-    }
-
-    void Input::SetMousePosition(const Vector2& position) 
-    {
-        // Not calling direct function because it modifies the data differently
-
-        glfwSetCursorPos(context, position.x, position.y);
-        mouse.currentPosition = position;
-        MousePositionEvent event("MousePositionMove", position);
-        emitter.Emit(event);
-    }
-
-    // Input scroll virtual device
-
-    const Vector2& Input::GetScrollDirection() 
-    {
-        return scroll.currentDirection;
-    }
-
-    void Input::SetScrollDirection(const Vector2& direction) 
-    {
-        DirectSetScrollDirection(direction);
-    }
-
-    // Context management
-
-    void Input::SetContext(WindowContext* newContext) 
-    {
-        context = newContext;
-
-		glfwSetKeyCallback(context, [](GLFWwindow* context, int vkeyCode, int scanCode, int action, int modidefrKey) 
-        {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			Key key = static_cast<Key>(vkeyCode);
-            window->input.DirectSetKeyState(key, action == GLFW_PRESS || action == GLFW_REPEAT);
-		});
-
-		glfwSetMouseButtonCallback(context, [](GLFWwindow* context, int button, int action, int modidefrKey) 
-        {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			MouseButton b = static_cast<MouseButton>(button);
-            window->input.DirectSetMouseButtonState(b, action == GLFW_PRESS);
-		});
-
-		glfwSetCursorPosCallback(context, [](GLFWwindow* context, double x, double y) 
-        {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			window->input.DirectSetMousePosition(Vector2(x, y));
-		});
-
-        glfwSetScrollCallback(context, [](GLFWwindow* context, double x, double y) 
-        {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-            window->input.DirectSetScrollDirection(Vector2(x, y));
-        });
-
-        glfwSetCharCallback(context, [](GLFWwindow* context, unsigned int codePoint) 
-        {
-            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-            CodePointEvent event(codePoint);
-            window->input.emitter.Emit(event);
-        });
-    }
-
-    void Input::Update() {
-        keyboard.Update();
-        mouse.Update();
-        scroll.Update();
-    }
-
-    // Private implementations
-
-    void Input::DirectSetKeyState(Key key, bool state) {
-        int index = static_cast<int>(key);
-        keyboard.currentState[index] = state;
-        KeyEvent event(state ? "KeyPressed" : "KeyReleased", key);
-        emitter.Emit(event);
-    }
-
-    void Input::DirectSetMouseButtonState(MouseButton button, bool state) {
-        mouse.currentButtonState[static_cast<int>(button)] = state;
-        MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonReleased", button);
-        emitter.Emit(event);
-    }
-
-    void Input::DirectSetMousePosition(const Vector2& position) {
-        mouse.currentPosition = position;
-        MousePositionEvent event("MousePositionMoved", position);
-        emitter.Emit(event);
-    }
-
-    void Input::DirectSetScrollDirection(const Vector2& direction) {
-        scroll.currentDirection = direction;
+    
+    void Scroller::DirectSetDirection(const Vector2& direction) {
+        currentDirection = direction;
         ScrollEvent event("ScrollMoved", direction);
-        emitter.Emit(event);
+        system->emitter.Emit(event);
     }
 }
