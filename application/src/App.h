@@ -86,29 +86,29 @@ public:
 
 	void Update(float deltaTime) 
 	{
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::Space) && window.input.Get<Mouse>().IsButtonPressed(MouseButton::F1))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::Space) && window.GetInput<Mouse>().IsButtonPressed(MouseButton::F1))
 		{
 			mouseDragging = true;
-			mouseDragBeginPoint = worldCamera.ToWorldPoint(window.input.Get<Mouse>().GetPosition());
+			mouseDragBeginPoint = worldCamera.ToWorldPoint(window.GetInput<Mouse>().GetPosition());
 		}
 
-		if (mouseDragging && (window.input.Get<Mouse>().IsButtonReleased(MouseButton::F1) || window.input.Get<Keyboard>().IsKeyReleased(Key::Space)))
+		if (mouseDragging && (window.GetInput<Mouse>().IsButtonReleased(MouseButton::F1) || window.GetInput<Keyboard>().IsKeyReleased(Key::Space)))
 		{
 			mouseDragging = false;
 		}
 
-		if (mouseDragging && window.input.Get<Mouse>().IsButtonDown(MouseButton::F1))
+		if (mouseDragging && window.GetInput<Mouse>().IsButtonDown(MouseButton::F1))
 		{
-			mouseDragEndPoint = worldCamera.ToWorldPoint(window.input.Get<Mouse>().GetPosition());
+			mouseDragEndPoint = worldCamera.ToWorldPoint(window.GetInput<Mouse>().GetPosition());
 			worldCamera.NudgeTargetPosition(mouseDragEndPoint - mouseDragBeginPoint);
 		}
 
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::LeftShift))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::LeftShift))
 		{
 			attractorAcceleration += Math::Clamp(attractorAcceleration + 1.0f, 0.0f, attractorMaxVelocity);
 			attractorVelocity += deltaTime * attractorAcceleration;
 		}
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::RightShift))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::RightShift))
 		{
 			attractorAcceleration += Math::Clamp(attractorAcceleration - 1.0f, 0.0f, attractorMaxVelocity);
 			attractorVelocity += deltaTime * attractorAcceleration;
@@ -116,7 +116,7 @@ public:
 
 		attractorPosition += deltaTime * attractorVelocity * GetInputAxis();
 
-		worldCamera.NudgeViewScale(deltaTime * window.input.Get<Scroller>().GetDirection().y);
+		worldCamera.NudgeViewScale(deltaTime * window.GetInput<Scroller>().GetDirection().y);
 		worldCamera.Update();
 
 		renderer.canvas.Clear(Vector4::charcoal);
@@ -138,16 +138,16 @@ public:
 	{
 		Vector2 direction;
 
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::Left))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::Left))
 			direction.x -= 1;
 
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::Right))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::Right))
 			direction.x += 1;
 
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::Up))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::Up))
 			direction.y -= 1;
 
-		if (window.input.Get<Keyboard>().IsKeyDown(Key::Down))
+		if (window.GetInput<Keyboard>().IsKeyDown(Key::Down))
 			direction.y += 1;
 
 		return Vector2::Normalize(direction);

@@ -8,44 +8,24 @@ namespace Anggur
 {
     // Input
         
-    Input::Input(InputSystem* systemRef): system(systemRef)
+    Input::Input(Window& newWindow): window(newWindow)
     {
-        system->references.push_back(this);
+        window.RegisterInput(this);
     }
 
     void Input::Update()
     {
     }
 
-    // Input System
-
-    void InputSystem::SetContext(WindowContext* newContext) 
-    {
-        context = newContext;
-
-        // glfwSetCharCallback(context, [](GLFWwindow* context, unsigned int codePoint) 
-        // {
-        //     auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-        //     CodePointEvent event(codePoint);
-        //     window->input.emitter.Emit(event);
-        // });
-    }
-
-    void InputSystem::Update() {
-        for (Input* input: references) {
-            input->Update();
-        }
-    }
-
     // Keyboard
 
-    Keyboard::Keyboard(InputSystem* system): Input(system)
+    Keyboard::Keyboard(Window& window): Input(window)
     {
-		glfwSetKeyCallback(system->context, [](GLFWwindow* context, int vkeyCode, int scanCode, int action, int modidefrKey) 
+		glfwSetKeyCallback(window.GetContext(), [](GLFWwindow* context, int vkeyCode, int scanCode, int action, int modifierKey) 
         {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Key key = static_cast<Key>(vkeyCode);
-            window->input.Get<Keyboard>().DirectSetKeyState(key, action == GLFW_PRESS || action == GLFW_REPEAT);
+            window->GetInput<Keyboard>().DirectSetKeyState(key, action == GLFW_PRESS || action == GLFW_REPEAT);
 		});
     }
 
@@ -90,25 +70,25 @@ namespace Anggur
         int index = static_cast<int>(key);
         currentState[index] = state;
         KeyEvent event(state ? "KeyPressed" : "KeyReleased", key);
-        system->emitter.Emit(event);
+        window.emitter.Emit(event);
     }
 
 
     // Input mouse device
 
-    Mouse::Mouse(InputSystem* system): Input(system) 
+    Mouse::Mouse(Window& window): Input(window) 
     {
-		glfwSetMouseButtonCallback(system->context, [](GLFWwindow* context, int button, int action, int modidefrKey) 
+		glfwSetMouseButtonCallback(window.GetContext(), [](GLFWwindow* context, int button, int action, int modidefrKey) 
         {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			MouseButton b = static_cast<MouseButton>(button);
-            window->input.Get<Mouse>().DirectSetButtonState(b, action == GLFW_PRESS);
+            window->GetInput<Mouse>().DirectSetButtonState(b, action == GLFW_PRESS);
 		});
 
-		glfwSetCursorPosCallback(system->context, [](GLFWwindow* context, double x, double y) 
+		glfwSetCursorPosCallback(window.GetContext(), [](GLFWwindow* context, double x, double y) 
         {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			window->input.Get<Mouse>().DirectSetPosition(Vector2(x, y));
+			window->GetInput<Mouse>().DirectSetPosition(Vector2(x, y));
 		});
     }
 
@@ -166,32 +146,32 @@ namespace Anggur
     {
         // Not calling direct function because it modifies the data differently
 
-        glfwSetCursorPos(system->context, position.x, position.y);
+        glfwSetCursorPos(window.GetContext(), position.x, position.y);
         currentPosition = position;
         MousePositionEvent event("MousePositionMove", position);
-        system->emitter.Emit(event);
+        window.emitter.Emit(event);
     }
 
     void Mouse::DirectSetButtonState(MouseButton button, bool state) {
         currentButtonState[static_cast<int>(button)] = state;
         MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonReleased", button);
-        system->emitter.Emit(event);
+        window.emitter.Emit(event);
     }
 
     void Mouse::DirectSetPosition(const Vector2& position) {
         currentPosition = position;
         MousePositionEvent event("MousePositionMoved", position);
-        system->emitter.Emit(event);
+        window.emitter.Emit(event);
     }
 
     // Scroller
 
-    Scroller::Scroller(InputSystem* system): Input(system)
+    Scroller::Scroller(Window& window): Input(window)
     {
-        glfwSetScrollCallback(system->context, [](GLFWwindow* context, double x, double y) 
+        glfwSetScrollCallback(window.GetContext(), [](GLFWwindow* context, double x, double y) 
         {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-            window->input.Get<Scroller>().DirectSetDirection(Vector2(x, y));
+            window->GetInput<Scroller>().DirectSetDirection(Vector2(x, y));
         });
     }
 
@@ -214,6 +194,6 @@ namespace Anggur
     void Scroller::DirectSetDirection(const Vector2& direction) {
         currentDirection = direction;
         ScrollEvent event("ScrollMoved", direction);
-        system->emitter.Emit(event);
+        window.emitter.Emit(event);
     }
 }

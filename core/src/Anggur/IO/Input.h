@@ -2,46 +2,21 @@
 
 #include "Anggur/EventEmitter.h"
 #include "InputEvent.h"
-#include "WindowContext.h"
 #include <array>
 
 namespace Anggur 
 {
-    class InputSystem;
+    class Window;
 
     class Input
     {
     protected:
-        InputSystem* system;
+        Window& window;
 
     public:
-        Input(InputSystem* system);
+        Input(Window& window);
 
         virtual void Update();
-    };
-
-    class InputSystem 
-    {
-    public:
-        WindowContext* context = nullptr;
-        std::vector<Input*> references;
-        EventEmitter emitter;
-
-        template <class Input>
-        Input& Get() 
-        {
-            static Input input(this);
-
-            return input;
-        }
-
-        // Data management
-
-        void SetContext(WindowContext* context);
-        void Update();
-
-    private:
-        friend class Window;
     };
 
     // Common Devices
@@ -49,7 +24,7 @@ namespace Anggur
     class Keyboard: public Input
     {
     public:
-        Keyboard(InputSystem* system);
+        Keyboard(Window& window);
         void Update();
 
         bool IsKeyPressed(Key key);
@@ -70,7 +45,7 @@ namespace Anggur
     class Mouse: public Input
     {
     public:
-        Mouse(InputSystem* system);
+        Mouse(Window& window);
         void Update();
 
         bool IsButtonPressed(MouseButton button);
@@ -100,7 +75,7 @@ namespace Anggur
     class Scroller: public Input
     {
     public:
-        Scroller(InputSystem* system);
+        Scroller(Window& window);
         void Update();
 
         const Vector2& GetDirection();

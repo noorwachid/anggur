@@ -10,8 +10,7 @@ namespace Anggur
 	class Window 
 	{
 	public:
-		EventEmitter emmiter;
-		InputSystem input;
+		EventEmitter emitter;
 
 	public:
 		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
@@ -42,6 +41,16 @@ namespace Anggur
 
 		void Update();
 
+        template <class Input>
+        Input& GetInput() 
+        {
+            static Input input(*this);
+
+            return input;
+        }
+
+		void RegisterInput(Input* input);
+
 	private:
 		void InitializeGraphics();
 
@@ -57,5 +66,7 @@ namespace Anggur
 		Vector2 size;
 		Vector2 frameBufferSize;
 		std::string title;
+
+        std::vector<Input*> inputs;
 	};
 }

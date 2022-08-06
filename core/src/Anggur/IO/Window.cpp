@@ -23,7 +23,6 @@ namespace Anggur
 		assert(context && "[Window] Failed to create a window");
 
 		BindNativeContext();
-		input.SetContext(context);
 		BindGraphics();
 
 		InitializeGraphics();
@@ -38,7 +37,7 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
 			WindowSizeEvent event("WindowResized", size);
-			window->emmiter.Emit(event);
+			window->emitter.Emit(event);
 			window->size = size;
 		});
 
@@ -47,7 +46,7 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 position(x, y);
 			WindowSizeEvent event("WindowMoved", position);
-			window->emmiter.Emit(event);
+			window->emitter.Emit(event);
 			window->position = position;
 		});
 
@@ -56,7 +55,7 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
 			FrameBufferSizeEvent event("FrameBufferResized", size);
-			window->emmiter.Emit(event);
+			window->emitter.Emit(event);
 			window->frameBufferSize = size;
 		});
 	}
@@ -128,7 +127,15 @@ namespace Anggur
 		BindGraphics();
 		SwapFrameBuffers();
 
-		input.Update();
+        for (Input* input: inputs) 
+		{
+            input->Update();
+        }
+	}
+
+	void Window::RegisterInput(Input* input) 
+	{
+		inputs.push_back(input);
 	}
 	
 	void Window::InitializeGraphics() 
