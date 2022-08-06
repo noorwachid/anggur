@@ -127,11 +127,6 @@ namespace Anggur
         return currentButtonState[index] == false;
     }
 
-    void Mouse::SetButtonState(MouseButton button, bool state) 
-    {
-        DirectSetButtonState(button, state);
-    }
-
     const Vector2& Mouse::GetPosition() 
     {
         return currentPosition;
@@ -140,6 +135,26 @@ namespace Anggur
     const Vector2& Mouse::GetDirection() 
     {
         return direction;
+    }
+
+    MouseShape Mouse::GetShape()
+    {
+        return shape;
+    }
+
+    void Mouse::SetButtonState(MouseButton button, bool state) 
+    {
+        DirectSetButtonState(button, state);
+    }
+
+    void Mouse::SetShape(MouseShape newShape)
+    {
+        int intMode = static_cast<int>(newShape);
+        if (shapeBuffers[intMode] == nullptr) {
+            shapeBuffers[intMode] = glfwCreateStandardCursor(intMode + 0x00036000);
+        }
+        glfwSetCursor(window.GetContext(), static_cast<GLFWcursor*>(shapeBuffers[intMode]));
+        shape = newShape;
     }
 
     void Mouse::SetPosition(const Vector2& position) 

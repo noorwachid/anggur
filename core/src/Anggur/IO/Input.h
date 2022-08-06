@@ -42,6 +42,16 @@ namespace Anggur
         std::array<bool, maxKeyValue> previousState{false}; 
     };
 
+    enum class MouseShape 
+    {
+        Arrow = 0x1,
+        I = 0x2,
+        Crosshair = 0x3,
+        Hand = 0x4,
+        HResize = 0x5,
+        VResize = 0x6,
+    };
+
     class Mouse: public Input
     {
     public:
@@ -56,8 +66,11 @@ namespace Anggur
         const Vector2& GetPosition();
         const Vector2& GetDirection();
 
+        MouseShape GetShape();
+
         void SetButtonState(MouseButton button, bool state);
         void SetPosition(const Vector2& position);
+        void SetShape(MouseShape mode);
 
     private:
         void DirectSetButtonState(MouseButton button, bool state);
@@ -70,6 +83,9 @@ namespace Anggur
 
         std::array<bool, maxMouseButtonValue> currentButtonState{false};
         std::array<bool, maxMouseButtonValue> previousButtonState{false};
+
+        MouseShape shape;
+        std::array<void*, 8> shapeBuffers{nullptr};
     };
 
     class Scroller: public Input

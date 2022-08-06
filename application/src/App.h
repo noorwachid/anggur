@@ -51,9 +51,10 @@ public:
 
 
 	Vector2 attractorPosition;
-	Vector2 attractorVelocity;
-	float attractorAcceleration = 0.0f;
+
+	float attractorAcceleration = 10.0f;
 	float attractorMaxVelocity = 1000.0f;
+	float attractorVelocity = 0.0f;
 
 	void Initialize() 
 	{
@@ -105,13 +106,11 @@ public:
 
 		if (window.GetInput<Keyboard>().IsKeyDown(Key::LeftShift))
 		{
-			attractorAcceleration += Math::Clamp(attractorAcceleration + 1.0f, 0.0f, attractorMaxVelocity);
-			attractorVelocity += deltaTime * attractorAcceleration;
+			attractorVelocity = Math::Clamp(attractorVelocity + attractorAcceleration, 0.0f, attractorMaxVelocity);
 		}
 		if (window.GetInput<Keyboard>().IsKeyDown(Key::RightShift))
 		{
-			attractorAcceleration += Math::Clamp(attractorAcceleration - 1.0f, 0.0f, attractorMaxVelocity);
-			attractorVelocity += deltaTime * attractorAcceleration;
+			attractorVelocity = Math::Clamp(attractorVelocity - attractorAcceleration, 0.0f, attractorMaxVelocity);
 		}
 
 		attractorPosition += deltaTime * attractorVelocity * GetInputAxis();
