@@ -3,5 +3,5 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(anggur)
 
-add_subdirectory(core)
+add_subdirectory(anggur)
 add_subdirectory(application)
