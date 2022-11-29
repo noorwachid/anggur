@@ -70,7 +70,7 @@ namespace Anggur
         int index = static_cast<int>(key);
         currentState[index] = state;
         KeyEvent event(state ? "KeyPressed" : "KeyReleased", key);
-        window.emitter.Dispatch(event);
+        window.eventDispatcher.Dispatch(event);
     }
 
     // Input mouse device
@@ -175,7 +175,7 @@ namespace Anggur
         glfwSetCursorPos(window.getContext(), position.x, position.y);
         currentCursorPosition = position;
         MousePositionEvent event("MousePositionMove", position);
-        window.emitter.Dispatch(event);
+        window.eventDispatcher.Dispatch(event);
     }
 
     void Mouse::setWheelDirection(const Vector2 &direction)
@@ -187,20 +187,20 @@ namespace Anggur
     {
         currentButtonState[static_cast<int>(button)] = state;
         MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonReleased", button);
-        window.emitter.Dispatch(event);
+        window.eventDispatcher.Dispatch(event);
     }
 
     void Mouse::directSetCursorPosition(const Vector2 &position)
     {
         currentCursorPosition = position;
         MousePositionEvent event("MousePositionMoved", position);
-        window.emitter.Dispatch(event);
+        window.eventDispatcher.Dispatch(event);
     }
 
     void Mouse::directSetWheelDirection(const Vector2 &direction)
     {
         currentWheelDirection = direction;
         ScrollEvent event("ScrollMoved", direction);
-        window.emitter.Dispatch(event);
+        window.eventDispatcher.Dispatch(event);
     }
 }

@@ -5,6 +5,8 @@
 #include "Anggur/Math/Vector3.h"
 #include "Anggur/Math/Vector4.h"
 #include "Texture2D.h"
+#include "Shader.h"
+#include "VertexBuffer.h"
 #include <memory>
 #include <vector>
 

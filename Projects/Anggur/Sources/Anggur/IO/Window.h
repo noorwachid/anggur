@@ -10,7 +10,7 @@ namespace Anggur
     class Window
     {
       public:
-        EventDispatcher emitter;
+        EventDispatcher eventDispatcher;
 
       public:
         Window(const Vector2 &size = Vector2(800, 600), const std::string &title = "");

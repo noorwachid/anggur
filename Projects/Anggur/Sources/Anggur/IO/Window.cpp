@@ -36,7 +36,7 @@ namespace Anggur
             auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
             Vector2 size(width, height);
             WindowSizeEvent event("WindowResized", size);
-            window->emitter.emit(event);
+            window->eventDispatcher.Dispatch(event);
             window->size = size;
         });
 
@@ -44,7 +44,7 @@ namespace Anggur
             auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
             Vector2 position(x, y);
             WindowSizeEvent event("WindowMoved", position);
-            window->emitter.emit(event);
+            window->eventDispatcher.Dispatch(event);
             window->position = position;
         });
 
@@ -52,7 +52,7 @@ namespace Anggur
             auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
             Vector2 size(width, height);
             FrameBufferSizeEvent event("FrameBufferResized", size);
-            window->emitter.emit(event);
+            window->eventDispatcher.Dispatch(event);
             window->frameBufferSize = size;
         });
     }
