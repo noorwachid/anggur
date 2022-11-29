@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 set(CMAKE_CXX_STANDARD 20)
 
-project(anggur)
+project(Anggur)
 
-add_subdirectory(anggur)
-add_subdirectory(application)
+add_subdirectory(Projects/Anggur)
+add_subdirectory(Projects/Application)
