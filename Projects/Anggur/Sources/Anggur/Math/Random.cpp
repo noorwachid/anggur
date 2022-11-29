@@ -6,38 +6,38 @@ namespace Anggur
     {
     }
 
-    float Random::generate()
+    float Random::Generate()
     {
         return generator();
     }
 
-    float Random::range(float lower, float upper)
+    float Random::Range(float lower, float upper)
     {
         std::uniform_real_distribution<float> distribution(lower, upper);
         return distribution(generator);
     }
 
-    float Random::getNormal()
+    float Random::GetNormal()
     {
-        return range(0.f, 1.f);
+        return Range(0.f, 1.f);
     }
 
-    float Random::getSigned()
+    float Random::GetSigned()
     {
-        return range(-1.f, 1.f);
+        return Range(-1.f, 1.f);
     }
 
-    float Random::getAngle()
+    float Random::GetAngle()
     {
-        return range(0.f, Math::twoPi);
+        return Range(0.f, Math::twoPi);
     }
 
-    bool Random::getBoolean()
+    bool Random::GetBoolean()
     {
-        return getNormal() > 0.5;
+        return GetNormal() > 0.5;
     }
 
-    void Random::setSeed(float n)
+    void Random::SetSeed(float n)
     {
         generator.seed(n);
     }

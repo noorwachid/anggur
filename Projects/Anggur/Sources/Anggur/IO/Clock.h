@@ -18,7 +18,7 @@ namespace Anggur
         /**
          * Get elapsed time on call
          */
-        float getElapsed() const
+        float GetElapsed() const
         {
             TimePoint current = ClockContext::now();
             return std::chrono::duration_cast<std::chrono::milliseconds>(current - started).count() * 0.001;

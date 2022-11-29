@@ -6,7 +6,7 @@ namespace Anggur
     VertexBuffer::VertexBuffer()
     {
         glGenBuffers(1, &id);
-        bind();
+        Bind();
     }
 
     VertexBuffer::~VertexBuffer()
@@ -15,17 +15,17 @@ namespace Anggur
             glDeleteBuffers(1, &id);
     }
 
-    void VertexBuffer::bind()
+    void VertexBuffer::Bind()
     {
         glBindBuffer(GL_ARRAY_BUFFER, id);
     }
 
-    void VertexBuffer::unbind()
+    void VertexBuffer::Unbind()
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void VertexBuffer::setCapacity(size_t byteSize)
+    void VertexBuffer::SetCapacity(size_t byteSize)
     {
         glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
     }
@@ -38,7 +38,7 @@ namespace Anggur
     IndexBuffer::IndexBuffer()
     {
         glGenBuffers(1, &id);
-        bind();
+        Bind();
     }
 
     IndexBuffer::~IndexBuffer()
@@ -46,17 +46,17 @@ namespace Anggur
         glDeleteBuffers(1, &id);
     }
 
-    void IndexBuffer::bind()
+    void IndexBuffer::Bind()
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
     }
 
-    void IndexBuffer::unbind()
+    void IndexBuffer::Unbind()
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    void IndexBuffer::setCapacity(size_t byteSize)
+    void IndexBuffer::SetCapacity(size_t byteSize)
     {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
     }
@@ -69,7 +69,7 @@ namespace Anggur
     VertexArray::VertexArray()
     {
         glGenVertexArrays(1, &id);
-        bind();
+        Bind();
     }
 
     VertexArray::~VertexArray()
@@ -77,17 +77,17 @@ namespace Anggur
         glDeleteVertexArrays(1, &id);
     }
 
-    void VertexArray::bind()
+    void VertexArray::Bind()
     {
         glBindVertexArray(id);
     }
 
-    void VertexArray::unbind()
+    void VertexArray::Unbind()
     {
         glBindVertexArray(0);
     }
 
-    void VertexArray::setAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset)
+    void VertexArray::SetAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset)
     {
         glVertexAttribPointer(index, size, type, GL_FALSE, byteStride, (void*)byteOffset);
         glEnableVertexAttribArray(index);

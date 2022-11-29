@@ -11,6 +11,6 @@ namespace Anggur
     class Texture
     {
       public:
-        static int getMaxSlot();
+        static int GetMaxSlot();
     };
 }

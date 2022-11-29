@@ -26,7 +26,7 @@ namespace Anggur
         {
         }
 
-        void set(float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH,
+        void Set(float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH,
                  float newI)
         {
             a = newA;
@@ -40,12 +40,12 @@ namespace Anggur
             i = newI;
         }
 
-        const float* toPointer() const
+        const float* ToPointer() const
         {
             return &a;
         }
 
-        std::string toString() const
+        std::string ToString() const
         {
             std::string buffer;
 
@@ -56,7 +56,7 @@ namespace Anggur
             return buffer;
         }
 
-        float getDeterminant() const
+        float GetDeterminant() const
         {
             float determinantA = a * ((e * i) - (f * h));
             float determinantD = -d * ((b * i) - (h * c));
@@ -65,7 +65,7 @@ namespace Anggur
             return determinantA + determinantD + determinantG;
         }
 
-        Matrix3 getCofactor() const
+        Matrix3 GetCofactor() const
         {
             Matrix3 cofactor;
             cofactor.a = (e * i) - (f * h);
@@ -83,41 +83,41 @@ namespace Anggur
             return cofactor;
         }
 
-        Matrix3 getAdjugate() const
+        Matrix3 GetAdjugate() const
         {
-            return getCofactor().getTranspose();
+            return GetCofactor().GetTranspose();
         }
 
-        Matrix3 getInverse() const
+        Matrix3 GetInverse() const
         {
-            float determinant = getDeterminant();
+            float determinant = GetDeterminant();
 
             if (determinant == 0.0f)
                 return Matrix3(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
-            float inverseDeterminant = 1.0f / getDeterminant();
-            Matrix3 adjugate = getAdjugate();
+            float inverseDeterminant = 1.0f / GetDeterminant();
+            Matrix3 adjugate = GetAdjugate();
 
             return inverseDeterminant * adjugate;
         }
 
-        Matrix3 getTranspose() const
+        Matrix3 GetTranspose() const
         {
             return Matrix3(a, d, g, b, e, h, c, f, i);
         }
 
-        static Matrix3 createTranslation(const Vector2& translation)
+        static Matrix3 CreateTranslation(const Vector2& translation)
         {
             return Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, translation.x, translation.y, 1.0f);
         }
 
-        static Matrix3 createRotation(float rotation)
+        static Matrix3 CreateRotation(float rotation)
         {
             return Matrix3(Math::Cos(rotation), -Math::Sin(rotation), 0.0f, Math::Sin(rotation), Math::Cos(rotation),
                            0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix3 createScale(const Vector2& scale)
+        static Matrix3 CreateScale(const Vector2& scale)
         {
             return Matrix3(scale.x, 0.0f, 0.0f, 0.0f, scale.y, 0.0f, 0.0f, 0.0f, 1.0f);
         }

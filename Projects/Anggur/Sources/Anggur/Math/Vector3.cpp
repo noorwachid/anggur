@@ -29,43 +29,43 @@ namespace Anggur
 
     // Casters
 
-    const float* Vector3::toPointer() const
+    const float* Vector3::ToPointer() const
     {
         return &x;
     }
 
-    float* Vector3::toPointer()
+    float* Vector3::ToPointer()
     {
         return &x;
     }
 
-    std::string Vector3::toString()
+    std::string Vector3::ToString()
     {
         return std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z);
     }
 
     // Getters
 
-    float Vector3::getLengthSquared() const
+    float Vector3::GetLengthSquared() const
     {
         return (x * x + y * y + z * z);
     }
 
-    float Vector3::getLength() const
+    float Vector3::GetLength() const
     {
-        return (Math::Sqrt(getLengthSquared()));
+        return (Math::Sqrt(GetLengthSquared()));
     }
 
     // Setters
 
-    void Vector3::set(float scalar)
+    void Vector3::Set(float scalar)
     {
         x = scalar;
         y = scalar;
         z = scalar;
     }
 
-    void Vector3::set(float newX, float newY, float newZ)
+    void Vector3::Set(float newX, float newY, float newZ)
     {
         x = newX;
         y = newY;
@@ -74,19 +74,19 @@ namespace Anggur
 
     // 2nd class manipulations
 
-    float Vector3::dot(const Vector3& a, const Vector3& b)
+    float Vector3::Dot(const Vector3& a, const Vector3& b)
     {
         return (a.x * b.x + a.y * b.y + a.z * b.z);
     }
 
-    Vector3 Vector3::cross(const Vector3& a, const Vector3& b)
+    Vector3 Vector3::Cross(const Vector3& a, const Vector3& b)
     {
         return Vector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
     }
 
-    Vector3 Vector3::normalize(const Vector3& a)
+    Vector3 Vector3::Normalize(const Vector3& a)
     {
-        float length = a.getLength();
+        float length = a.GetLength();
 
         if (length == 0)
             return Vector3::zero;
@@ -94,7 +94,7 @@ namespace Anggur
         return Vector3(a.x / length, a.y / length, a.z / length);
     }
 
-    Vector3 Vector3::lerp(const Vector3& a, const Vector3& b, float amount)
+    Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float amount)
     {
         return Vector3(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount), Math::Lerp(a.z, b.z, amount));
     }

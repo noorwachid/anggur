@@ -71,33 +71,33 @@ namespace Anggur
 
         // Casters
 
-        const float* toPointer() const;
+        const float* ToPointer() const;
 
-        float* toPointer();
+        float* ToPointer();
 
-        std::string toString();
+        std::string ToString();
 
         // Getter
 
-        float getLengthSquared() const;
+        float GetLengthSquared() const;
 
-        float getLength() const;
+        float GetLength() const;
 
         // Setters
 
-        void set(float scalar);
+        void Set(float scalar);
 
-        void set(float newX, float newY, float newZ, float newW);
+        void Set(float newX, float newY, float newZ, float newW);
 
         // 2nd class manipulations
 
-        static float dot(const Vector4& a, const Vector4& b);
+        static float Dot(const Vector4& a, const Vector4& b);
 
-        static Vector4 cross(const Vector4& a, const Vector4& b);
+        static Vector4 Cross(const Vector4& a, const Vector4& b);
 
-        static Vector4 normalize(const Vector4& a);
+        static Vector4 Normalize(const Vector4& a);
 
-        static Vector4 lerp(const Vector4& a, const Vector4& b, float amount);
+        static Vector4 Lerp(const Vector4& a, const Vector4& b, float amount);
 
         // 3rd class manipulations
 

@@ -13,72 +13,81 @@ namespace Anggur
 
         ~Image();
 
-        inline uint32_t getWidth() const
+        inline uint32_t GetWidth() const
         {
             return width;
         }
-        inline uint32_t getHeight() const
+
+        inline uint32_t GetHeight() const
         {
             return height;
         }
-        inline uint32_t getChannels() const
+
+        inline uint32_t GetChannels() const
         {
             return channels;
         }
-        inline uint32_t getVolume() const
+
+        inline uint32_t GetVolume() const
         {
             return width * height * channels;
         }
 
-        inline const std::vector<uint8_t>& getBytes() const
-        {
-            return bytes;
-        }
-        inline std::vector<uint8_t>& getBytes()
+        inline const std::vector<uint8_t>& GetBytes() const
         {
             return bytes;
         }
 
-        inline uint8_t* toPointer()
+        inline std::vector<uint8_t>& GetBytes()
+        {
+            return bytes;
+        }
+
+        inline uint8_t* ToPointer()
         {
             return bytes.data();
         }
 
-        inline void setByte(uint32_t index, uint8_t value)
+        inline void SetByte(uint32_t index, uint8_t value)
         {
             bytes[index] = value;
         }
-        inline void setByte(uint32_t x, uint32_t y, uint8_t value)
+
+        inline void SetByte(uint32_t x, uint32_t y, uint8_t value)
         {
             bytes[y * width + x] = value;
         }
-        inline void setWidth(uint32_t newWidth)
-        {
-            width = newWidth;
-        };
-        inline void setHeight(uint32_t newHeight)
-        {
-            height = newHeight;
-        };
-        inline void setSize(uint32_t newWidth, uint32_t newHeight)
-        {
-            width = newWidth;
-            height = newHeight;
-        };
-        inline void setChannels(uint32_t newChannels)
-        {
-            channels = newChannels;
-        };
 
-        void resize()
+        inline void SetWidth(uint32_t newWidth)
         {
-            bytes.resize(getVolume());
+            width = newWidth;
         }
 
-        void load(const std::string& path);
-        void unload();
+        inline void SetHeight(uint32_t newHeight)
+        {
+            height = newHeight;
+        }
 
-        void save(const std::string& path);
+        inline void SetSize(uint32_t newWidth, uint32_t newHeight)
+        {
+            width = newWidth;
+            height = newHeight;
+        }
+
+        inline void SetChannels(uint32_t newChannels)
+        {
+            channels = newChannels;
+        }
+
+        void Resize()
+        {
+            bytes.resize(GetVolume());
+        }
+
+        void Read(const std::string& path);
+        void Close();
+
+        void Write(const std::string& path);
 
       private:
         uint32_t width;

@@ -73,36 +73,36 @@ namespace Anggur
 
     // Casters
 
-    const float* Vector4::toPointer() const
+    const float* Vector4::ToPointer() const
     {
         return &x;
     }
 
-    float* Vector4::toPointer()
+    float* Vector4::ToPointer()
     {
         return &x;
     }
 
-    std::string Vector4::toString()
+    std::string Vector4::ToString()
     {
         return std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ", " + std::to_string(w);
     }
 
     // Getters
 
-    float Vector4::getLengthSquared() const
+    float Vector4::GetLengthSquared() const
     {
         return (x * x + y * y + z * z + w * w);
     }
 
-    float Vector4::getLength() const
+    float Vector4::GetLength() const
     {
-        return (Math::Sqrt(getLengthSquared()));
+        return (Math::Sqrt(GetLengthSquared()));
     }
 
     // Setters
 
-    void Vector4::set(float newX, float newY, float newZ, float newW)
+    void Vector4::Set(float newX, float newY, float newZ, float newW)
     {
         x = newX;
         y = newY;
@@ -112,20 +112,20 @@ namespace Anggur
 
     // 2nd class manipulations
 
-    float Vector4::dot(const Vector4& a, const Vector4& b)
+    float Vector4::Dot(const Vector4& a, const Vector4& b)
     {
         return (a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w);
     }
 
-    Vector4 Vector4::cross(const Vector4& a, const Vector4& b)
+    Vector4 Vector4::Cross(const Vector4& a, const Vector4& b)
     {
         // TODO: implement this
         return Vector4();
     }
 
-    Vector4 Vector4::normalize(const Vector4& a)
+    Vector4 Vector4::Normalize(const Vector4& a)
     {
-        float length = a.getLength();
+        float length = a.GetLength();
 
         if (length == 0)
             return Vector4::zero;
@@ -133,7 +133,7 @@ namespace Anggur
         return Vector4(a.x / length, a.y / length, a.z / length, a.w / length);
     }
 
-    Vector4 Vector4::lerp(const Vector4& a, const Vector4& b, float amount)
+    Vector4 Vector4::Lerp(const Vector4& a, const Vector4& b, float amount)
     {
         return Vector4(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount), Math::Lerp(a.z, b.z, amount),
                        Math::Lerp(a.w, b.w, amount));

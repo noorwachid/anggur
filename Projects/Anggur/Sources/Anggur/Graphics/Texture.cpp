@@ -3,7 +3,7 @@
 
 namespace Anggur
 {
-    int Texture::getMaxSlot()
+    int Texture::GetMaxSlot()
     {
         static int maxSlot = 0;
         if (maxSlot == 0)

@@ -22,15 +22,15 @@ namespace Anggur
         context = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
         assert(context && "[Window] Failed to create a window");
 
-        bindContext();
-        bindGraphics();
+        BindContext();
+        BindGraphicsAPI();
 
-        initializeGraphics();
+        InitializeGraphicsAPI();
 
         int frameBufferWidth = 0;
         int frameBufferHeight = 0;
         glfwGetFramebufferSize(context, &frameBufferWidth, &frameBufferHeight);
-        frameBufferSize.set(frameBufferWidth, frameBufferHeight);
+        frameBufferSize.Set(frameBufferWidth, frameBufferHeight);
 
         glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
             auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
@@ -63,93 +63,93 @@ namespace Anggur
             glfwDestroyWindow(context);
     }
 
-    WindowContext* Window::getContext()
+    WindowContext* Window::GetContext()
     {
         return context;
     }
 
-    float Window::getAspectRatio()
+    float Window::GetAspectRatio()
     {
         return size.y / size.x;
     }
 
-    const Vector2& Window::getCursorPosition()
+    const Vector2& Window::GetCursorPosition()
     {
         return position;
     }
 
-    const Vector2& Window::getSize()
+    const Vector2& Window::GetSize()
     {
         return size;
     }
 
-    const Vector2& Window::getFrameBufferSize()
+    const Vector2& Window::GetFrameBufferSize()
     {
         return frameBufferSize;
     }
 
-    const std::string& Window::getTitle()
+    const std::string& Window::GetTitle()
     {
         return title;
     }
 
-    void Window::setCursorPosition(const Vector2& position)
+    void Window::SetCursorPosition(const Vector2& position)
     {
         glfwSetWindowPos(context, position.x, position.y);
     }
 
-    void Window::setSize(const Vector2& size)
+    void Window::SetSize(const Vector2& size)
     {
         glfwSetWindowSize(context, size.x, size.y);
     }
 
-    void Window::setTitle(const std::string& newTitle)
+    void Window::SetTitle(const std::string& newTitle)
     {
         glfwSetWindowTitle(context, newTitle.c_str());
         title = newTitle;
     }
 
-    bool Window::isOpen()
+    bool Window::IsOpen()
     {
         return !glfwWindowShouldClose(context);
     }
 
-    void Window::close()
+    void Window::Close()
     {
         glfwSetWindowShouldClose(context, true);
     }
 
-    void Window::update()
+    void Window::Update()
     {
-        bindGraphics();
-        swapFrameBuffers();
+        BindGraphicsAPI();
+        SwapFrameBuffers();
 
         for (InputDevice* input : inputs)
-            input->update();
+            input->Update();
     }
 
-    void Window::registerInputDevice(InputDevice* input)
+    void Window::RegisterInputDevice(InputDevice* input)
     {
         inputs.push_back(input);
     }
 
-    void Window::initializeGraphics()
+    void Window::InitializeGraphicsAPI()
     {
         bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         assert(result && "[Window] Failed to load graphic functions");
     }
 
-    void Window::bindGraphics()
+    void Window::BindGraphicsAPI()
     {
         glfwMakeContextCurrent(context);
     }
 
-    void Window::swapFrameBuffers()
+    void Window::SwapFrameBuffers()
     {
         glfwSwapBuffers(context);
     }
 
-    void Window::bindContext()
+    void Window::BindContext()
     {
         glfwSetWindowUserPointer(context, this);
     }

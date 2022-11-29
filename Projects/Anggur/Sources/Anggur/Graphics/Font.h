@@ -43,9 +43,9 @@ namespace Anggur
 
         GlyphBuffer(uint32_t size)
         {
-            image.setSize(size, size);
-            image.setChannels(1);
-            image.resize();
+            image.SetSize(size, size);
+            image.SetChannels(1);
+            image.Resize();
         }
     };
 
@@ -61,7 +61,7 @@ namespace Anggur
         std::vector<GlyphBuffer> glyphBuffers;
         std::unordered_map<uint32_t, Glyph> glyphMap;
 
-        void load(const std::string& path)
+        void Read(const std::string& path)
         {
             FILE* fontFile = fopen(path.c_str(), "rb");
             fseek(fontFile, 0, SEEK_END);
@@ -73,10 +73,10 @@ namespace Anggur
             fread(data.data(), byteSize, 1, fontFile);
             fclose(fontFile);
 
-            initialize();
+            Initialize();
         }
 
-        void initialize()
+        void Initialize()
         {
             context = new FontContext;
 
@@ -86,9 +86,9 @@ namespace Anggur
                 throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
         }
 
-        void setSample(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
+        void SetSample(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
         {
-            load(newPath);
+            Read(newPath);
             glyphSamplingSize = newGlyphSamplingSize;
             glyphAtlasSize = newGlyphAtlasSize;
 
@@ -98,7 +98,7 @@ namespace Anggur
             }
         }
 
-        void generate(uint32_t newCodePoint = 'F', uint32_t next = 1)
+        void Generate(uint32_t newCodePoint = 'F', uint32_t next = 1)
         {
             if (glyphBuffers.empty() || glyphBuffers.back().occupied)
                 glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
@@ -130,7 +130,7 @@ namespace Anggur
                 if (glyphMaxHeight < glyphHeight)
                     glyphMaxHeight = glyphHeight;
 
-                if (glyphBuffers.back().pointerX + glyphWidth > glyphBuffers.back().image.getWidth())
+                if (glyphBuffers.back().pointerX + glyphWidth > glyphBuffers.back().image.GetWidth())
                 {
                     glyphBuffers.back().pointerX = 0;
                     glyphBuffers.back().pointerY += glyphMaxHeight;
@@ -138,7 +138,7 @@ namespace Anggur
                     glyphMaxHeight = 0;
                 }
 
-                if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.getHeight())
+                if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
                 {
                     glyphBuffers.back().occupied = true;
 
@@ -154,8 +154,8 @@ namespace Anggur
                 float normal = 1.0f / glyphAtlasSize;
 
                 Glyph glyph;
-                glyph.offset.set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
-                glyph.size.set(glyphWidth * normal, glyphHeight * normal);
+                glyph.offset.Set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
+                glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
                 glyph.ascent = (ascent + glyphY) * normal;
                 glyph.descent = -descent * normal;
                 glyph.bufferIndex = glyphBuffers.size() - 1;
@@ -163,7 +163,7 @@ namespace Anggur
 
                 for (int x = 0; x < glyphWidth; ++x)
                     for (int y = 0; y < glyphHeight; ++y)
-                        glyphBuffers.back().image.setByte(x + glyphBuffers.back().pointerX,
+                        glyphBuffers.back().image.SetByte(x + glyphBuffers.back().pointerX,
                                                           y + glyphBuffers.back().pointerY, buffer[y * glyphWidth + x]);
 
                 glyphBuffers.back().pointerX += glyphWidth;
@@ -172,9 +172,9 @@ namespace Anggur
             glyphBuffers.back().texture = std::make_shared<Texture2D>(glyphBuffers.back().image);
         }
 
-        void generateASCII()
+        void GenerateASCII()
         {
-            generate(33, 94);
+            Generate(33, 94);
         }
     };
 }

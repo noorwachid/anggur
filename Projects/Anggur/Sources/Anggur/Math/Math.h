@@ -29,7 +29,7 @@ namespace Anggur
 
         static float Max(float a, float b);
 
-        static float Max(float a, float b);
+        static float Min(float a, float b);
 
         static float Clamp(float x, float lower = -1, float upper = 1);
 

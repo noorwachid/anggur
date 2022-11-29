@@ -18,12 +18,12 @@ namespace Anggur
             clean();
 
             viewProjection =
-                Matrix3::createTranslation(
+                Matrix3::CreateTranslation(
                     Vector2(targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y)) *
-                Matrix3::createRotation(viewRotation) *
-                Matrix3::createScale(Vector2(2.0f / (viewSize.x * viewScale.x), -2.0f / (viewSize.y * viewScale.y)));
+                Matrix3::CreateRotation(viewRotation) *
+                Matrix3::CreateScale(Vector2(2.0f / (viewSize.x * viewScale.x), -2.0f / (viewSize.y * viewScale.y)));
 
-            screen = viewProjection.getInverse();
+            screen = viewProjection.GetInverse();
         }
 
         const Matrix3& getViewProjection() const
@@ -51,13 +51,13 @@ namespace Anggur
         void setViewSize(const Vector2& size)
         {
             markDirty();
-            viewSize.set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
+            viewSize.Set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
         }
 
         void setViewScale(const Vector2& scale)
         {
             markDirty();
-            viewScale.set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
+            viewScale.Set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
         }
 
         void setViewRotation(float rotation)
@@ -69,7 +69,7 @@ namespace Anggur
         void setTargetPosition(const Vector2& position)
         {
             markDirty();
-            targetPosition.set(position.x, position.y);
+            targetPosition.Set(position.x, position.y);
         }
 
         void setTargetOffset(const Vector2& offset)
@@ -80,7 +80,7 @@ namespace Anggur
         void setScreenSize(const Vector2& size)
         {
             markDirty();
-            screenSize.set(size.x, size.y);
+            screenSize.Set(size.x, size.y);
         }
 
         void nudgeViewScale(const Vector2& amount)

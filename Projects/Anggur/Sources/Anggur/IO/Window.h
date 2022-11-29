@@ -20,56 +20,56 @@ namespace Anggur
         /**
          * Get native context
          */
-        WindowContext* getContext();
+        WindowContext* GetContext();
 
         /**
          * Get aspect ratio
          */
-        float getAspectRatio();
+        float GetAspectRatio();
 
         /**
          * Get cursor position
          */
-        const Vector2& getCursorPosition();
+        const Vector2& GetCursorPosition();
 
         /**
          * Get size
          */
-        const Vector2& getSize();
+        const Vector2& GetSize();
 
-        const Vector2& getFrameBufferSize();
+        const Vector2& GetFrameBufferSize();
 
-        const std::string& getTitle();
+        const std::string& GetTitle();
 
-        void setCursorPosition(const Vector2& pos);
+        void SetCursorPosition(const Vector2& pos);
 
-        void setSize(const Vector2& size);
+        void SetSize(const Vector2& size);
 
-        void setTitle(const std::string& title);
+        void SetTitle(const std::string& title);
 
-        bool isOpen();
+        bool IsOpen();
 
-        void close();
+        void Close();
 
-        void update();
+        void Update();
 
-        template <class InputDevice> InputDevice& getInputDevice()
+        template <class InputDevice> InputDevice& GetInputDevice()
         {
             static InputDevice device(*this);
 
             return device;
         }
 
-        void registerInputDevice(InputDevice* device);
+        void RegisterInputDevice(InputDevice* device);
 
       private:
-        void initializeGraphics();
+        void InitializeGraphicsAPI();
 
-        void bindGraphics();
+        void BindGraphicsAPI();
 
-        void bindContext();
+        void BindContext();
 
-        void swapFrameBuffers();
+        void SwapFrameBuffers();
 
       private:
         WindowContext* context;

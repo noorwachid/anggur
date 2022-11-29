@@ -28,7 +28,7 @@ namespace Anggur
         {
         }
 
-        void set(float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH,
+        void Set(float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH,
                  float newI, float newJ, float newK, float newL, float newM, float newN, float newO, float newP)
         {
             a = newA;
@@ -49,12 +49,12 @@ namespace Anggur
             p = newP;
         }
 
-        const float* toPointer() const
+        const float* ToPointer() const
         {
             return &a;
         }
 
-        std::string toString()
+        std::string ToString()
         {
             std::string buffer;
 
@@ -72,18 +72,18 @@ namespace Anggur
 
         // Model Matrices
 
-        static Matrix4 createTranslation(const Vector3& translation)
+        static Matrix4 CreateTranslation(const Vector3& translation)
         {
             return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, translation.x,
                            translation.y, translation.z, 1.0f);
         }
 
-        static Matrix4 createRotation(const Vector3& rotation)
+        static Matrix4 CreateRotation(const Vector3& rotation)
         {
-            return createRotationX(rotation.x) * createRotationY(rotation.y) * createRotationZ(rotation.z);
+            return CreateRotationX(rotation.x) * CreateRotationY(rotation.y) * CreateRotationZ(rotation.z);
         }
 
-        static Matrix4 createRotation(const Quaternion& q)
+        static Matrix4 CreateRotation(const Quaternion& q)
         {
             return Matrix4(1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z, 2.0f * q.x * q.y + 2.0f * q.w * q.z,
                            2.0f * q.x * q.z - 2.0f * q.w * q.y, 0.0f,
@@ -97,25 +97,25 @@ namespace Anggur
                            0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix4 createRotationX(float angle)
+        static Matrix4 CreateRotationX(float angle)
         {
             return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f,
                            -Math::Sin(angle), Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix4 createRotationY(float angle)
+        static Matrix4 CreateRotationY(float angle)
         {
             return Matrix4(Math::Cos(angle), 0.0f, -Math::Sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, Math::Sin(angle),
                            0.0f, Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix4 createRotationZ(float angle)
+        static Matrix4 CreateRotationZ(float angle)
         {
             return Matrix4(Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f, -Math::Sin(angle), Math::Cos(angle), 0.0f,
                            0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix4 createScale(const Vector3& scale)
+        static Matrix4 CreateScale(const Vector3& scale)
         {
             return Matrix4(scale.x, 0.0f, 0.0f, 0.0f, 0.0f, scale.y, 0.0f, 0.0f, 0.0f, 0.0f, scale.z, 0.0f, 0.0f, 0.0f,
                            0.0f, 1.0f);
@@ -123,13 +123,13 @@ namespace Anggur
 
         // View Matrices
 
-        static Matrix4 createLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
+        static Matrix4 CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
         {
-            Vector3 zaxis = Vector3::normalize(target - eye);
-            Vector3 xaxis = Vector3::normalize(Vector3::cross(up, zaxis));
-            Vector3 yaxis = Vector3::normalize(Vector3::cross(zaxis, xaxis));
+            Vector3 zaxis = Vector3::Normalize(target - eye);
+            Vector3 xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
+            Vector3 yaxis = Vector3::Normalize(Vector3::Cross(zaxis, xaxis));
 
-            Vector3 trans(-Vector3::dot(xaxis, eye), -Vector3::dot(yaxis, eye), -Vector3::dot(zaxis, eye));
+            Vector3 trans(-Vector3::Dot(xaxis, eye), -Vector3::Dot(yaxis, eye), -Vector3::Dot(zaxis, eye));
 
             return Matrix4(xaxis.x, yaxis.x, zaxis.x, 0.0f, xaxis.y, yaxis.y, zaxis.y, 0.0f, xaxis.z, yaxis.z, zaxis.z,
                            0.0f, trans.x, trans.y, trans.z, 1.0f);
@@ -137,7 +137,7 @@ namespace Anggur
 
         // Projection Matrices
 
-        static Matrix4 createPerspective(float fovY, float width, float height, float near, float far)
+        static Matrix4 CreatePerspective(float fovY, float width, float height, float near, float far)
         {
             float yScale = Math::Cot(fovY / 2.0f);
             float xScale = yScale * height / width;
@@ -146,12 +146,12 @@ namespace Anggur
                            0.0f, 0.0f, -near * far / (far - near), 0.0);
         }
 
-        static Matrix4 createOrtographic(float left, float right, float top, float bottom, float near, float far)
+        static Matrix4 CreateOrtographic(float left, float right, float top, float bottom, float near, float far)
         {
             return Matrix4();
         }
 
-        static Matrix4 createOrthographic(float width, float height, float near, float far)
+        static Matrix4 CreateOrthographic(float width, float height, float near, float far)
         {
             return Matrix4(2.0f / width, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f / height, 0.0f, 0.0f, 0.0f, 0.0f,
                            1.0f / (far - near), 0.0f, 0.0f, 0.0f, near / (near - far), 1.0);

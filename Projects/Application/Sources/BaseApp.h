@@ -1,47 +1,53 @@
 #pragma once
 
-#include "Anggur/IO/WindowSystem.h"
-#include "Anggur/IO/Window.h"
-#include "Anggur/IO/Clock.h"
 #include "Anggur/Graphics/Renderer.h"
+#include "Anggur/IO/Clock.h"
+#include "Anggur/IO/Window.h"
+#include "Anggur/IO/WindowSystem.h"
 
 using namespace Anggur;
 
-class BaseApp {
-public:
-    BaseApp() {
-        initialize();
+class BaseApp
+{
+  public:
+    BaseApp()
+    {
+        Initialize();
 
         // Initialize common inputs
-        window.getInputDevice<Keyboard>();
-        window.getInputDevice<Mouse>();
+        window.GetInputDevice<Keyboard>();
+        window.GetInputDevice<Mouse>();
     }
 
-    virtual void initialize() {
+    virtual void Initialize()
+    {
     }
 
-    virtual void update(float deltaTime) {
+    virtual void Update(float deltaTime)
+    {
     }
 
-    void run() {
-        initialize();
-        
-        float previousTime = clock.getElapsed();
+    void Run()
+    {
+        Initialize();
 
-        while (window.isOpen()) {
-            float currentTime = clock.getElapsed();
+        float previousTime = clock.GetElapsed();
 
-            windowSystem.pollEvents();
+        while (window.IsOpen())
+        {
+            float currentTime = clock.GetElapsed();
 
-            update(currentTime - previousTime);
+            windowSystem.PollEvents();
+
+            Update(currentTime - previousTime);
 
             previousTime = currentTime;
 
-            window.update();
+            window.Update();
         }
     }
 
-protected:
+  protected:
     WindowSystem windowSystem;
     Window window;
 

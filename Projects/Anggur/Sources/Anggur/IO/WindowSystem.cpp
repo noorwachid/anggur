@@ -19,7 +19,7 @@ namespace Anggur
         glfwTerminate();
     }
 
-    void WindowSystem::pollEvents()
+    void WindowSystem::PollEvents()
     {
         glfwPollEvents();
     }

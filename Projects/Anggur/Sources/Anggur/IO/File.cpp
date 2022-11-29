@@ -3,7 +3,7 @@
 
 namespace Anggur::File
 {
-    std::vector<uint8_t> load(const std::string& path)
+    std::vector<uint8_t> Read(const std::string& path)
     {
         std::ifstream file(path, std::ios::in | std::ios::binary);
         std::vector<uint8_t> bytes;
@@ -13,7 +13,7 @@ namespace Anggur::File
         return bytes;
     }
 
-    std::string loadText(const std::string& path)
+    std::string ReadText(const std::string& path)
     {
         std::ifstream file(path, std::ios::in | std::ios::binary);
         std::string text;

@@ -11,32 +11,32 @@ namespace Anggur
         Shader();
         ~Shader();
 
-        inline uint32_t getID() const
+        inline uint32_t GetID() const
         {
             return id;
         }
 
-        void setVertexSource(const std::string& source);
-        void setFragmentSource(const std::string& source);
+        void SetVertexSource(const std::string& source);
+        void SetFragmentSource(const std::string& source);
 
-        void compile();
-        void bind();
-        void terminate();
+        void Compile();
+        void Bind();
+        void Terminate();
 
-        int getLocation(const std::string& name);
+        int GetLocation(const std::string& name);
 
-        void setUniformMatrix3(const std::string& name, const Matrix3& matrix);
-        void setUniformMatrix4(const std::string& name, const Matrix4& matrix);
+        void SetUniformMatrix3(const std::string& name, const Matrix3& matrix);
+        void SetUniformMatrix4(const std::string& name, const Matrix4& matrix);
 
-        void setUniformVector2(const std::string& name, const Vector2& vector);
-        void setUniformVector3(const std::string& name, const Vector3& vector);
-        void setUniformVector4(const std::string& name, const Vector4& vector);
+        void SetUniformVector2(const std::string& name, const Vector2& vector);
+        void SetUniformVector3(const std::string& name, const Vector3& vector);
+        void SetUniformVector4(const std::string& name, const Vector4& vector);
 
-        void setUniformInt(const std::string& name, int value);
-        void setUniformInt(const std::string& name, size_t size, int* values);
+        void SetUniformInt(const std::string& name, int value);
+        void SetUniformInt(const std::string& name, size_t size, int* values);
 
-        void setUniformFloat(const std::string& name, float value);
-        void setUniformFloat(const std::string& name, size_t size, float* values);
+        void SetUniformFloat(const std::string& name, float value);
+        void SetUniformFloat(const std::string& name, size_t size, float* values);
 
       private:
         uint32_t id;

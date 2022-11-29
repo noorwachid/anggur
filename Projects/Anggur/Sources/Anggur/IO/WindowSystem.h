@@ -12,6 +12,6 @@ namespace Anggur
         /**
          * Poll event of each devices
          */
-        void pollEvents();
+        void PollEvents();
     };
 }

@@ -25,13 +25,13 @@ namespace Anggur
         {
         }
 
-        std::string toString()
+        std::string ToString()
         {
             std::string temp;
 
-            temp += "position: " + position.toString() + "\n";
-            temp += "color: " + color.toString() + "\n";
-            temp += "uv: " + uv.toString() + "\n";
+            temp += "position: " + position.ToString() + "\n";
+            temp += "color: " + color.ToString() + "\n";
+            temp += "uv: " + uv.ToString() + "\n";
             temp += "slot: " + std::to_string(slot) + "\n";
 
             return temp;
@@ -40,12 +40,12 @@ namespace Anggur
 
     enum class TextAlignment
     {
-        beginning,
-        middle,
-        end,
+        Beginning,
+        Middle,
+        End,
 
-        inBetween,
-        even,
+        InBetween,
+        Even,
     };
 
     struct TextOptions
@@ -58,8 +58,8 @@ namespace Anggur
         float lineSpacing = 0.01f;
 
         // Alignment
-        TextAlignment horizontalAlignment = TextAlignment::beginning;
-        TextAlignment verticalAlignment = TextAlignment::beginning;
+        TextAlignment horizontalAlignment = TextAlignment::Beginning;
+        TextAlignment verticalAlignment = TextAlignment::Beginning;
 
         // Wrap
         bool horizontalWrap = false;
@@ -82,70 +82,70 @@ namespace Anggur
 
         ~CanvasRenderer();
 
-        void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-        void clear(const Vector4& color = Vector4::black);
-        void setViewport(const Vector2& size);
-        void setViewport(const Vector2& position, const Vector2& size);
-        void setViewProjection(const Matrix3& newViewProjection);
+        void SetBatchChunk(size_t vertex, size_t indexMultiplier = 2);
+        void Clear(const Vector4& color = Vector4::black);
+        void SetViewport(const Vector2& size);
+        void SetViewport(const Vector2& position, const Vector2& size);
+        void SetViewProjection(const Matrix3& newViewProjection);
 
-        void begin();
-        void begin(const Matrix3& viewProjection);
-        void End();
+        void BeginScene();
+        void BeginScene(const Matrix3& viewProjection);
+        void EndScene();
 
-        bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
-        void flush();
-        void flushInternalBuffer();
+        bool IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
+        void Flush();
+        void FlushInternalBuffer();
 
-        void draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices,
+        void Draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices,
                   const std::shared_ptr<Texture2D>& texture);
 
         // Digital Geometry
-        void drawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2,
+        void DrawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2,
                           const Vector4& color = Vector4::white);
-        void drawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2,
+        void DrawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& point2,
                       const Vector2& point3, const Vector4& color = Vector4::white);
-        void drawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
+        void DrawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
                            const Vector4& color = Vector4::white);
 
-        void drawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
+        void DrawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
                                    const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint = Vector2::zero,
                                    const Vector2& uvSize = Vector2::one, const Vector4& color = Vector4::white);
 
         // Augmented-Natural Geometry
-        void drawArc(const Matrix3& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi,
+        void DrawArc(const Matrix3& model, float radius = 1.0f, float beginAngle = 0.0f, float sweepAngle = Math::pi,
                      int segment = 16, const Vector4& color = Vector4::white);
-        void drawCircle(const Matrix3& model, float radius = 1.0f, int segment = 32,
+        void DrawCircle(const Matrix3& model, float radius = 1.0f, int segment = 32,
                         const Vector4& color = Vector4::white);
 
         // Semi-Digital-Natural Geometry
-        void drawRoundedTriangle();
-        void drawRoundedQuad();
-        void drawRoundedRectangle();
+        void DrawRoundedTriangle();
+        void DrawRoundedQuad();
+        void DrawRoundedRectangle();
 
         // Line Geometry
-        void drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+        void DrawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
                                 float thickness = 0.5, const Vector4& color = Vector4::white);
-        void drawLineAnchor(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& p2,
+        void DrawLineAnchor(const Matrix3& model, const Vector2& point0, const Vector2& point1, const Vector2& p2,
                             float thickness = 0.5, const Vector4& color = Vector4::white);
-        void drawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5,
+        void DrawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5,
                       const Vector4& color = Vector4::white);
-        void drawPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5,
+        void DrawPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5,
                           const Vector4& color = Vector4::white);
-        void drawClosedPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5,
+        void DrawClosedPolyLine(const Matrix3& model, const std::vector<Vector2>& points, float thickness = 0.5,
                                 const Vector4& color = Vector4::white);
 
         // Semi-Natural-Line Geometry
-        void drawRoundedLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+        void DrawRoundedLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
                                        float thickness = 0.5, const Vector4& color = Vector4::white);
-        void drawRoundedLineAnchor(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+        void DrawRoundedLineAnchor(const Matrix3& model, const Vector2& point0, const Vector2& point1,
                                    const Vector2& p2, float thickness = 0.5, const Vector4& color = Vector4::white);
-        void drawRoundedLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5,
+        void DrawRoundedLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness = 0.5,
                              const Vector4& color = Vector4::white);
 
         // text
-        void drawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font,
+        void DrawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font,
                       const TextOptions& options = TextOptions());
-        void drawTextGlyph(const Matrix3& model, const Vector2& point, const Vector2& size,
+        void DrawTextGlyph(const Matrix3& model, const Vector2& point, const Vector2& size,
                            const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint = Vector2::zero,
                            const Vector2& uvSize = Vector2::one, const Vector4& color = Vector4::white);
 
@@ -155,11 +155,11 @@ namespace Anggur
 
         enum class DrawingMode
         {
-            geometry,
-            text,
+            Geometry,
+            Text,
         };
 
-        DrawingMode drawingMode = DrawingMode::geometry;
+        DrawingMode drawingMode = DrawingMode::Geometry;
 
         VertexArray vertexArray;
         VertexBuffer vertexBuffer;
@@ -184,10 +184,10 @@ namespace Anggur
         Matrix3 viewProjection;
 
       private:
-        void initializeVertexPool();
-        void initializeTexturePool();
+        void InitializeVertexPool();
+        void InitializeTexturePool();
         void initializeShaders();
 
-        void switchDrawingMode(DrawingMode mode);
+        void SwitchDrawingMode(DrawingMode mode);
     };
 }

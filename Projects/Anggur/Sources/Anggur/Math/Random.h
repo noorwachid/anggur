@@ -12,21 +12,21 @@ namespace Anggur
 
         // Getters
 
-        float generate();
+        float Generate();
 
-        float range(float lower, float upper);
+        float Range(float lower, float upper);
 
-        float getNormal();
+        float GetNormal();
 
-        float getSigned();
+        float GetSigned();
 
-        float getAngle();
+        float GetAngle();
 
-        bool getBoolean();
+        bool GetBoolean();
 
         // Setters
 
-        void setSeed(float n);
+        void SetSeed(float n);
 
       private:
         std::random_device device;

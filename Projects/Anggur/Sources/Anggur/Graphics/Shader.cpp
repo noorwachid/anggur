@@ -16,20 +16,20 @@ namespace Anggur
 
     Shader::~Shader()
     {
-        terminate();
+        Terminate();
     }
 
-    void Shader::setVertexSource(const std::string& source)
+    void Shader::SetVertexSource(const std::string& source)
     {
         vertexSource = source;
     }
 
-    void Shader::setFragmentSource(const std::string& source)
+    void Shader::SetFragmentSource(const std::string& source)
     {
         fragmentSource = source;
     }
 
-    void Shader::compile()
+    void Shader::Compile()
     {
         const char* cVertexSource = vertexSource.c_str();
         const char* cFragmentSource = fragmentSource.c_str();
@@ -60,7 +60,7 @@ namespace Anggur
             throw std::runtime_error(std::string("Failed to compile fragment shader: ") + message);
         }
 
-        terminate(); // in case shader already created
+        Terminate(); // in case shader already created
 
         id = glCreateProgram();
         glAttachShader(id, vertexId);
@@ -79,64 +79,64 @@ namespace Anggur
         glDeleteShader(fragmentId);
     }
 
-    void Shader::bind()
+    void Shader::Bind()
     {
         glUseProgram(id);
     }
 
-    void Shader::terminate()
+    void Shader::Terminate()
     {
         if (id > 0)
             glDeleteProgram(id);
     }
 
-    int Shader::getLocation(const std::string& name)
+    int Shader::GetLocation(const std::string& name)
     {
         return glGetUniformLocation(id, name.c_str());
     }
 
-    void Shader::setUniformVector2(const std::string& name, const Vector2& vector)
+    void Shader::SetUniformVector2(const std::string& name, const Vector2& vector)
     {
-        glUniform2f(getLocation(name), vector.x, vector.y);
+        glUniform2f(GetLocation(name), vector.x, vector.y);
     }
 
-    void Shader::setUniformVector3(const std::string& name, const Vector3& vector)
+    void Shader::SetUniformVector3(const std::string& name, const Vector3& vector)
     {
-        glUniform3f(getLocation(name), vector.x, vector.y, vector.z);
+        glUniform3f(GetLocation(name), vector.x, vector.y, vector.z);
     }
 
-    void Shader::setUniformVector4(const std::string& name, const Vector4& vector)
+    void Shader::SetUniformVector4(const std::string& name, const Vector4& vector)
     {
-        glUniform4f(getLocation(name), vector.x, vector.y, vector.z, vector.w);
+        glUniform4f(GetLocation(name), vector.x, vector.y, vector.z, vector.w);
     }
 
-    void Shader::setUniformMatrix3(const std::string& name, const Matrix3& matrix)
+    void Shader::SetUniformMatrix3(const std::string& name, const Matrix3& matrix)
     {
-        glUniformMatrix3fv(getLocation(name), 1, GL_FALSE, matrix.toPointer());
+        glUniformMatrix3fv(GetLocation(name), 1, GL_FALSE, matrix.ToPointer());
     }
 
-    void Shader::setUniformMatrix4(const std::string& name, const Matrix4& matrix)
+    void Shader::SetUniformMatrix4(const std::string& name, const Matrix4& matrix)
     {
-        glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, matrix.toPointer());
+        glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, matrix.ToPointer());
     }
 
-    void Shader::setUniformInt(const std::string& name, int value)
+    void Shader::SetUniformInt(const std::string& name, int value)
     {
-        glUniform1i(getLocation(name), value);
+        glUniform1i(GetLocation(name), value);
     }
 
-    void Shader::setUniformInt(const std::string& name, size_t size, int* values)
+    void Shader::SetUniformInt(const std::string& name, size_t size, int* values)
     {
-        glUniform1iv(getLocation(name), size, values);
+        glUniform1iv(GetLocation(name), size, values);
     }
 
-    void Shader::setUniformFloat(const std::string& name, float value)
+    void Shader::SetUniformFloat(const std::string& name, float value)
     {
-        glUniform1f(getLocation(name), value);
+        glUniform1f(GetLocation(name), value);
     }
 
-    void Shader::setUniformFloat(const std::string& name, size_t size, float* values)
+    void Shader::SetUniformFloat(const std::string& name, size_t size, float* values)
     {
-        glUniform1fv(getLocation(name), size, values);
+        glUniform1fv(GetLocation(name), size, values);
     }
 }

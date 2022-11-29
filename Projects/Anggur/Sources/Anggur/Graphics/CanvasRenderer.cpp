@@ -10,8 +10,8 @@ namespace Anggur
 {
     CanvasRenderer::CanvasRenderer()
     {
-        initializeVertexPool();
-        initializeTexturePool();
+        InitializeVertexPool();
+        InitializeTexturePool();
         initializeShaders();
     }
 
@@ -19,28 +19,28 @@ namespace Anggur
     {
     }
 
-    void CanvasRenderer::initializeVertexPool()
+    void CanvasRenderer::InitializeVertexPool()
     {
         vertices.assign(batchVertex,
                         CanvasVertex(Vector2(0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
         indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-        vertexBuffer.setCapacity(sizeof(CanvasVertex) * vertices.size());
+        vertexBuffer.SetCapacity(sizeof(CanvasVertex) * vertices.size());
 
-        vertexArray.setAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
-        vertexArray.setAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
-        vertexArray.setAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
-        vertexArray.setAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
+        vertexArray.SetAttribute(0, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, position));
+        vertexArray.SetAttribute(1, 4, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, color));
+        vertexArray.SetAttribute(2, 2, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, uv));
+        vertexArray.SetAttribute(3, 1, GL_FLOAT, sizeof(CanvasVertex), offsetof(CanvasVertex, slot));
 
-        indexBuffer.setCapacity(sizeof(uint32_t) * indices.size());
+        indexBuffer.SetCapacity(sizeof(uint32_t) * indices.size());
     }
 
-    void CanvasRenderer::initializeTexturePool()
+    void CanvasRenderer::InitializeTexturePool()
     {
-        textures.assign(Texture::getMaxSlot(), nullptr);
-        slots.reserve(Texture::getMaxSlot());
+        textures.assign(Texture::GetMaxSlot(), nullptr);
+        slots.reserve(Texture::GetMaxSlot());
 
-        for (int i = 0; i < Texture::getMaxSlot(); ++i)
+        for (int i = 0; i < Texture::GetMaxSlot(); ++i)
         {
             slots.push_back(i);
         }
@@ -50,8 +50,8 @@ namespace Anggur
 
     void CanvasRenderer::initializeShaders()
     {
-        textShader.bind();
-        textShader.setVertexSource(R"(
+        textShader.Bind();
+        textShader.SetVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec2 aPosition;
@@ -73,7 +73,7 @@ namespace Anggur
                 vSlot = aSlot;
             }
         )");
-        textShader.setFragmentSource(R"(
+        textShader.SetFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -83,7 +83,7 @@ namespace Anggur
             out vec4 fColor;
 
             uniform sampler2D uSlots[)" +
-                                     std::to_string(Texture::getMaxSlot()) + R"(];
+                                     std::to_string(Texture::GetMaxSlot()) + R"(];
             
             void main() {
                 float distance = texture(uSlots[int(vSlot)], vUV).r;
@@ -102,10 +102,10 @@ namespace Anggur
                 }
             }
         )");
-        textShader.compile();
+        textShader.Compile();
 
-        geometryShader.bind();
-        geometryShader.setVertexSource(R"(
+        geometryShader.Bind();
+        geometryShader.SetVertexSource(R"(
             #version 330 core
 
             layout (location = 0) in vec2 aPosition;
@@ -127,7 +127,7 @@ namespace Anggur
                 vSlot = aSlot;
             }
         )");
-        geometryShader.setFragmentSource(R"(
+        geometryShader.SetFragmentSource(R"(
             #version 330 core
             
             in vec4 vColor;
@@ -136,71 +136,71 @@ namespace Anggur
 
             out vec4 fColor;
 
-            uniform sampler2D uSlots[)" + std::to_string(Texture::getMaxSlot()) +
+            uniform sampler2D uSlots[)" + std::to_string(Texture::GetMaxSlot()) +
                                          R"(];
             
             void main() {
                 fColor = texture(uSlots[int(vSlot)], vUV) * vColor;
             }
         )");
-        geometryShader.compile();
+        geometryShader.Compile();
     }
 
-    void CanvasRenderer::switchDrawingMode(DrawingMode newMode)
+    void CanvasRenderer::SwitchDrawingMode(DrawingMode newMode)
     {
         if (drawingMode != newMode)
         {
-            flush();
+            Flush();
             drawingMode = newMode;
         }
     }
 
-    void CanvasRenderer::setBatchChunk(size_t vertex, size_t indexMultiplier)
+    void CanvasRenderer::SetBatchChunk(size_t vertex, size_t indexMultiplier)
     {
         batchVertex = vertex;
         batchIndexMultiplier = indexMultiplier;
     }
 
-    void CanvasRenderer::clear(const Vector4& color)
+    void CanvasRenderer::Clear(const Vector4& color)
     {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void CanvasRenderer::setViewport(const Vector2& size)
+    void CanvasRenderer::SetViewport(const Vector2& size)
     {
         glViewport(0, 0, size.x, size.y);
     }
 
-    void CanvasRenderer::setViewport(const Vector2& position, const Vector2& size)
+    void CanvasRenderer::SetViewport(const Vector2& position, const Vector2& size)
     {
         glViewport(position.x, position.y, size.x, size.y);
     }
 
-    void CanvasRenderer::setViewProjection(const Matrix3& newViewProjection)
+    void CanvasRenderer::SetViewProjection(const Matrix3& newViewProjection)
     {
         viewProjection = newViewProjection;
     }
 
-    void CanvasRenderer::begin()
+    void CanvasRenderer::BeginScene()
     {
         drawCount = 0;
 
-        flushInternalBuffer();
+        FlushInternalBuffer();
     }
 
-    void CanvasRenderer::begin(const Matrix3& viewProjection)
+    void CanvasRenderer::BeginScene(const Matrix3& viewProjection)
     {
-        setViewProjection(viewProjection);
-        begin();
+        SetViewProjection(viewProjection);
+        BeginScene();
     }
 
-    void CanvasRenderer::End()
+    void CanvasRenderer::EndScene()
     {
-        flush();
+        Flush();
     }
 
-    void CanvasRenderer::flush()
+    void CanvasRenderer::Flush()
     {
         if (vertexOffset == 0)
         {
@@ -209,64 +209,64 @@ namespace Anggur
 
         for (size_t i = 0; i < textureOffset; ++i)
         {
-            textures[i]->bind(i);
+            textures[i]->Bind(i);
         }
 
         switch (drawingMode)
         {
-        case DrawingMode::text:
-            textShader.bind();
-            textShader.setUniformMatrix3("uViewProjection", viewProjection);
-            textShader.setUniformInt("uSlots", textureOffset, slots.data());
+        case DrawingMode::Text:
+            textShader.Bind();
+            textShader.SetUniformMatrix3("uViewProjection", viewProjection);
+            textShader.SetUniformInt("uSlots", textureOffset, slots.data());
             break;
 
-        case DrawingMode::geometry:
+        case DrawingMode::Geometry:
         default:
-            geometryShader.bind();
-            geometryShader.setUniformMatrix3("uViewProjection", viewProjection);
-            geometryShader.setUniformInt("uSlots", textureOffset, slots.data());
+            geometryShader.Bind();
+            geometryShader.SetUniformMatrix3("uViewProjection", viewProjection);
+            geometryShader.SetUniformInt("uSlots", textureOffset, slots.data());
             break;
         }
 
-        vertexArray.bind();
+        vertexArray.Bind();
 
-        vertexBuffer.bind();
+        vertexBuffer.Bind();
         vertexBuffer.setData(sizeof(CanvasVertex) * vertexOffset, vertices.data());
 
-        indexBuffer.bind();
+        indexBuffer.Bind();
         indexBuffer.setData(sizeof(uint32_t) * indexOffset, indices.data());
 
         glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
-        flushInternalBuffer();
+        FlushInternalBuffer();
 
         ++drawCount;
     }
 
-    void CanvasRenderer::flushInternalBuffer()
+    void CanvasRenderer::FlushInternalBuffer()
     {
         vertexOffset = 0;
         indexOffset = 0;
         textureOffset = 0;
     }
 
-    bool CanvasRenderer::isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize)
+    bool CanvasRenderer::IsCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize)
     {
         return vertexOffset + newVertexSize > vertices.size() || indexOffset + newIndexSize > indices.size() ||
                textureOffset + newTextureSize > textures.size();
     }
 
-    void CanvasRenderer::draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices,
+    void CanvasRenderer::Draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices,
                               const std::shared_ptr<Texture2D>& texture)
     {
-        if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1))
-            flush();
+        if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1))
+            Flush();
 
         // Find or add new texture slot
         int textureSlot = 0;
 
         // This code only create one branch
-        for (; textureSlot < textureOffset && textures[textureSlot]->getID() != texture->getID(); ++textureSlot)
+        for (; textureSlot < textureOffset && textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot)
             ;
 
         if (textureSlot == textureOffset)
@@ -295,12 +295,12 @@ namespace Anggur
 
     // 2D primitives
 
-    void CanvasRenderer::drawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+    void CanvasRenderer::DrawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1,
                                       const Vector2& point2, const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
-        draw(
+        Draw(
             {
                 CanvasVertex(model * point0, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
                 CanvasVertex(model * point1, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
@@ -314,12 +314,12 @@ namespace Anggur
             whiteTexture);
     }
 
-    void CanvasRenderer::drawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+    void CanvasRenderer::DrawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1,
                                   const Vector2& point2, const Vector2& point3, const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
-        draw(
+        Draw(
             {
                 CanvasVertex(model * point0, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
                 CanvasVertex(model * point1, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
@@ -337,12 +337,12 @@ namespace Anggur
             whiteTexture);
     }
 
-    void CanvasRenderer::drawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
+    void CanvasRenderer::DrawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
                                        const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
-        draw(
+        Draw(
             {
                 CanvasVertex(model * point, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
                 CanvasVertex(model * Vector2(point.x + size.x, point.y), Vector4(color.x, color.y, color.z, color.w),
@@ -363,13 +363,13 @@ namespace Anggur
             whiteTexture);
     }
 
-    void CanvasRenderer::drawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
+    void CanvasRenderer::DrawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
                                                const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint,
                                                const Vector2& uvSize, const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
-        draw(
+        Draw(
             {
                 CanvasVertex(model * point, Vector4(color.x, color.y, color.z, color.w), uvPoint),
                 CanvasVertex(model * Vector2(point.x + size.x, point.y), Vector4(color.x, color.y, color.z, color.w),
@@ -391,9 +391,9 @@ namespace Anggur
             texture);
     }
 
-    void CanvasRenderer::drawCircle(const Matrix3& model, float radius, int segment, const Vector4& color)
+    void CanvasRenderer::DrawCircle(const Matrix3& model, float radius, int segment, const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         if (segment < 3)
             segment = 3;
@@ -441,13 +441,13 @@ namespace Anggur
             offset += 3;
         }
 
-        draw(vertices, indices, whiteTexture);
+        Draw(vertices, indices, whiteTexture);
     }
 
-    void CanvasRenderer::drawArc(const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment,
+    void CanvasRenderer::DrawArc(const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment,
                                  const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         if (segment < 3)
             segment = 3;
@@ -460,7 +460,7 @@ namespace Anggur
         float tangetialFactor = Math::Tan(theta);
         float radialFactor = Math::Cos(theta);
 
-        Vector2 walker = Vector2::createPolar(radius, beginAngle);
+        Vector2 walker = Vector2::CreatePolar(radius, beginAngle);
 
         std::vector<CanvasVertex> vertices;
         std::vector<uint32_t> indices;
@@ -502,34 +502,34 @@ namespace Anggur
         indices.push_back(segment);
         indices.push_back(1);
 
-        draw(vertices, indices, whiteTexture);
+        Draw(vertices, indices, whiteTexture);
     }
 
     // 2D lines
 
-    void CanvasRenderer::drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+    void CanvasRenderer::DrawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
                                             float thickness, const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
-        Vector2 offsetPoint = thickness * Vector2::normalize((point0 - point1));
-        Vector2 perpenPoint = thickness * Vector2::normalize((point1 - point0).getPerpendicular());
+        Vector2 offsetPoint = thickness * Vector2::Normalize((point0 - point1));
+        Vector2 perpenPoint = thickness * Vector2::Normalize((point1 - point0).GetPerpendicular());
 
-        drawQuad(model, point1 + perpenPoint, point0 + perpenPoint + offsetPoint, point0 - perpenPoint + offsetPoint,
+        DrawQuad(model, point1 + perpenPoint, point0 + perpenPoint + offsetPoint, point0 - perpenPoint + offsetPoint,
                  point1 - perpenPoint, color);
     }
 
-    void CanvasRenderer::drawLineAnchor(const Matrix3& transform, const Vector2& p0, const Vector2& p1,
+    void CanvasRenderer::DrawLineAnchor(const Matrix3& transform, const Vector2& p0, const Vector2& p1,
                                         const Vector2& p2, float w, const Vector4& c)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         Vector2 i0 = transform * Vector2::zero;
         Vector2 l0 = transform * p0;
         Vector2 l1 = transform * p1;
         Vector2 l2 = transform * p2;
-        Vector2 t0 = (l1 - l0).getPerpendicular();
-        Vector2 t2 = (l2 - l1).getPerpendicular();
+        Vector2 t0 = (l1 - l0).GetPerpendicular();
+        Vector2 t2 = (l2 - l1).GetPerpendicular();
 
         if (0 < ((l1.x - l0.x) * (l2.y - l0.y) - (l2.x - l0.x) * (l1.y - l0.y)))
         {
@@ -537,8 +537,8 @@ namespace Anggur
             t2 = -t2;
         }
 
-        t0.setLength(w);
-        t2.setLength(w);
+        t0.SetLength(w);
+        t2.SetLength(w);
 
         Vector2 u0 = (l0 + t0);
         Vector2 u1 = (l2 + t2);
@@ -549,10 +549,10 @@ namespace Anggur
         Vector2 d0 = (l1 - t0);
         Vector2 d1 = (l1 - t2);
         Vector2 e0c = (l1 - l0);
-        e0c.setLength(w * 2);
+        e0c.SetLength(w * 2);
         Vector2 e0 = (e0c + c0);
         Vector2 e1c = (l1 - l2);
-        e1c.setLength(w * 2);
+        e1c.SetLength(w * 2);
         Vector2 e1 = (e1c + c1);
 
         auto areLinesIntersected =
@@ -567,7 +567,7 @@ namespace Anggur
 
             if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
             {
-                p4 = Vector2::lerp(p0, p1, 0.5);
+                p4 = Vector2::Lerp(p0, p1, 0.5);
                 return true;
             }
 
@@ -618,41 +618,41 @@ namespace Anggur
             indices[17] = 7;
         }
 
-        draw(vertices, indices, whiteTexture);
+        Draw(vertices, indices, whiteTexture);
     }
 
-    void CanvasRenderer::drawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness,
+    void CanvasRenderer::DrawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness,
                                   const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
-        Vector2 midPoint = Vector2::lerp(point0, point1, 0.5);
+        Vector2 midPoint = Vector2::Lerp(point0, point1, 0.5);
 
-        drawLineTerminator(model, point0, midPoint, thickness, color);
-        drawLineTerminator(model, point1, midPoint, thickness, color);
+        DrawLineTerminator(model, point0, midPoint, thickness, color);
+        DrawLineTerminator(model, point1, midPoint, thickness, color);
     }
 
-    void CanvasRenderer::drawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w,
+    void CanvasRenderer::DrawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w,
                                       const Vector4& c)
     {
-        switchDrawingMode(DrawingMode::geometry);
+        SwitchDrawingMode(DrawingMode::Geometry);
 
         if (ps.size() > 1)
         {
             std::vector<Vector2> ms;
 
             for (size_t i = 0; i < ps.size() - 1; ++i)
-                ms.push_back(Vector2::lerp(ps[i], ps[i + 1], 0.5));
+                ms.push_back(Vector2::Lerp(ps[i], ps[i + 1], 0.5));
 
             for (size_t i = 1; i < ms.size(); ++i)
-                drawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
+                DrawLineAnchor(transform, ms[i - 1], ps[i], ms[i], w, c);
 
-            drawLineTerminator(transform, ps.front(), ms.front(), w, c);
-            drawLineTerminator(transform, ps.back(), ms.back(), w, c);
+            DrawLineTerminator(transform, ps.front(), ms.front(), w, c);
+            DrawLineTerminator(transform, ps.back(), ms.back(), w, c);
         }
     }
 
-    // void CanvasRenderer::drawPolyLineConnected(const Matrix3& transform, const std::vector<Vector2>& ps, float w,
+    // void CanvasRenderer::DrawPolyLineConnected(const Matrix3& transform, const std::vector<Vector2>& ps, float w,
     // const Vector4& c) { 	if (ps.size() > 1) { 		std::vector<Vector2> ms;
 
     // 		for (size_t i = 0; i < ps.size() - 1; ++i)
@@ -668,7 +668,7 @@ namespace Anggur
     // 	}
     // }
 
-    // void CanvasRenderer::drawQuadraticBezier(const Matrix3& transform,
+    // void CanvasRenderer::DrawQuadraticBezier(const Matrix3& transform,
     // 	const Vector2& p0,
     // 	const Vector2& p1,
     // 	const Vector2& p2,
@@ -700,7 +700,7 @@ namespace Anggur
     // 	drawPolyLine(transform, points, w, c);
     // }
 
-    // void CanvasRenderer::drawQuadraticBezierAlt(const Matrix3& transform,
+    // void CanvasRenderer::DrawQuadraticBezierAlt(const Matrix3& transform,
     // 	const Vector2& p0,
     // 	const Vector2& p1,
     // 	const Vector2& p2,
@@ -710,7 +710,7 @@ namespace Anggur
     // 	drawQuadraticBezier(transform, p0, px, p2, w, c);
     // }
 
-    // void CanvasRenderer::drawQubicBezier(const Matrix3& transform,
+    // void CanvasRenderer::DrawQubicBezier(const Matrix3& transform,
     // 	const Vector2& p0,
     // 	const Vector2& p1,
     // 	const Vector2& p2,
@@ -746,10 +746,10 @@ namespace Anggur
     // 	drawPolyLine(transform, points, w, c);
     // }
 
-    void CanvasRenderer::drawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font,
+    void CanvasRenderer::DrawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font,
                                   const TextOptions& options)
     {
-        switchDrawingMode(DrawingMode::text);
+        SwitchDrawingMode(DrawingMode::Text);
 
         Vector2 pointer;
 
@@ -766,20 +766,20 @@ namespace Anggur
             }
 
             Glyph glyph = font->glyphMap[codePoint];
-            drawTextGlyph(model, Vector2(pointer.x, pointer.y + (glyph.ascent * options.size)),
+            DrawTextGlyph(model, Vector2(pointer.x, pointer.y + (glyph.ascent * options.size)),
                           options.size * glyph.size, font->glyphBuffers[glyph.bufferIndex].texture, glyph.offset,
                           glyph.size);
             pointer.x += glyph.size.x * options.size;
         }
     }
 
-    void CanvasRenderer::drawTextGlyph(const Matrix3& model, const Vector2& point, const Vector2& size,
+    void CanvasRenderer::DrawTextGlyph(const Matrix3& model, const Vector2& point, const Vector2& size,
                                        const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint,
                                        const Vector2& uvSize, const Vector4& color)
     {
-        switchDrawingMode(DrawingMode::text);
+        SwitchDrawingMode(DrawingMode::Text);
 
-        draw(
+        Draw(
             {
                 CanvasVertex(model * point, Vector4(color.x, color.y, color.z, color.w), uvPoint),
                 CanvasVertex(model * Vector2(point.x + size.x, point.y), Vector4(color.x, color.y, color.z, color.w),

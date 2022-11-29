@@ -11,17 +11,17 @@ namespace Anggur
 
     Image::Image(const std::string& path)
     {
-        load(path);
+        Read(path);
     }
 
     Image::~Image()
     {
-        unload();
+        Close();
     }
 
-    void Image::load(const std::string& path)
+    void Image::Read(const std::string& path)
     {
-        unload();
+        Close();
 
         int newWidth;
         int newHeight;
@@ -40,11 +40,11 @@ namespace Anggur
         channels = newChannels;
     }
 
-    void Image::unload()
+    void Image::Close()
     {
     }
 
-    void Image::save(const std::string& path)
+    void Image::Write(const std::string& path)
     {
         stbi_write_png((path + ".png").c_str(), width, height, 1, bytes.data(), width);
     }

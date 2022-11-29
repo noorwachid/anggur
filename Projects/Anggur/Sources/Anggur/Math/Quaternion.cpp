@@ -122,14 +122,14 @@ namespace Anggur
         // ps * qv + qs * pv + pv x qv
         Vector3 qv(q.x, q.y, q.z);
         Vector3 pv(p.x, p.y, p.z);
-        Vector3 newVec = p.w * qv + q.w * pv + Vector3::cross(pv, qv);
+        Vector3 newVec = p.w * qv + q.w * pv + Vector3::Cross(pv, qv);
         newValue.x = newVec.x;
         newValue.y = newVec.y;
         newValue.z = newVec.z;
 
         // Scalar component is:
         // ps * qs - pv . qv
-        newValue.w = p.w * q.w - Vector3::dot(pv, qv);
+        newValue.w = p.w * q.w - Vector3::Dot(pv, qv);
 
         return newValue;
     }

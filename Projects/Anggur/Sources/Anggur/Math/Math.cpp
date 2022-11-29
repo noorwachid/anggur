@@ -29,14 +29,14 @@ namespace Anggur
         return fmaxf(a, b);
     }
 
-    float Math::Max(float a, float b)
+    float Math::Min(float a, float b)
     {
         return fminf(a, b);
     }
 
     float Math::Clamp(float x, float lower, float upper)
     {
-        return Max(upper, Max(lower, x));
+        return Min(upper, Max(lower, x));
     }
 
     float Math::Abs(float x)

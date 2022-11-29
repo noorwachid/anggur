@@ -9,7 +9,7 @@ namespace Anggur
 {
     struct KeyEvent : public Event
     {
-        Key key = Key::unknown;
+        Key key = Key::Unknown;
 
         KeyEvent(const std::string& name, Key newKey) : Event(name), key(newKey)
         {
@@ -18,7 +18,7 @@ namespace Anggur
 
     struct MouseButtonEvent : public Event
     {
-        MouseButton button = MouseButton::unknown;
+        MouseButton button = MouseButton::Unknown;
 
         MouseButtonEvent(const std::string& name, MouseButton newButton) : Event(name), button(newButton)
         {
