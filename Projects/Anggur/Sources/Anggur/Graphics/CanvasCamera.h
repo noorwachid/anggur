@@ -8,14 +8,14 @@ namespace Anggur
     class CanvasCamera
     {
       public:
-        void update()
+        void Update()
         {
-            if (!isDirty())
+            if (!IsDirty())
             {
                 return;
             }
 
-            clean();
+            Clean();
 
             viewProjection =
                 Matrix3::CreateTranslation(
@@ -26,92 +26,92 @@ namespace Anggur
             screen = viewProjection.GetInverse();
         }
 
-        const Matrix3& getViewProjection() const
+        const Matrix3& GetViewProjection() const
         {
             return viewProjection;
         }
 
-        const Matrix3& getScreen() const
+        const Matrix3& GetScreen() const
         {
             return screen;
         }
 
-        const Vector2& getTargetPosition() const
+        const Vector2& GetTargetPosition() const
         {
             return targetPosition;
         }
 
-        Vector2 toWorldPoint(const Vector2& screenPoint) const
+        Vector2 ToWorldPoint(const Vector2& screenPoint) const
         {
             Vector2 normalizedScreenPoint =
                 Vector2(screenPoint.x / screenSize.x * 2 - 1, -screenPoint.y / screenSize.y * 2 + 1);
             return screen * normalizedScreenPoint;
         }
 
-        void setViewSize(const Vector2& size)
+        void SetViewSize(const Vector2& size)
         {
-            markDirty();
+            MarkDirty();
             viewSize.Set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
         }
 
-        void setViewScale(const Vector2& scale)
+        void SetViewScale(const Vector2& scale)
         {
-            markDirty();
+            MarkDirty();
             viewScale.Set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
         }
 
-        void setViewRotation(float rotation)
+        void SetViewRotation(float rotation)
         {
-            markDirty();
+            MarkDirty();
             viewRotation = Math::Mod(rotation, Math::twoPi);
         }
 
-        void setTargetPosition(const Vector2& position)
+        void SetTargetPosition(const Vector2& position)
         {
-            markDirty();
+            MarkDirty();
             targetPosition.Set(position.x, position.y);
         }
 
-        void setTargetOffset(const Vector2& offset)
+        void SetTargetOffset(const Vector2& offset)
         {
-            markDirty();
+            MarkDirty();
         }
 
-        void setScreenSize(const Vector2& size)
+        void SetScreenSize(const Vector2& size)
         {
-            markDirty();
+            MarkDirty();
             screenSize.Set(size.x, size.y);
         }
 
-        void nudgeViewScale(const Vector2& amount)
+        void NudgeViewScale(const Vector2& amount)
         {
-            markDirty();
-            setViewScale(viewScale + amount);
+            MarkDirty();
+            SetViewScale(viewScale + amount);
         }
 
-        void nudgeViewRotation(float rotation)
+        void NudgeViewRotation(float rotation)
         {
-            markDirty();
-            setViewRotation(viewRotation + rotation);
+            MarkDirty();
+            SetViewRotation(viewRotation + rotation);
         }
 
-        void nudgeTargetPosition(const Vector2& amount)
+        void NudgeTargetPosition(const Vector2& amount)
         {
-            markDirty();
+            MarkDirty();
             targetPosition += amount;
         }
 
-        bool isDirty()
+        bool IsDirty()
         {
             return dirty;
         }
 
-        void markDirty()
+        void MarkDirty()
         {
             dirty = true;
         }
 
-        void clean()
+        void Clean()
         {
             dirty = false;
         }

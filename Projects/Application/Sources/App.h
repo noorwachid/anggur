@@ -78,11 +78,11 @@ class App : public BaseApp
     {
         window.SetTitle("TestingCameraApp");
 
-        worldCamera.setScreenSize(window.GetSize());
-        worldCamera.setViewSize(0.25 * window.GetSize());
+        worldCamera.SetScreenSize(window.GetSize());
+        worldCamera.SetViewSize(0.25 * window.GetSize());
 
-        uiCamera.setScreenSize(window.GetSize());
-        uiCamera.setViewSize(window.GetFrameBufferSize());
+        uiCamera.SetScreenSize(window.GetSize());
+        uiCamera.SetViewSize(window.GetFrameBufferSize());
 
         font = std::make_shared<Font>();
         font->SetSample("Resources/Fonts/OpenSans-Regular.ttf", 64, 512);
@@ -102,7 +102,7 @@ class App : public BaseApp
         if (keyboard.IsKeyDown(Key::Space) && mouse.IsButtonPressed(MouseButton::F1))
         {
             mouseDragging = true;
-            mouseDragBeginPoint = worldCamera.toWorldPoint(mouse.GetCursorPosition());
+            mouseDragBeginPoint = worldCamera.ToWorldPoint(mouse.GetCursorPosition());
         }
 
         if (mouseDragging && (mouse.IsButtonReleased(MouseButton::F1) || keyboard.IsKeyReleased(Key::Space)))
@@ -112,8 +112,8 @@ class App : public BaseApp
 
         if (mouseDragging && mouse.IsButtonDown(MouseButton::F1))
         {
-            mouseDragEndPoint = worldCamera.toWorldPoint(mouse.GetCursorPosition());
-            worldCamera.nudgeTargetPosition(mouseDragEndPoint - mouseDragBeginPoint);
+            mouseDragEndPoint = worldCamera.ToWorldPoint(mouse.GetCursorPosition());
+            worldCamera.NudgeTargetPosition(mouseDragEndPoint - mouseDragBeginPoint);
         }
 
         if (keyboard.IsKeyDown(Key::LeftShift))
@@ -133,11 +133,11 @@ class App : public BaseApp
 
         attractorPosition += deltaTime * attractorVelocity * GetInputDeviceAxis();
 
-        worldCamera.nudgeViewScale(deltaTime * mouse.GetWheelDirection().y);
-        worldCamera.update();
+        worldCamera.NudgeViewScale(deltaTime * mouse.GetWheelDirection().y);
+        worldCamera.Update();
 
         renderer.canvas.Clear(Vector4::charcoal);
-        renderer.canvas.BeginScene(worldCamera.getViewProjection());
+        renderer.canvas.BeginScene(worldCamera.GetViewProjection());
 
         for (Mover& mover : movers)
         {
