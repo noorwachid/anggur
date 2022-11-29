@@ -4,8 +4,8 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector3.h"
 #include "Anggur/Math/Vector4.h"
-#include "Texture2D.h"
 #include "Shader.h"
+#include "Texture2D.h"
 #include "VertexBuffer.h"
 #include <memory>
 #include <vector>
@@ -21,7 +21,7 @@ namespace Anggur
         float slot;
 
         MeshVertex() = default;
-        MeshVertex(const Vector3 &newPosition, const Vector3 &newNormal, const Vector4 &newColor, const Vector2 &newUV,
+        MeshVertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newUV,
                    float newSlot = 0.0f)
             : position(newPosition), normal(newNormal), color(newColor), uv(newUV), slot(newSlot)
         {
@@ -49,24 +49,24 @@ namespace Anggur
         ~MeshRenderer();
 
         void setBatchChunk(size_t vertex, size_t indexMultiplier = 2);
-        void clear(const Vector4 &color = Vector4::black);
-        void setViewport(const Vector2 &size);
-        void setViewport(const Vector2 &position, const Vector2 &size);
-        void setViewProjection(const Matrix4 &newViewProjection);
+        void clear(const Vector4& color = Vector4::black);
+        void setViewport(const Vector2& size);
+        void setViewport(const Vector2& position, const Vector2& size);
+        void setViewProjection(const Matrix4& newViewProjection);
 
         void begin();
-        void begin(const Matrix4 &viewProjection);
+        void begin(const Matrix4& viewProjection);
         void end();
 
         bool isCapacityMaxout(size_t newVertexSize, size_t newIndexSize, size_t newTextureSize);
         void flush();
         void flushInternalBuffer();
 
-        void draw(const std::vector<MeshVertex> &newVertices, const std::vector<uint32_t> &newIndices,
-                  const std::shared_ptr<Texture2D> &texture);
+        void draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices,
+                  const std::shared_ptr<Texture2D>& texture);
 
         // 3D Primitives
-        void drawCube(const Matrix4 &model, const Vector4 &color = Vector4::white);
+        void drawCube(const Matrix4& model, const Vector4& color = Vector4::white);
 
       private:
         std::shared_ptr<Shader> shader;

@@ -30,7 +30,7 @@ namespace Anggur
         glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
     }
 
-    void VertexBuffer::setData(size_t byteSize, void *byteData)
+    void VertexBuffer::setData(size_t byteSize, void* byteData)
     {
         glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize, byteData);
     }
@@ -61,7 +61,7 @@ namespace Anggur
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
     }
 
-    void IndexBuffer::setData(size_t byteSize, void *byteData)
+    void IndexBuffer::setData(size_t byteSize, void* byteData)
     {
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, byteSize, byteData);
     }
@@ -89,7 +89,7 @@ namespace Anggur
 
     void VertexArray::setAttribute(size_t index, size_t size, int type, size_t byteStride, size_t byteOffset)
     {
-        glVertexAttribPointer(index, size, type, GL_FALSE, byteStride, (void *)byteOffset);
+        glVertexAttribPointer(index, size, type, GL_FALSE, byteStride, (void*)byteOffset);
         glEnableVertexAttribArray(index);
     }
 }

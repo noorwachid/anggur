@@ -11,7 +11,7 @@ namespace Anggur
     {
         Key key = Key::unknown;
 
-        KeyEvent(const std::string &name, Key newKey) : Event(name), key(newKey)
+        KeyEvent(const std::string& name, Key newKey) : Event(name), key(newKey)
         {
         }
     };
@@ -20,7 +20,7 @@ namespace Anggur
     {
         MouseButton button = MouseButton::unknown;
 
-        MouseButtonEvent(const std::string &name, MouseButton newButton) : Event(name), button(newButton)
+        MouseButtonEvent(const std::string& name, MouseButton newButton) : Event(name), button(newButton)
         {
         }
     };
@@ -29,7 +29,7 @@ namespace Anggur
     {
         Vector2 position;
 
-        MousePositionEvent(const std::string &name, const Vector2 &newPosition) : Event(name), position(newPosition)
+        MousePositionEvent(const std::string& name, const Vector2& newPosition) : Event(name), position(newPosition)
         {
         }
     };
@@ -38,7 +38,7 @@ namespace Anggur
     {
         Vector2 direction;
 
-        ScrollEvent(const std::string &name, const Vector2 &newDirection) : Event(name), direction(newDirection)
+        ScrollEvent(const std::string& name, const Vector2& newDirection) : Event(name), direction(newDirection)
         {
         }
     };

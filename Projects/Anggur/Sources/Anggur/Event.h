@@ -9,7 +9,7 @@ namespace Anggur
         std::string name;
         bool consumed = false;
 
-        Event(const std::string &newName) : name(newName)
+        Event(const std::string& newName) : name(newName)
         {
         }
 

@@ -51,7 +51,7 @@ namespace Anggur
 
     struct Font
     {
-        FontContext *context;
+        FontContext* context;
         std::vector<uint8_t> data;
 
         uint32_t glyphSamplingSize;
@@ -61,9 +61,9 @@ namespace Anggur
         std::vector<GlyphBuffer> glyphBuffers;
         std::unordered_map<uint32_t, Glyph> glyphMap;
 
-        void load(const std::string &path)
+        void load(const std::string& path)
         {
-            FILE *fontFile = fopen(path.c_str(), "rb");
+            FILE* fontFile = fopen(path.c_str(), "rb");
             fseek(fontFile, 0, SEEK_END);
             size_t byteSize = ftell(fontFile);
             fseek(fontFile, 0, SEEK_SET);
@@ -86,7 +86,7 @@ namespace Anggur
                 throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
         }
 
-        void setSample(const std::string &newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
+        void setSample(const std::string& newPath, uint32_t newGlyphSamplingSize, uint32_t newGlyphAtlasSize)
         {
             load(newPath);
             glyphSamplingSize = newGlyphSamplingSize;
@@ -123,7 +123,7 @@ namespace Anggur
                 int glyphX;
                 int glyphY;
 
-                uint8_t *buffer =
+                uint8_t* buffer =
                     stbtt_GetCodepointSDF(context, scale, codePoint, padding, edgeValue, pixelDistanceScale,
                                           &glyphWidth, &glyphHeight, &glyphX, &glyphY);
 

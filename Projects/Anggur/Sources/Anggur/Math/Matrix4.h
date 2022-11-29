@@ -49,7 +49,7 @@ namespace Anggur
             p = newP;
         }
 
-        const float *toPointer() const
+        const float* toPointer() const
         {
             return &a;
         }
@@ -72,18 +72,18 @@ namespace Anggur
 
         // Model Matrices
 
-        static Matrix4 createTranslation(const Vector3 &translation)
+        static Matrix4 createTranslation(const Vector3& translation)
         {
             return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, translation.x,
                            translation.y, translation.z, 1.0f);
         }
 
-        static Matrix4 createRotation(const Vector3 &rotation)
+        static Matrix4 createRotation(const Vector3& rotation)
         {
             return createRotationX(rotation.x) * createRotationY(rotation.y) * createRotationZ(rotation.z);
         }
 
-        static Matrix4 createRotation(const Quaternion &q)
+        static Matrix4 createRotation(const Quaternion& q)
         {
             return Matrix4(1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z, 2.0f * q.x * q.y + 2.0f * q.w * q.z,
                            2.0f * q.x * q.z - 2.0f * q.w * q.y, 0.0f,
@@ -99,23 +99,23 @@ namespace Anggur
 
         static Matrix4 createRotationX(float angle)
         {
-            return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, Math::cos(angle), Math::sin(angle), 0.0f, 0.0f,
-                           -Math::sin(angle), Math::cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+            return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f,
+                           -Math::Sin(angle), Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
         static Matrix4 createRotationY(float angle)
         {
-            return Matrix4(Math::cos(angle), 0.0f, -Math::sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, Math::sin(angle),
-                           0.0f, Math::cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+            return Matrix4(Math::Cos(angle), 0.0f, -Math::Sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, Math::Sin(angle),
+                           0.0f, Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
         static Matrix4 createRotationZ(float angle)
         {
-            return Matrix4(Math::cos(angle), Math::sin(angle), 0.0f, 0.0f, -Math::sin(angle), Math::cos(angle), 0.0f,
+            return Matrix4(Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f, -Math::Sin(angle), Math::Cos(angle), 0.0f,
                            0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix4 createScale(const Vector3 &scale)
+        static Matrix4 createScale(const Vector3& scale)
         {
             return Matrix4(scale.x, 0.0f, 0.0f, 0.0f, 0.0f, scale.y, 0.0f, 0.0f, 0.0f, 0.0f, scale.z, 0.0f, 0.0f, 0.0f,
                            0.0f, 1.0f);
@@ -123,7 +123,7 @@ namespace Anggur
 
         // View Matrices
 
-        static Matrix4 createLookAt(const Vector3 &eye, const Vector3 &target, const Vector3 &up)
+        static Matrix4 createLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
         {
             Vector3 zaxis = Vector3::normalize(target - eye);
             Vector3 xaxis = Vector3::normalize(Vector3::cross(up, zaxis));
@@ -139,7 +139,7 @@ namespace Anggur
 
         static Matrix4 createPerspective(float fovY, float width, float height, float near, float far)
         {
-            float yScale = Math::cot(fovY / 2.0f);
+            float yScale = Math::Cot(fovY / 2.0f);
             float xScale = yScale * height / width;
 
             return Matrix4(xScale, 0.0f, 0.0f, 0.0f, 0.0f, -yScale, 0.0f, 0.0f, 0.0f, 0.0f, far / (far - near), 1.0f,
@@ -157,7 +157,7 @@ namespace Anggur
                            1.0f / (far - near), 0.0f, 0.0f, 0.0f, near / (near - far), 1.0);
         }
 
-        friend Matrix4 operator*(const Matrix4 &a, const Matrix4 &b)
+        friend Matrix4 operator*(const Matrix4& a, const Matrix4& b)
         {
             return Matrix4(
                 a.a * b.a + a.b * b.e + a.c * b.i + a.d * b.m, a.a * b.b + a.b * b.f + a.c * b.j + a.d * b.n,
@@ -170,7 +170,7 @@ namespace Anggur
                 a.m * b.c + a.n * b.g + a.o * b.k + a.p * b.o, a.m * b.d + a.n * b.h + a.o * b.l + a.p * b.p);
         }
 
-        friend Vector3 operator*(const Matrix4 &a, const Vector3 &b)
+        friend Vector3 operator*(const Matrix4& a, const Vector3& b)
         {
             return Vector3(a.a * b.x + a.e * b.y + a.i * b.z + a.m * 1.0f,
                            a.b * b.x + a.f * b.y + a.j * b.z + a.n * 1.0f,

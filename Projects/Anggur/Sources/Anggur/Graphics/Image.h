@@ -9,7 +9,7 @@ namespace Anggur
     {
       public:
         Image();
-        Image(const std::string &path);
+        Image(const std::string& path);
 
         ~Image();
 
@@ -30,16 +30,16 @@ namespace Anggur
             return width * height * channels;
         }
 
-        inline const std::vector<uint8_t> &getBytes() const
+        inline const std::vector<uint8_t>& getBytes() const
         {
             return bytes;
         }
-        inline std::vector<uint8_t> &getBytes()
+        inline std::vector<uint8_t>& getBytes()
         {
             return bytes;
         }
 
-        inline uint8_t *toPointer()
+        inline uint8_t* toPointer()
         {
             return bytes.data();
         }
@@ -75,10 +75,10 @@ namespace Anggur
             bytes.resize(getVolume());
         }
 
-        void load(const std::string &path);
+        void load(const std::string& path);
         void unload();
 
-        void save(const std::string &path);
+        void save(const std::string& path);
 
       private:
         uint32_t width;

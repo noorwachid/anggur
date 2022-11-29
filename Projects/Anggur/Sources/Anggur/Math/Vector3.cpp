@@ -29,12 +29,12 @@ namespace Anggur
 
     // Casters
 
-    const float *Vector3::toPointer() const
+    const float* Vector3::toPointer() const
     {
         return &x;
     }
 
-    float *Vector3::toPointer()
+    float* Vector3::toPointer()
     {
         return &x;
     }
@@ -53,7 +53,7 @@ namespace Anggur
 
     float Vector3::getLength() const
     {
-        return (Math::sqrt(getLengthSquared()));
+        return (Math::Sqrt(getLengthSquared()));
     }
 
     // Setters
@@ -74,17 +74,17 @@ namespace Anggur
 
     // 2nd class manipulations
 
-    float Vector3::dot(const Vector3 &a, const Vector3 &b)
+    float Vector3::dot(const Vector3& a, const Vector3& b)
     {
         return (a.x * b.x + a.y * b.y + a.z * b.z);
     }
 
-    Vector3 Vector3::cross(const Vector3 &a, const Vector3 &b)
+    Vector3 Vector3::cross(const Vector3& a, const Vector3& b)
     {
         return Vector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
     }
 
-    Vector3 Vector3::normalize(const Vector3 &a)
+    Vector3 Vector3::normalize(const Vector3& a)
     {
         float length = a.getLength();
 
@@ -94,74 +94,74 @@ namespace Anggur
         return Vector3(a.x / length, a.y / length, a.z / length);
     }
 
-    Vector3 Vector3::lerp(const Vector3 &a, const Vector3 &b, float amount)
+    Vector3 Vector3::lerp(const Vector3& a, const Vector3& b, float amount)
     {
-        return Vector3(Math::lerp(a.x, b.x, amount), Math::lerp(a.y, b.y, amount), Math::lerp(a.z, b.z, amount));
+        return Vector3(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount), Math::Lerp(a.z, b.z, amount));
     }
 
     // 3rd class manipulations
 
-    Vector3 operator+(const Vector3 &a, const Vector3 &b)
+    Vector3 operator+(const Vector3& a, const Vector3& b)
     {
         return Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
     }
 
-    Vector3 operator-(const Vector3 &a, const Vector3 &b)
+    Vector3 operator-(const Vector3& a, const Vector3& b)
     {
         return Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
     }
 
-    Vector3 operator*(const Vector3 &a, const Vector3 &b)
+    Vector3 operator*(const Vector3& a, const Vector3& b)
     {
         return Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
     }
 
-    Vector3 operator+(float a, const Vector3 &b)
+    Vector3 operator+(float a, const Vector3& b)
     {
         return Vector3(a + b.x, a + b.y, a + b.z);
     }
 
-    Vector3 operator-(float a, const Vector3 &b)
+    Vector3 operator-(float a, const Vector3& b)
     {
         return Vector3(a - b.x, a - b.y, a - b.z);
     }
 
-    Vector3 operator*(float a, const Vector3 &b)
+    Vector3 operator*(float a, const Vector3& b)
     {
         return Vector3(a * b.x, a * b.y, a * b.z);
     }
 
-    Vector3 &operator+=(Vector3 &a, const Vector3 &b)
+    Vector3& operator+=(Vector3& a, const Vector3& b)
     {
         a = a + b;
         return a;
     }
 
-    Vector3 &operator-=(Vector3 &a, const Vector3 &b)
+    Vector3& operator-=(Vector3& a, const Vector3& b)
     {
         a = a - b;
         return a;
     }
 
-    Vector3 &operator*=(Vector3 &a, const Vector3 &b)
+    Vector3& operator*=(Vector3& a, const Vector3& b)
     {
         a = a * b;
         return a;
     }
 
-    Vector3 &operator+=(Vector3 &a, float b)
+    Vector3& operator+=(Vector3& a, float b)
     {
         a = b + a;
         return a;
     }
 
-    Vector3 &operator-=(Vector3 &a, float b)
+    Vector3& operator-=(Vector3& a, float b)
     {
         a = b - a;
         return a;
     }
 
-    Vector3 &operator*=(Vector3 &a, float b)
+    Vector3& operator*=(Vector3& a, float b)
     {
         a = b * a;
         return a;

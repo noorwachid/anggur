@@ -108,23 +108,23 @@ namespace Anggur
         batchIndexMultiplier = indexMultiplier;
     }
 
-    void MeshRenderer::clear(const Vector4 &color)
+    void MeshRenderer::clear(const Vector4& color)
     {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void MeshRenderer::setViewport(const Vector2 &size)
+    void MeshRenderer::setViewport(const Vector2& size)
     {
         glViewport(0, 0, size.x, size.y);
     }
 
-    void MeshRenderer::setViewport(const Vector2 &position, const Vector2 &size)
+    void MeshRenderer::setViewport(const Vector2& position, const Vector2& size)
     {
         glViewport(position.x, position.y, size.x, size.y);
     }
 
-    void MeshRenderer::setViewProjection(const Matrix4 &newViewProjection)
+    void MeshRenderer::setViewProjection(const Matrix4& newViewProjection)
     {
         viewProjection = newViewProjection;
     }
@@ -136,7 +136,7 @@ namespace Anggur
         flushInternalBuffer();
     }
 
-    void MeshRenderer::begin(const Matrix4 &viewProjection)
+    void MeshRenderer::begin(const Matrix4& viewProjection)
     {
         setViewProjection(viewProjection);
         begin();
@@ -187,8 +187,8 @@ namespace Anggur
                textureOffset + newTextureSize > textures.size();
     }
 
-    void MeshRenderer::draw(const std::vector<MeshVertex> &newVertices, const std::vector<uint32_t> &newIndices,
-                            const std::shared_ptr<Texture2D> &texture)
+    void MeshRenderer::draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices,
+                            const std::shared_ptr<Texture2D>& texture)
     {
         if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1))
             flush();
@@ -209,7 +209,7 @@ namespace Anggur
 
         for (size_t i = 0; i < newVertices.size(); ++i)
         {
-            auto &vertex = vertices[i + vertexOffset];
+            auto& vertex = vertices[i + vertexOffset];
 
             vertex = newVertices[i];
             vertex.slot = textureSlot;
@@ -224,7 +224,7 @@ namespace Anggur
         indexOffset += newIndices.size();
     }
 
-    void MeshRenderer::drawCube(const Matrix4 &model, const Vector4 &color)
+    void MeshRenderer::drawCube(const Matrix4& model, const Vector4& color)
     {
         draw(
             {

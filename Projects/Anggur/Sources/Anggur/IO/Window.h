@@ -13,14 +13,14 @@ namespace Anggur
         EventDispatcher eventDispatcher;
 
       public:
-        Window(const Vector2 &size = Vector2(800, 600), const std::string &title = "");
+        Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
 
         ~Window();
 
         /**
          * Get native context
          */
-        WindowContext *getContext();
+        WindowContext* getContext();
 
         /**
          * Get aspect ratio
@@ -30,22 +30,22 @@ namespace Anggur
         /**
          * Get cursor position
          */
-        const Vector2 &getCursorPosition();
+        const Vector2& getCursorPosition();
 
         /**
          * Get size
          */
-        const Vector2 &getSize();
+        const Vector2& getSize();
 
-        const Vector2 &getFrameBufferSize();
+        const Vector2& getFrameBufferSize();
 
-        const std::string &getTitle();
+        const std::string& getTitle();
 
-        void setCursorPosition(const Vector2 &pos);
+        void setCursorPosition(const Vector2& pos);
 
-        void setSize(const Vector2 &size);
+        void setSize(const Vector2& size);
 
-        void setTitle(const std::string &title);
+        void setTitle(const std::string& title);
 
         bool isOpen();
 
@@ -53,14 +53,14 @@ namespace Anggur
 
         void update();
 
-        template <class InputDevice> InputDevice &getInputDevice()
+        template <class InputDevice> InputDevice& getInputDevice()
         {
             static InputDevice device(*this);
 
             return device;
         }
 
-        void registerInputDevice(InputDevice *device);
+        void registerInputDevice(InputDevice* device);
 
       private:
         void initializeGraphics();
@@ -72,12 +72,12 @@ namespace Anggur
         void swapFrameBuffers();
 
       private:
-        WindowContext *context;
+        WindowContext* context;
         Vector2 position;
         Vector2 size;
         Vector2 frameBufferSize;
         std::string title;
 
-        std::vector<InputDevice *> inputs;
+        std::vector<InputDevice*> inputs;
     };
 }

@@ -8,7 +8,7 @@ namespace Anggur
 {
     // Input
 
-    InputDevice::InputDevice(Window &newWindow) : window(newWindow)
+    InputDevice::InputDevice(Window& newWindow) : window(newWindow)
     {
         window.registerInputDevice(this);
     }
@@ -19,11 +19,11 @@ namespace Anggur
 
     // Keyboard
 
-    Keyboard::Keyboard(Window &window) : InputDevice(window)
+    Keyboard::Keyboard(Window& window) : InputDevice(window)
     {
-        glfwSetKeyCallback(window.getContext(), [](GLFWwindow *context, int vkeyCode, int scanCode, int action,
+        glfwSetKeyCallback(window.getContext(), [](GLFWwindow* context, int vkeyCode, int scanCode, int action,
                                                    int modifierKey) {
-            auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
             Key key = static_cast<Key>(vkeyCode);
             window->getInputDevice<Keyboard>().directSetKeyState(key, action == GLFW_PRESS || action == GLFW_REPEAT);
         });
@@ -75,22 +75,22 @@ namespace Anggur
 
     // Input mouse device
 
-    Mouse::Mouse(Window &window) : InputDevice(window)
+    Mouse::Mouse(Window& window) : InputDevice(window)
     {
         glfwSetMouseButtonCallback(
-            window.getContext(), [](GLFWwindow *context, int button, int action, int modidefrKey) {
-                auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+            window.getContext(), [](GLFWwindow* context, int button, int action, int modidefrKey) {
+                auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
                 MouseButton b = static_cast<MouseButton>(button);
                 window->getInputDevice<Mouse>().directSetButtonState(b, action == GLFW_PRESS);
             });
 
-        glfwSetCursorPosCallback(window.getContext(), [](GLFWwindow *context, double x, double y) {
-            auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+        glfwSetCursorPosCallback(window.getContext(), [](GLFWwindow* context, double x, double y) {
+            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
             window->getInputDevice<Mouse>().directSetCursorPosition(Vector2(x, y));
         });
 
-        glfwSetScrollCallback(window.getContext(), [](GLFWwindow *context, double x, double y) {
-            auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+        glfwSetScrollCallback(window.getContext(), [](GLFWwindow* context, double x, double y) {
+            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
             window->getInputDevice<Mouse>().directSetWheelDirection(Vector2(x, y));
         });
     }
@@ -132,12 +132,12 @@ namespace Anggur
         return currentButtonState[index] == false;
     }
 
-    const Vector2 &Mouse::getCursorPosition()
+    const Vector2& Mouse::getCursorPosition()
     {
         return currentCursorPosition;
     }
 
-    const Vector2 &Mouse::getCursorDirection()
+    const Vector2& Mouse::getCursorDirection()
     {
         return cursorDirection;
     }
@@ -147,7 +147,7 @@ namespace Anggur
         return shape;
     }
 
-    const Vector2 &Mouse::getWheelDirection()
+    const Vector2& Mouse::getWheelDirection()
     {
         return currentWheelDirection;
     }
@@ -164,11 +164,11 @@ namespace Anggur
         {
             shapeBuffers[intMode] = glfwCreateStandardCursor(intMode + 0x00036000);
         }
-        glfwSetCursor(window.getContext(), static_cast<GLFWcursor *>(shapeBuffers[intMode]));
+        glfwSetCursor(window.getContext(), static_cast<GLFWcursor*>(shapeBuffers[intMode]));
         shape = newShape;
     }
 
-    void Mouse::setCursorPosition(const Vector2 &position)
+    void Mouse::setCursorPosition(const Vector2& position)
     {
         // Not calling direct function because it modifies the data differently
 
@@ -178,7 +178,7 @@ namespace Anggur
         window.eventDispatcher.Dispatch(event);
     }
 
-    void Mouse::setWheelDirection(const Vector2 &direction)
+    void Mouse::setWheelDirection(const Vector2& direction)
     {
         directSetWheelDirection(direction);
     }
@@ -190,14 +190,14 @@ namespace Anggur
         window.eventDispatcher.Dispatch(event);
     }
 
-    void Mouse::directSetCursorPosition(const Vector2 &position)
+    void Mouse::directSetCursorPosition(const Vector2& position)
     {
         currentCursorPosition = position;
         MousePositionEvent event("MousePositionMoved", position);
         window.eventDispatcher.Dispatch(event);
     }
 
-    void Mouse::directSetWheelDirection(const Vector2 &direction)
+    void Mouse::directSetWheelDirection(const Vector2& direction)
     {
         currentWheelDirection = direction;
         ScrollEvent event("ScrollMoved", direction);

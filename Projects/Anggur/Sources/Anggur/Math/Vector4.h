@@ -71,9 +71,9 @@ namespace Anggur
 
         // Casters
 
-        const float *toPointer() const;
+        const float* toPointer() const;
 
-        float *toPointer();
+        float* toPointer();
 
         std::string toString();
 
@@ -91,38 +91,38 @@ namespace Anggur
 
         // 2nd class manipulations
 
-        static float dot(const Vector4 &a, const Vector4 &b);
+        static float dot(const Vector4& a, const Vector4& b);
 
-        static Vector4 cross(const Vector4 &a, const Vector4 &b);
+        static Vector4 cross(const Vector4& a, const Vector4& b);
 
-        static Vector4 normalize(const Vector4 &a);
+        static Vector4 normalize(const Vector4& a);
 
-        static Vector4 lerp(const Vector4 &a, const Vector4 &b, float amount);
+        static Vector4 lerp(const Vector4& a, const Vector4& b, float amount);
 
         // 3rd class manipulations
 
-        friend Vector4 operator+(const Vector4 &a, const Vector4 &b);
+        friend Vector4 operator+(const Vector4& a, const Vector4& b);
 
-        friend Vector4 operator-(const Vector4 &a, const Vector4 &b);
+        friend Vector4 operator-(const Vector4& a, const Vector4& b);
 
-        friend Vector4 operator*(const Vector4 &a, const Vector4 &b);
+        friend Vector4 operator*(const Vector4& a, const Vector4& b);
 
-        friend Vector4 operator+(float a, const Vector4 &b);
+        friend Vector4 operator+(float a, const Vector4& b);
 
-        friend Vector4 operator-(float a, const Vector4 &b);
+        friend Vector4 operator-(float a, const Vector4& b);
 
-        friend Vector4 operator+(float a, const Vector4 &b);
+        friend Vector4 operator+(float a, const Vector4& b);
 
-        friend Vector4 &operator+=(Vector4 &a, const Vector4 &b);
+        friend Vector4& operator+=(Vector4& a, const Vector4& b);
 
-        friend Vector4 &operator-=(Vector4 &a, const Vector4 &b);
+        friend Vector4& operator-=(Vector4& a, const Vector4& b);
 
-        friend Vector4 &operator*=(Vector4 &a, const Vector4 &b);
+        friend Vector4& operator*=(Vector4& a, const Vector4& b);
 
-        friend Vector4 &operator+=(Vector4 &a, float b);
+        friend Vector4& operator+=(Vector4& a, float b);
 
-        friend Vector4 &operator-=(Vector4 &a, float b);
+        friend Vector4& operator-=(Vector4& a, float b);
 
-        friend Vector4 &operator*=(Vector4 &a, float b);
+        friend Vector4& operator*=(Vector4& a, float b);
     };
 }

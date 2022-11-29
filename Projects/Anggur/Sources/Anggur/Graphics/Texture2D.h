@@ -9,9 +9,9 @@ namespace Anggur
     {
       public:
         Texture2D();
-        Texture2D(const std::vector<uint8_t> &bytes, uint32_t width, uint32_t height, uint32_t channels = 8,
+        Texture2D(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels = 8,
                   SamplerFilter filter = SamplerFilter::Linear);
-        Texture2D(const Image &image, SamplerFilter filter = SamplerFilter::Linear);
+        Texture2D(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
 
         ~Texture2D();
 
@@ -32,14 +32,14 @@ namespace Anggur
             return channels;
         }
 
-        void load(const std::vector<uint8_t> &bytes, uint32_t width, uint32_t height, uint32_t channels = 8,
+        void load(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels = 8,
                   SamplerFilter filter = SamplerFilter::Linear);
-        void load(const Image &image, SamplerFilter filter = SamplerFilter::Linear);
+        void load(const Image& image, SamplerFilter filter = SamplerFilter::Linear);
         void unload();
 
         void bind(uint32_t slot = 0);
 
-        friend bool operator==(const Texture2D &a, const Texture2D &b);
+        friend bool operator==(const Texture2D& a, const Texture2D& b);
         friend class FrameBuffer;
 
       private:

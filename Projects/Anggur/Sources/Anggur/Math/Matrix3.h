@@ -40,7 +40,7 @@ namespace Anggur
             i = newI;
         }
 
-        const float *toPointer() const
+        const float* toPointer() const
         {
             return &a;
         }
@@ -106,28 +106,28 @@ namespace Anggur
             return Matrix3(a, d, g, b, e, h, c, f, i);
         }
 
-        static Matrix3 createTranslation(const Vector2 &translation)
+        static Matrix3 createTranslation(const Vector2& translation)
         {
             return Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, translation.x, translation.y, 1.0f);
         }
 
         static Matrix3 createRotation(float rotation)
         {
-            return Matrix3(Math::cos(rotation), -Math::sin(rotation), 0.0f, Math::sin(rotation), Math::cos(rotation),
+            return Matrix3(Math::Cos(rotation), -Math::Sin(rotation), 0.0f, Math::Sin(rotation), Math::Cos(rotation),
                            0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        static Matrix3 createScale(const Vector2 &scale)
+        static Matrix3 createScale(const Vector2& scale)
         {
             return Matrix3(scale.x, 0.0f, 0.0f, 0.0f, scale.y, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
-        friend Matrix3 operator*(float a, const Matrix3 &b)
+        friend Matrix3 operator*(float a, const Matrix3& b)
         {
             return Matrix3(a * b.a, a * b.b, a * b.c, a * b.d, a * b.e, a * b.f, a * b.g, a * b.h, a * b.i);
         }
 
-        friend Matrix3 operator*(const Matrix3 &a, const Matrix3 &b)
+        friend Matrix3 operator*(const Matrix3& a, const Matrix3& b)
         {
             return Matrix3(
                 a.a * b.a + a.b * b.d + a.c * b.g, a.a * b.b + a.b * b.e + a.c * b.h, a.a * b.c + a.b * b.f + a.c * b.i,
@@ -136,7 +136,7 @@ namespace Anggur
                 a.g * b.c + a.h * b.f + a.i * b.i);
         }
 
-        friend Vector2 operator*(const Matrix3 &a, const Vector2 &b)
+        friend Vector2 operator*(const Matrix3& a, const Vector2& b)
         {
             return Vector2(a.a * b.x + a.d * b.y + a.g, a.b * b.x + a.e * b.y + a.h);
         }

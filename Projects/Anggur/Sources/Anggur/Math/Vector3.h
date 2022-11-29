@@ -33,9 +33,9 @@ namespace Anggur
 
         // Casters
 
-        const float *toPointer() const;
+        const float* toPointer() const;
 
-        float *toPointer();
+        float* toPointer();
 
         std::string toString();
 
@@ -53,38 +53,38 @@ namespace Anggur
 
         // 2nd class manipulations
 
-        static float dot(const Vector3 &a, const Vector3 &b);
+        static float dot(const Vector3& a, const Vector3& b);
 
-        static Vector3 cross(const Vector3 &a, const Vector3 &b);
+        static Vector3 cross(const Vector3& a, const Vector3& b);
 
-        static Vector3 normalize(const Vector3 &a);
+        static Vector3 normalize(const Vector3& a);
 
-        static Vector3 lerp(const Vector3 &a, const Vector3 &b, float amount);
+        static Vector3 lerp(const Vector3& a, const Vector3& b, float amount);
 
         // 3rd class manipulations
 
-        friend Vector3 operator+(const Vector3 &a, const Vector3 &b);
+        friend Vector3 operator+(const Vector3& a, const Vector3& b);
 
-        friend Vector3 operator-(const Vector3 &a, const Vector3 &b);
+        friend Vector3 operator-(const Vector3& a, const Vector3& b);
 
-        friend Vector3 operator*(const Vector3 &a, const Vector3 &b);
+        friend Vector3 operator*(const Vector3& a, const Vector3& b);
 
-        friend Vector3 operator+(float a, const Vector3 &b);
+        friend Vector3 operator+(float a, const Vector3& b);
 
-        friend Vector3 operator-(float a, const Vector3 &b);
+        friend Vector3 operator-(float a, const Vector3& b);
 
-        friend Vector3 operator+(float a, const Vector3 &b);
+        friend Vector3 operator+(float a, const Vector3& b);
 
-        friend Vector3 &operator+=(Vector3 &a, const Vector3 &b);
+        friend Vector3& operator+=(Vector3& a, const Vector3& b);
 
-        friend Vector3 &operator-=(Vector3 &a, const Vector3 &b);
+        friend Vector3& operator-=(Vector3& a, const Vector3& b);
 
-        friend Vector3 &operator*=(Vector3 &a, const Vector3 &b);
+        friend Vector3& operator*=(Vector3& a, const Vector3& b);
 
-        friend Vector3 &operator+=(Vector3 &a, float b);
+        friend Vector3& operator+=(Vector3& a, float b);
 
-        friend Vector3 &operator-=(Vector3 &a, float b);
+        friend Vector3& operator-=(Vector3& a, float b);
 
-        friend Vector3 &operator*=(Vector3 &a, float b);
+        friend Vector3& operator*=(Vector3& a, float b);
     };
 }

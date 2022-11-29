@@ -19,7 +19,7 @@ namespace Anggur
         void bind();
         void unbind();
         void setCapacity(size_t byteSize);
-        void setData(size_t byteSize, void *byteData);
+        void setData(size_t byteSize, void* byteData);
 
       private:
         uint32_t id = 0;
@@ -39,7 +39,7 @@ namespace Anggur
         void bind();
         void unbind();
         void setCapacity(size_t byteSize);
-        void setData(size_t byteSize, void *byteData);
+        void setData(size_t byteSize, void* byteData);
 
       private:
         uint32_t id;

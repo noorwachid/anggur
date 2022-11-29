@@ -9,7 +9,7 @@ namespace Anggur
     {
         Vector2 size;
 
-        WindowSizeEvent(const std::string &name, const Vector2 &newSize) : Event(name), size(newSize)
+        WindowSizeEvent(const std::string& name, const Vector2& newSize) : Event(name), size(newSize)
         {
         }
     };
@@ -18,7 +18,7 @@ namespace Anggur
     {
         Vector2 position;
 
-        WindowPositionEvent(const std::string &name, const Vector2 &newPosition) : Event(name), position(newPosition)
+        WindowPositionEvent(const std::string& name, const Vector2& newPosition) : Event(name), position(newPosition)
         {
         }
     };
@@ -27,7 +27,7 @@ namespace Anggur
     {
         Vector2 size;
 
-        FrameBufferSizeEvent(const std::string &name, const Vector2 &newSize) : Event(name), size(newSize)
+        FrameBufferSizeEvent(const std::string& name, const Vector2& newSize) : Event(name), size(newSize)
         {
         }
     };

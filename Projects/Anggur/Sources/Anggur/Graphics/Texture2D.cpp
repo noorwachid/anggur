@@ -10,14 +10,14 @@ namespace Anggur
         id = 0;
     }
 
-    Texture2D::Texture2D(const std::vector<uint8_t> &bytes, uint32_t width, uint32_t height, uint32_t channels,
+    Texture2D::Texture2D(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels,
                          SamplerFilter filter)
     {
         id = 0;
         load(bytes, width, height, channels, filter);
     }
 
-    Texture2D::Texture2D(const Image &image, SamplerFilter filter)
+    Texture2D::Texture2D(const Image& image, SamplerFilter filter)
     {
         id = 0;
         load(image, filter);
@@ -28,7 +28,7 @@ namespace Anggur
         unload();
     }
 
-    void Texture2D::load(const std::vector<uint8_t> &bytes, uint32_t width, uint32_t height, uint32_t channels,
+    void Texture2D::load(const std::vector<uint8_t>& bytes, uint32_t width, uint32_t height, uint32_t channels,
                          SamplerFilter filter)
     {
         unload();
@@ -78,7 +78,7 @@ namespace Anggur
         }
     }
 
-    void Texture2D::load(const Image &image, SamplerFilter filter)
+    void Texture2D::load(const Image& image, SamplerFilter filter)
     {
         width = image.getWidth();
         height = image.getHeight();
@@ -98,7 +98,7 @@ namespace Anggur
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
-    bool operator==(const Texture2D &a, const Texture2D &b)
+    bool operator==(const Texture2D& a, const Texture2D& b)
     {
         return a.getID() == b.getID();
     }

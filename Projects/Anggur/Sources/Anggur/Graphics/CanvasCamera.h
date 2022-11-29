@@ -26,64 +26,64 @@ namespace Anggur
             screen = viewProjection.getInverse();
         }
 
-        const Matrix3 &getViewProjection() const
+        const Matrix3& getViewProjection() const
         {
             return viewProjection;
         }
 
-        const Matrix3 &getScreen() const
+        const Matrix3& getScreen() const
         {
             return screen;
         }
 
-        const Vector2 &getTargetPosition() const
+        const Vector2& getTargetPosition() const
         {
             return targetPosition;
         }
 
-        Vector2 toWorldPoint(const Vector2 &screenPoint) const
+        Vector2 toWorldPoint(const Vector2& screenPoint) const
         {
             Vector2 normalizedScreenPoint =
                 Vector2(screenPoint.x / screenSize.x * 2 - 1, -screenPoint.y / screenSize.y * 2 + 1);
             return screen * normalizedScreenPoint;
         }
 
-        void setViewSize(const Vector2 &size)
+        void setViewSize(const Vector2& size)
         {
             markDirty();
-            viewSize.set(Math::max(Math::epsilon, size.x), Math::max(Math::epsilon, size.y));
+            viewSize.set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
         }
 
-        void setViewScale(const Vector2 &scale)
+        void setViewScale(const Vector2& scale)
         {
             markDirty();
-            viewScale.set(Math::max(Math::epsilon, scale.x), Math::max(Math::epsilon, scale.y));
+            viewScale.set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
         }
 
         void setViewRotation(float rotation)
         {
             markDirty();
-            viewRotation = Math::mod(rotation, Math::twoPi);
+            viewRotation = Math::Mod(rotation, Math::twoPi);
         }
 
-        void setTargetPosition(const Vector2 &position)
+        void setTargetPosition(const Vector2& position)
         {
             markDirty();
             targetPosition.set(position.x, position.y);
         }
 
-        void setTargetOffset(const Vector2 &offset)
+        void setTargetOffset(const Vector2& offset)
         {
             markDirty();
         }
 
-        void setScreenSize(const Vector2 &size)
+        void setScreenSize(const Vector2& size)
         {
             markDirty();
             screenSize.set(size.x, size.y);
         }
 
-        void nudgeViewScale(const Vector2 &amount)
+        void nudgeViewScale(const Vector2& amount)
         {
             markDirty();
             setViewScale(viewScale + amount);
@@ -95,7 +95,7 @@ namespace Anggur
             setViewRotation(viewRotation + rotation);
         }
 
-        void nudgeTargetPosition(const Vector2 &amount)
+        void nudgeTargetPosition(const Vector2& amount)
         {
             markDirty();
             targetPosition += amount;

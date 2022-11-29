@@ -35,7 +35,7 @@ namespace Anggur
 
         void recreate(uint32_t width, uint32_t height);
 
-        const std::shared_ptr<Texture2D> &getTexture() const
+        const std::shared_ptr<Texture2D>& getTexture() const
         {
             return texture;
         };

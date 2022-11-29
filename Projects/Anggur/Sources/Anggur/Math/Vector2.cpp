@@ -38,12 +38,12 @@ namespace Anggur
 
     // Casters
 
-    const float *Vector2::toPointer() const
+    const float* Vector2::toPointer() const
     {
         return &x;
     }
 
-    float *Vector2::toPointer()
+    float* Vector2::toPointer()
     {
         return &x;
     }
@@ -62,12 +62,12 @@ namespace Anggur
 
     float Vector2::getLength() const
     {
-        return Math::sqrt(getLengthSquared());
+        return Math::Sqrt(getLengthSquared());
     }
 
     float Vector2::getAngle() const
     {
-        return Math::atan(y, x);
+        return Math::Atan(y, x);
     }
 
     Vector2 Vector2::getPerpendicular() const
@@ -91,8 +91,8 @@ namespace Anggur
 
     void Vector2::setPolar(float length, float angle)
     {
-        x = Math::cos(angle) * length;
-        y = Math::sin(angle) * length;
+        x = Math::Cos(angle) * length;
+        y = Math::Sin(angle) * length;
     }
 
     void Vector2::setLength(float length)
@@ -113,17 +113,17 @@ namespace Anggur
 
     // 2nd class manipulations
 
-    float Vector2::dot(const Vector2 &a, const Vector2 &b)
+    float Vector2::dot(const Vector2& a, const Vector2& b)
     {
         return a.x * b.x + a.y * b.y;
     }
 
-    float Vector2::cross(const Vector2 &a, const Vector2 &b)
+    float Vector2::cross(const Vector2& a, const Vector2& b)
     {
         return a.x * b.y - a.y * b.x;
     }
 
-    Vector2 Vector2::normalize(const Vector2 &a)
+    Vector2 Vector2::normalize(const Vector2& a)
     {
         float length = a.getLength();
 
@@ -133,79 +133,79 @@ namespace Anggur
         return Vector2(a.x / length, a.y / length);
     }
 
-    Vector2 Vector2::lerp(const Vector2 &a, const Vector2 &b, float amount)
+    Vector2 Vector2::lerp(const Vector2& a, const Vector2& b, float amount)
     {
-        return Vector2(Math::lerp(a.x, b.x, amount), Math::lerp(a.y, b.y, amount));
+        return Vector2(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount));
     }
 
     // 3rd class manipulations
 
-    Vector2 operator-(const Vector2 &a)
+    Vector2 operator-(const Vector2& a)
     {
         return Vector2(-a.x, -a.y);
     }
 
-    Vector2 operator+(const Vector2 &a, const Vector2 &b)
+    Vector2 operator+(const Vector2& a, const Vector2& b)
     {
         return Vector2(a.x + b.x, a.y + b.y);
     }
 
-    Vector2 operator-(const Vector2 &a, const Vector2 &b)
+    Vector2 operator-(const Vector2& a, const Vector2& b)
     {
         return Vector2(a.x - b.x, a.y - b.y);
     }
 
-    Vector2 operator*(const Vector2 &a, const Vector2 &b)
+    Vector2 operator*(const Vector2& a, const Vector2& b)
     {
         return Vector2(a.x * b.x, a.y * b.y);
     }
 
-    Vector2 operator+(float a, const Vector2 &b)
+    Vector2 operator+(float a, const Vector2& b)
     {
         return Vector2(a + b.x, a + b.y);
     }
 
-    Vector2 operator-(float a, const Vector2 &b)
+    Vector2 operator-(float a, const Vector2& b)
     {
         return Vector2(a - b.x, a - b.y);
     }
 
-    Vector2 operator*(float a, const Vector2 &b)
+    Vector2 operator*(float a, const Vector2& b)
     {
         return Vector2(a * b.x, a * b.y);
     }
 
-    Vector2 &operator+=(Vector2 &a, const Vector2 &b)
+    Vector2& operator+=(Vector2& a, const Vector2& b)
     {
         a = a + b;
         return a;
     }
 
-    Vector2 &operator-=(Vector2 &a, const Vector2 &b)
+    Vector2& operator-=(Vector2& a, const Vector2& b)
     {
         a = a - b;
         return a;
     }
 
-    Vector2 &operator*=(Vector2 &a, const Vector2 &b)
+    Vector2& operator*=(Vector2& a, const Vector2& b)
     {
         a = a * b;
         return a;
     }
 
-    Vector2 &operator+=(Vector2 &a, float b)
+    Vector2& operator+=(Vector2& a, float b)
     {
         a = b + a;
         return a;
     }
 
-    Vector2 &operator-=(Vector2 &a, float b)
+    Vector2& operator-=(Vector2& a, float b)
     {
         a = b - a;
         return a;
     }
 
-    Vector2 &operator*=(Vector2 &a, float b)
+    Vector2& operator*=(Vector2& a, float b)
     {
         a = b * a;
         return a;

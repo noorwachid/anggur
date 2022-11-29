@@ -11,10 +11,10 @@ namespace Anggur
     class InputDevice
     {
       protected:
-        Window &window;
+        Window& window;
 
       public:
-        InputDevice(Window &window);
+        InputDevice(Window& window);
 
         /**
          * Will be called on frame update
@@ -27,7 +27,7 @@ namespace Anggur
     class Keyboard : public InputDevice
     {
       public:
-        Keyboard(Window &window);
+        Keyboard(Window& window);
 
         void update() override;
 
@@ -80,7 +80,7 @@ namespace Anggur
     class Mouse : public InputDevice
     {
       public:
-        Mouse(Window &window);
+        Mouse(Window& window);
 
         void update() override;
 
@@ -107,12 +107,12 @@ namespace Anggur
         /**
          * Get current cursor position
          */
-        const Vector2 &getCursorPosition();
+        const Vector2& getCursorPosition();
 
         /**
          * Get cursor direction based on previous cursor position
          */
-        const Vector2 &getCursorDirection();
+        const Vector2& getCursorDirection();
 
         /**
          * Get cursor cursor shape
@@ -122,7 +122,7 @@ namespace Anggur
         /**
          * Get wheel direction
          */
-        const Vector2 &getWheelDirection();
+        const Vector2& getWheelDirection();
 
         /**
          * Set button state
@@ -132,7 +132,7 @@ namespace Anggur
         /**
          * Set cursor position
          */
-        void setCursorPosition(const Vector2 &position);
+        void setCursorPosition(const Vector2& position);
 
         /**
          * Set cursor shape
@@ -142,7 +142,7 @@ namespace Anggur
         /**
          * Set wheel direction
          */
-        void setWheelDirection(const Vector2 &direction);
+        void setWheelDirection(const Vector2& direction);
 
       private:
         /**
@@ -153,12 +153,12 @@ namespace Anggur
         /**
          * Set cursor position
          */
-        void directSetCursorPosition(const Vector2 &position);
+        void directSetCursorPosition(const Vector2& position);
 
         /**
          * Set wheel direction
          */
-        void directSetWheelDirection(const Vector2 &direction);
+        void directSetWheelDirection(const Vector2& direction);
 
       private:
         Vector2 currentCursorPosition;
@@ -169,7 +169,7 @@ namespace Anggur
         std::array<bool, maxMouseButtonValue> previousButtonState{false};
 
         MouseCursorShape shape;
-        std::array<void *, 8> shapeBuffers{nullptr};
+        std::array<void*, 8> shapeBuffers{nullptr};
 
         Vector2 currentWheelDirection;
         Vector2 previousWheelDirection;

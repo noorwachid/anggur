@@ -105,11 +105,11 @@ public:
 		}
 
 		if (keyboard.isKeyDown(Key::leftShift)) {
-			attractorVelocity = Math::clamp(attractorVelocity + attractorAcceleration, 0.0f, attractorMaxVelocity);
+			attractorVelocity = Math::Clamp(attractorVelocity + attractorAcceleration, 0.0f, attractorMaxVelocity);
 		}
 
 		if (keyboard.isKeyDown(Key::rightShift)) {
-			attractorVelocity = Math::clamp(attractorVelocity - attractorAcceleration, 0.0f, attractorMaxVelocity);
+			attractorVelocity = Math::Clamp(attractorVelocity - attractorAcceleration, 0.0f, attractorMaxVelocity);
 		}
 
 		if (keyboard.isKeyDown(Key::enter)) {

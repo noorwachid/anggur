@@ -1,6 +1,6 @@
 BasedOnStyle: Microsoft
 AlignConsecutiveDeclarations: true
-PointerAlignment: Right
+PointerAlignment: Left
 IndentWidth: 4
 NamespaceIndentation: All
 FixNamespaceComments: false

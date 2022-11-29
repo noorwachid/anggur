@@ -9,7 +9,7 @@ namespace Anggur
     {
     }
 
-    Image::Image(const std::string &path)
+    Image::Image(const std::string& path)
     {
         load(path);
     }
@@ -19,7 +19,7 @@ namespace Anggur
         unload();
     }
 
-    void Image::load(const std::string &path)
+    void Image::load(const std::string& path)
     {
         unload();
 
@@ -27,7 +27,7 @@ namespace Anggur
         int newHeight;
         int newChannels;
 
-        uint8_t *rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
+        uint8_t* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
         assert(rawData && "Failed to load image");
 
         bytes.resize(newWidth * newHeight * newChannels);
@@ -44,7 +44,7 @@ namespace Anggur
     {
     }
 
-    void Image::save(const std::string &path)
+    void Image::save(const std::string& path)
     {
         stbi_write_png((path + ".png").c_str(), width, height, 1, bytes.data(), width);
     }

@@ -5,7 +5,7 @@
 
 namespace Anggur
 {
-    Window::Window(const Vector2 &newSize, const std::string &newTitle) : size(newSize), title(newTitle)
+    Window::Window(const Vector2& newSize, const std::string& newTitle) : size(newSize), title(newTitle)
     {
 #ifdef ANGGUR_OS_X
         glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, 0);
@@ -32,24 +32,24 @@ namespace Anggur
         glfwGetFramebufferSize(context, &frameBufferWidth, &frameBufferHeight);
         frameBufferSize.set(frameBufferWidth, frameBufferHeight);
 
-        glfwSetWindowSizeCallback(context, [](GLFWwindow *context, int width, int height) {
-            auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+        glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
+            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
             Vector2 size(width, height);
             WindowSizeEvent event("WindowResized", size);
             window->eventDispatcher.Dispatch(event);
             window->size = size;
         });
 
-        glfwSetWindowPosCallback(context, [](GLFWwindow *context, int x, int y) {
-            auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+        glfwSetWindowPosCallback(context, [](GLFWwindow* context, int x, int y) {
+            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
             Vector2 position(x, y);
             WindowSizeEvent event("WindowMoved", position);
             window->eventDispatcher.Dispatch(event);
             window->position = position;
         });
 
-        glfwSetFramebufferSizeCallback(context, [](GLFWwindow *context, int width, int height) {
-            auto window = static_cast<Window *>(glfwGetWindowUserPointer(context));
+        glfwSetFramebufferSizeCallback(context, [](GLFWwindow* context, int width, int height) {
+            auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
             Vector2 size(width, height);
             FrameBufferSizeEvent event("FrameBufferResized", size);
             window->eventDispatcher.Dispatch(event);
@@ -63,7 +63,7 @@ namespace Anggur
             glfwDestroyWindow(context);
     }
 
-    WindowContext *Window::getContext()
+    WindowContext* Window::getContext()
     {
         return context;
     }
@@ -73,37 +73,37 @@ namespace Anggur
         return size.y / size.x;
     }
 
-    const Vector2 &Window::getCursorPosition()
+    const Vector2& Window::getCursorPosition()
     {
         return position;
     }
 
-    const Vector2 &Window::getSize()
+    const Vector2& Window::getSize()
     {
         return size;
     }
 
-    const Vector2 &Window::getFrameBufferSize()
+    const Vector2& Window::getFrameBufferSize()
     {
         return frameBufferSize;
     }
 
-    const std::string &Window::getTitle()
+    const std::string& Window::getTitle()
     {
         return title;
     }
 
-    void Window::setCursorPosition(const Vector2 &position)
+    void Window::setCursorPosition(const Vector2& position)
     {
         glfwSetWindowPos(context, position.x, position.y);
     }
 
-    void Window::setSize(const Vector2 &size)
+    void Window::setSize(const Vector2& size)
     {
         glfwSetWindowSize(context, size.x, size.y);
     }
 
-    void Window::setTitle(const std::string &newTitle)
+    void Window::setTitle(const std::string& newTitle)
     {
         glfwSetWindowTitle(context, newTitle.c_str());
         title = newTitle;
@@ -124,11 +124,11 @@ namespace Anggur
         bindGraphics();
         swapFrameBuffers();
 
-        for (InputDevice *input : inputs)
+        for (InputDevice* input : inputs)
             input->update();
     }
 
-    void Window::registerInputDevice(InputDevice *input)
+    void Window::registerInputDevice(InputDevice* input)
     {
         inputs.push_back(input);
     }

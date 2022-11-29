@@ -161,23 +161,23 @@ namespace Anggur
         batchIndexMultiplier = indexMultiplier;
     }
 
-    void CanvasRenderer::clear(const Vector4 &color)
+    void CanvasRenderer::clear(const Vector4& color)
     {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void CanvasRenderer::setViewport(const Vector2 &size)
+    void CanvasRenderer::setViewport(const Vector2& size)
     {
         glViewport(0, 0, size.x, size.y);
     }
 
-    void CanvasRenderer::setViewport(const Vector2 &position, const Vector2 &size)
+    void CanvasRenderer::setViewport(const Vector2& position, const Vector2& size)
     {
         glViewport(position.x, position.y, size.x, size.y);
     }
 
-    void CanvasRenderer::setViewProjection(const Matrix3 &newViewProjection)
+    void CanvasRenderer::setViewProjection(const Matrix3& newViewProjection)
     {
         viewProjection = newViewProjection;
     }
@@ -189,7 +189,7 @@ namespace Anggur
         flushInternalBuffer();
     }
 
-    void CanvasRenderer::begin(const Matrix3 &viewProjection)
+    void CanvasRenderer::begin(const Matrix3& viewProjection)
     {
         setViewProjection(viewProjection);
         begin();
@@ -256,8 +256,8 @@ namespace Anggur
                textureOffset + newTextureSize > textures.size();
     }
 
-    void CanvasRenderer::draw(const std::vector<CanvasVertex> &newVertices, const std::vector<uint32_t> &newIndices,
-                              const std::shared_ptr<Texture2D> &texture)
+    void CanvasRenderer::draw(const std::vector<CanvasVertex>& newVertices, const std::vector<uint32_t>& newIndices,
+                              const std::shared_ptr<Texture2D>& texture)
     {
         if (isCapacityMaxout(newVertices.size(), newIndices.size(), 1))
             flush();
@@ -278,7 +278,7 @@ namespace Anggur
 
         for (size_t i = 0; i < newVertices.size(); ++i)
         {
-            auto &vertex = vertices[i + vertexOffset];
+            auto& vertex = vertices[i + vertexOffset];
 
             vertex = newVertices[i];
             vertex.slot = textureSlot;
@@ -295,8 +295,8 @@ namespace Anggur
 
     // 2D primitives
 
-    void CanvasRenderer::drawTriangle(const Matrix3 &model, const Vector2 &point0, const Vector2 &point1,
-                                      const Vector2 &point2, const Vector4 &color)
+    void CanvasRenderer::drawTriangle(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+                                      const Vector2& point2, const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -314,8 +314,8 @@ namespace Anggur
             whiteTexture);
     }
 
-    void CanvasRenderer::drawQuad(const Matrix3 &model, const Vector2 &point0, const Vector2 &point1,
-                                  const Vector2 &point2, const Vector2 &point3, const Vector4 &color)
+    void CanvasRenderer::drawQuad(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+                                  const Vector2& point2, const Vector2& point3, const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -337,8 +337,8 @@ namespace Anggur
             whiteTexture);
     }
 
-    void CanvasRenderer::drawRectangle(const Matrix3 &model, const Vector2 &point, const Vector2 &size,
-                                       const Vector4 &color)
+    void CanvasRenderer::drawRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
+                                       const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -363,9 +363,9 @@ namespace Anggur
             whiteTexture);
     }
 
-    void CanvasRenderer::drawTexturedRectangle(const Matrix3 &model, const Vector2 &point, const Vector2 &size,
-                                               const std::shared_ptr<Texture2D> &texture, const Vector2 &uvPoint,
-                                               const Vector2 &uvSize, const Vector4 &color)
+    void CanvasRenderer::drawTexturedRectangle(const Matrix3& model, const Vector2& point, const Vector2& size,
+                                               const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint,
+                                               const Vector2& uvSize, const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -391,7 +391,7 @@ namespace Anggur
             texture);
     }
 
-    void CanvasRenderer::drawCircle(const Matrix3 &model, float radius, int segment, const Vector4 &color)
+    void CanvasRenderer::drawCircle(const Matrix3& model, float radius, int segment, const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -402,8 +402,8 @@ namespace Anggur
         size_t triangleSize = segment - 2;
 
         float theta = (Math::twoPi / segment);
-        float tangetialFactor = Math::tan(theta);
-        float radialFactor = Math::cos(theta);
+        float tangetialFactor = Math::Tan(theta);
+        float radialFactor = Math::Cos(theta);
 
         float x = radius;
         float y = 0;
@@ -444,8 +444,8 @@ namespace Anggur
         draw(vertices, indices, whiteTexture);
     }
 
-    void CanvasRenderer::drawArc(const Matrix3 &model, float radius, float beginAngle, float sweepAngle, int segment,
-                                 const Vector4 &color)
+    void CanvasRenderer::drawArc(const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment,
+                                 const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -457,8 +457,8 @@ namespace Anggur
         // // TODO: simplify this equation
         float theta = Math::twoPi / ((segment - 1) / (sweepAngle / Math::twoPi));
 
-        float tangetialFactor = Math::tan(theta);
-        float radialFactor = Math::cos(theta);
+        float tangetialFactor = Math::Tan(theta);
+        float radialFactor = Math::Cos(theta);
 
         Vector2 walker = Vector2::createPolar(radius, beginAngle);
 
@@ -507,8 +507,8 @@ namespace Anggur
 
     // 2D lines
 
-    void CanvasRenderer::drawLineTerminator(const Matrix3 &model, const Vector2 &point0, const Vector2 &point1,
-                                            float thickness, const Vector4 &color)
+    void CanvasRenderer::drawLineTerminator(const Matrix3& model, const Vector2& point0, const Vector2& point1,
+                                            float thickness, const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -519,8 +519,8 @@ namespace Anggur
                  point1 - perpenPoint, color);
     }
 
-    void CanvasRenderer::drawLineAnchor(const Matrix3 &transform, const Vector2 &p0, const Vector2 &p1,
-                                        const Vector2 &p2, float w, const Vector4 &c)
+    void CanvasRenderer::drawLineAnchor(const Matrix3& transform, const Vector2& p0, const Vector2& p1,
+                                        const Vector2& p2, float w, const Vector4& c)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -556,14 +556,14 @@ namespace Anggur
         Vector2 e1 = (e1c + c1);
 
         auto areLinesIntersected =
-            [](const Vector2 &p0, const Vector2 &p1, const Vector2 &p2, const Vector2 &p3, Vector2 &p4) -> bool {
+            [](const Vector2& p0, const Vector2& p1, const Vector2& p2, const Vector2& p3, Vector2& p4) -> bool {
             float denom = (p3.y - p2.y) * (p1.x - p0.x) - (p3.x - p2.x) * (p1.y - p0.y);
             float numea = (p3.x - p2.x) * (p0.y - p2.y) - (p3.y - p2.y) * (p0.x - p2.x);
             float numeb = (p1.x - p0.x) * (p0.y - p2.y) - (p1.y - p0.y) * (p0.x - p2.x);
 
-            float denomAbs = Math::abs(denom);
-            float numeaAbs = Math::abs(numea);
-            float numebAbs = Math::abs(numeb);
+            float denomAbs = Math::Abs(denom);
+            float numeaAbs = Math::Abs(numea);
+            float numebAbs = Math::Abs(numeb);
 
             if (numeaAbs < Math::epsilon && numebAbs < Math::epsilon && denomAbs < Math::epsilon)
             {
@@ -621,8 +621,8 @@ namespace Anggur
         draw(vertices, indices, whiteTexture);
     }
 
-    void CanvasRenderer::drawLine(const Matrix3 &model, const Vector2 &point0, const Vector2 &point1, float thickness,
-                                  const Vector4 &color)
+    void CanvasRenderer::drawLine(const Matrix3& model, const Vector2& point0, const Vector2& point1, float thickness,
+                                  const Vector4& color)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -632,8 +632,8 @@ namespace Anggur
         drawLineTerminator(model, point1, midPoint, thickness, color);
     }
 
-    void CanvasRenderer::drawPolyLine(const Matrix3 &transform, const std::vector<Vector2> &ps, float w,
-                                      const Vector4 &c)
+    void CanvasRenderer::drawPolyLine(const Matrix3& transform, const std::vector<Vector2>& ps, float w,
+                                      const Vector4& c)
     {
         switchDrawingMode(DrawingMode::geometry);
 
@@ -746,8 +746,8 @@ namespace Anggur
     // 	drawPolyLine(transform, points, w, c);
     // }
 
-    void CanvasRenderer::drawText(const Matrix3 &model, const std::string &text, const std::shared_ptr<Font> &font,
-                                  const TextOptions &options)
+    void CanvasRenderer::drawText(const Matrix3& model, const std::string& text, const std::shared_ptr<Font>& font,
+                                  const TextOptions& options)
     {
         switchDrawingMode(DrawingMode::text);
 
@@ -773,9 +773,9 @@ namespace Anggur
         }
     }
 
-    void CanvasRenderer::drawTextGlyph(const Matrix3 &model, const Vector2 &point, const Vector2 &size,
-                                       const std::shared_ptr<Texture2D> &texture, const Vector2 &uvPoint,
-                                       const Vector2 &uvSize, const Vector4 &color)
+    void CanvasRenderer::drawTextGlyph(const Matrix3& model, const Vector2& point, const Vector2& size,
+                                       const std::shared_ptr<Texture2D>& texture, const Vector2& uvPoint,
+                                       const Vector2& uvSize, const Vector4& color)
     {
         switchDrawingMode(DrawingMode::text);
 
