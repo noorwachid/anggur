@@ -1,0 +1,9 @@
+BasedOnStyle: Microsoft
+AlignConsecutiveDeclarations: true
+PointerAlignment: Right
+IndentWidth: 4
+NamespaceIndentation: All
+FixNamespaceComments: false
+PenaltyIndentedWhitespace: 1
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false

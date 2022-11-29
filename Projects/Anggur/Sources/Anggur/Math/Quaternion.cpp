@@ -1,39 +1,47 @@
-#include "Math.h"
 #include "Quaternion.h"
+#include "Math.h"
 
-namespace Anggur {    
+namespace Anggur
+{
     // Initalizers
 
-    Quaternion::Quaternion(): x(0.0f), y(0.0f), z(0.0f), w(0.0f) {
+    Quaternion::Quaternion() : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+    {
     }
 
-    Quaternion::Quaternion(float newX, float newY, float newZ, float newW):  x(newX), y(newY), z(newZ), w(newW) {
+    Quaternion::Quaternion(float newX, float newY, float newZ, float newW) : x(newX), y(newY), z(newZ), w(newW)
+    {
     }
 
-    Quaternion::Quaternion(const Vector3& axis, float angle) {
+    Quaternion::Quaternion(const Vector3 &axis, float angle)
+    {
         set(axis, angle);
     }
 
     // Getters
 
-    float Quaternion::getLengthSquared() {
-        return (x*x + y*y + z*z + w*w);
+    float Quaternion::getLengthSquared()
+    {
+        return (x * x + y * y + z * z + w * w);
     }
 
-    float Quaternion::getLength() {
+    float Quaternion::getLength()
+    {
         return Math::sqrt(getLengthSquared());
     }
 
     // Setters
 
-    void Quaternion::set(float newX, float newY, float newZ, float newW) {
+    void Quaternion::set(float newX, float newY, float newZ, float newW)
+    {
         x = newX;
         y = newY;
         z = newZ;
         w = newW;
     }
 
-    void Quaternion::set(const Vector3& axis, float angle) {
+    void Quaternion::set(const Vector3 &axis, float angle)
+    {
         float scalar = Math::sin(angle / 2.0f);
         x = axis.x * scalar;
         y = axis.y * scalar;
@@ -43,7 +51,8 @@ namespace Anggur {
 
     // 1st class manipulations
 
-    void Quaternion::conjugate() {
+    void Quaternion::conjugate()
+    {
         x *= -1.0f;
         y *= -1.0f;
         z *= -1.0f;
@@ -51,11 +60,13 @@ namespace Anggur {
 
     // 2nd class manipulations
 
-    static float dot(const Quaternion& a, const Quaternion& b) {
+    static float dot(const Quaternion &a, const Quaternion &b)
+    {
         return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
     }
 
-    Quaternion Quaternion::lerp(const Quaternion& a, const Quaternion& b, float amount) {
+    Quaternion Quaternion::lerp(const Quaternion &a, const Quaternion &b, float amount)
+    {
         Quaternion newValue;
 
         newValue.x = Math::lerp(a.x, b.x, amount);
@@ -66,7 +77,8 @@ namespace Anggur {
         return normalize(newValue);
     }
 
-    Quaternion Quaternion::slerp(const Quaternion& a, const Quaternion& b, float amount) {
+    Quaternion Quaternion::slerp(const Quaternion &a, const Quaternion &b, float amount)
+    {
         float rawCosm = Quaternion::dot(a, b);
         float cosom = -rawCosm;
 
@@ -75,12 +87,15 @@ namespace Anggur {
 
         float scale0, scale1;
 
-        if (cosom < 0.9999f) {
+        if (cosom < 0.9999f)
+        {
             const float omega = Math::acos(cosom);
             const float invSin = 1.f / Math::sin(omega);
             scale0 = Math::sin((1.f - amount) * omega) * invSin;
             scale1 = Math::sin(amount * omega) * invSin;
-        } else {
+        }
+        else
+        {
             // Use linear interpolation if the quaternions
             // are collinear
             scale0 = 1.0f - amount;
@@ -99,7 +114,8 @@ namespace Anggur {
         return normalize(newValue);
     }
 
-    Quaternion Quaternion::concatenate(const Quaternion& q, const Quaternion& p) {
+    Quaternion Quaternion::concatenate(const Quaternion &q, const Quaternion &p)
+    {
         Quaternion newValue;
 
         // Vector component is:
@@ -118,4 +134,3 @@ namespace Anggur {
         return newValue;
     }
 }
-

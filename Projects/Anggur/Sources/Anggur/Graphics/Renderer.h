@@ -2,9 +2,11 @@
 
 #include "CanvasRenderer.h"
 
-namespace Anggur {
-    class Renderer {
-    public:
+namespace Anggur
+{
+    class Renderer
+    {
+      public:
         CanvasRenderer canvas;
     };
 }

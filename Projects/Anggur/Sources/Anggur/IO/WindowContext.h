@@ -2,6 +2,7 @@
 
 struct GLFWwindow;
 
-namespace Anggur {
-	using WindowContext = GLFWwindow;
+namespace Anggur
+{
+    using WindowContext = GLFWwindow;
 }

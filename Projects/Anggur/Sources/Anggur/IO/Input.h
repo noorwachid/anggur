@@ -4,37 +4,40 @@
 #include "InputEvent.h"
 #include <array>
 
-namespace Anggur {
+namespace Anggur
+{
     class Window;
 
-    class InputDevice {
-    protected:
-        Window& window;
+    class InputDevice
+    {
+      protected:
+        Window &window;
 
-    public:
-        InputDevice(Window& window);
+      public:
+        InputDevice(Window &window);
 
         /**
-         * Will be called on frame update 
+         * Will be called on frame update
          */
         virtual void update();
     };
 
     // Common Devices
 
-    class Keyboard: public InputDevice {
-    public:
-        Keyboard(Window& window);
+    class Keyboard : public InputDevice
+    {
+      public:
+        Keyboard(Window &window);
 
         void update() override;
 
         /**
-         * Is key is just pressed 
+         * Is key is just pressed
          */
         bool isKeyPressed(Key key);
 
         /**
-         * Is key is just released 
+         * Is key is just released
          */
         bool isKeyReleased(Key key);
 
@@ -53,18 +56,19 @@ namespace Anggur {
          */
         void setKeyState(Key key, bool state);
 
-    private:
+      private:
         /**
-         * Set the current key state directly 
+         * Set the current key state directly
          */
         void directSetKeyState(Key key, bool state);
 
-    private:
+      private:
         std::array<bool, maxKeyValue> currentState{false};
-        std::array<bool, maxKeyValue> previousState{false}; 
+        std::array<bool, maxKeyValue> previousState{false};
     };
 
-    enum class MouseCursorShape {
+    enum class MouseCursorShape
+    {
         arrow = 0x1,
         i = 0x2,
         crosshair = 0x3,
@@ -73,19 +77,20 @@ namespace Anggur {
         verticalResize = 0x6,
     };
 
-    class Mouse: public InputDevice {
-    public:
-        Mouse(Window& window);
+    class Mouse : public InputDevice
+    {
+      public:
+        Mouse(Window &window);
 
         void update() override;
 
         /**
-         * Is button is just pressed 
+         * Is button is just pressed
          */
         bool isButtonPressed(MouseButton button);
 
         /**
-         * Is button is just pressed 
+         * Is button is just pressed
          */
         bool isButtonReleased(MouseButton button);
 
@@ -100,14 +105,14 @@ namespace Anggur {
         bool isButtonUp(MouseButton button);
 
         /**
-         * Get current cursor position 
+         * Get current cursor position
          */
-        const Vector2& getCursorPosition();
-        
+        const Vector2 &getCursorPosition();
+
         /**
          * Get cursor direction based on previous cursor position
          */
-        const Vector2& getCursorDirection();
+        const Vector2 &getCursorDirection();
 
         /**
          * Get cursor cursor shape
@@ -117,17 +122,17 @@ namespace Anggur {
         /**
          * Get wheel direction
          */
-        const Vector2& getWheelDirection();
-        
+        const Vector2 &getWheelDirection();
+
         /**
-         * Set button state 
+         * Set button state
          */
         void setButtonState(MouseButton button, bool state);
 
         /**
          * Set cursor position
          */
-        void setCursorPosition(const Vector2& position);
+        void setCursorPosition(const Vector2 &position);
 
         /**
          * Set cursor shape
@@ -137,25 +142,25 @@ namespace Anggur {
         /**
          * Set wheel direction
          */
-        void setWheelDirection(const Vector2& direction);
+        void setWheelDirection(const Vector2 &direction);
 
-    private:
+      private:
         /**
-         * Set button state 
+         * Set button state
          */
         void directSetButtonState(MouseButton button, bool state);
 
         /**
          * Set cursor position
          */
-        void directSetCursorPosition(const Vector2& position);
-        
+        void directSetCursorPosition(const Vector2 &position);
+
         /**
          * Set wheel direction
          */
-        void directSetWheelDirection(const Vector2& direction);
-    
-    private:
+        void directSetWheelDirection(const Vector2 &direction);
+
+      private:
         Vector2 currentCursorPosition;
         Vector2 previousCursorPosition;
         Vector2 cursorDirection;
@@ -164,7 +169,7 @@ namespace Anggur {
         std::array<bool, maxMouseButtonValue> previousButtonState{false};
 
         MouseCursorShape shape;
-        std::array<void*, 8> shapeBuffers{nullptr};
+        std::array<void *, 8> shapeBuffers{nullptr};
 
         Vector2 currentWheelDirection;
         Vector2 previousWheelDirection;

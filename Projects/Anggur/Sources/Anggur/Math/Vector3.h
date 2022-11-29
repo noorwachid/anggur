@@ -2,87 +2,89 @@
 
 #include <string>
 
-namespace Anggur {
-	struct Matrix4;
+namespace Anggur
+{
+    struct Matrix4;
 
-	struct Vector3 {
-		// Fields
+    struct Vector3
+    {
+        // Fields
 
-		float x;
-		float y;
-		float z;
+        float x;
+        float y;
+        float z;
 
-		// Constants
+        // Constants
 
-		static Vector3 zero;
-		static Vector3 one;
+        static Vector3 zero;
+        static Vector3 one;
 
-		static Vector3 unitX;
-		static Vector3 unitY;
-		static Vector3 unitZ;
+        static Vector3 unitX;
+        static Vector3 unitY;
+        static Vector3 unitZ;
 
-		// Initializers
+        // Initializers
 
-		Vector3();
-		
-		Vector3(float scalar);
-		
-		Vector3(float x, float y, float z);
+        Vector3();
 
-		// Casters
+        Vector3(float scalar);
 
-		const float* toPointer() const;
+        Vector3(float x, float y, float z);
 
-		float* toPointer();
+        // Casters
 
-		std::string toString();
+        const float *toPointer() const;
 
-		// Getters
+        float *toPointer();
 
-		float getLengthSquared() const;
+        std::string toString();
 
-		float getLength() const;
+        // Getters
 
-		// Setters
+        float getLengthSquared() const;
 
-		void set(float scalar);
+        float getLength() const;
 
-		void set(float newX, float newY, float newZ);
+        // Setters
 
-		// 2nd class manipulations
+        void set(float scalar);
 
-		static float dot(const Vector3& a, const Vector3& b);
+        void set(float newX, float newY, float newZ);
 
-		static Vector3 cross(const Vector3& a, const Vector3& b);
+        // 2nd class manipulations
 
-		static Vector3 normalize(const Vector3& a);
-		
-		static Vector3 lerp(const Vector3& a, const Vector3& b, float amount);
+        static float dot(const Vector3 &a, const Vector3 &b);
 
-		// 3rd class manipulations
+        static Vector3 cross(const Vector3 &a, const Vector3 &b);
 
-		friend Vector3 operator+ (const Vector3& a, const Vector3& b);
+        static Vector3 normalize(const Vector3 &a);
 
-		friend Vector3 operator- (const Vector3& a, const Vector3& b);
+        static Vector3 lerp(const Vector3 &a, const Vector3 &b, float amount);
 
-		friend Vector3 operator* (const Vector3& a, const Vector3& b);
+        // 3rd class manipulations
 
-		friend Vector3 operator+ (float a, const Vector3& b);
+        friend Vector3 operator+(const Vector3 &a, const Vector3 &b);
 
-		friend Vector3 operator- (float a, const Vector3& b);
+        friend Vector3 operator-(const Vector3 &a, const Vector3 &b);
 
-		friend Vector3 operator+ (float a, const Vector3& b);
+        friend Vector3 operator*(const Vector3 &a, const Vector3 &b);
 
-		friend Vector3& operator+= (Vector3& a, const Vector3& b);
+        friend Vector3 operator+(float a, const Vector3 &b);
 
-		friend Vector3& operator-= (Vector3& a, const Vector3& b);
+        friend Vector3 operator-(float a, const Vector3 &b);
 
-		friend Vector3& operator*= (Vector3& a, const Vector3& b);
+        friend Vector3 operator+(float a, const Vector3 &b);
 
-		friend Vector3& operator+= (Vector3& a, float b);
+        friend Vector3 &operator+=(Vector3 &a, const Vector3 &b);
 
-		friend Vector3& operator-= (Vector3& a, float b);
+        friend Vector3 &operator-=(Vector3 &a, const Vector3 &b);
 
-		friend Vector3& operator*= (Vector3& a, float b);
-	};
+        friend Vector3 &operator*=(Vector3 &a, const Vector3 &b);
+
+        friend Vector3 &operator+=(Vector3 &a, float b);
+
+        friend Vector3 &operator-=(Vector3 &a, float b);
+
+        friend Vector3 &operator*=(Vector3 &a, float b);
+    };
 }

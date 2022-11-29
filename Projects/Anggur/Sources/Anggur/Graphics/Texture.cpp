@@ -1,12 +1,14 @@
-#include <Anggur/Graphics/Texture.h>
 #include <Anggur/Graphics/Function.h>
+#include <Anggur/Graphics/Texture.h>
 
-namespace Anggur {
-	int Texture::getMaxSlot() {
-		static int maxSlot = 0;
-		if (maxSlot == 0) 
-			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
+namespace Anggur
+{
+    int Texture::getMaxSlot()
+    {
+        static int maxSlot = 0;
+        if (maxSlot == 0)
+            glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
 
-		return maxSlot;
-	}
+        return maxSlot;
+    }
 }

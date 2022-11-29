@@ -1,83 +1,83 @@
 #pragma once
 
 #include "Anggur/EventEmitter.h"
-#include "WindowEvent.h"
-#include "WindowContext.h"
 #include "Input.h"
+#include "WindowContext.h"
+#include "WindowEvent.h"
 
-namespace Anggur 
+namespace Anggur
 {
-	class Window 
-	{
-	public:
-		EventEmitter emitter;
+    class Window
+    {
+      public:
+        EventDispatcher emitter;
 
-	public:
-		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
-		
-		~Window();
+      public:
+        Window(const Vector2 &size = Vector2(800, 600), const std::string &title = "");
 
-		/**
-		 * Get native context 
-		 */
-		WindowContext* getContext();
+        ~Window();
 
-		/**
-		 * Get aspect ratio 
-		 */
-		float getAspectRatio();
+        /**
+         * Get native context
+         */
+        WindowContext *getContext();
 
-		/**
-		 * Get cursor position 
-		 */
-		const Vector2& getCursorPosition();
+        /**
+         * Get aspect ratio
+         */
+        float getAspectRatio();
 
-		/**
-		 * Get size 
-		 */
-		const Vector2& getSize();
+        /**
+         * Get cursor position
+         */
+        const Vector2 &getCursorPosition();
 
-		const Vector2& getFrameBufferSize();
+        /**
+         * Get size
+         */
+        const Vector2 &getSize();
 
-		const std::string& getTitle();
+        const Vector2 &getFrameBufferSize();
 
-		void setCursorPosition(const Vector2& pos);
-		
-		void setSize(const Vector2& size);
-		
-		void setTitle(const std::string& title);
+        const std::string &getTitle();
 
-		bool isOpen();
+        void setCursorPosition(const Vector2 &pos);
 
-		void close();
+        void setSize(const Vector2 &size);
 
-		void update();
+        void setTitle(const std::string &title);
 
-        template <class InputDevice>
-        InputDevice& getInputDevice() {
+        bool isOpen();
+
+        void close();
+
+        void update();
+
+        template <class InputDevice> InputDevice &getInputDevice()
+        {
             static InputDevice device(*this);
 
             return device;
         }
 
-		void registerInputDevice(InputDevice* device);
+        void registerInputDevice(InputDevice *device);
 
-	private:
-		void initializeGraphics();
+      private:
+        void initializeGraphics();
 
-		void bindGraphics();
+        void bindGraphics();
 
-		void bindContext();
+        void bindContext();
 
-		void swapFrameBuffers();
+        void swapFrameBuffers();
 
-	private:
-		WindowContext* context;
-		Vector2 position;
-		Vector2 size;
-		Vector2 frameBufferSize;
-		std::string title;
+      private:
+        WindowContext *context;
+        Vector2 position;
+        Vector2 size;
+        Vector2 frameBufferSize;
+        std::string title;
 
-        std::vector<InputDevice*> inputs;
-	};
+        std::vector<InputDevice *> inputs;
+    };
 }
