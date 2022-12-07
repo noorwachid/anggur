@@ -5,53 +5,53 @@
 
 namespace Anggur
 {
-    class FrameBuffer
-    {
-      public:
-        FrameBuffer();
-        FrameBuffer(uint32_t width, uint32_t height);
+	class FrameBuffer
+	{
+	  public:
+		FrameBuffer();
+		FrameBuffer(uint32_t width, uint32_t height);
 
-        ~FrameBuffer();
+		~FrameBuffer();
 
-        inline uint32_t GetID() const
-        {
-            return id;
-        }
+		inline uint32_t GetID() const
+		{
+			return id;
+		}
 
-        inline uint32_t GetColorAttachment() const
-        {
-            return colorAttachment;
-        }
+		inline uint32_t GetColorAttachment() const
+		{
+			return colorAttachment;
+		}
 
-        inline uint32_t GetWidth() const
-        {
-            return width;
-        }
+		inline uint32_t GetWidth() const
+		{
+			return width;
+		}
 
-        inline uint32_t GetHeight() const
-        {
-            return height;
-        }
+		inline uint32_t GetHeight() const
+		{
+			return height;
+		}
 
-        void Bind();
-        void Unbind();
+		void Bind();
+		void Unbind();
 
-        void Recreate(uint32_t width, uint32_t height);
+		void Recreate(uint32_t width, uint32_t height);
 
-        const std::shared_ptr<Texture2D>& GetTexture() const
-        {
-            return texture;
-        };
+		const std::shared_ptr<Texture2D>& GetTexture() const
+		{
+			return texture;
+		};
 
-      private:
-        void Initialize();
+	  private:
+		void Initialize();
 
-      private:
-        uint32_t id;
-        uint32_t colorAttachment;
-        uint32_t width;
-        uint32_t height;
+	  private:
+		uint32_t id;
+		uint32_t colorAttachment;
+		uint32_t width;
+		uint32_t height;
 
-        std::shared_ptr<Texture2D> texture = nullptr;
-    };
+		std::shared_ptr<Texture2D> texture = nullptr;
+	};
 }

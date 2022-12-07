@@ -5,31 +5,31 @@
 
 namespace Anggur
 {
-    class Random
-    {
-      public:
-        Random();
+	class Random
+	{
+	  public:
+		Random();
 
-        // Getters
+		// Getters
 
-        float Generate();
+		float Generate();
 
-        float Range(float lower, float upper);
+		float Range(float lower, float upper);
 
-        float GetNormal();
+		float GetNormal();
 
-        float GetSigned();
+		float GetSigned();
 
-        float GetAngle();
+		float GetAngle();
 
-        bool GetBoolean();
+		bool GetBoolean();
 
-        // Setters
+		// Setters
 
-        void SetSeed(float n);
+		void SetSeed(float n);
 
-      private:
-        std::random_device device;
-        std::mt19937 generator;
-    };
+	  private:
+		std::random_device device;
+		std::mt19937 generator;
+	};
 }

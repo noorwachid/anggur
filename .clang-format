@@ -1,9 +1,10 @@
 BasedOnStyle: Microsoft
 AlignConsecutiveDeclarations: true
 PointerAlignment: Left
-IndentWidth: 4
 NamespaceIndentation: All
 FixNamespaceComments: false
 PenaltyIndentedWhitespace: 1
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
+UseTab: ForContinuationAndIndentation
+IndentAccessModifiers: false

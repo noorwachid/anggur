@@ -4,49 +4,49 @@
 
 namespace Anggur
 {
-    struct Quaternion
-    {
-        // Fields
+	struct Quaternion
+	{
+		// Fields
 
-        float x;
-        float y;
-        float z;
-        float w;
+		float x;
+		float y;
+		float z;
+		float w;
 
-        // Initializer
+		// Initializer
 
-        Quaternion();
+		Quaternion();
 
-        explicit Quaternion(float newX, float newY, float newZ, float newW);
+		explicit Quaternion(float newX, float newY, float newZ, float newW);
 
-        explicit Quaternion(const Vector3& axis, float angle);
+		explicit Quaternion(const Vector3& axis, float angle);
 
-        // Getters
+		// Getters
 
-        float GetLengthSquared();
+		float GetLengthSquared();
 
-        float GetLength();
+		float GetLength();
 
-        // Setters
+		// Setters
 
-        void Set(float inX, float inY, float inZ, float inW);
+		void Set(float inX, float inY, float inZ, float inW);
 
-        void Set(const Vector3& axis, float angle);
+		void Set(const Vector3& axis, float angle);
 
-        // 1st class manipulations
+		// 1st class manipulations
 
-        void Conjugate();
+		void Conjugate();
 
-        // 2nd class manipulations
+		// 2nd class manipulations
 
-        static float Dot(const Quaternion& a, const Quaternion& b);
+		static float Dot(const Quaternion& a, const Quaternion& b);
 
-        static Quaternion Normalize(const Quaternion& a);
+		static Quaternion Normalize(const Quaternion& a);
 
-        static Quaternion Lerp(const Quaternion& a, const Quaternion& b, float amount);
+		static Quaternion Lerp(const Quaternion& a, const Quaternion& b, float amount);
 
-        static Quaternion Slerp(const Quaternion& a, const Quaternion& b, float amount);
+		static Quaternion Slerp(const Quaternion& a, const Quaternion& b, float amount);
 
-        static Quaternion Concatenate(const Quaternion& a, const Quaternion& b);
-    };
+		static Quaternion Concatenate(const Quaternion& a, const Quaternion& b);
+	};
 }

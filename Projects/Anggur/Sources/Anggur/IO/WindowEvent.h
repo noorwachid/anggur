@@ -5,30 +5,30 @@
 
 namespace Anggur
 {
-    struct WindowSizeEvent : public Event
-    {
-        Vector2 size;
+	struct WindowSizeEvent : public Event
+	{
+		Vector2 size;
 
-        WindowSizeEvent(const std::string& name, const Vector2& newSize) : Event(name), size(newSize)
-        {
-        }
-    };
+		WindowSizeEvent(const std::string& name, const Vector2& newSize) : Event(name), size(newSize)
+		{
+		}
+	};
 
-    struct WindowPositionEvent : public Event
-    {
-        Vector2 position;
+	struct WindowPositionEvent : public Event
+	{
+		Vector2 position;
 
-        WindowPositionEvent(const std::string& name, const Vector2& newPosition) : Event(name), position(newPosition)
-        {
-        }
-    };
+		WindowPositionEvent(const std::string& name, const Vector2& newPosition) : Event(name), position(newPosition)
+		{
+		}
+	};
 
-    struct FrameBufferSizeEvent : public Event
-    {
-        Vector2 size;
+	struct FrameBufferSizeEvent : public Event
+	{
+		Vector2 size;
 
-        FrameBufferSizeEvent(const std::string& name, const Vector2& newSize) : Event(name), size(newSize)
-        {
-        }
-    };
+		FrameBufferSizeEvent(const std::string& name, const Vector2& newSize) : Event(name), size(newSize)
+		{
+		}
+	};
 }

@@ -4,87 +4,87 @@
 
 namespace Anggur
 {
-    struct Matrix4;
+	struct Matrix4;
 
-    struct Vector3
-    {
-        // Fields
+	struct Vector3
+	{
+		// Fields
 
-        float x;
-        float y;
-        float z;
+		float x;
+		float y;
+		float z;
 
-        // Constants
+		// Constants
 
-        static Vector3 zero;
-        static Vector3 one;
+		static Vector3 zero;
+		static Vector3 one;
 
-        static Vector3 unitX;
-        static Vector3 unitY;
-        static Vector3 unitZ;
+		static Vector3 unitX;
+		static Vector3 unitY;
+		static Vector3 unitZ;
 
-        // Initializers
+		// Initializers
 
-        Vector3();
+		Vector3();
 
-        Vector3(float scalar);
+		Vector3(float scalar);
 
-        Vector3(float x, float y, float z);
+		Vector3(float x, float y, float z);
 
-        // Casters
+		// Casters
 
-        const float* ToPointer() const;
+		const float* ToPointer() const;
 
-        float* ToPointer();
+		float* ToPointer();
 
-        std::string ToString();
+		std::string ToString();
 
-        // Getters
+		// Getters
 
-        float GetLengthSquared() const;
+		float GetLengthSquared() const;
 
-        float GetLength() const;
+		float GetLength() const;
 
-        // Setters
+		// Setters
 
-        void Set(float scalar);
+		void Set(float scalar);
 
-        void Set(float newX, float newY, float newZ);
+		void Set(float newX, float newY, float newZ);
 
-        // 2nd class manipulations
+		// 2nd class manipulations
 
-        static float Dot(const Vector3& a, const Vector3& b);
+		static float Dot(const Vector3& a, const Vector3& b);
 
-        static Vector3 Cross(const Vector3& a, const Vector3& b);
+		static Vector3 Cross(const Vector3& a, const Vector3& b);
 
-        static Vector3 Normalize(const Vector3& a);
+		static Vector3 Normalize(const Vector3& a);
 
-        static Vector3 Lerp(const Vector3& a, const Vector3& b, float amount);
+		static Vector3 Lerp(const Vector3& a, const Vector3& b, float amount);
 
-        // 3rd class manipulations
+		// 3rd class manipulations
 
-        friend Vector3 operator+(const Vector3& a, const Vector3& b);
+		friend Vector3 operator+(const Vector3& a, const Vector3& b);
 
-        friend Vector3 operator-(const Vector3& a, const Vector3& b);
+		friend Vector3 operator-(const Vector3& a, const Vector3& b);
 
-        friend Vector3 operator*(const Vector3& a, const Vector3& b);
+		friend Vector3 operator*(const Vector3& a, const Vector3& b);
 
-        friend Vector3 operator+(float a, const Vector3& b);
+		friend Vector3 operator+(float a, const Vector3& b);
 
-        friend Vector3 operator-(float a, const Vector3& b);
+		friend Vector3 operator-(float a, const Vector3& b);
 
-        friend Vector3 operator+(float a, const Vector3& b);
+		friend Vector3 operator+(float a, const Vector3& b);
 
-        friend Vector3& operator+=(Vector3& a, const Vector3& b);
+		friend Vector3& operator+=(Vector3& a, const Vector3& b);
 
-        friend Vector3& operator-=(Vector3& a, const Vector3& b);
+		friend Vector3& operator-=(Vector3& a, const Vector3& b);
 
-        friend Vector3& operator*=(Vector3& a, const Vector3& b);
+		friend Vector3& operator*=(Vector3& a, const Vector3& b);
 
-        friend Vector3& operator+=(Vector3& a, float b);
+		friend Vector3& operator+=(Vector3& a, float b);
 
-        friend Vector3& operator-=(Vector3& a, float b);
+		friend Vector3& operator-=(Vector3& a, float b);
 
-        friend Vector3& operator*=(Vector3& a, float b);
-    };
+		friend Vector3& operator*=(Vector3& a, float b);
+	};
 }

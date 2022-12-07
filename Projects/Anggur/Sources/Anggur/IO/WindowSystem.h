@@ -2,16 +2,16 @@
 
 namespace Anggur
 {
-    class WindowSystem
-    {
-      public:
-        WindowSystem();
+	class WindowSystem
+	{
+	  public:
+		WindowSystem();
 
-        ~WindowSystem();
+		~WindowSystem();
 
-        /**
-         * Poll event of each devices
-         */
-        void PollEvents();
-    };
+		/**
+		 * Poll event of each devices
+		 */
+		void PollEvents();
+	};
 }

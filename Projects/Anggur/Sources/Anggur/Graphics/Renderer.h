@@ -4,9 +4,9 @@
 
 namespace Anggur
 {
-    class Renderer
-    {
-      public:
-        CanvasRenderer canvas;
-    };
+	class Renderer
+	{
+	  public:
+		CanvasRenderer canvas;
+	};
 }

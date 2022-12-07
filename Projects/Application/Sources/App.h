@@ -146,7 +146,7 @@ class App : public BaseApp
             mover.Draw(renderer);
         }
 
-        renderer.canvas.DrawCircle(Matrix3::CreateTranslation(attractorPosition), 10, 6, Vector4::white);
+        renderer.canvas.DrawCircle(Matrix3::CreateTranslation(attractorPosition), 10, 12, Vector4::white);
 
         renderer.canvas.EndScene();
     }
