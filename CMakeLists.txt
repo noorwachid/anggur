@@ -3,5 +3,29 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(Anggur)
 
-add_subdirectory(Projects/Anggur)
-add_subdirectory(Projects/Application)
+file(GLOB anggur_src
+    "src/Anggur/*/*.cpp"
+	"src/Anggur/*.cpp"
+)
+
+add_library(anggur STATIC
+    ${anggur_src}
+)
+
+# Local libraries
+add_subdirectory(vendor/glad/glad)
+add_subdirectory(vendor/glfw/glfw)
+add_subdirectory(vendor/stb/image)
+add_subdirectory(vendor/stb/truetype)
+
+target_include_directories(anggur PUBLIC src)
+target_link_libraries(anggur
+	glfw
+	glad
+
+	stb_image
+	stb_truetype
+
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
+)
