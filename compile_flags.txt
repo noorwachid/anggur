@@ -1,0 +1,9 @@
+-std=c++20
+-stdlib=libc++
+-xc++
+-I./src
+-I./vendor/glad/glad/include
+-I./vendor/glfw/glfw/include
+-I./vendor/stb/image/src
+-I./vendor/stb/truetype/src
+-I/usr/local/include/

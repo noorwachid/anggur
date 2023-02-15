@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CanvasRenderer.h"
+#include "MeshRenderer.h"
 
 namespace Anggur
 {
@@ -8,5 +9,6 @@ namespace Anggur
 	{
 	  public:
 		CanvasRenderer canvas;
+		MeshRenderer mesh;
 	};
 }

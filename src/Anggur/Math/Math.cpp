@@ -134,7 +134,7 @@ namespace Anggur
 
 	float Math::Cot(float x)
 	{
-		return 0;
+		return 1 / Tan(x);
 	}
 
 	float Math::Csc(float x)
