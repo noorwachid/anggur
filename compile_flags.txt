@@ -6,4 +6,5 @@
 -I./vendor/glfw/glfw/include
 -I./vendor/stb/image/src
 -I./vendor/stb/truetype/src
+-I./vendor/skypjack/entt/src
 -I/usr/local/include/

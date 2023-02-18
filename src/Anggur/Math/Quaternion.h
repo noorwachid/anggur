@@ -23,9 +23,9 @@ namespace Anggur
 
 		// Getters
 
-		float GetLengthSquared();
+		float GetLengthSquared() const;
 
-		float GetLength();
+		float GetLength() const;
 
 		// Setters
 

@@ -17,6 +17,7 @@ add_subdirectory(vendor/glad/glad)
 add_subdirectory(vendor/glfw/glfw)
 add_subdirectory(vendor/stb/image)
 add_subdirectory(vendor/stb/truetype)
+add_subdirectory(vendor/skypjack/entt)
 
 target_include_directories(anggur PUBLIC src)
 target_link_libraries(anggur
@@ -25,6 +26,8 @@ target_link_libraries(anggur
 
 	stb_image
 	stb_truetype
+
+    EnTT
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

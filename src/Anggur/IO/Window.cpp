@@ -36,7 +36,7 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
 			WindowSizeEvent event("WindowResized", size);
-			window->eventDispatcher.Dispatch(event);
+			window->Dispatch(event);
 			window->size = size;
 		});
 
@@ -44,7 +44,7 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 position(x, y);
 			WindowSizeEvent event("WindowMoved", position);
-			window->eventDispatcher.Dispatch(event);
+			window->Dispatch(event);
 			window->position = position;
 		});
 
@@ -52,9 +52,12 @@ namespace Anggur
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
 			FrameBufferSizeEvent event("FrameBufferResized", size);
-			window->eventDispatcher.Dispatch(event);
+			window->Dispatch(event);
 			window->frameBufferSize = size;
 		});
+
+        keyboard.Initialize(context);
+        mouse.Initialize(context);
 	}
 
 	Window::~Window()
@@ -123,14 +126,6 @@ namespace Anggur
 	{
 		BindGraphicsAPI();
 		SwapFrameBuffers();
-
-		for (InputDevice* input : inputs)
-			input->Update();
-	}
-
-	void Window::RegisterInputDevice(InputDevice* input)
-	{
-		inputs.push_back(input);
 	}
 
 	void Window::InitializeGraphicsAPI()

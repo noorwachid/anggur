@@ -1,206 +1,88 @@
 #include "Input.h"
-#include "Internal.h"
 #include "Window.h"
+#include "Internal.h"
 #include <array>
 #include <iostream>
 
 namespace Anggur
 {
 	// Input
+    
+    void InputDevice::Initialize(WindowContext* newContext)
+    {
+        context = newContext;
+    }
 
-	InputDevice::InputDevice(Window& newWindow) : window(newWindow)
+	void Keyboard::Initialize(WindowContext* newContext)
 	{
-		window.RegisterInputDevice(this);
-	}
-
-	void InputDevice::Update()
-	{
-	}
-
-	// Keyboard
-
-	Keyboard::Keyboard(Window& window) : InputDevice(window)
-	{
-		glfwSetKeyCallback(window.GetContext(), [](GLFWwindow* context, int vkeyCode, int scanCode, int action,
-												   int modifierKey) {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+        context = newContext;
+		glfwSetKeyCallback(context, [](GLFWwindow* context, int vkeyCode, int scanCode, int state, int modifierKey) {
+			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Key key = static_cast<Key>(vkeyCode);
-			window->GetInputDevice<Keyboard>().DirectSetKeyState(key, action == GLFW_PRESS || action == GLFW_REPEAT);
+
+            switch (state) {
+                case GLFW_PRESS:
+                {
+                    KeyEvent event("KeyPressed", key);
+                    window.Dispatch(event);
+                    break;
+                }
+
+                case GLFW_REPEAT:
+                {
+                    KeyEvent event("KeyDown", key);
+                    window.Dispatch(event);
+                    break;
+                }
+
+                case GLFW_RELEASE:
+                {
+                    KeyEvent event("KeyReleased", key);
+                    window.Dispatch(event);
+                    break;
+                }
+
+                default: break;
+            }
 		});
 	}
 
-	void Keyboard::Update()
-	{
-		for (int i = 0; i < previousState.size(); ++i)
-			if (previousState[i] != currentState[i])
-				previousState[i] = currentState[i];
-	}
-
-	bool Keyboard::IsKeyPressed(Key key)
+	bool Keyboard::IsKeyPressed(Key key) const
 	{
 		int index = static_cast<int>(key);
-		return currentState[index] && previousState[index] == false;
+
+        return glfwGetKey(context, index) == GLFW_PRESS;
 	}
 
-	bool Keyboard::IsKeyReleased(Key key)
+	bool Keyboard::IsKeyReleased(Key key) const
 	{
 		int index = static_cast<int>(key);
-		return currentState[index] == false && previousState[index];
+
+        return glfwGetKey(context, index) == GLFW_RELEASE;
 	}
 
-	bool Keyboard::IsKeyDown(Key key)
+	bool Keyboard::IsKeyDown(Key key) const
 	{
 		int index = static_cast<int>(key);
-		return currentState[index];
+        int state = glfwGetKey(context, index);
+
+        return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Keyboard::IsKeyUp(Key key)
+	bool Keyboard::IsKeyUp(Key key) const
 	{
 		int index = static_cast<int>(key);
-		return currentState[index] == false;
+
+        return IsKeyReleased(key) || !IsKeyDown(key);
 	}
 
-	void Keyboard::SetKeyState(Key key, bool state)
+	void Mouse::Initialize(WindowContext* newContext)
 	{
-		DirectSetKeyState(key, state);
-	}
-
-	void Keyboard::DirectSetKeyState(Key key, bool state)
-	{
-		int index = static_cast<int>(key);
-		currentState[index] = state;
-		KeyEvent event(state ? "KeyPressed" : "KeyReleased", key);
-		window.eventDispatcher.Dispatch(event);
-	}
-
-	// Input mouse device
-
-	Mouse::Mouse(Window& window) : InputDevice(window)
-	{
-		glfwSetMouseButtonCallback(
-			window.GetContext(), [](GLFWwindow* context, int button, int action, int modidefrKey) {
-				auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-				MouseButton b = static_cast<MouseButton>(button);
-				window->GetInputDevice<Mouse>().DirectSetButtonState(b, action == GLFW_PRESS);
-			});
-
-		glfwSetCursorPosCallback(window.GetContext(), [](GLFWwindow* context, double x, double y) {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			window->GetInputDevice<Mouse>().DirectSetCursorPosition(Vector2(x, y));
+        context = newContext;
+		glfwSetCursorPosCallback(context, [](GLFWwindow* context, double x, double y) {
+			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+            MousePositionEvent event("MouseMoved", Vector2(x, y));
+            window.Dispatch(event);
 		});
-
-		glfwSetScrollCallback(window.GetContext(), [](GLFWwindow* context, double x, double y) {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			window->GetInputDevice<Mouse>().DirectSetWheelDirection(Vector2(x, y));
-		});
-	}
-
-	void Mouse::Update()
-	{
-		for (int i = 0; i < previousButtonState.size(); ++i)
-			if (previousButtonState[i] != currentButtonState[i])
-				previousButtonState[i] = currentButtonState[i];
-
-		cursorDirection = currentCursorPosition - previousCursorPosition;
-		previousCursorPosition = currentCursorPosition;
-
-		previousWheelDirection = currentWheelDirection;
-		currentWheelDirection.Set(0.0f, 0.0f);
-	}
-
-	bool Mouse::IsButtonPressed(MouseButton button)
-	{
-		int index = static_cast<int>(button);
-		return currentButtonState[index] && previousButtonState[index] == false;
-	}
-
-	bool Mouse::IsButtonReleased(MouseButton button)
-	{
-		int index = static_cast<int>(button);
-		return currentButtonState[index] == false && previousButtonState[index];
-	}
-
-	bool Mouse::IsButtonDown(MouseButton button)
-	{
-		int index = static_cast<int>(button);
-		return currentButtonState[index];
-	}
-
-	bool Mouse::IsButtonUp(MouseButton button)
-	{
-		int index = static_cast<int>(button);
-		return currentButtonState[index] == false;
-	}
-
-	const Vector2& Mouse::GetCursorPosition()
-	{
-		return currentCursorPosition;
-	}
-
-	const Vector2& Mouse::GetCursorDirection()
-	{
-		return cursorDirection;
-	}
-
-	MouseCursorShape Mouse::GetCursorShape()
-	{
-		return shape;
-	}
-
-	const Vector2& Mouse::GetWheelDirection()
-	{
-		return currentWheelDirection;
-	}
-
-	void Mouse::SetButtonState(MouseButton button, bool state)
-	{
-		DirectSetButtonState(button, state);
-	}
-
-	void Mouse::SetCursorShape(MouseCursorShape newShape)
-	{
-		int intMode = static_cast<int>(newShape);
-		if (shapeBuffers[intMode] == nullptr)
-		{
-			shapeBuffers[intMode] = glfwCreateStandardCursor(intMode + 0x00036000);
-		}
-		glfwSetCursor(window.GetContext(), static_cast<GLFWcursor*>(shapeBuffers[intMode]));
-		shape = newShape;
-	}
-
-	void Mouse::SetCursorPosition(const Vector2& position)
-	{
-		// Not calling direct function because it modifies the data differently
-
-		glfwSetCursorPos(window.GetContext(), position.x, position.y);
-		currentCursorPosition = position;
-		MousePositionEvent event("MousePositionMove", position);
-		window.eventDispatcher.Dispatch(event);
-	}
-
-	void Mouse::SetWheelDirection(const Vector2& direction)
-	{
-		DirectSetWheelDirection(direction);
-	}
-
-	void Mouse::DirectSetButtonState(MouseButton button, bool state)
-	{
-		currentButtonState[static_cast<int>(button)] = state;
-		MouseButtonEvent event(state ? "MouseButtonPressed" : "MouseButtonReleased", button);
-		window.eventDispatcher.Dispatch(event);
-	}
-
-	void Mouse::DirectSetCursorPosition(const Vector2& position)
-	{
-		currentCursorPosition = position;
-		MousePositionEvent event("MousePositionMoved", position);
-		window.eventDispatcher.Dispatch(event);
-	}
-
-	void Mouse::DirectSetWheelDirection(const Vector2& direction)
-	{
-		currentWheelDirection = direction;
-		ScrollEvent event("ScrollMoved", direction);
-		window.eventDispatcher.Dispatch(event);
 	}
 }

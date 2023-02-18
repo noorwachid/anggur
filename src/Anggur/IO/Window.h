@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/EventEmitter.h"
 #include "Input.h"
 #include "WindowContext.h"
 #include "WindowEvent.h"
@@ -10,7 +9,8 @@ namespace Anggur
 	class Window
 	{
 	  public:
-		EventDispatcher eventDispatcher;
+        Keyboard keyboard;
+        Mouse mouse;
 
 	  public:
 		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
@@ -60,7 +60,16 @@ namespace Anggur
 			return device;
 		}
 
-		void RegisterInputDevice(InputDevice* device);
+        void Dispatch(Event& event)
+        {
+            if (listener)
+                listener(event);
+        }
+
+        void SetListener(const std::function<void(Event&)>& newListener)
+        {
+            listener = newListener;
+        }
 
 	  private:
 		void InitializeGraphicsAPI();
@@ -78,6 +87,6 @@ namespace Anggur
 		Vector2 frameBufferSize;
 		std::string title;
 
-		std::vector<InputDevice*> inputs;
+        std::function<void(Event&)> listener;
 	};
 }

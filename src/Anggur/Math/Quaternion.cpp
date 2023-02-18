@@ -20,12 +20,12 @@ namespace Anggur
 
 	// Getters
 
-	float Quaternion::GetLengthSquared()
+	float Quaternion::GetLengthSquared() const
 	{
 		return (x * x + y * y + z * z + w * w);
 	}
 
-	float Quaternion::GetLength()
+	float Quaternion::GetLength() const
 	{
 		return Math::Sqrt(GetLengthSquared());
 	}
@@ -60,9 +60,22 @@ namespace Anggur
 
 	// 2nd class manipulations
 
-	static float dot(const Quaternion& a, const Quaternion& b)
+	float Quaternion::Dot(const Quaternion& a, const Quaternion& b)
 	{
 		return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+	}
+
+    Quaternion Quaternion::Normalize(const Quaternion& q)
+	{
+        Quaternion r;
+        float length = q.GetLength();
+
+        r.x /= length;
+        r.y /= length;
+        r.z /= length;
+        r.w /= length;
+
+        return r;
 	}
 
 	Quaternion Quaternion::Lerp(const Quaternion& a, const Quaternion& b, float amount)
