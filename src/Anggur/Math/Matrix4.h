@@ -131,8 +131,11 @@ namespace Anggur
 
 			Vector3 trans(-Vector3::Dot(xaxis, eye), -Vector3::Dot(yaxis, eye), -Vector3::Dot(zaxis, eye));
 
-			return Matrix4(xaxis.x, yaxis.x, zaxis.x, 0.0f, xaxis.y, yaxis.y, zaxis.y, 0.0f, xaxis.z, yaxis.z, zaxis.z,
-						   0.0f, trans.x, trans.y, trans.z, 1.0f);
+			return Matrix4(
+                xaxis.x, yaxis.x, zaxis.x, 0.0f, 
+                xaxis.y, yaxis.y, zaxis.y, 0.0f, 
+                xaxis.z, yaxis.z, zaxis.z, 0.0f, 
+                trans.x, trans.y, trans.z, 1.0f);
 		}
 
 		// Projection Matrices
@@ -142,8 +145,12 @@ namespace Anggur
 			float yScale = Math::Cot(fovY / 2.0f);
 			float xScale = yScale * height / width;
 
-			return Matrix4(xScale, 0.0f, 0.0f, 0.0f, 0.0f, -yScale, 0.0f, 0.0f, 0.0f, 0.0f, far / (far - near), 1.0f,
-						   0.0f, 0.0f, -near * far / (far - near), 0.0);
+			return Matrix4(
+                xScale, 0.0f, 0.0f, 0.0f, 
+                0.0f, yScale, 0.0f, 0.0f, 
+                0.0f, 0.0f, far / (far - near), 1.0f,
+                0.0f, 0.0f, -near * far / (far - near), 0.0
+            );
 		}
 
 		static Matrix4 CreateOrtographic(float left, float right, float top, float bottom, float near, float far)
@@ -153,8 +160,12 @@ namespace Anggur
 
 		static Matrix4 CreateOrthographic(float width, float height, float near, float far)
 		{
-			return Matrix4(2.0f / width, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f / height, 0.0f, 0.0f, 0.0f, 0.0f,
-						   1.0f / (far - near), 0.0f, 0.0f, 0.0f, near / (near - far), 1.0);
+			return Matrix4(
+                2.0f / width, 0.0f, 0.0f, 
+                0.0f, 0.0f, 2.0f / height, 0.0f, 
+                0.0f, 0.0f, 0.0f, 1.0f / (far - near), 
+                0.0f, 0.0f, 0.0f, near / (near - far), 1.0
+            );
 		}
 
 		friend Matrix4 operator*(const Matrix4& a, const Matrix4& b)

@@ -4,6 +4,7 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector3.h"
 #include "Anggur/Math/Vector4.h"
+#include "Mesh.h"
 #include "Shader.h"
 #include "Texture2D.h"
 #include "VertexBuffer.h"
@@ -12,35 +13,6 @@
 
 namespace Anggur
 {
-	struct MeshVertex
-	{
-		Vector3 position;
-		Vector3 normal;
-		Vector4 color;
-		Vector2 uv;
-		float slot;
-
-		MeshVertex() = default;
-		MeshVertex(const Vector3& newPosition, const Vector3& newNormal, const Vector4& newColor, const Vector2& newUV,
-				   float newSlot = 0.0f)
-			: position(newPosition), normal(newNormal), color(newColor), uv(newUV), slot(newSlot)
-		{
-		}
-
-		std::string ToString()
-		{
-			std::string temp;
-
-			temp += "position: " + position.ToString() + "\n";
-			temp += "normal: " + normal.ToString() + "\n";
-			temp += "color: " + color.ToString() + "\n";
-			temp += "textureCoord: " + uv.ToString() + "\n";
-			temp += "textureSlot: " + std::to_string(slot) + "\n";
-
-			return temp;
-		}
-	};
-
 	class MeshRenderer
 	{
 	  public:
@@ -62,11 +34,12 @@ namespace Anggur
 		void Flush();
 		void FlushInternalBuffer();
 
-		void Draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices,
-				  const std::shared_ptr<Texture2D>& texture);
+        inline const std::shared_ptr<Texture2D>& GetDefaultTexture() const 
+        {
+            return whiteTexture;
+        }
 
-		// 3D Primitives
-		void DrawCube(const Matrix4& model, const Vector4& color = Vector4::white);
+		void Draw(const Matrix4& model, const Mesh& mesh);
 
 	  private:
 		std::shared_ptr<Shader> shader;
@@ -74,7 +47,7 @@ namespace Anggur
 		std::shared_ptr<VertexBuffer> vertexBuffer;
 		std::shared_ptr<IndexBuffer> indexBuffer;
 
-		std::vector<MeshVertex> vertices;
+		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 		std::vector<std::shared_ptr<Texture2D>> textures;
 		std::vector<int> textureSlots;

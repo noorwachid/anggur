@@ -23,19 +23,19 @@ namespace Anggur
 
 	void MeshRenderer::InitializeVertexPool()
 	{
-		vertices.assign(batchVertex, MeshVertex(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f),
+		vertices.assign(batchVertex, Vertex(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f),
 												Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f), 0.0f));
 		indices.assign(batchVertex * batchIndexMultiplier, 0);
 
 		vertexBuffer = std::make_shared<VertexBuffer>();
-		vertexBuffer->SetCapacity(sizeof(MeshVertex) * vertices.size());
+		vertexBuffer->SetCapacity(sizeof(Vertex) * vertices.size());
 
 		vertexArray = std::make_shared<VertexArray>();
-		vertexArray->SetAttribute(0, 3, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, position));
-		vertexArray->SetAttribute(1, 3, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, normal));
-		vertexArray->SetAttribute(2, 4, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, color));
-		vertexArray->SetAttribute(3, 2, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, uv));
-		vertexArray->SetAttribute(4, 1, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, slot));
+		vertexArray->SetAttribute(0, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, position));
+		vertexArray->SetAttribute(1, 3, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, normal));
+		vertexArray->SetAttribute(2, 4, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, color));
+		vertexArray->SetAttribute(3, 2, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, uv));
+		vertexArray->SetAttribute(4, 1, GL_FLOAT, sizeof(Vertex), offsetof(Vertex, slot));
 
 		indexBuffer = std::make_shared<IndexBuffer>();
 		indexBuffer->SetCapacity(sizeof(uint32_t) * indices.size());
@@ -162,7 +162,7 @@ namespace Anggur
 		vertexArray->Bind();
 
 		vertexBuffer->Bind();
-		vertexBuffer->setData(sizeof(MeshVertex) * vertexOffset, vertices.data());
+		vertexBuffer->setData(sizeof(Vertex) * vertexOffset, vertices.data());
 
 		indexBuffer->Bind();
 		indexBuffer->setData(sizeof(uint32_t) * indexOffset, indices.data());
@@ -187,115 +187,59 @@ namespace Anggur
 			   textureOffset + newTextureSize > textures.size();
 	}
 
-	void MeshRenderer::Draw(const std::vector<MeshVertex>& newVertices, const std::vector<uint32_t>& newIndices,
-							const std::shared_ptr<Texture2D>& texture)
+	void MeshRenderer::Draw(const Matrix4& model, const Mesh& mesh)
 	{
-		if (IsCapacityMaxout(newVertices.size(), newIndices.size(), 1))
+		if (IsCapacityMaxout(mesh.vertices.size(), mesh.indices.size(), 1))
 			Flush();
 
-		// Find or add new texture slot
-		int textureSlot = 0;
+        int textureSlot = 0;
 
-		// This code only create one branch
-		for (; textureSlot < textureOffset && textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot)
-			;
+        if (!mesh.textures.empty())
+        {
+            for (const auto& texture : mesh.textures)
+            {
+                // Find or add new texture slot
+                // This code only create one branch
+                for (; textureSlot < textureOffset && textures[textureSlot]->GetID() != texture->GetID(); ++textureSlot)
+                    ;
 
-		if (textureSlot == textureOffset)
-		{
-			textureSlot = textureOffset;
-			textures[textureOffset] = texture;
-			textureOffset += 1;
-		}
+                if (textureSlot == textureOffset)
+                {
+                    textureSlot = textureOffset;
+                    textures[textureOffset] = texture;
+                    textureOffset += 1;
+                }
+            }
+        } 
+        else 
+        {
+            for (; textureSlot < textureOffset && textures[textureSlot]->GetID() != whiteTexture->GetID(); ++textureSlot)
+                ;
 
-		for (size_t i = 0; i < newVertices.size(); ++i)
+            if (textureSlot == textureOffset)
+            {
+                textureSlot = textureOffset;
+                textures[textureOffset] = whiteTexture;
+                textureOffset += 1;
+            }
+        }
+
+
+		for (size_t i = 0; i < mesh.vertices.size(); ++i)
 		{
 			auto& vertex = vertices[i + vertexOffset];
 
-			vertex = newVertices[i];
+			vertex = mesh.vertices[i];
+            vertex.position = model * vertex.position;
 			vertex.slot = textureSlot;
 		}
 
-		for (size_t i = 0; i < newIndices.size(); ++i)
+		for (size_t i = 0; i < mesh.indices.size(); ++i)
 		{
-			indices[i + indexOffset] = newIndices[i] + vertexOffset;
+			indices[i + indexOffset] = mesh.indices[i] + vertexOffset;
 		}
 
-		vertexOffset += newVertices.size();
-		indexOffset += newIndices.size();
-	}
-
-	void MeshRenderer::DrawCube(const Matrix4& model, const Vector4& color)
-	{
-		Draw(
-			{
-				// position                                 // normal                  // color // texCoord
-				MeshVertex(model * Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-				MeshVertex(model * Vector3(0.5f, -0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
-				MeshVertex(model * Vector3(0.5f, 0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
-				MeshVertex(model * Vector3(-0.5f, 0.5f, -0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
-
-				MeshVertex(model * Vector3(0.5f, -0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-				MeshVertex(model * Vector3(-0.5f, -0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(1, 0)),
-				MeshVertex(model * Vector3(-0.5f, 0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(1, 1)),
-				MeshVertex(model * Vector3(0.5f, 0.5f, 0.5f), Vector3(0.0f, 0.0f, 1.0f),
-						   Vector4(color.x, color.y, color.z, color.w), Vector2(0, 1)),
-			},
-			{
-				// front
-				0,
-				1,
-				2,
-				2,
-				3,
-				0,
-
-				// back
-				4,
-				5,
-				6,
-				6,
-				7,
-				4,
-
-				// left
-				5,
-				0,
-				3,
-				3,
-				6,
-				5,
-
-				// right
-				1,
-				4,
-				7,
-				7,
-				2,
-				1,
-
-				// top
-				3,
-				2,
-				7,
-				7,
-				6,
-				3,
-
-				// bottom
-				1,
-				0,
-				5,
-				5,
-				4,
-				1,
-			},
-			whiteTexture);
+		vertexOffset += mesh.vertices.size();
+		indexOffset += mesh.indices.size();
 	}
 }
