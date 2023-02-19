@@ -7,47 +7,89 @@
 
 namespace Anggur
 {
-	struct KeyEvent : public Event
+	struct KeyEvent : Event
 	{
 		Key key = Key::Unknown;
 
-		KeyEvent(const std::string& name, Key newKey) : Event(name), key(newKey)
+		KeyEvent(ID newType, Key newKey) : Event(newType), key(newKey)
 		{
 		}
 	};
 
-	struct MouseButtonEvent : public Event
+	struct KeyPressedEvent : KeyEvent
+	{
+		KeyPressedEvent(Key newKey) : KeyEvent(GetID<KeyPressedEvent>(), newKey)
+		{
+		}
+	};
+
+	struct KeyHeldEvent : KeyEvent
+	{
+		KeyHeldEvent(Key newKey) : KeyEvent(GetID<KeyHeldEvent>(), newKey)
+		{
+		}
+	};
+
+	struct KeyReleasedEvent : KeyEvent
+	{
+		KeyReleasedEvent(Key newKey) : KeyEvent(GetID<KeyReleasedEvent>(), newKey)
+		{
+		}
+	};
+
+	struct KeyComposedEvent : public Event
+	{
+		uint32_t codepoint;
+
+		KeyComposedEvent(uint32_t newCodepoint) : Event(GetID<KeyComposedEvent>()), codepoint(newCodepoint)
+		{
+		}
+	};
+
+	struct MouseEvent : public Event
 	{
 		MouseButton button = MouseButton::Unknown;
 
-		MouseButtonEvent(const std::string& name, MouseButton newButton) : Event(name), button(newButton)
+		MouseEvent(ID newType, MouseButton newButton) : Event(newType), button(newButton)
 		{
 		}
 	};
 
-	struct MousePositionEvent : public Event
+	struct MousePressedEvent : public MouseEvent
+	{
+		MousePressedEvent(MouseButton newButton) : MouseEvent(GetID<MousePressedEvent>(), newButton)
+		{
+		}
+	};
+
+	struct MouseHeldEvent : public MouseEvent
+	{
+		MouseHeldEvent(MouseButton newButton) : MouseEvent(GetID<MouseHeldEvent>(), newButton)
+		{
+		}
+	};
+
+	struct MouseReleasedEvent : public MouseEvent
+	{
+		MouseReleasedEvent(MouseButton newButton) : MouseEvent(GetID<MouseReleasedEvent>(), newButton)
+		{
+		}
+	};
+
+	struct MouseMovedEvent : public Event
 	{
 		Vector2 position;
 
-		MousePositionEvent(const std::string& name, const Vector2& newPosition) : Event(name), position(newPosition)
+		MouseMovedEvent(const Vector2& newPosition) : Event(GetID<MouseMovedEvent>()), position(newPosition)
 		{
 		}
 	};
 
-	struct ScrollEvent : public Event
+	struct MouseScrolledEvent : public Event
 	{
 		Vector2 direction;
 
-		ScrollEvent(const std::string& name, const Vector2& newDirection) : Event(name), direction(newDirection)
-		{
-		}
-	};
-
-	struct CodePointEvent : public Event
-	{
-		uint32_t codePoint;
-
-		CodePointEvent(uint32_t newCodePoint) : Event("CodePoint"), codePoint(newCodePoint)
+		MouseScrolledEvent(const Vector2& newDirection) : Event(GetID<MouseScrolledEvent>()), direction(newDirection)
 		{
 		}
 	};

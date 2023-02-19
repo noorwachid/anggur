@@ -6,38 +6,39 @@
 
 namespace Anggur
 {
-	// Input
-    
-    void InputDevice::Initialize(WindowContext* newContext)
-    {
-        context = newContext;
-    }
-
-	void Keyboard::Initialize(WindowContext* newContext)
+	void Input::Initialize(WindowContext* newContext)
 	{
         context = newContext;
+
+        SetKeyCallbacks();
+        SetMouseCallbacks();
+    }
+
+    void Input::SetKeyCallbacks()
+    {
 		glfwSetKeyCallback(context, [](GLFWwindow* context, int vkeyCode, int scanCode, int state, int modifierKey) {
 			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Key key = static_cast<Key>(vkeyCode);
 
-            switch (state) {
+            switch (state) 
+            {
                 case GLFW_PRESS:
                 {
-                    KeyEvent event("KeyPressed", key);
+                    KeyPressedEvent event(key);
                     window.Dispatch(event);
                     break;
                 }
 
                 case GLFW_REPEAT:
                 {
-                    KeyEvent event("KeyDown", key);
+                    KeyHeldEvent event(key);
                     window.Dispatch(event);
                     break;
                 }
 
                 case GLFW_RELEASE:
                 {
-                    KeyEvent event("KeyReleased", key);
+                    KeyReleasedEvent event(key);
                     window.Dispatch(event);
                     break;
                 }
@@ -47,21 +48,55 @@ namespace Anggur
 		});
 	}
 
-	bool Keyboard::IsKeyPressed(Key key) const
+	void Input::SetMouseCallbacks()
+	{
+		glfwSetCursorPosCallback(context, [](GLFWwindow* context, double x, double y) {
+			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+            MouseMovedEvent event(Vector2(x, y));
+            window.input.mousePosition = Vector2(x, y);
+            window.Dispatch(event);
+		});
+
+		glfwSetMouseButtonCallback(context, [](GLFWwindow* context, int buttonCode, int state, int mods) {
+			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+            MouseButton button = static_cast<MouseButton>(buttonCode);
+
+            switch (state)
+            {
+                case GLFW_PRESS:
+                {
+                    MousePressedEvent event(button);
+                    window.Dispatch(event);
+                    break;
+                }
+
+                case GLFW_REPEAT:
+                {
+                    MouseHeldEvent event(button);
+                    window.Dispatch(event);
+                    break;
+                }
+
+                case GLFW_RELEASE:
+                {
+                    MouseReleasedEvent event(button);
+                    window.Dispatch(event);
+                    break;
+                }
+
+                default: break;
+            }
+		});
+	}
+
+	bool Input::IsKeyPressed(Key key) const
 	{
 		int index = static_cast<int>(key);
 
         return glfwGetKey(context, index) == GLFW_PRESS;
 	}
 
-	bool Keyboard::IsKeyReleased(Key key) const
-	{
-		int index = static_cast<int>(key);
-
-        return glfwGetKey(context, index) == GLFW_RELEASE;
-	}
-
-	bool Keyboard::IsKeyDown(Key key) const
+	bool Input::IsKeyHeld(Key key) const
 	{
 		int index = static_cast<int>(key);
         int state = glfwGetKey(context, index);
@@ -69,20 +104,15 @@ namespace Anggur
         return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Keyboard::IsKeyUp(Key key) const
+	bool Input::IsKeyReleased(Key key) const
 	{
 		int index = static_cast<int>(key);
 
-        return IsKeyReleased(key) || !IsKeyDown(key);
+        return glfwGetKey(context, index) == GLFW_RELEASE;
 	}
 
-	void Mouse::Initialize(WindowContext* newContext)
-	{
-        context = newContext;
-		glfwSetCursorPosCallback(context, [](GLFWwindow* context, double x, double y) {
-			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
-            MousePositionEvent event("MouseMoved", Vector2(x, y));
-            window.Dispatch(event);
-		});
-	}
+    const Vector2& Input::GetMousePosition() const
+    {
+        return mousePosition;
+    }
 }

@@ -1,20 +1,17 @@
 #pragma once
 
 #include <string>
+#include "ID.h"
 
 namespace Anggur
 {
 	struct Event
 	{
-		std::string name;
+        ID type = 0;
 		bool consumed = false;
 
-		Event(const std::string& newName) : name(newName)
-		{
-		}
-
-		virtual ~Event()
-		{
-		}
+        Event(ID newType): type(newType)
+        {
+        }
 	};
 }

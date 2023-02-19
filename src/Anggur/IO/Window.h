@@ -8,40 +8,25 @@ namespace Anggur
 {
 	class Window
 	{
-	  public:
-        Keyboard keyboard;
-        Mouse mouse;
+	public:
+        Input input;
 
-	  public:
+	public:
 		Window(const Vector2& size = Vector2(800, 600), const std::string& title = "");
 
 		~Window();
 
-		/**
-		 * Get native context
-		 */
 		WindowContext* GetContext();
 
-		/**
-		 * Get aspect ratio
-		 */
 		float GetAspectRatio();
 
-		/**
-		 * Get cursor position
-		 */
-		const Vector2& GetCursorPosition();
+		const Vector2& GetPosition();
 
-		/**
-		 * Get size
-		 */
 		const Vector2& GetSize();
-
-		const Vector2& GetFrameBufferSize();
 
 		const std::string& GetTitle();
 
-		void SetCursorPosition(const Vector2& pos);
+		void SetPosition(const Vector2& pos);
 
 		void SetSize(const Vector2& size);
 
@@ -71,7 +56,7 @@ namespace Anggur
             listener = newListener;
         }
 
-	  private:
+	private:
 		void InitializeGraphicsAPI();
 
 		void BindGraphicsAPI();
@@ -80,11 +65,10 @@ namespace Anggur
 
 		void SwapFrameBuffers();
 
-	  private:
+	private:
 		WindowContext* context;
 		Vector2 position;
 		Vector2 size;
-		Vector2 frameBufferSize;
 		std::string title;
 
         std::function<void(Event&)> listener;

@@ -8,34 +8,9 @@ namespace Anggur
 {
 	class Window;
 
-	class InputDevice
-	{
-      public:
-        virtual void Initialize(WindowContext* context);
-
-      protected:
-        WindowContext* context;
-
-        friend class Window;
-	};
-
 	// Common Devices
-
-	class Keyboard : public InputDevice
-	{
-	  public:
-        virtual void Initialize(WindowContext* context) override;
-
-		bool IsKeyPressed(Key key) const;
-
-		bool IsKeyReleased(Key key) const;
-
-		bool IsKeyDown(Key key) const;
-
-		bool IsKeyUp(Key key) const;
-	};
-
-	enum class MouseCursorShape
+    //
+	enum class MouseShape
 	{
 		Arrow = 0x1,
 		I = 0x2,
@@ -45,10 +20,27 @@ namespace Anggur
 		VerticalResize = 0x6,
 	};
 
-	class Mouse : public InputDevice
+	class Input
 	{
-      public:
-        virtual void Initialize(WindowContext* context) override;
+	public:
+        void Initialize(WindowContext* context);
 
+		bool IsKeyPressed(Key key) const;
+
+		bool IsKeyHeld(Key key) const;
+
+		bool IsKeyReleased(Key key) const;
+
+        const Vector2& GetMousePosition() const;
+
+    private:
+        void SetKeyCallbacks();
+
+        void SetMouseCallbacks();
+
+    private:
+        Vector2 mousePosition;
+
+        WindowContext* context;
 	};
 }

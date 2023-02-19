@@ -28,15 +28,10 @@ namespace Anggur
 
 		InitializeGraphicsAPI();
 
-		int frameBufferWidth = 0;
-		int frameBufferHeight = 0;
-		glfwGetFramebufferSize(context, &frameBufferWidth, &frameBufferHeight);
-		frameBufferSize.Set(frameBufferWidth, frameBufferHeight);
-
 		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 size(width, height);
-			WindowSizeEvent event("WindowResized", size);
+			WindowResizedEvent event(size);
 			window->Dispatch(event);
 			window->size = size;
 		});
@@ -44,21 +39,12 @@ namespace Anggur
 		glfwSetWindowPosCallback(context, [](GLFWwindow* context, int x, int y) {
 			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 			Vector2 position(x, y);
-			WindowSizeEvent event("WindowMoved", position);
+			WindowMovedEvent event(position);
 			window->Dispatch(event);
 			window->position = position;
 		});
 
-		glfwSetFramebufferSizeCallback(context, [](GLFWwindow* context, int width, int height) {
-			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			Vector2 size(width, height);
-			FrameBufferSizeEvent event("FrameBufferResized", size);
-			window->Dispatch(event);
-			window->frameBufferSize = size;
-		});
-
-        keyboard.Initialize(context);
-        mouse.Initialize(context);
+        input.Initialize(context);
 	}
 
 	Window::~Window()
@@ -77,7 +63,7 @@ namespace Anggur
 		return size.y / size.x;
 	}
 
-	const Vector2& Window::GetCursorPosition()
+	const Vector2& Window::GetPosition()
 	{
 		return position;
 	}
@@ -87,17 +73,12 @@ namespace Anggur
 		return size;
 	}
 
-	const Vector2& Window::GetFrameBufferSize()
-	{
-		return frameBufferSize;
-	}
-
 	const std::string& Window::GetTitle()
 	{
 		return title;
 	}
 
-	void Window::SetCursorPosition(const Vector2& position)
+	void Window::SetPosition(const Vector2& position)
 	{
 		glfwSetWindowPos(context, position.x, position.y);
 	}

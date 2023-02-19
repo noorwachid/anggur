@@ -68,11 +68,16 @@ namespace Anggur
 
     void Scene::On(Event& event)
     {
+        auto scriptView = registry.view<Script>();
+
+        for (auto [id, script] : scriptView.each())
+        {
+            script.instance->On(event);
+        }
     }
 
     void Scene::Detach()
     {
-
         auto scriptView = registry.view<Script>();
 
         for (auto [id, script] : scriptView.each())
