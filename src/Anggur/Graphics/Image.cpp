@@ -27,6 +27,8 @@ namespace Anggur
 		int newHeight;
 		int newChannels;
 
+        stbi_set_flip_vertically_on_load(true);
+
 		uint8_t* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
 		assert(rawData && "Failed to load image");
 

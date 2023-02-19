@@ -13,8 +13,6 @@ namespace Anggur
 		InitializeVertexPool();
 		InitializeTexturePool();
 		InitializeShader();
-
-		glEnable(GL_DEPTH_TEST);
 	}
 
 	MeshRenderer::~MeshRenderer()
@@ -59,7 +57,7 @@ namespace Anggur
 	{
 		shader = std::make_shared<Shader>();
 		shader->SetVertexSource(R"(
-            #version 330 core
+            #version 410 core
 
             layout (location = 0) in vec3 aPosition;
             layout (location = 1) in vec3 aNormal;
@@ -83,7 +81,7 @@ namespace Anggur
         )");
 
 		shader->SetFragmentSource(R"(
-            #version 330 core
+            #version 410 core
             
             in vec4 vColor;
             in vec2 vTexCoord;
@@ -134,6 +132,8 @@ namespace Anggur
 		drawCount = 0;
 
 		FlushInternalBuffer();
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void MeshRenderer::BeginScene(const Matrix4& viewProjection)

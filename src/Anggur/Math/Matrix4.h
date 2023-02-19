@@ -125,17 +125,15 @@ namespace Anggur
 
 		static Matrix4 CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
 		{
-			Vector3 zaxis = Vector3::Normalize(target - eye);
-			Vector3 xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
-			Vector3 yaxis = Vector3::Normalize(Vector3::Cross(zaxis, xaxis));
-
-			Vector3 trans(-Vector3::Dot(xaxis, eye), -Vector3::Dot(yaxis, eye), -Vector3::Dot(zaxis, eye));
+			Vector3 f = Vector3::Normalize(target - eye);
+			Vector3 s = Vector3::Normalize(Vector3::Cross(f, up));
+			Vector3 u = Vector3::Normalize(Vector3::Cross(s, f));
 
 			return Matrix4(
-                xaxis.x, yaxis.x, zaxis.x, 0.0f, 
-                xaxis.y, yaxis.y, zaxis.y, 0.0f, 
-                xaxis.z, yaxis.z, zaxis.z, 0.0f, 
-                trans.x, trans.y, trans.z, 1.0f);
+                s.x, u.x, -f.x, 0.0f, 
+                s.y, u.y, -f.y, 0.0f, 
+                s.z, u.z, -f.z, 0.0f, 
+                -Vector3::Dot(s, eye), -Vector3::Dot(u, eye), Vector3::Dot(f, eye), 1.0f);
 		}
 
 		// Projection Matrices
@@ -148,23 +146,19 @@ namespace Anggur
 			return Matrix4(
                 xScale, 0.0f, 0.0f, 0.0f, 
                 0.0f, yScale, 0.0f, 0.0f, 
-                0.0f, 0.0f, far / (far - near), 1.0f,
-                0.0f, 0.0f, -near * far / (far - near), 0.0
+                0.0f, 0.0f, -(far + near) / (far - near), -1.0f,
+                0.0f, 0.0f, -2 * (near * far) / (far - near), 0.0
             );
-		}
-
-		static Matrix4 CreateOrtographic(float left, float right, float top, float bottom, float near, float far)
-		{
-			return Matrix4();
 		}
 
 		static Matrix4 CreateOrthographic(float width, float height, float near, float far)
 		{
+            // TODO: find opengl based orthographic matrix
 			return Matrix4(
-                2.0f / width, 0.0f, 0.0f, 
-                0.0f, 0.0f, 2.0f / height, 0.0f, 
-                0.0f, 0.0f, 0.0f, 1.0f / (far - near), 
-                0.0f, 0.0f, 0.0f, near / (near - far), 1.0
+                1.0f / width, 0.0f, 0.0f, 0.0f, 
+                0.0f, 1.0f / height, 0.0f, 0.0f, 
+                0.0f, 0.0f, -2.0f / (far - near), 0.0f, 
+                0.0f, 0.0f, (far + near) / (far - near), 1.0
             );
 		}
 

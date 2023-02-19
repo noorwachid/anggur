@@ -18,6 +18,7 @@ namespace Anggur
 #ifdef ANGGUR_OS_X
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_TRUE);
 
 		context = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
 		assert(context && "[Window] Failed to create a window");

@@ -42,8 +42,7 @@ namespace Anggur
             script.instance->Update(deltaTime);
         }
 
-        auto windowSize = window->GetSize();
-        auto projection = Matrix4::CreatePerspective(Math::DegreeToRadian(75.0f), windowSize.x, windowSize.y, 0.1f, 100.f);
+        auto projection = Matrix4::CreatePerspective(Math::DegreeToRadian(45.0f), viewport->x, viewport->y, 0.1f, 100.f);
 
         Camera* camera = GetPrimaryCamera();
 
@@ -52,6 +51,8 @@ namespace Anggur
             : projection;
 
         meshRenderer->BeginScene(viewProjection);
+        
+        meshRenderer->BeginScene();
 
         meshRenderer->Clear(Vector4::charcoal);
 

@@ -24,6 +24,7 @@ namespace Anggur
         Scene* scene = nullptr;
         Window* window = nullptr;
         MeshRenderer* meshRenderer = nullptr;
+        Vector2* viewport = nullptr;
 
         friend class Application;
     };

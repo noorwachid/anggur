@@ -8,6 +8,7 @@ namespace Anggur
         {
             scene->window = window;
             scene->meshRenderer = meshRenderer;
+            scene->viewport = viewport;
             scene->Attach();
         }
     }

@@ -15,36 +15,30 @@ namespace Anggur
     class Application
     {
       public:
-        void Initialize()
+        virtual void Initialize()
         {
             window.SetListener([this](Event& event) {
                 sceneSystem.On(event);
             });
 
-            meshRenderer.SetViewport(window.GetFrameBufferSize());
-
             sceneSystem.window = &window;
             sceneSystem.meshRenderer = &meshRenderer;
+            sceneSystem.viewport = &viewport;
         }
 
-        void Run(Scene* newScene)
+        virtual void Run(Scene* newScene)
         {
             Initialize();
 
             sceneSystem.Attach(newScene);
 
-            float previousTime = clock.GetElapsed();
+            clock.Tick();
 
             while (window.IsOpen())
             {
-                float currentTime = clock.GetElapsed();
-                float deltaTime = currentTime - previousTime;
-
                 windowSystem.PollEvents();
 
-                sceneSystem.Update(deltaTime);
-
-                previousTime = currentTime;
+                sceneSystem.Update(clock.Tick());
 
                 window.Update();
             }
@@ -52,9 +46,10 @@ namespace Anggur
             sceneSystem.Detach();
         }
 
-      private:
+      protected:
         WindowSystem windowSystem;
         Window window;
+        Vector2 viewport;
 
         MeshRenderer meshRenderer;
         Clock clock;

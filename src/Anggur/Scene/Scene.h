@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "Anggur/Event.h"
+#include "Anggur/Math/Vector2.h"
 #include "Camera.h"
 #include "entt/entt.hpp"
 
@@ -42,5 +43,6 @@ namespace Anggur
         entt::registry registry;
         Window* window;
         MeshRenderer* meshRenderer;
+        Vector2* viewport;
     };
 }

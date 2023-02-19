@@ -8,13 +8,13 @@ namespace Anggur
 {
     struct Transform 
     {
-        Vector3 position = Vector3::zero;
-        Vector3 rotation = Vector3::zero;
+        Vector3 position;
+        Quaternion rotation;
         Vector3 scale = Vector3::one;
 
         Matrix4 ToMatrix()
         {
-            return Matrix4::CreateScale(scale) * Matrix4::CreateTranslation(position);
+            return Matrix4::CreateScale(scale) * Matrix4::CreateRotation(rotation) * Matrix4::CreateTranslation(position);
         }
     };
 }

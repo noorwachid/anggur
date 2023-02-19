@@ -24,8 +24,23 @@ namespace Anggur
 			return std::chrono::duration_cast<std::chrono::milliseconds>(current - started).count() * 0.001;
 		}
 
+        /**
+         * Get distance between previous tick
+         */
+        float Tick()
+        {
+            float currentTime = GetElapsed();
+            float deltaTime = currentTime - previousTime;
+
+            previousTime = currentTime;
+
+            return deltaTime;
+        }
+
 	  private:
 		ClockContext context;
 		TimePoint started;
+
+        float previousTime = 0;
 	};
 }
