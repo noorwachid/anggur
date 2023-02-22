@@ -1,10 +1,10 @@
 -std=c++20
 -stdlib=libc++
 -xc++
--I./src
--I./vendor/glad/glad/include
--I./vendor/glfw/glfw/include
--I./vendor/stb/image/src
--I./vendor/stb/truetype/src
--I./vendor/skypjack/entt/src
 -I/usr/local/include/
+-I./Sources
+-I./Dependencies/GLAD/GLAD/include
+-I./Dependencies/GLFW/GLFW/include
+-I./Dependencies/STB/Image/Sources
+-I./Dependencies/STB/TrueType/Sources
+-I./Dependencies/SkyPjack/EnTT/src

@@ -1,10 +1,22 @@
+Language: Cpp
+
 BasedOnStyle: Microsoft
-AlignConsecutiveDeclarations: true
+
+UseTab: Always
+
+BreakBeforeBraces: Allman
+IndentWidth: 4
+AlignAfterOpenBracket: BlockIndent
 PointerAlignment: Left
+
 NamespaceIndentation: All
 FixNamespaceComments: false
-PenaltyIndentedWhitespace: 1
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-UseTab: ForContinuationAndIndentation
-IndentAccessModifiers: false
+
+BinPackArguments: true
+
+ColumnLimit: 120
+
+AlwaysBreakTemplateDeclarations: Yes
+
+IndentCaseLabels: true
+AccessModifierOffset: -4
