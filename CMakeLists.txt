@@ -3,23 +3,23 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(Anggur)
 
-file(GLOB Anggur_Sources
-	"Sources/Anggur/*/*.cpp"
-	"Sources/Anggur/*.cpp"
+file(GLOB Anggur_Source
+	"Source/Anggur/*/*.cpp"
+	"Source/Anggur/*.cpp"
 )
 
 add_library(Anggur STATIC
-	${Anggur_Sources}
+	${Anggur_Source}
 )
 
 # Local libraries
-add_subdirectory("Dependencies/GLAD/GLAD")
-add_subdirectory("Dependencies/GLFW/GLFW")
-add_subdirectory("Dependencies/STB/Image")
-add_subdirectory("Dependencies/STB/TrueType")
-add_subdirectory("Dependencies/SkyPjack/entt")
+add_subdirectory("Vendor/GLAD/GLAD")
+add_subdirectory("Vendor/GLFW/GLFW")
+add_subdirectory("Vendor/STB/Image")
+add_subdirectory("Vendor/STB/TrueType")
+add_subdirectory("Vendor/SkyPjack/entt")
 
-target_include_directories(Anggur PUBLIC "Sources")
+target_include_directories(Anggur PUBLIC "Source")
 target_link_libraries(Anggur
 	glfw
 	GLAD
