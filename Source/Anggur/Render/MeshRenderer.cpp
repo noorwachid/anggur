@@ -1,4 +1,4 @@
-#include "Anggur/RenderPipeline/MeshRenderer.h"
+#include "Anggur/Render/MeshRenderer.h"
 #include "Anggur/Graphics/Function.h"
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/VertexBuffer.h"
@@ -75,12 +75,18 @@ namespace Anggur
             out vec2 vTexCoord;
             out float vTexSlot;
 
+			uniform vec3 uLightPosition;
+			uniform vec4 uLightColor;
             uniform mat4 uViewProjection;
 
-            void main() {
+            void main() 
+			{
+				float ambientStrength = 0.2;
+				vec4 ambient = ambientStrength * uLightColor;
+
                 gl_Position = uViewProjection * vec4(aPosition, 1.0f);
 
-                vColor = aColor;
+                vColor = aColor * ambient;
                 vTexCoord = aTexCoord;
                 vTexSlot = aTexSlot;
             }
@@ -161,7 +167,12 @@ namespace Anggur
 		for (size_t i = 0; i < textureOffset; ++i)
 			textures[i]->Bind(i);
 
+		Vector3 lightPosition(1, 1, 1);
+		Vector4 lightColor(1, 1, 1, 1);
+
 		shader->Bind();
+		shader->SetUniformVector3("uLightPosition", lightPosition);
+		shader->SetUniformVector4("uLightColor", lightColor);
 		shader->SetUniformMatrix4("uViewProjection", viewProjection);
 		shader->SetUniformInt("uTextures", textureOffset, textureSlots.data());
 

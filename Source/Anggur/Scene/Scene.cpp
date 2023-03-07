@@ -3,7 +3,7 @@
 #include "Anggur/Scene/Entity.h"
 #include "Anggur/Scene/Script.h"
 #include "Anggur/Scene/Transform.h"
-#include "Anggur/RenderPipeline/MeshRenderer.h"
+#include "Anggur/Render/MeshRenderer.h"
 
 namespace Anggur
 {

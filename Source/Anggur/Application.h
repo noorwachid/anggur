@@ -4,7 +4,7 @@
 #include "Anggur/IO/Input.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/IO/WindowSystem.h"
-#include "Anggur/RenderPipeline/MeshRenderer.h"
+#include "Anggur/Render/MeshRenderer.h"
 #include "Anggur/Scene/Scene.h"
 #include "Anggur/Scene/SceneSystem.h"
 #include "Anggur/Scene/Script.h"

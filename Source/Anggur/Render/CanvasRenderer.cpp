@@ -2,7 +2,7 @@
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/VertexBuffer.h"
 #include "Anggur/Math/Vector2.h"
-#include "Anggur/RenderPipeline/CanvasRenderer.h"
+#include "Anggur/Render/CanvasRenderer.h"
 #include <iostream>
 #include <vector>
 

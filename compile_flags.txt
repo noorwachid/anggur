@@ -2,9 +2,10 @@
 -stdlib=libc++
 -xc++
 -I/usr/local/include/
--I./Sources
--I./Dependencies/GLAD/GLAD/include
--I./Dependencies/GLFW/GLFW/include
--I./Dependencies/STB/Image/Sources
--I./Dependencies/STB/TrueType/Sources
--I./Dependencies/SkyPjack/EnTT/src
+-I/opt/local/include/
+-I./Source
+-I./Vendor/GLAD/GLAD/include
+-I./Vendor/GLFW/GLFW/include
+-I./Vendor/STB/Image/Sources
+-I./Vendor/STB/TrueType/Sources
+-I./Vendor/SkyPjack/EnTT/src
