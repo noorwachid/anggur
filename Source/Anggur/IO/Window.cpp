@@ -40,6 +40,18 @@ namespace Anggur
 			}
 		);
 
+		glfwSetFramebufferSizeCallback(
+			context,
+			[](GLFWwindow* context, int width, int height)
+			{
+				auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+				Vector2 size(width, height);
+				WindowResizedEvent event(size);
+				window->Dispatch(event);
+				window->frameBufferSize = size;
+			}
+		);
+
 		glfwSetWindowPosCallback(
 			context,
 			[](GLFWwindow* context, int x, int y)
@@ -51,6 +63,10 @@ namespace Anggur
 				window->position = position;
 			}
 		);
+
+		int fbx, fby;
+		glfwGetFramebufferSize(context, &fbx, &fby);
+		frameBufferSize.Set(fbx, fby);
 
 		input.Initialize(context);
 	}
@@ -79,6 +95,11 @@ namespace Anggur
 	const Vector2& Window::GetSize()
 	{
 		return size;
+	}
+
+	const Vector2& Window::GetFrameBufferSize()
+	{
+		return frameBufferSize;
 	}
 
 	const std::string& Window::GetTitle()

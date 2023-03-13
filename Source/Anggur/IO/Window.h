@@ -24,6 +24,8 @@ namespace Anggur
 
 		const Vector2& GetSize();
 
+		const Vector2& GetFrameBufferSize();
+
 		const std::string& GetTitle();
 
 		void SetPosition(const Vector2& pos);
@@ -63,6 +65,8 @@ namespace Anggur
 		Vector2 position;
 		Vector2 size;
 		std::string title;
+
+		Vector2 frameBufferSize;
 
         std::function<void(Event&)> listener;
 	};

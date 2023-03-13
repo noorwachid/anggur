@@ -4,11 +4,7 @@
 #include "Anggur/IO/Input.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/IO/WindowSystem.h"
-#include "Anggur/Render/MeshRenderer.h"
-#include "Anggur/Scene/Scene.h"
-#include "Anggur/Scene/SceneSystem.h"
-#include "Anggur/Scene/Script.h"
-#include "Anggur/Scene/Transform.h"
+#include "Anggur/Render/CanvasRenderer.h"
 
 namespace Anggur
 {
@@ -17,20 +13,20 @@ namespace Anggur
 	public:
 		virtual void Initialize()
 		{
-			window.SetListener([this](Event& event) { sceneSystem.On(event); });
-
-			viewport = window.GetSize();
-
-			sceneSystem.window = &window;
-			sceneSystem.meshRenderer = &meshRenderer;
-			sceneSystem.viewport = &viewport;
+			window.SetListener([this](Event& event) { On(event); });
 		}
 
-		virtual void Run(Scene* newScene)
+		virtual void Update()
+		{
+		}
+
+		virtual void On(Event& event)
+		{
+		}
+
+		virtual void Run()
 		{
 			Initialize();
-
-			sceneSystem.Attach(newScene);
 
 			clock.Tick();
 
@@ -38,23 +34,17 @@ namespace Anggur
 			{
 				windowSystem.PollEvents();
 
-				sceneSystem.Update(clock.Tick());
+				Update();
 
 				window.Update();
 			}
-
-			sceneSystem.Detach();
 		}
 
 	protected:
 		WindowSystem windowSystem;
 		Window window;
 
-		Vector2 viewport;
-
-		MeshRenderer meshRenderer;
+		CanvasRenderer renderer;
 		Clock clock;
-
-		SceneSystem sceneSystem;
 	};
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/Graphics/Mesh.h"
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
@@ -8,6 +7,7 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector3.h"
 #include "Anggur/Math/Vector4.h"
+#include "Anggur/Render/Mesh.h"
 #include <memory>
 #include <vector>
 
