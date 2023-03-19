@@ -20,6 +20,8 @@ namespace Anggur
 
 		float GetAspectRatio();
 
+		float GetScale();
+
 		const Vector2& GetPosition();
 
 		const Vector2& GetSize();

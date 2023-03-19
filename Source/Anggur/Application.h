@@ -4,7 +4,7 @@
 #include "Anggur/IO/Input.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/IO/WindowSystem.h"
-#include "Anggur/Render/CanvasRenderer.h"
+#include "Anggur/Render/UIRenderer.h"
 
 namespace Anggur
 {
@@ -44,7 +44,7 @@ namespace Anggur
 		WindowSystem windowSystem;
 		Window window;
 
-		CanvasRenderer renderer;
+		UIRenderer uiRenderer;
 		Clock clock;
 	};
 }

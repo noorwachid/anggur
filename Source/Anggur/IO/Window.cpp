@@ -87,6 +87,11 @@ namespace Anggur
 		return size.y / size.x;
 	}
 
+	float Window::GetScale()
+	{
+		return frameBufferSize.x / size.x;
+	}
+
 	const Vector2& Window::GetPosition()
 	{
 		return position;

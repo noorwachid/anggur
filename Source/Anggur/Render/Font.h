@@ -21,13 +21,15 @@ namespace Anggur
 
 	struct Glyph
 	{
-		Vector2 offset;
 		Vector2 size;
 
 		float ascent;
 		float descent;
 
 		size_t bufferIndex = 0;
+
+		Vector2 texturePosition;
+		Vector2 textureSize;
 	};
 
 	struct GlyphBuffer
@@ -54,6 +56,10 @@ namespace Anggur
 		FontContext* context;
 		std::vector<uint8_t> data;
 
+		float glyphNormal;
+		float glyphPadding;
+
+		uint glyphSamplingPaddingSize;
 		uint32_t glyphSamplingSize;
 		uint32_t glyphAtlasSize;
 		uint32_t glyphMaxHeight = 0;
@@ -98,6 +104,13 @@ namespace Anggur
 			}
 		}
 
+		float GetKerning(uint codePoint, uint nextCodePoint) {
+			float kerning = stbtt_GetCodepointKernAdvance(context, codePoint, nextCodePoint);
+			float scale = stbtt_ScaleForPixelHeight(context, glyphSamplingSize);
+
+			return kerning * scale * glyphNormal;
+		}
+
 		void Generate(uint32_t newCodePoint = 'F', uint32_t next = 1)
 		{
 			if (glyphBuffers.empty() || glyphBuffers.back().occupied)
@@ -114,6 +127,12 @@ namespace Anggur
 			float pixelDistanceScale = 32.0; // trades off precision w/ ability to handle *smaller* sizes
 			int edgeValue = 206;
 			int padding = 6; // not used in shade
+			float normal = 1.0f / glyphSamplingSize;
+			float textureNormal = 1.0f / glyphAtlasSize;
+
+			glyphSamplingPaddingSize = padding;
+			glyphNormal = normal;
+			glyphPadding = padding * normal;
 
 			for (uint32_t i = 0; i < next; ++i)
 			{
@@ -152,14 +171,16 @@ namespace Anggur
 					glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
 				}
 
-				float normal = 1.0f / glyphAtlasSize;
-
 				Glyph glyph;
-				glyph.offset.Set((glyphBuffers.back().pointerX) * normal, glyphBuffers.back().pointerY * normal);
+
 				glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
 				glyph.ascent = (ascent + glyphY) * normal;
 				glyph.descent = -descent * normal;
 				glyph.bufferIndex = glyphBuffers.size() - 1;
+
+				glyph.texturePosition.Set((glyphBuffers.back().pointerX) * textureNormal, glyphBuffers.back().pointerY * textureNormal);
+				glyph.textureSize.Set(glyphWidth * textureNormal, glyphHeight * textureNormal);
+
 				glyphMap[codePoint] = glyph;
 
 				for (int x = 0; x < glyphWidth; ++x)

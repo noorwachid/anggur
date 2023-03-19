@@ -805,7 +805,7 @@ namespace Anggur
 			Glyph glyph = font->glyphMap[codePoint];
 			DrawTextGlyph(
 				model, Vector2(pointer.x, pointer.y + (glyph.ascent * options.size)), options.size * glyph.size,
-				font->glyphBuffers[glyph.bufferIndex].texture, glyph.offset, glyph.size
+				font->glyphBuffers[glyph.bufferIndex].texture, glyph.texturePosition, glyph.textureSize
 			);
 			pointer.x += glyph.size.x * options.size;
 		}

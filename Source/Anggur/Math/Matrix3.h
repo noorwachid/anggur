@@ -34,7 +34,7 @@ namespace Anggur
 			c = newC;
 			d = newD;
 			e = newE;
-			g = newG;
+			f = newF;
 			g = newG;
 			h = newH;
 			i = newI;
