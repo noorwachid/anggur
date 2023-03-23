@@ -19,6 +19,7 @@ namespace Anggur
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 		glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_TRUE);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		context = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
 		assert(context && "[Window] Failed to create a window");
@@ -27,6 +28,8 @@ namespace Anggur
 		BindGraphicsAPI();
 
 		InitializeGraphicsAPI();
+
+		glEnable(GL_MULTISAMPLE);
 
 		glfwSetWindowSizeCallback(
 			context,

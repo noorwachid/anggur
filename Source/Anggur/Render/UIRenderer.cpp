@@ -89,19 +89,12 @@ namespace Anggur
             
             void main() {
                 float distance = texture(uSlots[int(vSlot)], vUV).r;
-                float lowThreshold = 0.8f;
-                float highThreshold = 0.9f;
+				float smoothing = 0.07f;
+				float buffer = 0.78f;
                 fColor.rgb = vColor.rgb;
 
-                if (distance > highThreshold) {
-                    fColor.a = 1.0f;
-                }
-                else if (distance > lowThreshold) {
-                    fColor.a = smoothstep(0.0f, 1.0f, distance);
-                }
-                else {
-                    fColor.a = 0.0f;
-                }
+                fColor.a = smoothstep(buffer - smoothing, buffer + smoothing, distance);
+                // fColor.a = distance;
             }
         )"
 		);
@@ -316,6 +309,76 @@ namespace Anggur
 		);
 	}
 
+	void UIRenderer::DrawRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color)
+	{
+		SwitchDrawingMode(DrawingMode::Geometry);
+
+		Draw(
+			{
+				UIVertex(position,                                          color, texturePosition),
+				UIVertex(Vector2(position.x + size.x, position.y),          color, Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
+				UIVertex(Vector2(position.x + size.x, position.y + size.y), color, Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+				UIVertex(Vector2(position.x,          position.y + size.y), color, Vector2(texturePosition.x,                 texturePosition.y + textureSize.y)),
+			},
+			{
+				0, 1, 2,
+				2, 3, 0,
+			},
+			texture
+		);
+	}
+
+	Vector2 UIRenderer::MeasureText(
+		const std::string& text, 
+		const std::shared_ptr<Font> font,
+		float fontSize,
+		float letterSpacing,
+		float wordSpacing,
+		float lineSpacing
+	) 
+	{
+		Vector2 size(0, fontSize);
+		Vector2 pointer;
+		float maxWidth = 0;
+
+		for (usize i = 0; i < text.size(); ++i)
+		{
+			char codePoint = text[i];
+
+			if (codePoint == ' ')
+			{
+				pointer.x += wordSpacing;
+				continue;
+			}
+			else if (codePoint == '\t')
+			{
+				pointer.x += 8 * wordSpacing;
+				continue;
+			}
+			else if (codePoint == '\n') 
+			{
+				pointer.y += lineSpacing + fontSize;
+				maxWidth = std::max(maxWidth, pointer.x);
+				size.y = pointer.y + fontSize;
+				pointer.x = 0;
+				continue;
+			}
+
+			pointer.x += letterSpacing;
+			
+			Glyph glyph = font->glyphMap[codePoint];
+
+			float offset = (glyph.size.x - 2 * font->glyphPadding + font->GetKerning(codePoint, text[i + 1])) * fontSize;
+
+			pointer.x += offset;
+			size.x = pointer.x;
+		}
+
+		std::cout << size.ToString() << "\n";
+
+		return Vector2(std::max(maxWidth, size.x), size.y);
+	}
+
 	void UIRenderer::DrawText(
 		const Vector2& position, 
 		const Vector2& size, 
@@ -329,7 +392,7 @@ namespace Anggur
 	{
 		SwitchDrawingMode(DrawingMode::Text);
 
-		Vector2 pointer = fontSize * Vector2(-font->glyphPadding, -font->glyphPadding);
+		Vector2 pointer = (fontSize * Vector2(-font->glyphPadding, -font->glyphPadding * 0.5)) + position;
 
 		for (usize i = 0; i < text.size(); ++i)
 		{
@@ -340,12 +403,20 @@ namespace Anggur
 				pointer.x += wordSpacing;
 				continue;
 			}
-			else
+			else if (codePoint == '\t')
 			{
-				pointer.x += letterSpacing;
+				pointer.x += 8 * wordSpacing;
+				continue;
 			}
-
+			else if (codePoint == '\n') 
+			{
+				pointer.x = -font->glyphPadding * fontSize + position.x; 
+				pointer.y += lineSpacing + fontSize;
+				continue;
+			}
+			
 			Glyph glyph = font->glyphMap[codePoint];
+
 			DrawTextGlyph(
 				Vector2(pointer.x, pointer.y + (glyph.ascent * fontSize)), 
 				fontSize * glyph.size ,
@@ -353,7 +424,8 @@ namespace Anggur
 				glyph.texturePosition, glyph.textureSize
 			);
 
-			pointer.x += (glyph.size.x - 2 * font->glyphPadding + font->GetKerning(codePoint, text[i + 1])) * fontSize;
+			float offset = (glyph.size.x - 2 * font->glyphPadding + font->GetKerning(codePoint, text[i + 1])) * fontSize;
+			pointer.x += offset + letterSpacing;
 		}
 	}
 
@@ -367,6 +439,20 @@ namespace Anggur
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Text);
+
+		// Draw(
+		// 	{
+		// 		UIVertex(position,                                          Vector4::red, Vector2::zero),
+		// 		UIVertex(Vector2(position.x + size.x, position.y),          Vector4::red, Vector2::zero),
+		// 		UIVertex(Vector2(position.x + size.x, position.y + size.y), Vector4::red, Vector2::zero),
+		// 		UIVertex(Vector2(position.x, position.y + size.y),          Vector4::red, Vector2::zero),
+		// 	},
+		// 	{
+		// 		0, 1, 2,
+		// 		2, 3, 0,
+		// 	},
+		// 	whiteTexture
+		// );
 
 		Draw(
 			{

@@ -66,6 +66,17 @@ namespace Anggur
 
 		void DrawRectangle(const Vector2& position, const Vector2& size, const Vector4& color = Vector4::white);
 
+		void DrawRectangle(const Vector2& position, const Vector2& size, const std::shared_ptr<Texture2D>& texture, const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color = Vector4::white);
+
+		Vector2 MeasureText(
+			const std::string& text, 
+			const std::shared_ptr<Font> font,
+			float fontSize = 16.0f,
+			float letterSpacing = 1.0f,
+			float wordSpacing = 4.0f,
+			float lineSpacing = 0.0f
+		);
+
 		void DrawText(
 			const Vector2& position, 
 			const Vector2& size, 

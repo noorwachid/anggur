@@ -8,13 +8,13 @@ namespace Anggur
 
 	float Random::Generate()
 	{
-		return generator();
+		return GetInstance().generator();
 	}
 
 	float Random::Range(float lower, float upper)
 	{
 		std::uniform_real_distribution<float> distribution(lower, upper);
-		return distribution(generator);
+		return distribution(GetInstance().generator);
 	}
 
 	float Random::GetNormal()
@@ -39,6 +39,6 @@ namespace Anggur
 
 	void Random::SetSeed(float n)
 	{
-		generator.seed(n);
+		GetInstance().generator.seed(n);
 	}
 }

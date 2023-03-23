@@ -1,0 +1,31 @@
+Anggur
+	Core
+		IO
+			Window
+			Input
+				Mouse
+				Keyboard
+				TouchScreen
+
+			FileSystem
+				File
+					Read
+					Write
+				Directory
+					Read
+					Write
+		Math
+		Graphics
+			Render
+				TypographySystem
+					Font
+					FontManager
+				
+			Shader
+			ShaderProgram
+
+		Utility
+			Assertion
+			TypeID
+			EnumeratorBitManipulation
+

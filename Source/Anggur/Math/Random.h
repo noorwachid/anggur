@@ -7,26 +7,34 @@ namespace Anggur
 {
 	class Random
 	{
-	  public:
-		Random();
-
+	public:
 		// Getters
 
-		float Generate();
+		static float Generate();
 
-		float Range(float lower, float upper);
+		static float Range(float lower, float upper);
 
-		float GetNormal();
+		static float GetNormal();
 
-		float GetSigned();
+		static float GetSigned();
 
-		float GetAngle();
+		static float GetAngle();
 
-		bool GetBoolean();
+		static bool GetBoolean();
 
 		// Setters
 
-		void SetSeed(float n);
+		static void SetSeed(float n);
+
+	private:
+		Random();
+
+		static Random& GetInstance() 
+		{
+			static Random instance;
+
+			return instance;
+		}
 
 	  private:
 		std::random_device device;
