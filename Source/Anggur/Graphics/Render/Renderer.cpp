@@ -45,6 +45,7 @@ namespace Anggur
 		{
 			slots.push_back(i);
 		}
+
 		std::vector<uint8_t> bytes = {{255, 255, 255, 255}};
 		whiteTexture = new Texture2D(bytes, 1, 1, 4);
 	}
@@ -163,11 +164,6 @@ namespace Anggur
 	{
 		glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
-	}
-
-	void Renderer::SetScissor(const Vector2& position, const Vector2& size)
-	{
-		glScissor(position.x, position.y, size.x, size.y);
 	}
 
 	void Renderer::SetViewport(const Vector2& position, const Vector2& size)
@@ -297,7 +293,11 @@ namespace Anggur
 	// 2D primitives
 
 	void Renderer::DrawTriangle(
-		const Matrix3& model, const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color
+		const Matrix3& model, 
+		const Vector2& position0, 
+		const Vector2& position1, 
+		const Vector2& position2, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -309,17 +309,19 @@ namespace Anggur
 				Vertex(model * position2, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
 			},
 			{
-				0,
-				1,
-				2,
+				0, 1, 2,
 			},
 			whiteTexture
 		);
 	}
 
 	void Renderer::DrawQuad(
-		const Matrix3& model, const Vector2& position0, const Vector2& position1, const Vector2& position2,
-		const Vector2& position3, const Vector4& color
+		const Matrix3& model, 
+		const Vector2& position0, 
+		const Vector2& position1, 
+		const Vector2& position2,
+		const Vector2& position3, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -332,19 +334,17 @@ namespace Anggur
 				Vertex(model * position3, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
 			},
 			{
-				0,
-				1,
-				2,
-				2,
-				3,
-				0,
+				0, 1, 2, 2, 3, 0,
 			},
 			whiteTexture
 		);
 	}
 
 	void Renderer::DrawRectangle(
-		const Matrix3& model, const Vector2& position, const Vector2& size, const Vector4& color
+		const Matrix3& model, 
+		const Vector2& position, 
+		const Vector2& size, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -352,61 +352,38 @@ namespace Anggur
 		Draw(
 			{
 				Vertex(model * position, Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
-				Vertex(
-					model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(0, 0)
-				),
-				Vertex(
-					model * Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(0, 0)
-				),
-				Vertex(
-					model * Vector2(position.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(0, 0)
-				),
+				Vertex(model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+				Vertex(model * Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
+				Vertex(model * Vector2(position.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(0, 0)),
 			},
 			{
-				0,
-				1,
-				2,
-				2,
-				3,
-				0,
+				0, 1, 2, 2, 3, 0,
 			},
 			whiteTexture
 		);
 	}
 
-	void Renderer::DrawTexturedRectangle(
-		const Matrix3& model, const Vector2& position, const Vector2& size, Texture2D* texture,
-		const Vector2& uvposition, const Vector2& uvSize, const Vector4& color
+	void Renderer::DrawRectangle(
+		const Matrix3& model, 
+		const Vector2& position, 
+		const Vector2& size, 
+		Texture2D* texture,
+		const Vector2& texturePosition, 
+		const Vector2& textureSize, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
 
 		Draw(
 			{
-				Vertex(model * position, Vector4(color.x, color.y, color.z, color.w), uvposition),
-				Vertex(
-					model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(uvposition.x + uvSize.x, uvposition.y)
-				),
-				Vertex(
-					model * Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(uvposition.x + uvSize.x, uvposition.y + uvSize.y)
-				),
-				Vertex(
-					model * Vector2(position.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(uvposition.x, uvposition.y + uvSize.y)
-				),
+				Vertex(model * position, Vector4(color.x, color.y, color.z, color.w), texturePosition),
+				Vertex(model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
+				Vertex(model * Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+				Vertex(model * Vector2(position.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
 			},
 			{
-				0,
-				1,
-				2,
-				2,
-				3,
-				0,
+				0, 1, 2, 2, 3, 0,
 			},
 			texture
 		);
@@ -466,7 +443,12 @@ namespace Anggur
 	}
 
 	void Renderer::DrawArc(
-		const Matrix3& model, float radius, float beginAngle, float sweepAngle, int segment, const Vector4& color
+		const Matrix3& model, 
+		float radius, 
+		float beginAngle, 
+		float sweepAngle, 
+		int segment, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -530,7 +512,11 @@ namespace Anggur
 	// 2D lines
 
 	void Renderer::DrawLineTerminator(
-		const Matrix3& model, const Vector2& position0, const Vector2& position1, float thickness, const Vector4& color
+		const Matrix3& model, 
+		const Vector2& position0, 
+		const Vector2& position1, 
+		float thickness, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -539,13 +525,22 @@ namespace Anggur
 		Vector2 perpenposition = thickness * Vector2::Normalize((position1 - position0).GetPerpendicular());
 
 		DrawQuad(
-			model, position1 + perpenposition, position0 + perpenposition + offsetposition, position0 - perpenposition + offsetposition,
-			position1 - perpenposition, color
+			model, 
+			position1 + perpenposition, 
+			position0 + perpenposition + offsetposition, 
+			position0 - perpenposition + offsetposition,
+			position1 - perpenposition, 
+			color
 		);
 	}
 
 	void Renderer::DrawLineAnchor(
-		const Matrix3& transform, const Vector2& p0, const Vector2& p1, const Vector2& p2, float w, const Vector4& c
+		const Matrix3& transform, 
+		const Vector2& p0, 
+		const Vector2& p1, 
+		const Vector2& p2, 
+		float w, 
+		const Vector4& c
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -649,7 +644,11 @@ namespace Anggur
 	}
 
 	void Renderer::DrawLine(
-		const Matrix3& model, const Vector2& position0, const Vector2& position1, float thickness, const Vector4& color
+		const Matrix3& model, 
+		const Vector2& position0, 
+		const Vector2& position1, 
+		float thickness, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -661,7 +660,11 @@ namespace Anggur
 	}
 
 	void Renderer::DrawPolyLine(
-		const Matrix3& transform, const std::vector<Vector2>& ps, float w, const Vector4& c
+		const Matrix3& 
+		transform, 
+		const std::vector<Vector2>& ps, 
+		float w, 
+		const Vector4& c
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Geometry);
@@ -684,6 +687,7 @@ namespace Anggur
 	void Renderer::DrawText(
 		const Matrix3& model, 
 		const Vector2& position, 
+		float down,
 		const std::string& text, 
 		Font* font, 
 		float size
@@ -708,8 +712,9 @@ namespace Anggur
 			Glyph glyph = font->glyphMap[text[i]];
 			DrawTextGlyph(
 				model, 
-				(positioner - Vector2(font->glyphPadding * 2 * i, glyph.ascent)) * size, 
+				(positioner + Vector2(-font->glyphPadding * 2 * i, glyph.ascent * down)) * size, 
 				glyph.size * size,
+				down,
 				font->glyphBuffers[glyph.bufferIndex].texture, 
 				glyph.texturePosition, 
 				glyph.textureSize
@@ -720,8 +725,14 @@ namespace Anggur
 	}
 
 	void Renderer::DrawTextGlyph(
-		const Matrix3& model, const Vector2& position, const Vector2& size, Texture2D* texture,
-		const Vector2& texturePosition, const Vector2& textureSize, const Vector4& color
+		const Matrix3& model, 
+		const Vector2& position, 
+		const Vector2& size, 
+		float down,
+		Texture2D* texture,
+		const Vector2& texturePosition, 
+		const Vector2& textureSize, 
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Text);
@@ -729,26 +740,12 @@ namespace Anggur
 		Draw(
 			{
 				Vertex(model * position, Vector4(color.x, color.y, color.z, color.w), texturePosition),
-				Vertex(
-					model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(texturePosition.x + textureSize.x, texturePosition.y)
-				),
-				Vertex(
-					model * Vector2(position.x + size.x, position.y - size.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)
-				),
-				Vertex(
-					model * Vector2(position.x, position.y - size.y), Vector4(color.x, color.y, color.z, color.w),
-					Vector2(texturePosition.x, texturePosition.y + textureSize.y)
-				),
+				Vertex(model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
+				Vertex(model * Vector2(position.x + size.x, position.y + size.y * down), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+				Vertex(model * Vector2(position.x, position.y + size.y * down), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
 			},
 			{
-				0,
-				1,
-				2,
-				2,
-				3,
-				0,
+				0, 1, 2, 2, 3, 0,
 			},
 			texture
 		);

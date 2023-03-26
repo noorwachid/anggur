@@ -35,9 +35,11 @@ namespace Anggur
 
 		void SetBatchChunk(usize vertex, usize indexMultiplier = 2);
 		void Clear(const Vector4& color = Vector4::black);
-		void SetScissor(const Vector2& position, const Vector2& size);
 		void SetViewport(const Vector2& position, const Vector2& size);
 		void SetViewProjection(const Matrix3& newViewProjection);
+
+		void BeginScissor(const Vector2& position, const Vector2& size);
+		void EndScissor();
 
 		void BeginScene();
 		void BeginScene(const Matrix3& viewProjection);
@@ -69,6 +71,7 @@ namespace Anggur
 			const Vector2& position3, 
 			const Vector4& color = Vector4::white
 		);
+
 		void DrawRectangle(
 			const Matrix3& model, 
 			const Vector2& position, 
@@ -76,13 +79,13 @@ namespace Anggur
 			const Vector4& color = Vector4::white
 		);
 
-		void DrawTexturedRectangle(
+		void DrawRectangle(
 			const Matrix3& model, 
 			const Vector2& position, 
 			const Vector2& size, 
 			Texture2D* texture,
-			const Vector2& uvposition = Vector2::zero, 
-			const Vector2& uvSize = Vector2::one,
+			const Vector2& texturePosition = Vector2::zero, 
+			const Vector2& textureSize = Vector2::one,
 			const Vector4& color = Vector4::white
 		);
 
@@ -142,17 +145,19 @@ namespace Anggur
 		void DrawText(
 			const Matrix3& model, 
 			const Vector2& position, 
+			float down,
 			const std::string& text, 
 			Font* font, 
-			float size
+			float fontSize
 		);
 		void DrawTextGlyph(
 			const Matrix3& model, 
 			const Vector2& position, 
 			const Vector2& size, 
+			float down,
 			Texture2D* texture,
-			const Vector2& uvposition = Vector2::zero, 
-			const Vector2& uvSize = Vector2::one,
+			const Vector2& texturePosition = Vector2::zero, 
+			const Vector2& textureSize = Vector2::one,
 			const Vector4& color = Vector4::white
 		);
 
