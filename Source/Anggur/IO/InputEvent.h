@@ -1,96 +1,77 @@
 #pragma once
 
 #include "Anggur/Event.h"
+#include "Anggur/Integral.h"
 #include "Anggur/IO/Key.h"
 #include "Anggur/IO/MouseButton.h"
 #include "Anggur/Math/Vector2.h"
 
 namespace Anggur
 {
-	struct KeyEvent : Event
+	struct KeyboardPressedEvent : Event
 	{
-		Key key = Key::Unknown;
-
-		KeyEvent(ID newType, Key newKey) : Event(newType), key(newKey)
-		{
-		}
+		Key Key = Key::Unknown;
 	};
 
-	struct KeyPressedEvent : KeyEvent
+	struct KeyboardHeldEvent : Event
 	{
-		KeyPressedEvent(Key newKey) : KeyEvent(GetID<KeyPressedEvent>(), newKey)
-		{
-		}
+		Key Key = Key::Unknown;
 	};
 
-	struct KeyHeldEvent : KeyEvent
+	struct KeyboardReleasedEvent : Event
 	{
-		KeyHeldEvent(Key newKey) : KeyEvent(GetID<KeyHeldEvent>(), newKey)
-		{
-		}
+		Key Key = Key::Unknown;
 	};
 
-	struct KeyReleasedEvent : KeyEvent
+	struct KeyboardTypedEvent : public Event
 	{
-		KeyReleasedEvent(Key newKey) : KeyEvent(GetID<KeyReleasedEvent>(), newKey)
-		{
-		}
-	};
-
-	struct KeyComposedEvent : public Event
-	{
-		uint32_t codepoint;
-
-		KeyComposedEvent(uint32_t newCodepoint) : Event(GetID<KeyComposedEvent>()), codepoint(newCodepoint)
-		{
-		}
-	};
-
-	struct MouseEvent : public Event
-	{
-		MouseButton button = MouseButton::Unknown;
-
-		MouseEvent(ID newType, MouseButton newButton) : Event(newType), button(newButton)
-		{
-		}
-	};
-
-	struct MousePressedEvent : public MouseEvent
-	{
-		MousePressedEvent(MouseButton newButton) : MouseEvent(GetID<MousePressedEvent>(), newButton)
-		{
-		}
-	};
-
-	struct MouseHeldEvent : public MouseEvent
-	{
-		MouseHeldEvent(MouseButton newButton) : MouseEvent(GetID<MouseHeldEvent>(), newButton)
-		{
-		}
-	};
-
-	struct MouseReleasedEvent : public MouseEvent
-	{
-		MouseReleasedEvent(MouseButton newButton) : MouseEvent(GetID<MouseReleasedEvent>(), newButton)
-		{
-		}
+		uint Codepoint;
 	};
 
 	struct MouseMovedEvent : public Event
 	{
-		Vector2 position;
+		Vector2 Position;
+	};
 
-		MouseMovedEvent(const Vector2& newPosition) : Event(GetID<MouseMovedEvent>()), position(newPosition)
-		{
-		}
+	struct MousePressedEvent : Event
+	{
+		MouseButton Button = MouseButton::Unknown;
+	};
+
+	struct MouseHeldEvent : Event
+	{
+		Key Key = Key::Unknown;
+	};
+
+	struct MouseReleasedEvent : Event
+	{
+		Key Key = Key::Unknown;
 	};
 
 	struct MouseScrolledEvent : public Event
 	{
-		Vector2 direction;
+		Vector2 Direction;
+	};
 
-		MouseScrolledEvent(const Vector2& newDirection) : Event(GetID<MouseScrolledEvent>()), direction(newDirection)
-		{
-		}
+	class InputEventListener 
+	{
+	public:
+		virtual void OnKeyboardPress(KeyboardPressedEvent& event) {}
+
+		virtual void OnKeyboardHold(KeyboardHeldEvent& event) {}
+
+		virtual void OnKeyboardRelease(KeyboardReleasedEvent& event) {}
+
+		virtual void OnKeyboardType(KeyboardTypedEvent& event) {}
+
+		virtual void OnMousePress(MousePressedEvent& event) {}
+
+		virtual void OnMouseHold(MouseHeldEvent& event) {}
+
+		virtual void OnMouseRelease(MouseReleasedEvent& event) {}
+
+		virtual void OnMouseMove(MouseMovedEvent& event) {}
+
+		virtual void OnMouseScroll(MouseScrolledEvent& event) {}
 	};
 }

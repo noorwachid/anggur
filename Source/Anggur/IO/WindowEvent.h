@@ -2,24 +2,25 @@
 
 #include "Anggur/Event.h"
 #include "Anggur/Math/Vector2.h"
+#include "Anggur/IO/InputEvent.h"
 
 namespace Anggur
 {
-	struct WindowResizedEvent : public Event
-	{
-		Vector2 size;
-
-		WindowResizedEvent(const Vector2& newSize) : Event(GetID<WindowResizedEvent>()), size(newSize)
-		{
-		}
-	};
-
 	struct WindowMovedEvent : public Event
 	{
-		Vector2 position;
+		Vector2 Position;
+	};
 
-		WindowMovedEvent(const Vector2& newPosition) : Event(GetID<WindowMovedEvent>()), position(newPosition)
-		{
-		}
+	struct WindowResizedEvent : public Event
+	{
+		Vector2 Size;
+	};
+
+	class WindowEventListener : public InputEventListener
+	{
+	public:
+		virtual void OnWindowMove(WindowMovedEvent& event) {}
+
+		virtual void OnWindowResize(WindowResizedEvent& event) {}
 	};
 }

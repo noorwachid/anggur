@@ -36,7 +36,7 @@ namespace Anggur
 		int isSucceed;
 		char message[512];
 
-		uint32_t vertexId = glCreateShader(GL_VERTEX_SHADER);
+		uint vertexId = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexId, 1, &cVertexSource, NULL);
 		glCompileShader(vertexId);
 
@@ -48,7 +48,7 @@ namespace Anggur
 			throw std::runtime_error(std::string("Failed to compile vertex shader: ") + message);
 		}
 
-		uint32_t fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+		uint fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragmentId, 1, &cFragmentSource, NULL);
 		glCompileShader(fragmentId);
 

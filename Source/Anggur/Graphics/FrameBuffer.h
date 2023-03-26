@@ -9,26 +9,26 @@ namespace Anggur
 	{
 	public:
 		FrameBuffer();
-		FrameBuffer(uint32_t width, uint32_t height);
+		FrameBuffer(uint width, uint height);
 
 		~FrameBuffer();
 
-		inline uint32_t GetID() const
+		inline uint GetID() const
 		{
 			return id;
 		}
 
-		inline uint32_t GetColorAttachment() const
+		inline uint GetColorAttachment() const
 		{
 			return colorAttachment;
 		}
 
-		inline uint32_t GetWidth() const
+		inline uint GetWidth() const
 		{
 			return width;
 		}
 
-		inline uint32_t GetHeight() const
+		inline uint GetHeight() const
 		{
 			return height;
 		}
@@ -36,9 +36,9 @@ namespace Anggur
 		void Bind();
 		void Unbind();
 
-		void Recreate(uint32_t width, uint32_t height);
+		void Recreate(uint width, uint height);
 
-		const std::shared_ptr<Texture2D>& GetTexture() const
+		Texture2D* GetTexture()
 		{
 			return texture;
 		};
@@ -47,11 +47,11 @@ namespace Anggur
 		void Initialize();
 
 	private:
-		uint32_t id;
-		uint32_t colorAttachment;
-		uint32_t width;
-		uint32_t height;
+		uint id;
+		uint colorAttachment;
+		uint width;
+		uint height;
 
-		std::shared_ptr<Texture2D> texture = nullptr;
+		Texture2D* texture = nullptr;
 	};
 }

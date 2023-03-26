@@ -9,7 +9,7 @@ namespace Anggur
 		Initialize();
 	}
 
-	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height)
+	FrameBuffer::FrameBuffer(uint width, uint height)
 	{
 		Initialize();
 		Recreate(width, height);
@@ -19,14 +19,20 @@ namespace Anggur
 	{
 		glDeleteFramebuffers(1, &id);
 		glDeleteTextures(1, &colorAttachment);
+
+		if (texture)
+		{
+			delete texture;
+			texture = nullptr;
+		}
 	}
 
 	void FrameBuffer::Initialize()
 	{
-		texture = std::make_shared<Texture2D>();
+		texture = new Texture2D();
 	}
 
-	void FrameBuffer::Recreate(uint32_t width, uint32_t height)
+	void FrameBuffer::Recreate(uint width, uint height)
 	{
 		this->width = width;
 		this->height = height;

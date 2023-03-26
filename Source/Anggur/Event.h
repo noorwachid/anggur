@@ -1,16 +1,22 @@
 #pragma once
 
-#include "Anggur/Utility/ID.h"
+#include <string>
 
 namespace Anggur
 {
 	struct Event
 	{
-		ID type = 0;
-		bool consumed = false;
+		bool used = false;
+	};
 
-		Event(ID newType) : type(newType)
-		{
-		}
+	struct NotificationEvent : Event
+	{
+		std::string name;
+	};
+
+	class NotificationEventListener
+	{
+	public:
+		virtual void OnNotify(NotificationEvent& event) {}
 	};
 }

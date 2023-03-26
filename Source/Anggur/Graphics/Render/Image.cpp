@@ -1,4 +1,4 @@
-#include "Anggur/Graphics/Image.h"
+#include "Anggur/Graphics/Render/Image.h"
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include <cassert>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/Integral.h"
 #include <string>
 #include <vector>
 
@@ -8,7 +9,7 @@ namespace Anggur::File
 	/**
 	 * Load path as array of buffer
 	 */
-	std::vector<uint8_t> Read(const std::string& path);
+	std::vector<uchar> Read(const std::string& path);
 
 	/**
 	 * Load path of to std::string

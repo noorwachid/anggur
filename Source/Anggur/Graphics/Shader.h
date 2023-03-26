@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/Integral.h"
 #include "Anggur/Math/Math.h"
 #include <string>
 
@@ -11,7 +12,7 @@ namespace Anggur
 		Shader();
 		~Shader();
 
-		inline uint32_t GetID() const
+		inline uint GetID() const
 		{
 			return id;
 		}
@@ -39,7 +40,7 @@ namespace Anggur
 		void SetUniformFloat(const std::string& name, size_t size, float* values);
 
 	private:
-		uint32_t id;
+		uint id;
 		std::string vertexSource;
 		std::string fragmentSource;
 	};

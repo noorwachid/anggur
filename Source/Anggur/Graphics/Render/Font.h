@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Anggur/Graphics/Texture2D.h"
+#include "Anggur/Graphics/Render/Image.h"
+#include "Anggur/Math/Vector2.h"
 #include "Anggur/IO/File.h"
 #include <iostream>
 #include <stdexcept>
@@ -41,7 +43,7 @@ namespace Anggur
 		bool dirty = true;
 
 		Image image;
-		std::shared_ptr<Texture2D> texture;
+		Texture2D* texture;
 
 		GlyphBuffer(uint32_t size)
 		{
@@ -164,7 +166,8 @@ namespace Anggur
 
 					if (glyphBuffers.back().dirty)
 					{
-						glyphBuffers.back().texture = std::make_shared<Texture2D>(glyphBuffers.back().image);
+						Image& image = glyphBuffers.back().image;
+						glyphBuffers.back().texture = new Texture2D(image.GetBytes(), image.GetWidth(), image.GetHeight(), image.GetChannels());
 						glyphBuffers.back().dirty = false;
 					}
 
@@ -193,7 +196,8 @@ namespace Anggur
 				glyphBuffers.back().pointerX += glyphWidth;
 			}
 
-			glyphBuffers.back().texture = std::make_shared<Texture2D>(glyphBuffers.back().image);
+			Image& image = glyphBuffers.back().image;
+			glyphBuffers.back().texture = new Texture2D(image.GetBytes(), image.GetWidth(), image.GetHeight(), image.GetChannels());
 		}
 
 		void GenerateASCII()

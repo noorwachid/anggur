@@ -42,15 +42,9 @@ namespace Anggur
 
 		void Update();
 
-        void Dispatch(Event& event)
+        void SetListener(WindowEventListener* listener)
         {
-            if (listener)
-                listener(event);
-        }
-
-        void SetListener(const std::function<void(Event&)>& newListener)
-        {
-            listener = newListener;
+            _listener = listener;
         }
 
 	private:
@@ -70,6 +64,6 @@ namespace Anggur
 
 		Vector2 frameBufferSize;
 
-        std::function<void(Event&)> listener;
+        WindowEventListener* _listener = nullptr;
 	};
 }

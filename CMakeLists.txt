@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 project(Anggur)
 
 file(GLOB Anggur_Source
+	"Source/Anggur/*/*/*.cpp"
 	"Source/Anggur/*/*.cpp"
 	"Source/Anggur/*.cpp"
 )

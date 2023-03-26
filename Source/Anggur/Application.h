@@ -4,49 +4,46 @@
 #include "Anggur/IO/Input.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/IO/WindowSystem.h"
-#include "Anggur/Render/CanvasRenderer.h"
-#include "Anggur/Render/UIRenderer.h"
+#include "Anggur/Graphics/Render/Renderer.h"
+#include "Anggur/Scene/SceneSystem.h"
+#include <thread>
 
 namespace Anggur
 {
 	class Application
 	{
 	public:
-		virtual void Initialize()
+		WindowSystem windowSystem;
+		Window window;
+
+		Renderer renderer;
+		Clock clock;
+
+		SceneSystem sceneSystem;
+
+	public:
+		Application()
 		{
-			window.SetListener([this](Event& event) { On(event); });
+			sceneSystem.SetWindow(&window);
+			sceneSystem.SetRenderer(&renderer);
+
 		}
 
-		virtual void Update()
+		void Run()
 		{
-		}
-
-		virtual void On(Event& event)
-		{
-		}
-
-		virtual void Run()
-		{
-			Initialize();
-
 			clock.Tick();
 
 			while (window.IsOpen())
 			{
 				windowSystem.PollEvents();
 
-				Update();
+				sceneSystem.Update(clock.Tick());
+				sceneSystem.Draw();
 
 				window.Update();
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(16));
 			}
 		}
-
-	protected:
-		WindowSystem windowSystem;
-		Window window;
-
-		CanvasRenderer canvasRenderer;
-		UIRenderer uiRenderer;
-		Clock clock;
 	};
 }
