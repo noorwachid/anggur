@@ -687,7 +687,10 @@ namespace Anggur
 	Vector2 Renderer::MeasureText(
 		const std::string& text, 
 		Font* font, 
-		float fontSize
+		float fontSize,
+		float letterSpacing,
+		float wordSpacing,
+		float lineSpacing
 	)
 	{
 		Vector2 positioner;
@@ -700,25 +703,28 @@ namespace Anggur
 
 			if (text[i] == ' ')
 			{
-				positioner.x += 0.25;
+				positioner.x += wordSpacing;
 				continue;
 			}
 			else if (text[i] == '\n')
 			{
+				if (column > 0)
+					positioner.x -= letterSpacing;
+
 				maxWidth = Math::Max(maxWidth, positioner.x);
-				positioner.y -= 1;
+				positioner.y -= 1 + lineSpacing;
 				positioner.x = 0;
 				column = 0;
 				continue;
 			}
 
-			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]) - (font->glyphPadding * 2);
+			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]) - (font->glyphPadding * 2) + letterSpacing;
 			++column;
 		}
 		
 		positioner.y -= 1;
 
-		return Vector2(Math::Max(positioner.x, maxWidth), positioner.y) * fontSize;
+		return Vector2(Math::Max(positioner.x + (column > 0 ? -letterSpacing : 0), maxWidth), positioner.y) * fontSize;
 	}
 
 	void Renderer::DrawText(
@@ -727,14 +733,18 @@ namespace Anggur
 		const std::string& text, 
 		Font* font, 
 		float fontSize,
+		float letterSpacing,
+		float wordSpacing,
+		float lineSpacing,
 		const Vector4& color
 	)
 	{
+		DrawRectangle(model, position, MeasureText(text, font, fontSize), Vector4(1, 1, 0, 0.5));
+		
 		SwitchDrawingMode(DrawingMode::Text);
 
 		Vector2 positioner;
 		positioner.x = -font->glyphPadding;
-
 		usize column = 0;
 
 		for (usize i = 0; i < text.size(); ++i)
@@ -743,17 +753,17 @@ namespace Anggur
 
 			if (text[i] == ' ')
 			{
-				positioner.x += 0.25;
+				positioner.x += wordSpacing;
 				continue;
 			}
 			else if (text[i] == '\n')
 			{
-				positioner.y -= 1;
+				positioner.y -= 1 + lineSpacing;
 				positioner.x = -font->glyphPadding;
 				column = 0;
 				continue;
 			}
-
+			
 			DrawTextGlyph(
 				model, 
 				position + (positioner - Vector2(font->glyphPadding * 2 * column, glyph.ascent)) * fontSize, 
@@ -764,7 +774,7 @@ namespace Anggur
 				color
 			);
 
-			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]);
+			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]) + letterSpacing;
 			++column;
 		}
 	}

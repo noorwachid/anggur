@@ -145,7 +145,10 @@ namespace Anggur
 		Vector2 MeasureText(
 			const std::string& text, 
 			Font* font, 
-			float fontSize
+			float fontSize,
+			float letterSpacing = 0.025f,
+			float wordSpacing = 0.25f,
+			float lineSpacing = 0.0f
 		);
 
 		void DrawText(
@@ -154,6 +157,9 @@ namespace Anggur
 			const std::string& text, 
 			Font* font, 
 			float fontSize,
+			float letterSpacing = 0.025f,
+			float wordSpacing = 0.25f,
+			float lineSpacing = 0.0f,
 			const Vector4& color = Vector4::white
 		);
 
