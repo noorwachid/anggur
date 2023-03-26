@@ -726,7 +726,8 @@ namespace Anggur
 		const Vector2& position, 
 		const std::string& text, 
 		Font* font, 
-		float fontSize
+		float fontSize,
+		const Vector4& color
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Text);
@@ -759,7 +760,8 @@ namespace Anggur
 				glyph.size * fontSize,
 				font->glyphBuffers[glyph.bufferIndex].texture, 
 				glyph.texturePosition, 
-				glyph.textureSize
+				glyph.textureSize,
+				color
 			);
 
 			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]);

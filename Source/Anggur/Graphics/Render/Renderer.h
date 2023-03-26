@@ -153,7 +153,8 @@ namespace Anggur
 			const Vector2& position, 
 			const std::string& text, 
 			Font* font, 
-			float fontSize
+			float fontSize,
+			const Vector4& color = Vector4::white
 		);
 
 		void DrawTextGlyph(
