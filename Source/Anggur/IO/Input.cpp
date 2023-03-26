@@ -16,41 +16,59 @@ namespace Anggur
 
 	void Input::SetKeyCallbacks()
 	{
-		// glfwSetKeyCallback(
-		// 	context,
-		// 	[](GLFWwindow* context, int vkeyCode, int scanCode, int state, int modifierKey)
-		// 	{
-		// 		Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
-		// 		Key key = static_cast<Key>(vkeyCode);
-		//
-		// 		switch (state)
-		// 		{
-		// 			case GLFW_PRESS:
-		// 			{
-		// 				KeyPressedEvent event(key);
-		// 				window.Dispatch(event);
-		// 				break;
-		// 			}
-		//
-		// 			case GLFW_REPEAT:
-		// 			{
-		// 				KeyHeldEvent event(key);
-		// 				window.Dispatch(event);
-		// 				break;
-		// 			}
-		//
-		// 			case GLFW_RELEASE:
-		// 			{
-		// 				KeyReleasedEvent event(key);
-		// 				window.Dispatch(event);
-		// 				break;
-		// 			}
-		//
-		// 			default:
-		// 				break;
-		// 		}
-		// 	}
-		// );
+		glfwSetKeyCallback(
+			context,
+			[](GLFWwindow* context, int vkeyCode, int scanCode, int state, int modifierKey)
+			{
+				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+
+				if (window.listener == nullptr)
+					return;
+
+				Key key = static_cast<Key>(vkeyCode);
+
+				switch (state)
+				{
+					case GLFW_PRESS:
+					{
+						KeyboardPressedEvent event;
+						event.key = key;
+						window.listener->OnKeyboardPress(event);
+						break;
+					}
+
+					case GLFW_REPEAT:
+					{
+						KeyboardHeldEvent event;
+						event.key = key;
+						window.listener->OnKeyboardHold(event);
+						break;
+					}
+
+					case GLFW_RELEASE:
+					{
+						KeyboardReleasedEvent event;
+						event.key = key;
+						window.listener->OnKeyboardRelease(event);
+						break;
+					}
+
+					default:
+						break;
+				}
+			}
+		);
+
+		glfwSetCharCallback(context, [](GLFWwindow* context, uint codepoint) {
+			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+
+			if (window.listener == nullptr)
+				return;
+
+			KeyboardTypedEvent event;
+			event.codepoint = codepoint;
+			window.listener->OnKeyboardType(event);
+		});
 	}
 
 	void Input::SetMouseCallbacks()
@@ -103,14 +121,14 @@ namespace Anggur
 		// );
 	}
 
-	bool Input::IsKeyPressed(Key key) const
+	bool Input::IsKeyboardPressed(Key key) const
 	{
 		int index = static_cast<int>(key);
 
 		return glfwGetKey(context, index) == GLFW_PRESS;
 	}
 
-	bool Input::IsKeyHeld(Key key) const
+	bool Input::IsKeyboardHeld(Key key) const
 	{
 		int index = static_cast<int>(key);
 		int state = glfwGetKey(context, index);
@@ -118,7 +136,7 @@ namespace Anggur
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::IsKeyReleased(Key key) const
+	bool Input::IsKeyboardReleased(Key key) const
 	{
 		int index = static_cast<int>(key);
 

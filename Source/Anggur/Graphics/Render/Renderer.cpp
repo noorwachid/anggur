@@ -684,43 +684,86 @@ namespace Anggur
 		}
 	}
 
+	Vector2 Renderer::MeasureText(
+		const std::string& text, 
+		Font* font, 
+		float fontSize
+	)
+	{
+		Vector2 positioner;
+		float maxWidth = 0;
+		usize column = 0;
+
+		for (usize i = 0; i < text.size(); ++i)
+		{
+			Glyph glyph = font->glyphMap[text[i]];
+
+			if (text[i] == ' ')
+			{
+				positioner.x += 0.25;
+				continue;
+			}
+			else if (text[i] == '\n')
+			{
+				maxWidth = Math::Max(maxWidth, positioner.x);
+				positioner.y -= 1;
+				positioner.x = 0;
+				column = 0;
+				continue;
+			}
+
+			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]) - (font->glyphPadding * 2);
+			++column;
+		}
+		
+		positioner.y -= 1;
+
+		return Vector2(Math::Max(positioner.x, maxWidth), positioner.y) * fontSize;
+	}
+
 	void Renderer::DrawText(
 		const Matrix3& model, 
 		const Vector2& position, 
-		float down,
 		const std::string& text, 
 		Font* font, 
-		float size
+		float fontSize
 	)
 	{
 		SwitchDrawingMode(DrawingMode::Text);
 
 		Vector2 positioner;
+		positioner.x = -font->glyphPadding;
+
+		usize column = 0;
 
 		for (usize i = 0; i < text.size(); ++i)
 		{
+			Glyph glyph = font->glyphMap[text[i]];
+
 			if (text[i] == ' ')
 			{
-				positioner.x += 0.5;
+				positioner.x += 0.25;
 				continue;
 			}
-			else
+			else if (text[i] == '\n')
 			{
-				// positioner.x += options.letterSpacing;
+				positioner.y -= 1;
+				positioner.x = -font->glyphPadding;
+				column = 0;
+				continue;
 			}
 
-			Glyph glyph = font->glyphMap[text[i]];
 			DrawTextGlyph(
 				model, 
-				(positioner + Vector2(-font->glyphPadding * 2 * i, glyph.ascent * down)) * size, 
-				glyph.size * size,
-				down,
+				position + (positioner - Vector2(font->glyphPadding * 2 * column, glyph.ascent)) * fontSize, 
+				glyph.size * fontSize,
 				font->glyphBuffers[glyph.bufferIndex].texture, 
 				glyph.texturePosition, 
 				glyph.textureSize
 			);
 
 			positioner.x += glyph.size.x + font->GetKerning(text[i], text[i + 1]);
+			++column;
 		}
 	}
 
@@ -728,7 +771,6 @@ namespace Anggur
 		const Matrix3& model, 
 		const Vector2& position, 
 		const Vector2& size, 
-		float down,
 		Texture2D* texture,
 		const Vector2& texturePosition, 
 		const Vector2& textureSize, 
@@ -741,8 +783,8 @@ namespace Anggur
 			{
 				Vertex(model * position, Vector4(color.x, color.y, color.z, color.w), texturePosition),
 				Vertex(model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
-				Vertex(model * Vector2(position.x + size.x, position.y + size.y * down), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
-				Vertex(model * Vector2(position.x, position.y + size.y * down), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
+				Vertex(model * Vector2(position.x + size.x, position.y - size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+				Vertex(model * Vector2(position.x, position.y - size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
 			},
 			{
 				0, 1, 2, 2, 3, 0,

@@ -10,47 +10,47 @@ namespace Anggur
 {
 	struct KeyboardPressedEvent : Event
 	{
-		Key Key = Key::Unknown;
+		Key key = Key::Unknown;
 	};
 
 	struct KeyboardHeldEvent : Event
 	{
-		Key Key = Key::Unknown;
+		Key key = Key::Unknown;
 	};
 
 	struct KeyboardReleasedEvent : Event
 	{
-		Key Key = Key::Unknown;
+		Key key = Key::Unknown;
 	};
 
 	struct KeyboardTypedEvent : public Event
 	{
-		uint Codepoint;
+		uint codepoint;
 	};
 
 	struct MouseMovedEvent : public Event
 	{
-		Vector2 Position;
+		Vector2 position;
 	};
 
 	struct MousePressedEvent : Event
 	{
-		MouseButton Button = MouseButton::Unknown;
+		MouseButton button = MouseButton::Unknown;
 	};
 
 	struct MouseHeldEvent : Event
 	{
-		Key Key = Key::Unknown;
+		MouseButton button = MouseButton::Unknown;
 	};
 
 	struct MouseReleasedEvent : Event
 	{
-		Key Key = Key::Unknown;
+		MouseButton button = MouseButton::Unknown;
 	};
 
 	struct MouseScrolledEvent : public Event
 	{
-		Vector2 Direction;
+		Vector2 direction;
 	};
 
 	class InputEventListener 

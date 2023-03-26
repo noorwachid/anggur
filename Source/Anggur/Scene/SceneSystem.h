@@ -4,60 +4,22 @@
 
 namespace Anggur
 {
-	class SceneSystem : public NotificationEventListener, WindowEventListener
+	class SceneSystem
 	{
 	public:
-		void SetWindow(Window* newWindow)
-		{
-			window = newWindow;
-		}
+		void SetWindow(Window* newWindow);
 
-		void SetRenderer(Renderer* newRenderer)
-		{
-			renderer = newRenderer;
-		}
+		void SetRenderer(Renderer* newRenderer);
 
-		void SetScene(Scene* newScene)
-		{
-			if (scene)
-			{
-				Terminate();
-			}
+		void SetScene(Scene* newScene);
 
-			scene = newScene;
-			Initialize();
-		}
+		void Initialize();
 
-		void Initialize()
-		{
-			if (scene)
-			{
-				scene->SetWindow(window);
-				scene->SetRenderer(renderer);
-				scene->Initialize();
-			}
-		}
+		void Update(float deltaTime);
 
-		void Update(float deltaTime) 
-		{
-			if (scene)
-				scene->Update(deltaTime);
-		}
+		void Draw();
 
-		void Draw()
-		{
-			if (scene)
-				scene->Draw();
-		}
-
-		void Terminate()
-		{
-			if (scene)
-			{
-				delete scene;
-				scene = nullptr;
-			}
-		}
+		void Terminate();
 
 	private:
 		Window* window = nullptr;

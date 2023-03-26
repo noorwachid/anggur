@@ -8,12 +8,12 @@ namespace Anggur
 {
 	struct WindowMovedEvent : public Event
 	{
-		Vector2 Position;
+		Vector2 position;
 	};
 
 	struct WindowResizedEvent : public Event
 	{
-		Vector2 Size;
+		Vector2 size;
 	};
 
 	class WindowEventListener : public InputEventListener

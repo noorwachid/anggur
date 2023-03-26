@@ -142,19 +142,24 @@ namespace Anggur
 		);
 
 		// Text
-		void DrawText(
-			const Matrix3& model, 
-			const Vector2& position, 
-			float down,
+		Vector2 MeasureText(
 			const std::string& text, 
 			Font* font, 
 			float fontSize
 		);
+
+		void DrawText(
+			const Matrix3& model, 
+			const Vector2& position, 
+			const std::string& text, 
+			Font* font, 
+			float fontSize
+		);
+
 		void DrawTextGlyph(
 			const Matrix3& model, 
 			const Vector2& position, 
 			const Vector2& size, 
-			float down,
 			Texture2D* texture,
 			const Vector2& texturePosition = Vector2::zero, 
 			const Vector2& textureSize = Vector2::one,

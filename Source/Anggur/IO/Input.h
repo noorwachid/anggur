@@ -25,11 +25,11 @@ namespace Anggur
 	public:
 		void Initialize(WindowContext* context);
 
-		bool IsKeyPressed(Key key) const;
+		bool IsKeyboardPressed(Key key) const;
 
-		bool IsKeyHeld(Key key) const;
+		bool IsKeyboardHeld(Key key) const;
 
-		bool IsKeyReleased(Key key) const;
+		bool IsKeyboardReleased(Key key) const;
 
 		const Vector2& GetMousePosition() const;
 

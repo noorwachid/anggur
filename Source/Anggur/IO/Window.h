@@ -42,9 +42,9 @@ namespace Anggur
 
 		void Update();
 
-        void SetListener(WindowEventListener* listener)
+        void SetListener(WindowEventListener* newListener)
         {
-            _listener = listener;
+            listener = newListener;
         }
 
 	private:
@@ -64,6 +64,8 @@ namespace Anggur
 
 		Vector2 frameBufferSize;
 
-        WindowEventListener* _listener = nullptr;
+        WindowEventListener* listener = nullptr;
+
+		friend class Input;
 	};
 }
