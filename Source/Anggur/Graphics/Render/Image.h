@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/Integral.h"
 #include <string>
 #include <vector>
 
@@ -13,68 +14,68 @@ namespace Anggur
 
 		~Image();
 
-		inline uint32_t GetWidth() const
+		inline uint GetWidth() const
 		{
 			return width;
 		}
 
-		inline uint32_t GetHeight() const
+		inline uint GetHeight() const
 		{
 			return height;
 		}
 
-		inline uint32_t GetChannels() const
+		inline uint GetChannels() const
 		{
 			return channels;
 		}
 
-		inline uint32_t GetVolume() const
+		inline uint GetVolume() const
 		{
 			return width * height * channels;
 		}
 
-		inline const std::vector<uint8_t>& GetBytes() const
+		inline const std::vector<uchar>& GetBytes() const
 		{
 			return bytes;
 		}
 
-		inline std::vector<uint8_t>& GetBytes()
+		inline std::vector<uchar>& GetBytes()
 		{
 			return bytes;
 		}
 
-		inline uint8_t* ToPointer()
+		inline uchar* ToPointer()
 		{
 			return bytes.data();
 		}
 
-		inline void SetByte(uint32_t index, uint8_t value)
+		inline void SetByte(uint index, uchar value)
 		{
 			bytes[index] = value;
 		}
 
-		inline void SetByte(uint32_t x, uint32_t y, uint8_t value)
+		inline void SetByte(uint x, uint y, uchar value)
 		{
 			bytes[y * width + x] = value;
 		}
 
-		inline void SetWidth(uint32_t newWidth)
+		inline void SetWidth(uint newWidth)
 		{
 			width = newWidth;
 		}
 
-		inline void SetHeight(uint32_t newHeight)
+		inline void SetHeight(uint newHeight)
 		{
 			height = newHeight;
 		}
 
-		inline void SetSize(uint32_t newWidth, uint32_t newHeight)
+		inline void SetSize(uint newWidth, uint newHeight)
 		{
 			width = newWidth;
 			height = newHeight;
 		}
 
-		inline void SetChannels(uint32_t newChannels)
+		inline void SetChannels(uint newChannels)
 		{
 			channels = newChannels;
 		}
@@ -90,9 +91,9 @@ namespace Anggur
 		void Write(const std::string& path);
 
 	private:
-		uint32_t width;
-		uint32_t height;
-		uint32_t channels;
-		std::vector<uint8_t> bytes;
+		uint width;
+		uint height;
+		uint channels;
+		std::vector<uchar> bytes;
 	};
 }
