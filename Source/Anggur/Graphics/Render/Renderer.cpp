@@ -712,7 +712,7 @@ namespace Anggur
 					positioner.x -= letterSpacing;
 
 				maxWidth = Math::Max(maxWidth, positioner.x);
-				positioner.y -= 1 + lineSpacing;
+				positioner.y += 1 + lineSpacing;
 				positioner.x = 0;
 				column = 0;
 				continue;
@@ -722,7 +722,7 @@ namespace Anggur
 			++column;
 		}
 		
-		positioner.y -= 1;
+		positioner.y += 1;
 
 		return Vector2(Math::Max(positioner.x + (column > 0 ? -letterSpacing : 0), maxWidth), positioner.y) * fontSize;
 	}
@@ -739,7 +739,7 @@ namespace Anggur
 		const Vector4& color
 	)
 	{
-		DrawRectangle(model, position, MeasureText(text, font, fontSize), Vector4(1, 1, 0, 0.5));
+		// DrawRectangle(model, position, MeasureText(text, font, fontSize), Vector4(1, 1, 0, 0.5));
 		
 		SwitchDrawingMode(DrawingMode::Text);
 
@@ -758,7 +758,7 @@ namespace Anggur
 			}
 			else if (text[i] == '\n')
 			{
-				positioner.y -= 1 + lineSpacing;
+				positioner.y += 1 + lineSpacing;
 				positioner.x = -font->glyphPadding;
 				column = 0;
 				continue;
@@ -766,7 +766,7 @@ namespace Anggur
 			
 			DrawTextGlyph(
 				model, 
-				position + (positioner - Vector2(font->glyphPadding * 2 * column, glyph.ascent)) * fontSize, 
+				position + (positioner + Vector2(-font->glyphPadding * 2 * column, glyph.ascent)) * fontSize, 
 				glyph.size * fontSize,
 				font->glyphBuffers[glyph.bufferIndex].texture, 
 				glyph.texturePosition, 
@@ -795,8 +795,8 @@ namespace Anggur
 			{
 				Vertex(model * position, Vector4(color.x, color.y, color.z, color.w), texturePosition),
 				Vertex(model * Vector2(position.x + size.x, position.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y)),
-				Vertex(model * Vector2(position.x + size.x, position.y - size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
-				Vertex(model * Vector2(position.x, position.y - size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
+				Vertex(model * Vector2(position.x + size.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y)),
+				Vertex(model * Vector2(position.x, position.y + size.y), Vector4(color.x, color.y, color.z, color.w), Vector2(texturePosition.x, texturePosition.y + textureSize.y)),
 			},
 			{
 				0, 1, 2, 2, 3, 0,

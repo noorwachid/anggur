@@ -106,6 +106,25 @@ namespace Anggur
 			return Matrix3(a, d, g, b, e, h, c, f, i);
 		}
 
+		static Matrix3 CreateOrthographic(const Vector2& origin, const Vector2& viewportSize, float scale = 1.0f)
+		{
+			float inverseScale = 1 / scale;
+			return Matrix3(
+				inverseScale, 0.0f, 0.0f,
+				0.0f, -inverseScale * (viewportSize.x / viewportSize.y), 0.0f,
+				origin.x, -origin.y, 1.0f
+			);
+		}
+
+		static Matrix3 CreatePixelPerfect(const Vector2& origin, const Vector2& viewportSize)
+		{
+			return Matrix3(
+				2.0f / viewportSize.x, 0.0f, 0.0f,
+				0.0f, -2.0f / viewportSize.y, 0.0f,
+				origin.x, -origin.y, 1.0f
+			);
+		}
+
 		static Matrix3 CreateTranslation(const Vector2& translation)
 		{
 			return Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, translation.x, translation.y, 1.0f);

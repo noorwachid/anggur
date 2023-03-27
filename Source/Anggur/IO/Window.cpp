@@ -96,7 +96,7 @@ namespace Anggur
 
 	float Window::GetAspectRatio()
 	{
-		return size.y / size.x;
+		return size.x / size.y;
 	}
 
 	float Window::GetScale()
