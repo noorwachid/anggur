@@ -93,7 +93,11 @@ namespace Anggur
 			float determinant = GetDeterminant();
 
 			if (determinant == 0.0f)
-				return Matrix3(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+				return Matrix3(
+					0.0f, 0.0f, 0.0f, 
+					0.0f, 0.0f, 0.0f, 
+					0.0f, 0.0f, 0.0f
+				);
 
 			float inverseDeterminant = 1.0f / GetDeterminant();
 			Matrix3 adjugate = GetAdjugate();
@@ -132,26 +136,44 @@ namespace Anggur
 
 		static Matrix3 CreateRotation(float rotation)
 		{
-			return Matrix3(Math::Cos(rotation), -Math::Sin(rotation), 0.0f, Math::Sin(rotation), Math::Cos(rotation),
-						   0.0f, 0.0f, 0.0f, 1.0f);
+			return Matrix3(
+				Math::Cos(rotation), Math::Sin(rotation), 0.0f, 
+				-Math::Sin(rotation), Math::Cos(rotation), 0.0f, 
+				0.0f, 0.0f, 1.0f
+			);
 		}
 
 		static Matrix3 CreateScale(const Vector2& scale)
 		{
-			return Matrix3(scale.x, 0.0f, 0.0f, 0.0f, scale.y, 0.0f, 0.0f, 0.0f, 1.0f);
+			return Matrix3(
+				scale.x, 0.0f, 0.0f, 
+				0.0f, scale.y, 0.0f, 
+				0.0f, 0.0f, 1.0f
+			);
 		}
 
 		friend Matrix3 operator*(float a, const Matrix3& b)
 		{
-			return Matrix3(a * b.a, a * b.b, a * b.c, a * b.d, a * b.e, a * b.f, a * b.g, a * b.h, a * b.i);
+			return Matrix3(
+				a * b.a, a * b.b, a * b.c, 
+				a * b.d, a * b.e, a * b.f, 
+				a * b.g, a * b.h, a * b.i
+			);
 		}
 
 		friend Matrix3 operator*(const Matrix3& a, const Matrix3& b)
 		{
 			return Matrix3(
-				a.a * b.a + a.b * b.d + a.c * b.g, a.a * b.b + a.b * b.e + a.c * b.h, a.a * b.c + a.b * b.f + a.c * b.i,
-				a.d * b.a + a.e * b.d + a.f * b.g, a.d * b.b + a.e * b.e + a.f * b.h, a.d * b.c + a.e * b.f + a.f * b.i,
-				a.g * b.a + a.h * b.d + a.i * b.g, a.g * b.b + a.h * b.e + a.i * b.h,
+				a.a * b.a + a.b * b.d + a.c * b.g, 
+				a.a * b.b + a.b * b.e + a.c * b.h, 
+				a.a * b.c + a.b * b.f + a.c * b.i,
+
+				a.d * b.a + a.e * b.d + a.f * b.g, 
+				a.d * b.b + a.e * b.e + a.f * b.h, 
+				a.d * b.c + a.e * b.f + a.f * b.i,
+
+				a.g * b.a + a.h * b.d + a.i * b.g, 
+				a.g * b.b + a.h * b.e + a.i * b.h,
 				a.g * b.c + a.h * b.f + a.i * b.i);
 		}
 
