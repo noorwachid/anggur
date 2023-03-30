@@ -25,6 +25,14 @@ namespace Anggur
 		{
 		}
 	};
+	struct RCRectangleVertexUI
+	{
+		Vector2 corner;
+		Vector2 position;
+		Vector4 color;
+		float radius = 0;
+		float border = 0;
+	};
 
 	class Renderer
 	{
@@ -38,12 +46,17 @@ namespace Anggur
 		void SetViewport(const Vector2& position, const Vector2& size);
 		void SetViewProjection(const Matrix3& newViewProjection);
 
-		void BeginScissor(const Vector2& position, const Vector2& size);
-		void EndScissor();
-
 		void BeginScene();
 		void BeginScene(const Matrix3& viewProjection);
 		void EndScene();
+
+		void BeginMask();
+		void BeginWriteMask();
+		void EndWriteMask();
+		void BeginEraseMask();
+		void EndEraseMask();
+		void EndMask();
+
 
 		bool IsCapacityMaxout(usize newVertexSize, usize newIndexSize, usize newTextureSize);
 		void Flush();
@@ -172,6 +185,9 @@ namespace Anggur
 			const Vector2& textureSize = Vector2::one,
 			const Vector4& color = Vector4::white
 		);
+
+	public:
+		uchar stencilDepth = 0;
 
 	private:
 		Shader geometryShader;

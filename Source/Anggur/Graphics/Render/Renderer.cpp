@@ -8,6 +8,7 @@
 
 namespace Anggur
 {
+
 	Renderer::Renderer()
 	{
 		InitializeVertexPool();
@@ -163,7 +164,8 @@ namespace Anggur
 	void Renderer::Clear(const Vector4& color)
 	{
 		glClearColor(color.x, color.y, color.z, color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glStencilMask(0x00);
+		glClear(GL_COLOR_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 	}
 
 	void Renderer::SetViewport(const Vector2& position, const Vector2& size)
@@ -192,6 +194,64 @@ namespace Anggur
 	void Renderer::EndScene()
 	{
 		Flush();
+	}
+
+	void Renderer::BeginMask()
+	{
+		Flush();
+
+		if (stencilDepth == 0)
+			glEnable(GL_STENCIL_TEST);
+
+		++stencilDepth;
+	}
+
+	void Renderer::BeginWriteMask()
+	{
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glDepthMask(GL_FALSE);
+		glStencilFunc(GL_ALWAYS, stencilDepth, stencilDepth);
+		glStencilOp(GL_INCR, GL_INCR, GL_INCR);
+	}
+
+	void Renderer::EndWriteMask()
+	{
+		Flush();
+
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glDepthMask(GL_TRUE);
+		glStencilFunc(GL_EQUAL, stencilDepth, stencilDepth);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	}
+
+	void Renderer::BeginEraseMask()
+	{
+		Flush();
+
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glDepthMask(GL_FALSE);
+		glStencilFunc(GL_ALWAYS, stencilDepth, stencilDepth);
+		glStencilOp(GL_DECR, GL_DECR, GL_DECR);
+	}
+
+	void Renderer::EndEraseMask()
+	{
+		Flush();
+
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glDepthMask(GL_TRUE);
+		// glStencilFunc(GL_EQUAL, stencilDepth, stencilDepth);
+		// glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	}
+
+	void Renderer::EndMask()
+	{
+		Flush();
+
+		--stencilDepth;
+
+		if (stencilDepth == 0)
+			glDisable(GL_STENCIL_TEST);
 	}
 
 	void Renderer::Flush()
@@ -742,6 +802,8 @@ namespace Anggur
 		// DrawRectangle(model, position, MeasureText(text, font, fontSize), Vector4(1, 1, 0, 0.5));
 		
 		SwitchDrawingMode(DrawingMode::Text);
+
+		if (!font) return;
 
 		Vector2 positioner;
 		positioner.x = -font->glyphPadding;
