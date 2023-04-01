@@ -107,7 +107,7 @@ namespace Anggur
 					float scale = 0.5f / max(vSize.x, vSize.y);
 
 					float sharpness = scale * vSharpness;
-					float thickness = scale * vThickness;
+					float thickness = scale * 2.0f * vThickness;
 					float radius = scale * vRadius;
 
 					vec2 size = scale * vSize;
