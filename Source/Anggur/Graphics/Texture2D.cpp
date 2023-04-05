@@ -58,6 +58,10 @@ namespace Anggur
 					break;
 
 				case 3:
+					iformat = GL_RGB8;
+					format = GL_RGB;
+					break;
+
 				case 4:
 				default:
 					iformat = GL_RGBA8;

@@ -67,10 +67,10 @@ namespace Anggur
 				out float vSharpness;
 				out vec4 vColor;
 
-				uniform mat3 uViewProjection;
+				uniform mat3 uView;
 
 				void main() {
-					gl_Position.xyz = uViewProjection * vec3(aPosition, 1.0f);
+					gl_Position.xyz = uView * vec3(aPosition, 1.0f);
 					gl_Position.w = 1.0f;
 
 					vSize = aSize;
@@ -125,13 +125,13 @@ namespace Anggur
 			shader.Compile();
 		}
 
-		void SetViewProjection(const Matrix3& newViewProjection)
+		void SetView(const Matrix3& newView)
 		{
-			viewProjection = newViewProjection;
-			shader.SetUniformMatrix3("uViewProjection", viewProjection);
+			view = newView;
+			shader.SetUniformMatrix3("uView", view);
 		}
 
-		void Add(const Vector2& position, const Vector2& size, float radius = 0.0, float thickness = 1.0, float sharpness = 0.25, const Vector4& color = Vector4(1.0, 1.0, 1.0, 1.0))
+		void Add(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
 		{
 			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
 			{
@@ -214,7 +214,7 @@ namespace Anggur
 
 		Shader shader;
 
-		Matrix3 viewProjection;
+		Matrix3 view;
 
 		std::vector<RRVertex> vertices;
 		std::vector<uint> indices;

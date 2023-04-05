@@ -113,7 +113,7 @@ namespace Anggur
 			shader.SetUniformMatrix3("uViewProjection", viewProjection);
 		}
 
-		void Add(const Vector2& position, float radius = 0.5, float thickness = 0.5, float sharpness = 0.25, const Vector4& color = Vector4(1.0, 1.0, 1.0, 1.0))
+		void Add(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
 		{
 			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
 			{

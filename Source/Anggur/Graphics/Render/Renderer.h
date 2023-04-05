@@ -3,7 +3,8 @@
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
-#include "Anggur/Graphics/Render/Font.h"
+#include "Anggur/Graphics/Render/CirclePipeline.h"
+#include "Anggur/Graphics/Render/RRPipeline.h"
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
@@ -12,26 +13,10 @@
 
 namespace Anggur
 {
-	struct Vertex
+	enum class PipelineType
 	{
-		Vector2 position;
-		Vector4 color;
-		Vector2 uv;
-		float slot;
-
-		Vertex() = default;
-		Vertex(const Vector2& newPosition, const Vector4& newColor, const Vector2& newUV, float newSlot = 0.0f)
-			: position(newPosition), color(newColor), uv(newUV), slot(newSlot)
-		{
-		}
-	};
-	struct RCRectangleVertexUI
-	{
-		Vector2 corner;
-		Vector2 position;
-		Vector4 color;
-		float radius = 0;
-		float border = 0;
+		Circle,
+		RR,
 	};
 
 	class Renderer
@@ -41,13 +26,14 @@ namespace Anggur
 
 		~Renderer();
 
-		void SetBatchChunk(usize vertex, usize indexMultiplier = 2);
-		void Clear(const Vector4& color = Vector4::black);
-		void SetViewport(const Vector2& position, const Vector2& size);
-		void SetViewProjection(const Matrix3& newViewProjection);
+		void Draw();
 
-		void BeginScene();
-		void BeginScene(const Matrix3& viewProjection);
+		void Clear();
+
+		void SetClearColor(const Vector4& color = Vector4::black);
+		void SetViewport(const Vector2& position, const Vector2& size);
+
+		void BeginScene(const Matrix3& newView);
 		void EndScene();
 
 		void BeginMask();
@@ -57,177 +43,20 @@ namespace Anggur
 		void EndEraseMask();
 		void EndMask();
 
+		void AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
-		bool IsCapacityMaxout(usize newVertexSize, usize newIndexSize, usize newTextureSize);
-		void Flush();
-		void FlushInternalBuffer();
-
-		void Draw(
-			const std::vector<Vertex>& newVertices, 
-			const std::vector<uint>& newIndices,
-			Texture2D* texture
-		);
-
-		// Digital Geometry
-		void DrawTriangle(
-			const Matrix3& model, 
-			const Vector2& position0, 
-			const Vector2& position1, 
-			const Vector2& position2,
-			const Vector4& color = Vector4::white
-		);
-		void DrawQuad(
-			const Matrix3& model, 
-			const Vector2& position0, 
-			const Vector2& position1, 
-			const Vector2& position2,
-			const Vector2& position3, 
-			const Vector4& color = Vector4::white
-		);
-
-		void DrawRectangle(
-			const Matrix3& model, 
-			const Vector2& position, 
-			const Vector2& size, 
-			const Vector4& color = Vector4::white
-		);
-
-		void DrawRectangle(
-			const Matrix3& model, 
-			const Vector2& position, 
-			const Vector2& size, 
-			Texture2D* texture,
-			const Vector2& texturePosition = Vector2::zero, 
-			const Vector2& textureSize = Vector2::one,
-			const Vector4& color = Vector4::white
-		);
-
-		// Augmented-Natural Geometry
-		void DrawArc(
-			const Matrix3& model, 
-			float radius = 1.0f, 
-			float beginAngle = 0.0f, 
-			float sweepAngle = Math::pi,
-			int segment = 16, 
-			const Vector4& color = Vector4::white
-		);
-		void DrawCircle(
-			const Matrix3& model, 
-			float radius = 1.0f, 
-			int segment = 32, 
-			const Vector4& color = Vector4::white
-		);
-
-		// Line Geometry
-		void DrawLineTerminator(
-			const Matrix3& model, 
-			const Vector2& position0, 
-			const Vector2& position1, 
-			float thickness = 0.5,
-			const Vector4& color = Vector4::white
-		);
-		void DrawLineAnchor(
-			const Matrix3& model, 
-			const Vector2& position0, 
-			const Vector2& position1, 
-			const Vector2& p2,
-			float thickness = 0.5, 
-			const Vector4& color = Vector4::white
-		);
-		void DrawLine(
-			const Matrix3& model, 
-			const Vector2& position0, 
-			const Vector2& position1, 
-			float thickness = 0.5,
-			const Vector4& color = Vector4::white
-		);
-		void DrawPolyLine(
-			const Matrix3& model, 
-			const std::vector<Vector2>& positions, 
-			float thickness = 0.5,
-			const Vector4& color = Vector4::white
-		);
-		void DrawClosedPolyLine(
-			const Matrix3& model, 
-			const std::vector<Vector2>& positions, 
-			float thickness = 0.5,
-			const Vector4& color = Vector4::white
-		);
-
-		// Text
-		Vector2 MeasureText(
-			const std::string& text, 
-			Font* font, 
-			float fontSize,
-			float letterSpacing = 0.025f,
-			float wordSpacing = 0.25f,
-			float lineSpacing = 0.0f
-		);
-
-		void DrawText(
-			const Matrix3& model, 
-			const Vector2& position, 
-			const std::string& text, 
-			Font* font, 
-			float fontSize,
-			float letterSpacing = 0.025f,
-			float wordSpacing = 0.25f,
-			float lineSpacing = 0.0f,
-			const Vector4& color = Vector4::white
-		);
-
-		void DrawTextGlyph(
-			const Matrix3& model, 
-			const Vector2& position, 
-			const Vector2& size, 
-			Texture2D* texture,
-			const Vector2& texturePosition = Vector2::zero, 
-			const Vector2& textureSize = Vector2::one,
-			const Vector4& color = Vector4::white
-		);
-
-	public:
-		uchar stencilDepth = 0;
+		void AddRR(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
 	private:
-		Shader geometryShader;
-		Shader textShader;
+		void SetPipeline(PipelineType type);
+		void SetView();
 
-		enum class DrawingMode
-		{
-			Geometry,
-			Text,
-		};
+		uchar stencilDepth;
 
-		DrawingMode drawingMode = DrawingMode::Geometry;
+		Matrix3 view;
 
-		VertexArray vertexArray;
-		VertexBuffer vertexBuffer;
-		IndexBuffer indexBuffer;
-
-		std::vector<Vertex> vertices;
-		std::vector<uint> indices;
-		std::vector<Texture2D*> textures;
-		std::vector<int> slots;
-
-		Texture2D* whiteTexture;
-
-		usize vertexOffset = 0;
-		usize indexOffset = 0;
-		usize textureOffset = 0;
-
-		usize drawCount = 0;
-
-		usize batchVertex = 512;
-		usize batchIndexMultiplier = 2;
-
-		Matrix3 viewProjection;
-
-	private:
-		void InitializeVertexPool();
-		void InitializeTexturePool();
-		void InitializeShaders();
-
-		void SwitchDrawingMode(DrawingMode mode);
+		PipelineType pipelineType;
+		CirclePipeline circlePipeline;
+		RRPipeline rrPipeline;
 	};
 }
