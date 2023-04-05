@@ -128,7 +128,6 @@ namespace Anggur
 		void SetView(const Matrix3& newView)
 		{
 			view = newView;
-			shader.SetUniformMatrix3("uView", view);
 		}
 
 		void Add(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
@@ -191,6 +190,7 @@ namespace Anggur
 		void Draw()
 		{
 			shader.Bind();
+			shader.SetUniformMatrix3("uView", view);
 
 			vertexArray.Bind();
 

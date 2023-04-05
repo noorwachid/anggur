@@ -49,14 +49,17 @@ namespace Anggur
 	}
 
 
-	void Renderer::BeginScene(const Matrix3& newView)
+	void Renderer::SetView(const Matrix3& newView)
+	{
+		circlePipeline.SetView(newView);
+		rrPipeline.SetView(newView);
+	}
+
+	void Renderer::BeginScene()
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
-		view = newView;
-
-		SetView();
 		Clear();
 	}
 
@@ -127,21 +130,6 @@ namespace Anggur
 		{
 			Draw();
 			pipelineType = type;
-			SetView();
-		}
-	}
-
-	void Renderer::SetView()
-	{
-		switch (pipelineType) 
-		{
-			case PipelineType::Circle:
-				circlePipeline.SetViewProjection(view);
-				break;
-
-			case PipelineType::RR:
-				rrPipeline.SetView(view);
-				break;
 		}
 	}
 

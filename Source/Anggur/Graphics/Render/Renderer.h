@@ -32,8 +32,9 @@ namespace Anggur
 
 		void SetClearColor(const Vector4& color = Vector4::black);
 		void SetViewport(const Vector2& position, const Vector2& size);
+		void SetView(const Matrix3& newView);
 
-		void BeginScene(const Matrix3& newView);
+		void BeginScene();
 		void EndScene();
 
 		void BeginMask();
@@ -49,11 +50,8 @@ namespace Anggur
 
 	private:
 		void SetPipeline(PipelineType type);
-		void SetView();
 
 		uchar stencilDepth;
-
-		Matrix3 view;
 
 		PipelineType pipelineType;
 		CirclePipeline circlePipeline;
