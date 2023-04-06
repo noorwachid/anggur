@@ -108,7 +108,7 @@ namespace Anggur
 
 					float sharpness = scale * vSharpness;
 					float thickness = scale * 2.0f * vThickness;
-					float radius = scale * vRadius;
+					float radius = scale * 2.0f * vRadius;
 
 					vec2 size = scale * vSize;
 
@@ -120,6 +120,10 @@ namespace Anggur
 
 					fColor = vColor;
 					fColor.w *= mask;
+
+					if (fColor.w == 0.0f) {
+						discard;
+					}
 				}
 			)");
 			shader.Compile();
@@ -189,16 +193,20 @@ namespace Anggur
 
 		void Draw()
 		{
+			// Early exit if no vertices to draw
+			if (vertexOffset == 0)
+				return;
+
 			shader.Bind();
 			shader.SetUniformMatrix3("uView", view);
 
 			vertexArray.Bind();
 
 			vertexBuffer.Bind();
-			vertexBuffer.setData(sizeof(RRVertex) * vertexOffset, vertices.data());
+			vertexBuffer.SetData(sizeof(RRVertex) * vertexOffset, vertices.data());
 
 			indexBuffer.Bind();
-			indexBuffer.setData(sizeof(uint) * indexOffset, indices.data());
+			indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());
 
 			glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 

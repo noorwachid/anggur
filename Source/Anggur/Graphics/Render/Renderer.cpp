@@ -21,6 +21,10 @@ namespace Anggur
 	{
 		switch (pipelineType) 
 		{
+			case PipelineType::Mesh:
+				meshPipeline.Draw();
+				break;
+
 			case PipelineType::Circle:
 				circlePipeline.Draw();
 				break;
@@ -29,12 +33,13 @@ namespace Anggur
 				rrPipeline.Draw();
 				break;
 		}
+
+		++drawCount;
 	}
 
 	void Renderer::Clear()
 	{
-		int flag = GL_COLOR_BUFFER_BIT | (stencilDepth ? GL_STENCIL_BUFFER_BIT : 0);
-		glClear(flag);
+		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	void Renderer::SetClearColor(const Vector4& color)
@@ -51,6 +56,7 @@ namespace Anggur
 
 	void Renderer::SetView(const Matrix3& newView)
 	{
+		meshPipeline.SetView(newView);
 		circlePipeline.SetView(newView);
 		rrPipeline.SetView(newView);
 	}
@@ -61,6 +67,8 @@ namespace Anggur
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
 		Clear();
+
+		drawCount = 0;
 	}
 
 	void Renderer::EndScene()
@@ -132,6 +140,14 @@ namespace Anggur
 			pipelineType = type;
 		}
 	}
+
+	void Renderer::AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
+	{
+		SetPipeline(PipelineType::Mesh);
+
+		meshPipeline.AddRectangle(position, size, color);
+	}
+
 
 	void Renderer::AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
 	{

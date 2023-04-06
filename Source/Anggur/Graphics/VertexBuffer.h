@@ -18,7 +18,7 @@ namespace Anggur
 		void Bind();
 		void Unbind();
 		void SetCapacity(usize byteSize);
-		void setData(usize byteSize, void* byteData);
+		void SetData(usize byteSize, void* byteData);
 
 	private:
 		uint id = 0;
@@ -38,7 +38,7 @@ namespace Anggur
 		void Bind();
 		void Unbind();
 		void SetCapacity(usize byteSize);
-		void setData(usize byteSize, void* byteData);
+		void SetData(usize byteSize, void* byteData);
 
 	private:
 		uint id;

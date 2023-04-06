@@ -3,6 +3,7 @@
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
+#include "Anggur/Graphics/Render/MeshPipeline.h"
 #include "Anggur/Graphics/Render/CirclePipeline.h"
 #include "Anggur/Graphics/Render/RRPipeline.h"
 #include "Anggur/Math/Matrix3.h"
@@ -15,8 +16,13 @@ namespace Anggur
 {
 	enum class PipelineType
 	{
+		Mesh,
 		Circle,
+		Arc,
 		RR,
+		Line,
+		Spline,
+		Text,
 	};
 
 	class Renderer
@@ -44,6 +50,8 @@ namespace Anggur
 		void EndEraseMask();
 		void EndMask();
 
+		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color);
+
 		void AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
 		void AddRR(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
@@ -51,9 +59,13 @@ namespace Anggur
 	private:
 		void SetPipeline(PipelineType type);
 
-		uchar stencilDepth;
+		uchar stencilDepth = 0;
+
+		usize drawCount = 0;
 
 		PipelineType pipelineType;
+
+		MeshPipeline meshPipeline;
 		CirclePipeline circlePipeline;
 		RRPipeline rrPipeline;
 	};

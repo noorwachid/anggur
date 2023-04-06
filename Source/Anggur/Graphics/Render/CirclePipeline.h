@@ -102,6 +102,10 @@ namespace Anggur
 
 					fColor = vColor;
 					fColor.w *= mask;
+
+					if (fColor.w == 0.0f) {
+						discard;
+					}
 				}
 			)");
 			shader.Compile();
@@ -171,10 +175,10 @@ namespace Anggur
 			vertexArray.Bind();
 
 			vertexBuffer.Bind();
-			vertexBuffer.setData(sizeof(CircleVertex) * vertexOffset, vertices.data());
+			vertexBuffer.SetData(sizeof(CircleVertex) * vertexOffset, vertices.data());
 
 			indexBuffer.Bind();
-			indexBuffer.setData(sizeof(uint) * indexOffset, indices.data());
+			indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());
 
 			glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
