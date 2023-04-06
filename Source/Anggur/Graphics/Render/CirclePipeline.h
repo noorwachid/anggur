@@ -32,16 +32,18 @@ namespace Anggur
 
 			indices.assign(batchVertex * batchIndexMultiplier, 0);
 
+			vertexArray.Bind();
+			vertexArray.SetLayout({ 
+				{ 2, VertexDataType::Float },
+				{ 2, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
+				{ 4, VertexDataType::Float },
+			});
+
 			vertexBuffer.Bind();
 			vertexBuffer.SetCapacity(sizeof(CircleVertex) * vertices.size());
-
-			vertexArray.Bind();
-			vertexArray.SetAttribute(0, 2, GL_FLOAT, sizeof(CircleVertex), offsetof(CircleVertex, position));
-			vertexArray.SetAttribute(1, 2, GL_FLOAT, sizeof(CircleVertex), offsetof(CircleVertex, quadrant));
-			vertexArray.SetAttribute(2, 1, GL_FLOAT, sizeof(CircleVertex), offsetof(CircleVertex, radius));
-			vertexArray.SetAttribute(3, 1, GL_FLOAT, sizeof(CircleVertex), offsetof(CircleVertex, thickness));
-			vertexArray.SetAttribute(4, 1, GL_FLOAT, sizeof(CircleVertex), offsetof(CircleVertex, sharpness));
-			vertexArray.SetAttribute(5, 4, GL_FLOAT, sizeof(CircleVertex), offsetof(CircleVertex, color));
 
 			indexBuffer.Bind();
 			indexBuffer.SetCapacity(sizeof(uint) * indices.size());

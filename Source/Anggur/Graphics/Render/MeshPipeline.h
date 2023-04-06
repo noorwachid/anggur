@@ -28,12 +28,14 @@ namespace Anggur
 
 			indices.assign(batchVertex * batchIndexMultiplier, 0);
 
+			vertexArray.Bind();
+			vertexArray.SetLayout({ 
+				{ 2, VertexDataType::Float },
+				{ 4, VertexDataType::Float },
+			});
+
 			vertexBuffer.Bind();
 			vertexBuffer.SetCapacity(sizeof(MeshVertex) * vertices.size());
-
-			vertexArray.Bind();
-			vertexArray.SetAttribute(0, 2, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, position));
-			vertexArray.SetAttribute(1, 4, GL_FLOAT, sizeof(MeshVertex), offsetof(MeshVertex, color));
 
 			indexBuffer.Bind();
 			indexBuffer.SetCapacity(sizeof(uint) * indices.size());

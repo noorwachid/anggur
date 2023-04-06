@@ -66,6 +66,15 @@ namespace Anggur
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
+	usize GetVertexDataTypeByteSize(VertexDataType type)
+	{
+		switch (type) 
+		{
+			case VertexDataType::Float:
+				return 4;
+		}
+	}
+
 	VertexArray::VertexArray()
 	{
 		glGenVertexArrays(1, &id);
@@ -87,9 +96,41 @@ namespace Anggur
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::SetAttribute(usize index, usize size, int type, usize byteStride, usize byteOffset)
+	void VertexArray::SetAttribute(usize index, usize size, VertexDataType type, usize byteStride, usize byteOffset)
 	{
-		glVertexAttribPointer(index, size, type, GL_FALSE, byteStride, (void*)byteOffset);
+		int glType = 0;
+
+		switch (type) 
+		{
+			case VertexDataType::Float:
+				glType = GL_FLOAT;
+				break;
+		}
+
+		glVertexAttribPointer(index, size, glType, GL_FALSE, byteStride, (void*)byteOffset);
 		glEnableVertexAttribArray(index);
+	}
+
+	void VertexArray::SetLayout(const std::vector<std::tuple<usize, VertexDataType>>& layout)
+	{
+		stride = 0;
+
+		for (usize i = 0; i < layout.size(); ++i) 
+		{
+			auto [size, type] = layout[i];
+			stride += size * GetVertexDataTypeByteSize(type);
+		}
+
+		usize offset = 0;
+
+		for (usize i = 0; i < layout.size(); ++i) 
+		{
+			auto [size, type] = layout[i];
+			usize byteCount = size * GetVertexDataTypeByteSize(type);
+
+			SetAttribute(i, size, type, stride, offset);
+
+			offset += byteCount;
+		}
 	}
 }

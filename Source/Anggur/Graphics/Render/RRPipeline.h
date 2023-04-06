@@ -27,23 +27,23 @@ namespace Anggur
 	public:
 		RRPipeline() 
 		{
-			vertices.assign(
-				batchVertex, RRVertex{}
-			);
+			vertices.assign(batchVertex, RRVertex{});
 
 			indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-			vertexBuffer.Bind();
-			vertexBuffer.SetCapacity(sizeof(RRVertex) * vertices.size());
-
 			vertexArray.Bind();
-			vertexArray.SetAttribute(0, 2, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, position));
-			vertexArray.SetAttribute(1, 2, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, size));
-			vertexArray.SetAttribute(2, 2, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, quadrant));
-			vertexArray.SetAttribute(3, 1, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, radius));
-			vertexArray.SetAttribute(4, 1, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, thickness));
-			vertexArray.SetAttribute(5, 1, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, sharpness));
-			vertexArray.SetAttribute(6, 4, GL_FLOAT, sizeof(RRVertex), offsetof(RRVertex, color));
+			vertexArray.SetLayout({ 
+				{ 2, VertexDataType::Float },
+				{ 2, VertexDataType::Float },
+				{ 2, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
+				{ 4, VertexDataType::Float },
+			});
+
+			vertexBuffer.Bind();
+			vertexBuffer.SetCapacity(vertexArray.GetStride() * vertices.size());
 
 			indexBuffer.Bind();
 			indexBuffer.SetCapacity(sizeof(uint) * indices.size());
@@ -203,7 +203,7 @@ namespace Anggur
 			vertexArray.Bind();
 
 			vertexBuffer.Bind();
-			vertexBuffer.SetData(sizeof(RRVertex) * vertexOffset, vertices.data());
+			vertexBuffer.SetData(sizeof(RRPipeline) * vertexOffset, vertices.data());
 
 			indexBuffer.Bind();
 			indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Anggur/Integral.h"
+#include <vector>
 
 namespace Anggur
 {
@@ -43,6 +44,13 @@ namespace Anggur
 	private:
 		uint id;
 	};
+	
+	enum class VertexDataType 
+	{
+		Float,
+	};
+
+	usize GetVertexDataTypeByteSize(VertexDataType type);
 
 	class VertexArray
 	{
@@ -55,11 +63,15 @@ namespace Anggur
 			return id;
 		}
 
+		usize GetStride() { return stride; }
+
 		void Bind();
 		void Unbind();
-		void SetAttribute(usize index, usize size, int type, usize byteStride, usize byteOffset);
+		void SetAttribute(usize index, usize size, VertexDataType type, usize byteStride, usize byteOffset);
+		void SetLayout(const std::vector<std::tuple<usize, VertexDataType>>& layout);
 
 	private:
-		uint id;
+		uint id = 0;
+		usize stride = 0;
 	};
 }
