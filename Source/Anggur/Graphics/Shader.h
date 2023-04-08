@@ -34,10 +34,13 @@ namespace Anggur
 		void SetUniformVector4(const std::string& name, const Vector4& vector);
 
 		void SetUniformInt(const std::string& name, int value);
-		void SetUniformInt(const std::string& name, size_t size, int* values);
+		void SetUniformInt(const std::string& name, usize size, int* values);
+
+		void SetUniformUint(const std::string& name, uint value);
+		void SetUniformUint(const std::string& name, usize size, uint* values);
 
 		void SetUniformFloat(const std::string& name, float value);
-		void SetUniformFloat(const std::string& name, size_t size, float* values);
+		void SetUniformFloat(const std::string& name, usize size, float* values);
 
 	private:
 		uint id;

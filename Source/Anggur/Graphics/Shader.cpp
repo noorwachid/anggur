@@ -125,9 +125,19 @@ namespace Anggur
 		glUniform1i(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformInt(const std::string& name, size_t size, int* values)
+	void Shader::SetUniformInt(const std::string& name, usize size, int* values)
 	{
 		glUniform1iv(GetLocation(name), size, values);
+	}
+
+	void Shader::SetUniformUint(const std::string& name, uint value)
+	{
+		glUniform1ui(GetLocation(name), value);
+	}
+
+	void Shader::SetUniformUint(const std::string& name, usize size, uint* values)
+	{
+		glUniform1uiv(GetLocation(name), size, values);
 	}
 
 	void Shader::SetUniformFloat(const std::string& name, float value)
@@ -135,7 +145,7 @@ namespace Anggur
 		glUniform1f(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformFloat(const std::string& name, size_t size, float* values)
+	void Shader::SetUniformFloat(const std::string& name, usize size, float* values)
 	{
 		glUniform1fv(GetLocation(name), size, values);
 	}

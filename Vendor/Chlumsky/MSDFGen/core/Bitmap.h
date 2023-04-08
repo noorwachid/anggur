@@ -7,7 +7,7 @@ namespace msdfgen {
 
 /// A 2D image bitmap with N channels of type T. Pixel memory is managed by the class.
 template <typename T, int N = 1>
-class Bitmap {
+class  Bitmap {
 
 public:
     Bitmap();

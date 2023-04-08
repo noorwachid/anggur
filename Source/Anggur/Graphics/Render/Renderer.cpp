@@ -11,6 +11,9 @@ namespace Anggur
 	Renderer::Renderer()
 	{
 		pipelineType = PipelineType::Circle;
+
+		std::vector<uchar> pixels = { 0xFF, 0xFF, 0xFF };
+		defaultTexture = new Texture2D(pixels, 1, 1, 3);
 	}
 
 	Renderer::~Renderer()
@@ -22,16 +25,16 @@ namespace Anggur
 		switch (pipelineType) 
 		{
 			case PipelineType::Mesh:
-				meshPipeline.Draw();
-				break;
+				return meshPipeline.Draw();
 
 			case PipelineType::Circle:
-				circlePipeline.Draw();
-				break;
+				return circlePipeline.Draw();
 
 			case PipelineType::RR:
-				rrPipeline.Draw();
-				break;
+				return rrPipeline.Draw();
+
+			case PipelineType::Text:
+				return textPipeline.Draw();
 		}
 
 		++drawCount;
@@ -59,6 +62,7 @@ namespace Anggur
 		meshPipeline.SetView(newView);
 		circlePipeline.SetView(newView);
 		rrPipeline.SetView(newView);
+		textPipeline.SetView(newView);
 	}
 
 	void Renderer::BeginScene()
@@ -145,7 +149,14 @@ namespace Anggur
 	{
 		SetPipeline(PipelineType::Mesh);
 
-		meshPipeline.AddRectangle(position, size, color);
+		meshPipeline.AddRectangle(position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
+	}
+
+	void Renderer::AddRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+	{
+		SetPipeline(PipelineType::Mesh);
+
+		meshPipeline.AddRectangle(position, size, color, texture, texturePosition, textureSize);
 	}
 
 
@@ -161,5 +172,20 @@ namespace Anggur
 		SetPipeline(PipelineType::RR);
 
 		rrPipeline.Add(position, size, radius, thickness, sharpness, color);
+	}
+
+
+	void Renderer::AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+	{
+		SetPipeline(PipelineType::Text);
+
+		textPipeline.AddCharacter(position, size, thickness, sharpness, color, texture, texturePosition, textureSize);
+	}
+
+	void Renderer::AddTextLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)
+	{
+		SetPipeline(PipelineType::Text);
+
+		textPipeline.AddLine(position, content, font, size, thickness, sharpness, color);
 	}
 }
