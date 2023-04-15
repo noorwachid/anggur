@@ -29,7 +29,9 @@ namespace Anggur
 		usize atlasPx = 128;
 		usize characterPx = 32;
 		usize marginPx = 2;
-		usize paddingPx = 2;
+
+		float edgeColoringAngle = 4.0;
+		float distanceRange = 4.0;
 
 		usize hotTextureIndex = 0;
 		std::vector<Texture2D*> textures;
@@ -82,21 +84,16 @@ namespace Anggur
 
 						auto bounds = shape.getBounds();
 
-						std::cout << "'" << character << "'" << " L: " << bounds.l << " R: " << bounds.r << " T: " << bounds.t << " B: " << bounds.b << std::endl;
-
-						float distanceRange = 3.0;
-
 						Vector2 size(
 							Math::Abs(bounds.l - bounds.r) + distanceRange,
 							Math::Abs(bounds.b - bounds.t) + distanceRange
 						);
 
-						// Vector2 subbytesSize = size * (1.0f / metrics.emSize) * characterPx;
-						Vector2 subbytesSize = size * characterPx * pixelScale; // ChatGPT
+						Vector2 subbytesSize = size * characterPx * pixelScale;
 
 						msdfgen::Bitmap<float, 3> subbytes(subbytesSize.x, subbytesSize.y);
 
-						msdfgen::edgeColoringSimple(shape, 3.0);
+						msdfgen::edgeColoringSimple(shape, edgeColoringAngle);
 
 						msdfgen::generateMSDF(subbytes, shape, distanceRange, 
 							msdfgen::Vector2(characterPx * pixelScale, characterPx * pixelScale),
@@ -113,19 +110,19 @@ namespace Anggur
 							xOffsetPx = marginPx;
 							yOffsetPx += yOffsetMaxPx + marginPx;
 							yOffsetMaxPx = 0;
+						}
 
-							if (yOffsetPx + subbytes.height() > atlasPx)
-							{
-								Texture2D* texture = new Texture2D();
-								texture->Read(hotBytes, atlasPx, atlasPx, channels, SamplerFilter::Linear);
-								textures.push_back(texture);
-								++hotTextureIndex;
+						if (yOffsetPx + subbytes.height() > atlasPx)
+						{
+							Texture2D* texture = new Texture2D();
+							texture->Read(hotBytes, atlasPx, atlasPx, channels, SamplerFilter::Linear);
+							textures.push_back(texture);
+							++hotTextureIndex;
 
-								hotBytes.assign(atlasPx * atlasPx * channels, 0);
+							hotBytes.assign(atlasPx * atlasPx * channels, 0);
 
-								yOffsetPx = marginPx;
-								yOffsetMaxPx = 0;
-							}
+							yOffsetPx = marginPx;
+							yOffsetMaxPx = 0;
 						}
 
 						for (usize y = 0; y < subbytes.height(); ++y) 
