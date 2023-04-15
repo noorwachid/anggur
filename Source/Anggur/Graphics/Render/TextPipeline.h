@@ -80,31 +80,41 @@ namespace Anggur
 						shape.normalize();
 						shape.inverseYAxis = true;
 
-						TextCharacterInformation characterInfo;
 						auto bounds = shape.getBounds();
 
-						int rectWidth = (Math::Abs(pixelScale * bounds.l) + Math::Abs(pixelScale * bounds.r)) * characterPx;
-						int rectHeight = (Math::Abs(pixelScale * bounds.t) + Math::Abs(pixelScale * bounds.b)) * characterPx;
+						std::cout << "'" << character << "'" << " L: " << bounds.l << " R: " << bounds.r << " T: " << bounds.t << " B: " << bounds.b << std::endl;
 
-						msdfgen::Bitmap<float, 3> msdf(
-							rectWidth + paddingPx * 4, 
-							rectHeight + paddingPx * 4
+						float distanceRange = 3.0;
+
+						Vector2 size(
+							Math::Abs(bounds.l - bounds.r) + distanceRange,
+							Math::Abs(bounds.b - bounds.t) + distanceRange
 						);
 
+						// Vector2 subbytesSize = size * (1.0f / metrics.emSize) * characterPx;
+						Vector2 subbytesSize = size * characterPx * pixelScale; // ChatGPT
+
+						msdfgen::Bitmap<float, 3> subbytes(subbytesSize.x, subbytesSize.y);
+
 						msdfgen::edgeColoringSimple(shape, 3.0);
-						msdfgen::generateMSDF(msdf, shape, 4.0, 
-							msdfgen::Vector2(pixelScale * characterPx, pixelScale * characterPx),
-							msdfgen::Vector2(paddingPx - bounds.l, paddingPx - bounds.b));
 
-						float* subpixels = static_cast<float*>(msdf);
+						msdfgen::generateMSDF(subbytes, shape, distanceRange, 
+							msdfgen::Vector2(characterPx * pixelScale, characterPx * pixelScale),
+							msdfgen::Vector2(
+								((distanceRange * 0.5) - bounds.l),
+								((distanceRange * 0.5) - bounds.b)
+							)
+						);
 
-						if (xOffsetPx + msdf.width() > atlasPx)
+						float* rawSubbytes = static_cast<float*>(subbytes);
+
+						if (xOffsetPx + subbytes.width() > atlasPx)
 						{
 							xOffsetPx = marginPx;
 							yOffsetPx += yOffsetMaxPx + marginPx;
 							yOffsetMaxPx = 0;
 
-							if (yOffsetPx + msdf.height() > atlasPx)
+							if (yOffsetPx + subbytes.height() > atlasPx)
 							{
 								Texture2D* texture = new Texture2D();
 								texture->Read(hotBytes, atlasPx, atlasPx, channels, SamplerFilter::Linear);
@@ -118,34 +128,34 @@ namespace Anggur
 							}
 						}
 
-						for (usize y = 0; y < msdf.height(); ++y) 
+						for (usize y = 0; y < subbytes.height(); ++y) 
 						{
-							for (usize x = 0; x < msdf.width(); ++x)
+							for (usize x = 0; x < subbytes.width(); ++x)
 							{
 								for (usize c = 0; c < channels; ++c)
 								{
-									float hdr = subpixels[y * msdf.width() * channels + x * channels + c];
+									float hdr = rawSubbytes[y * subbytes.width() * channels + x * channels + c];
 									char normal = Math::Clamp(255 * hdr, 0, 255);
 									hotBytes[(y + yOffsetPx) * atlasPx * channels + (x + xOffsetPx) * channels + c] = normal;
 								}
 							}
 						}
 
+						float characterScale = 1.0f / metrics.emSize;
 						float atlasScale = 1.0f / atlasPx;
 
 						TextCharacterInformation info;
 
-						info.position.Set(0, 0);
-						info.size.Set(0.5, 1);
+						info.position.x = 0;
+						info.position.y = 1 - characterScale * bounds.t;
+						info.size = characterScale * size;
 
 						info.textureIndex = hotTextureIndex;
 						info.texturePosition = atlasScale * Vector2(xOffsetPx, yOffsetPx);
-						info.textureSize = atlasScale * Vector2(xOffsetPx, yOffsetPx);
-						info.texturePosition.Set(0, 0);
-						info.textureSize.Set(1, 1);
+						info.textureSize = atlasScale * subbytesSize;
 
-						xOffsetPx += msdf.width() + marginPx;
-						yOffsetMaxPx = Math::Max(yOffsetMaxPx, msdf.height());
+						xOffsetPx += subbytes.width() + marginPx;
+						yOffsetMaxPx = Math::Max(yOffsetMaxPx, subbytes.height());
 
 						characterInformationMap[character] = info;
 					}
@@ -281,18 +291,27 @@ namespace Anggur
 		void AddLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)
 		{
 			float offsetX = 0;
+			float characterX = 0;
 
 			for (char character: content)
 			{
+				if (character == ' ' || character == '\n') 
+				{
+					offsetX += size;
+					continue;
+				}
+
 				TextCharacterInformation& info = font->characterInformationMap[character];
 
-				Vector2 s = size * info.size;
+				Vector2 localPosition = size * info.position;
+				Vector2 localSize = size * info.size;
 
 				Texture2D* texture = font->textures[info.textureIndex];
 
-				AddCharacter(position + Vector2(offsetX, 0), s, thickness, sharpness, color, texture, info.texturePosition, info.textureSize);
+				AddCharacter(position + localPosition + Vector2(offsetX, 0), localSize, thickness, sharpness, color, texture, info.texturePosition, info.textureSize);
 
-				offsetX += s.x;
+				offsetX += localSize.x;
+				++characterX;
 			}
 		}
 

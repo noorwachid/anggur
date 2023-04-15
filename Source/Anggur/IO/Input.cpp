@@ -73,52 +73,56 @@ namespace Anggur
 
 	void Input::SetMouseCallbacks()
 	{
-		// glfwSetCursorPosCallback(
-		// 	context,
-		// 	[](GLFWwindow* context, double x, double y)
-		// 	{
-		// 		Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
-		// 		MouseMovedEvent event(Vector2(x, y));
-		// 		window.input.mousePosition = Vector2(x, y);
-		// 		window.Dispatch(event);
-		// 	}
-		// );
-		//
-		// glfwSetMouseButtonCallback(
-		// 	context,
-		// 	[](GLFWwindow* context, int buttonCode, int state, int mods)
-		// 	{
-		// 		Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
-		// 		MouseButton button = static_cast<MouseButton>(buttonCode);
-		//
-		// 		switch (state)
-		// 		{
-		// 			case GLFW_PRESS:
-		// 			{
-		// 				MousePressedEvent event(button);
-		// 				window.Dispatch(event);
-		// 				break;
-		// 			}
-		//
-		// 			case GLFW_REPEAT:
-		// 			{
-		// 				MouseHeldEvent event(button);
-		// 				window.Dispatch(event);
-		// 				break;
-		// 			}
-		//
-		// 			case GLFW_RELEASE:
-		// 			{
-		// 				MouseReleasedEvent event(button);
-		// 				window.Dispatch(event);
-		// 				break;
-		// 			}
-		//
-		// 			default:
-		// 				break;
-		// 		}
-		// 	}
-		// );
+		glfwSetCursorPosCallback(
+			context,
+			[](GLFWwindow* context, double x, double y)
+			{
+				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+				MouseMovedEvent event;
+				event.position.Set(x, y);
+				window.input.mousePosition.Set(x, y);
+				window.listener->OnMouseMove(event);
+			}
+		);
+
+		glfwSetMouseButtonCallback(
+			context,
+			[](GLFWwindow* context, int buttonCode, int state, int mods)
+			{
+				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+				MouseButton button = static_cast<MouseButton>(buttonCode);
+
+				switch (state)
+				{
+					case GLFW_PRESS:
+					{
+						MousePressedEvent event;
+						event.button = button;
+						window.listener->OnMousePress(event);
+						break;
+					}
+
+					case GLFW_REPEAT:
+					{
+						MouseHeldEvent event;
+						event.button = button;
+						window.listener->OnMouseHold(event);
+						break;
+					}
+
+					case GLFW_RELEASE:
+					{
+						MouseReleasedEvent event;
+						event.button = button;
+						window.listener->OnMouseRelease(event);
+						break;
+					}
+
+					default:
+						break;
+				}
+			}
+		);
 	}
 
 	bool Input::IsKeyboardPressed(Key key) const
