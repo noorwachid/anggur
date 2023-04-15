@@ -26,12 +26,14 @@ namespace Anggur
 	class TextFont
 	{
 	public:
-		usize atlasPx = 128;
+		usize atlasPx = 256;
 		usize characterPx = 32;
-		usize marginPx = 2;
+		usize marginPx = 4;
 
-		float edgeColoringAngle = 4.0;
+		float edgeColoringAngle = 2.0;
 		float distanceRange = 4.0;
+
+		float padding = 0.0;
 
 		usize hotTextureIndex = 0;
 		std::vector<Texture2D*> textures;
@@ -51,7 +53,10 @@ namespace Anggur
 				msdfgen::FontHandle *font = msdfgen::loadFont(ft, path.c_str());
 				msdfgen::FontMetrics metrics;
 				msdfgen::getFontMetrics(metrics, font);
+
 				float pixelScale = 1.0f / metrics.emSize;
+
+				padding = pixelScale * distanceRange;
 
 				if (font) 
 				{
@@ -175,6 +180,7 @@ namespace Anggur
 		float textureIndex = 0.0f;
 		float thickness = 0.5f;
 		float sharpness = 0.01f;
+		float scale = 1.0f;
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	};
 
@@ -202,6 +208,7 @@ namespace Anggur
 				{ 1, VertexDataType::Float },
 				{ 1, VertexDataType::Float },
 				{ 1, VertexDataType::Float },
+				{ 1, VertexDataType::Float },
 				{ 4, VertexDataType::Float },
 			});
 
@@ -220,12 +227,14 @@ namespace Anggur
 				layout (location = 2) in float aTextureIndex;
 				layout (location = 3) in float aThickness;
 				layout (location = 4) in float aSharpness;
-				layout (location = 5) in vec4 aColor;
+				layout (location = 5) in float aScale;
+				layout (location = 6) in vec4 aColor;
 
 				out vec2 vTexturePosition;
 				out float vTextureIndex;
 				out float vThickness;
 				out float vSharpness;
+				out float vScale;
 				out vec4 vColor;
 
 				uniform mat3 uView;
@@ -239,6 +248,7 @@ namespace Anggur
 					vTextureIndex = aTextureIndex;
 					vThickness = aThickness;
 					vSharpness = aSharpness;
+					vScale = aScale;
 					vColor = aColor;
 				}
 			)");
@@ -249,6 +259,7 @@ namespace Anggur
 				in float vTextureIndex;
 				in float vThickness;
 				in float vSharpness;
+				in float vScale;
 				in vec4 vColor;
 
 				out vec4 fColor;
@@ -265,7 +276,7 @@ namespace Anggur
 					int textureIndex = int(vTextureIndex);
 					vec4 sample = texture(uTextures[textureIndex], vTexturePosition);
 					float distance = Median(sample.r, sample.g, sample.b);
-					float screenPxDistance = 16 * (distance - 0.5);
+					float screenPxDistance = vScale * (distance - 0.5);
 					float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
 
 					fColor = vColor;
@@ -287,14 +298,15 @@ namespace Anggur
 
 		void AddLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)
 		{
-			float offsetX = 0;
+			Vector2 offset(size * -font->padding * 0.5, size * -font->padding * 0.5);
 			float characterX = 0;
+			float scale = size / font->characterPx * font->distanceRange;
 
 			for (char character: content)
 			{
 				if (character == ' ' || character == '\n') 
 				{
-					offsetX += size;
+					offset.x += size * 0.25;
 					continue;
 				}
 
@@ -305,14 +317,14 @@ namespace Anggur
 
 				Texture2D* texture = font->textures[info.textureIndex];
 
-				AddCharacter(position + localPosition + Vector2(offsetX, 0), localSize, thickness, sharpness, color, texture, info.texturePosition, info.textureSize);
+				AddCharacter(position + localPosition + offset, localSize, thickness, sharpness, scale, color, texture, info.texturePosition, info.textureSize);
 
-				offsetX += localSize.x;
+				offset.x += localSize.x - (size * font->padding);
 				++characterX;
 			}
 		}
 
-		void AddCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+		void AddCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 		{
 			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
 			{
@@ -333,6 +345,11 @@ namespace Anggur
 			vertices[vertexOffset + 1].sharpness = sharpness;
 			vertices[vertexOffset + 2].sharpness = sharpness;
 			vertices[vertexOffset + 3].sharpness = sharpness;
+
+			vertices[vertexOffset + 0].scale = scale;
+			vertices[vertexOffset + 1].scale = scale;
+			vertices[vertexOffset + 2].scale = scale;
+			vertices[vertexOffset + 3].scale = scale;
 
 			vertices[vertexOffset + 0].color = color;
 			vertices[vertexOffset + 1].color = color;

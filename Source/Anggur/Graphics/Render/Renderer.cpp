@@ -175,11 +175,11 @@ namespace Anggur
 	}
 
 
-	void Renderer::AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+	void Renderer::AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 	{
 		SetPipeline(PipelineType::Text);
 
-		textPipeline.AddCharacter(position, size, thickness, sharpness, color, texture, texturePosition, textureSize);
+		textPipeline.AddCharacter(position, size, thickness, sharpness, scale, color, texture, texturePosition, textureSize);
 	}
 
 	void Renderer::AddTextLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)

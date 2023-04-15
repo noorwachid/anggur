@@ -58,7 +58,7 @@ namespace Anggur
 
 		void AddRR(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
+		void AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
 
 		void AddTextLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color);
 
