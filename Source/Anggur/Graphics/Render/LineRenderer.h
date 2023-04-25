@@ -95,23 +95,28 @@ namespace Anggur
 				
 				void main() 
 				{
-					vec2 a = vPositionA;
-					vec2 b = vPositionB;
-					vec2 c = vQuadrant;
+					float sizeX = abs(vPositionA.x - vPositionB.x);
+					float sizeY = abs(vPositionA.y - vPositionB.y);
+					float scale = 1.0f / (max(sizeX, sizeY) + 2.0f * vSharpness + vThickness);
+					float sharpness = 2.0f * scale * vSharpness;
+					float thickness = scale * vThickness;
 
-					vec2 ab = b - a;
-					vec2 ac = c - a;
-					vec2 ab_hat = normalize(ab);
-					vec2 d = dot(ac,ab_hat) * ab_hat + a;
-					d = max(d, min(a, b));
-					d = min(d, max(a, b));
-					float dist = distance(c, d);
-					float mask = smoothstep(0.005, .009, dist);
+					vec2 translation = 0.5f * vec2(sizeX, sizeY);
+
+					vec2 a = 2.0f * scale * (vPositionA - translation);
+					vec2 b = 2.0f * scale * (vPositionB - translation);
+
+					vec2 ba = b - a;
+					vec2 pa = vQuadrant - a;
+					float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+					float distance = length(pa - h * ba);
+					float mask = 1.0f - smoothstep(thickness, thickness + sharpness, abs(distance));
 
 					fColor = vColor;
 					fColor.w *= mask;
 
-					if (fColor.w == 0.0f) {
+					if (fColor.w == 0.0f) 
+					{
 						discard;
 					}
 				}
@@ -132,33 +137,33 @@ namespace Anggur
 			}
 
 			Vector2 position(Math::Min(positionA.x, positionB.x), Math::Min(positionA.y, positionB.y));
-			Vector2 size(Math::Max(positionA.x, positionB.x), Math::Max(positionA.y, positionB.y));
+			Vector2 size = Vector2(Math::Max(positionA.x, positionB.x), Math::Max(positionA.y, positionB.y)) - position;
 
-			std::cout << "POS: " << position.ToString() << "\n";
-			std::cout << "SIZ: " << size.ToString() << "\n";
+			float edge = 0.5f * thickness + sharpness;
+			float doubleSharpness = 2.0f * sharpness + thickness;
+			float inverseMax = 1.0f / (Math::Max(size.x, size.y) + doubleSharpness);
+			float xAxis = inverseMax * (size.x + doubleSharpness);
+			float yAxis = inverseMax * (size.y + doubleSharpness);
 
-			float maxSize = Math::Max(size.x, size.y);
-			float halfMaxSize = maxSize * 0.5;
+			vertices[vertexOffset + 0].position = Vector2(position.x - edge,          position.y - edge);
+			vertices[vertexOffset + 1].position = Vector2(position.x + size.x + edge, position.y - edge);
+			vertices[vertexOffset + 2].position = Vector2(position.x + size.x + edge, position.y + size.y + edge);
+			vertices[vertexOffset + 3].position = Vector2(position.x - edge,          position.y + size.y + edge);
 
-			vertices[vertexOffset + 0].position = Vector2(position.x - halfMaxSize,           position.y - halfMaxSize);
-			vertices[vertexOffset + 1].position = Vector2(position.x + maxSize + halfMaxSize, position.y - halfMaxSize);
-			vertices[vertexOffset + 2].position = Vector2(position.x + maxSize + halfMaxSize, position.y + maxSize + halfMaxSize);
-			vertices[vertexOffset + 3].position = Vector2(position.x - halfMaxSize,           position.y + maxSize + halfMaxSize);
+			vertices[vertexOffset + 0].positionA = positionA - position;
+			vertices[vertexOffset + 1].positionA = positionA - position;
+			vertices[vertexOffset + 2].positionA = positionA - position;
+			vertices[vertexOffset + 3].positionA = positionA - position;
 
-			vertices[vertexOffset + 0].positionA = positionA;
-			vertices[vertexOffset + 1].positionA = positionA;
-			vertices[vertexOffset + 2].positionA = positionA;
-			vertices[vertexOffset + 3].positionA = positionA;
+			vertices[vertexOffset + 0].positionB = positionB - position;
+			vertices[vertexOffset + 1].positionB = positionB - position;
+			vertices[vertexOffset + 2].positionB = positionB - position;
+			vertices[vertexOffset + 3].positionB = positionB - position;
 
-			vertices[vertexOffset + 0].positionB = positionB;
-			vertices[vertexOffset + 1].positionB = positionB;
-			vertices[vertexOffset + 2].positionB = positionB;
-			vertices[vertexOffset + 3].positionB = positionB;
-
-			vertices[vertexOffset + 0].quadrant.Set(-1, -1);
-			vertices[vertexOffset + 1].quadrant.Set(+1, -1);
-			vertices[vertexOffset + 2].quadrant.Set(+1, +1);
-			vertices[vertexOffset + 3].quadrant.Set(-1, +1);
+			vertices[vertexOffset + 0].quadrant.Set(-xAxis, -yAxis);
+			vertices[vertexOffset + 1].quadrant.Set(+xAxis, -yAxis);
+			vertices[vertexOffset + 2].quadrant.Set(+xAxis, +yAxis);
+			vertices[vertexOffset + 3].quadrant.Set(-xAxis, +yAxis);
 
 			vertices[vertexOffset + 0].thickness = thickness;
 			vertices[vertexOffset + 1].thickness = thickness;
