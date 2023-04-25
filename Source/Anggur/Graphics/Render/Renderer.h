@@ -52,6 +52,12 @@ namespace Anggur
 		void EndEraseMask();
 		void EndMask();
 
+		void AddTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color);
+		void AddTriangleTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2);
+
+		void AddQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color);
+		void AddQuadTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3);
+
 		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color);
 		void AddRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
 
@@ -66,7 +72,7 @@ namespace Anggur
 		void AddTextLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color);
 
 	private:
-		void SetPipeline(RendererType type);
+		void SetType(RendererType type);
 
 		uchar stencilDepth = 0;
 

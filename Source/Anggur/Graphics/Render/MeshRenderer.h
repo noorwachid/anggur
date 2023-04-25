@@ -106,7 +106,7 @@ namespace Anggur
 			view = newView;
 		}
 
-		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+		void AddTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2)
 		{
 			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
 			{
@@ -128,10 +128,57 @@ namespace Anggur
 				++textureOffset;
 			}
 
-			vertices[vertexOffset + 0].position.Set(position.x,          position.y);
-			vertices[vertexOffset + 1].position.Set(position.x + size.x, position.y);
-			vertices[vertexOffset + 2].position.Set(position.x + size.x, position.y + size.y);
-			vertices[vertexOffset + 3].position.Set(position.x,          position.y + size.y);
+			vertices[vertexOffset + 0].position = position0;
+			vertices[vertexOffset + 1].position = position1;
+			vertices[vertexOffset + 2].position = position2;
+
+			vertices[vertexOffset + 0].color = color;
+			vertices[vertexOffset + 1].color = color;
+			vertices[vertexOffset + 2].color = color;
+
+			vertices[vertexOffset + 0].textureIndex = textureIndex;
+			vertices[vertexOffset + 1].textureIndex = textureIndex;
+			vertices[vertexOffset + 2].textureIndex = textureIndex;
+
+			vertices[vertexOffset + 0].texturePosition = texturePosition0;
+			vertices[vertexOffset + 1].texturePosition = texturePosition1;
+			vertices[vertexOffset + 2].texturePosition = texturePosition2;
+
+			indices[indexOffset + 0] = vertexOffset + 0;
+			indices[indexOffset + 1] = vertexOffset + 1; 
+			indices[indexOffset + 2] = vertexOffset + 2; 
+
+			vertexOffset += 3;
+
+			indexOffset += 3;
+		}
+
+		void AddQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3)
+		{
+			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
+			{
+				Draw();
+			}
+
+			usize textureIndex = 0;
+
+			if (textureIndexMap.count(texture->GetID()))
+			{
+				textureIndex = textureIndexMap[texture->GetID()];
+			}
+			else
+			{
+				textureIndex = textureOffset;
+				textureIndexMap[texture->GetID()] = textureIndex;
+				textures[textureIndex] = texture;
+
+				++textureOffset;
+			}
+
+			vertices[vertexOffset + 0].position = position0;
+			vertices[vertexOffset + 1].position = position1;
+			vertices[vertexOffset + 2].position = position2;
+			vertices[vertexOffset + 3].position = position3;
 
 			vertices[vertexOffset + 0].color = color;
 			vertices[vertexOffset + 1].color = color;
@@ -143,10 +190,10 @@ namespace Anggur
 			vertices[vertexOffset + 2].textureIndex = textureIndex;
 			vertices[vertexOffset + 3].textureIndex = textureIndex;
 
-			vertices[vertexOffset + 0].texturePosition.Set(texturePosition.x,                 texturePosition.y);
-			vertices[vertexOffset + 1].texturePosition.Set(texturePosition.x + textureSize.x, texturePosition.y);
-			vertices[vertexOffset + 2].texturePosition.Set(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y);
-			vertices[vertexOffset + 3].texturePosition.Set(texturePosition.x,                 texturePosition.y + textureSize.y);
+			vertices[vertexOffset + 0].texturePosition = texturePosition0;
+			vertices[vertexOffset + 1].texturePosition = texturePosition1;
+			vertices[vertexOffset + 2].texturePosition = texturePosition2;
+			vertices[vertexOffset + 3].texturePosition = texturePosition3;
 
 			indices[indexOffset + 0] = vertexOffset + 0;
 			indices[indexOffset + 1] = vertexOffset + 1; 
@@ -158,6 +205,22 @@ namespace Anggur
 			vertexOffset += 4;
 
 			indexOffset += 6;
+		}
+
+		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+		{
+			AddQuad(
+				Vector2(position.x,          position.y),
+				Vector2(position.x + size.x, position.y),
+				Vector2(position.x + size.x, position.y + size.y),
+				Vector2(position.x,          position.y + size.y),
+				color,
+				texture,
+				Vector2(texturePosition.x,                 texturePosition.y),
+				Vector2(texturePosition.x + textureSize.x, texturePosition.y),
+				Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y),
+				Vector2(texturePosition.x,                 texturePosition.y + textureSize.y)
+			);
 		}
 
 		void Draw()
