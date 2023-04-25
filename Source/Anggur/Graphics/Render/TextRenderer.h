@@ -23,17 +23,22 @@ namespace Anggur
 		Vector2 textureSize;
 	};
 
+	class TextManager
+	{
+	};
+
 	class TextFont
 	{
 	public:
-		usize atlasPx = 256;
-		usize characterPx = 32;
-		usize marginPx = 4;
+		usize atlasPx = 128;
+		usize characterPx = 24;
+		usize marginPx = 2;
 
-		float edgeColoringAngle = 2.0;
-		float distanceRange = 4.0;
+		float edgeColoringAngle = 8.0f;
+		float distanceRange = 2.0f;
 
-		float padding = 0.0;
+		float padding = 0.0f;
+		float scale = 0.0f;
 
 		usize hotTextureIndex = 0;
 		std::vector<Texture2D*> textures;
@@ -41,24 +46,35 @@ namespace Anggur
 
 		std::unordered_map<uint, TextCharacterInformation> characterInformationMap;
 
+		msdfgen::FontHandle* handle;
+
 		const TextCharacterInformation& GetCharacterInformation(uint character)
 		{
 			return characterInformationMap[character];
+		}
+
+		float GetKerning(uint a, uint b)
+		{
+			double kerning = 0;
+
+			msdfgen::getKerning(kerning, handle, a, b);
+
+			return kerning * scale;
 		}
 
 		void Load(const std::string& path)
 		{
 			msdfgen::FreetypeHandle *ft = msdfgen::initializeFreetype();
 			if (ft) {
-				msdfgen::FontHandle *font = msdfgen::loadFont(ft, path.c_str());
+				handle = msdfgen::loadFont(ft, path.c_str());
 				msdfgen::FontMetrics metrics;
-				msdfgen::getFontMetrics(metrics, font);
+				msdfgen::getFontMetrics(metrics, handle);
 
 				float pixelScale = 1.0f / metrics.emSize;
 
 				padding = pixelScale * distanceRange;
 
-				if (font) 
+				if (handle) 
 				{
 					int channels = 3;
 					std::vector<char> characters = 
@@ -79,13 +95,13 @@ namespace Anggur
 
 						char character = characters[i];
 						
-						if (!msdfgen::loadGlyph(shape, font, character)) 
+						if (!msdfgen::loadGlyph(shape, handle, character)) 
 						{
 							continue;
 						}
 
+						// shape.inverseYAxis = true;
 						shape.normalize();
-						shape.inverseYAxis = true;
 
 						auto bounds = shape.getBounds();
 
@@ -105,6 +121,7 @@ namespace Anggur
 							msdfgen::Vector2(
 								((distanceRange * 0.5) - bounds.l),
 								((distanceRange * 0.5) - bounds.b)
+								// 0
 							)
 						);
 
@@ -126,6 +143,7 @@ namespace Anggur
 
 							hotBytes.assign(atlasPx * atlasPx * channels, 0);
 
+							xOffsetPx = marginPx;
 							yOffsetPx = marginPx;
 							yOffsetMaxPx = 0;
 						}
@@ -143,14 +161,15 @@ namespace Anggur
 							}
 						}
 
-						float characterScale = 1.0f / metrics.emSize;
+						scale = 1.0f / metrics.emSize;
 						float atlasScale = 1.0f / atlasPx;
 
 						TextCharacterInformation info;
 
 						info.position.x = 0;
-						info.position.y = 1 - characterScale * bounds.t;
-						info.size = characterScale * size;
+						info.position.y = scale * (bounds.b);
+						// info.position.y = scale * (metrics.lineHeight - bounds.t);
+						info.size = scale * size;
 
 						info.textureIndex = hotTextureIndex;
 						info.texturePosition = atlasScale * Vector2(xOffsetPx, yOffsetPx);
@@ -165,10 +184,7 @@ namespace Anggur
 					Texture2D* texture = new Texture2D();
 					texture->Read(hotBytes, atlasPx, atlasPx, channels, SamplerFilter::Linear);
 					textures.push_back(texture);
-
-					msdfgen::destroyFont(font);
 				}
-				msdfgen::deinitializeFreetype(ft);
 			}
 		}
 	};
@@ -184,10 +200,10 @@ namespace Anggur
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	};
 
-	class TextPipeline
+	class TextRenderer
 	{
 	public:
-		TextPipeline() 
+		TextRenderer() 
 		{
 			vertices.assign(batchVertex, TextVertex{});
 
@@ -203,13 +219,13 @@ namespace Anggur
 
 			vertexArray.Bind();
 			vertexArray.SetLayout({ 
-				{ 2, VertexDataType::Float },
-				{ 2, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 4, VertexDataType::Float },
+				{ VertexDataType::Float, 2, "aPosition" },
+				{ VertexDataType::Float, 2, "aTexturePosition" },
+				{ VertexDataType::Float, 1, "aTextureIndex" },
+				{ VertexDataType::Float, 1, "aThickness" },
+				{ VertexDataType::Float, 1, "aSharpness" },
+				{ VertexDataType::Float, 1, "aScale" },
+				{ VertexDataType::Float, 4, "aColor" },
 			});
 
 			vertexBuffer.Bind();
@@ -266,7 +282,8 @@ namespace Anggur
 
 				uniform sampler2D uTextures[)" + std::to_string(TextureSpecification::GetMaxSlot()) + R"(];
 
-				float Median(float r, float g, float b) {
+				float Median(float r, float g, float b) 
+				{
 					return max(min(r, g), min(max(r, g), b));
 				}
 
@@ -299,11 +316,12 @@ namespace Anggur
 		void AddLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)
 		{
 			Vector2 offset(size * -font->padding * 0.5, size * -font->padding * 0.5);
-			float characterX = 0;
 			float scale = size / font->characterPx * font->distanceRange;
 
-			for (char character: content)
+			for (usize i = 0; i < content.size(); ++i)
 			{
+				char character = content[i];
+
 				if (character == ' ' || character == '\n') 
 				{
 					offset.x += size * 0.25;
@@ -319,14 +337,13 @@ namespace Anggur
 
 				AddCharacter(position + localPosition + offset, localSize, thickness, sharpness, scale, color, texture, info.texturePosition, info.textureSize);
 
-				offset.x += localSize.x - (size * font->padding);
-				++characterX;
+				offset.x += localSize.x - (size * font->padding) + (size * font->GetKerning(character, content[i + 1]));
 			}
 		}
 
 		void AddCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 		{
-			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
+			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size() || textureOffset + 1 > textures.size())
 			{
 				Draw();
 			}
@@ -409,7 +426,7 @@ namespace Anggur
 			vertexArray.Bind();
 
 			vertexBuffer.Bind();
-			vertexBuffer.SetData(sizeof(TextPipeline) * vertexOffset, vertices.data());
+			vertexBuffer.SetData(vertexArray.GetStride() * vertexOffset, vertices.data());
 
 			indexBuffer.Bind();
 			indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());

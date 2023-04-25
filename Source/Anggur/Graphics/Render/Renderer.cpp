@@ -10,7 +10,7 @@ namespace Anggur
 {
 	Renderer::Renderer()
 	{
-		pipelineType = PipelineType::Circle;
+		type = RendererType::Circle;
 
 		std::vector<uchar> pixels = { 0xFF, 0xFF, 0xFF };
 		defaultTexture = new Texture2D(pixels, 1, 1, 3);
@@ -22,19 +22,22 @@ namespace Anggur
 
 	void Renderer::Draw()
 	{
-		switch (pipelineType) 
+		switch (type) 
 		{
-			case PipelineType::Mesh:
-				return meshPipeline.Draw();
+			case RendererType::Mesh:
+				return meshRenderer.Draw();
 
-			case PipelineType::Circle:
-				return circlePipeline.Draw();
+			case RendererType::Circle:
+				return circleRenderer.Draw();
 
-			case PipelineType::RR:
-				return rrPipeline.Draw();
+			case RendererType::RoundRectangle:
+				return roundRectangleRenderer.Draw();
 
-			case PipelineType::Text:
-				return textPipeline.Draw();
+			case RendererType::Line:
+				return lineRenderer.Draw();
+
+			case RendererType::Text:
+				return textRenderer.Draw();
 		}
 
 		++drawCount;
@@ -59,10 +62,11 @@ namespace Anggur
 
 	void Renderer::SetView(const Matrix3& newView)
 	{
-		meshPipeline.SetView(newView);
-		circlePipeline.SetView(newView);
-		rrPipeline.SetView(newView);
-		textPipeline.SetView(newView);
+		meshRenderer.SetView(newView);
+		circleRenderer.SetView(newView);
+		roundRectangleRenderer.SetView(newView);
+		lineRenderer.SetView(newView);
+		textRenderer.SetView(newView);
 	}
 
 	void Renderer::BeginScene()
@@ -136,56 +140,63 @@ namespace Anggur
 			glDisable(GL_STENCIL_TEST);
 	}
 
-	void Renderer::SetPipeline(PipelineType type)
+	void Renderer::SetPipeline(RendererType newType)
 	{
-		if (pipelineType != type)
+		if (type != newType)
 		{
 			Draw();
-			pipelineType = type;
+			type = newType;
 		}
 	}
 
 	void Renderer::AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
 	{
-		SetPipeline(PipelineType::Mesh);
+		SetPipeline(RendererType::Mesh);
 
-		meshPipeline.AddRectangle(position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
+		meshRenderer.AddRectangle(position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 
 	void Renderer::AddRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 	{
-		SetPipeline(PipelineType::Mesh);
+		SetPipeline(RendererType::Mesh);
 
-		meshPipeline.AddRectangle(position, size, color, texture, texturePosition, textureSize);
+		meshRenderer.AddRectangle(position, size, color, texture, texturePosition, textureSize);
 	}
 
 
 	void Renderer::AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
 	{
-		SetPipeline(PipelineType::Circle);
+		SetPipeline(RendererType::Circle);
 
-		circlePipeline.Add(position, radius, thickness, sharpness, color);
+		circleRenderer.Add(position, radius, thickness, sharpness, color);
 	}
 
-	void Renderer::AddRR(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
+	void Renderer::AddLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color)
 	{
-		SetPipeline(PipelineType::RR);
+		SetPipeline(RendererType::Line);
 
-		rrPipeline.Add(position, size, radius, thickness, sharpness, color);
+		lineRenderer.Add(positionA, positionB, thickness, sharpness, color);
+	}
+
+	void Renderer::AddRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
+	{
+		SetPipeline(RendererType::RoundRectangle);
+
+		roundRectangleRenderer.Add(position, size, radius, thickness, sharpness, color);
 	}
 
 
 	void Renderer::AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 	{
-		SetPipeline(PipelineType::Text);
+		SetPipeline(RendererType::Text);
 
-		textPipeline.AddCharacter(position, size, thickness, sharpness, scale, color, texture, texturePosition, textureSize);
+		textRenderer.AddCharacter(position, size, thickness, sharpness, scale, color, texture, texturePosition, textureSize);
 	}
 
 	void Renderer::AddTextLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
-		SetPipeline(PipelineType::Text);
+		SetPipeline(RendererType::Text);
 
-		textPipeline.AddLine(position, content, font, size, thickness, sharpness, color);
+		textRenderer.AddLine(position, content, font, size, thickness, sharpness, color);
 	}
 }

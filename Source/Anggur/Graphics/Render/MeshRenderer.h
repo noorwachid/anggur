@@ -19,10 +19,10 @@ namespace Anggur
 		Vector2 texturePosition;
 	};
 
-	class MeshPipeline
+	class MeshRenderer
 	{
 	public:
-		MeshPipeline() 
+		MeshRenderer() 
 		{
 			vertices.assign(
 				batchVertex, MeshVertex{}
@@ -40,10 +40,10 @@ namespace Anggur
 
 			vertexArray.Bind();
 			vertexArray.SetLayout({ 
-				{ 2, VertexDataType::Float },
-				{ 4, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 2, VertexDataType::Float },
+				{ VertexDataType::Float, 2, "aPosition" },
+				{ VertexDataType::Float, 4, "aColor" },
+				{ VertexDataType::Float, 1, "aTextureIndex" },
+				{ VertexDataType::Float, 2, "aTexturePosition" },
 			});
 
 			vertexBuffer.Bind();

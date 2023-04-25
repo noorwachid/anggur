@@ -3,10 +3,11 @@
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
-#include "Anggur/Graphics/Render/MeshPipeline.h"
-#include "Anggur/Graphics/Render/CirclePipeline.h"
-#include "Anggur/Graphics/Render/RRPipeline.h"
-#include "Anggur/Graphics/Render/TextPipeline.h"
+#include "Anggur/Graphics/Render/MeshRenderer.h"
+#include "Anggur/Graphics/Render/CircleRenderer.h"
+#include "Anggur/Graphics/Render/LineRenderer.h"
+#include "Anggur/Graphics/Render/RoundRectangleRenderer.h"
+#include "Anggur/Graphics/Render/TextRenderer.h"
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
@@ -15,13 +16,13 @@
 
 namespace Anggur
 {
-	enum class PipelineType
+	enum class RendererType
 	{
 		Mesh,
 		Circle,
 		// Arc,
-		RR,
-		// Line,
+		RoundRectangle,
+		Line,
 		// Spline,
 		Text,
 	};
@@ -56,25 +57,28 @@ namespace Anggur
 
 		void AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void AddRR(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
+		void AddLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color);
+
+		void AddRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
 		void AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
 
 		void AddTextLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color);
 
 	private:
-		void SetPipeline(PipelineType type);
+		void SetPipeline(RendererType type);
 
 		uchar stencilDepth = 0;
 
 		usize drawCount = 0;
 
-		PipelineType pipelineType;
+		RendererType type;
 
-		MeshPipeline meshPipeline;
-		CirclePipeline circlePipeline;
-		RRPipeline rrPipeline;
-		TextPipeline textPipeline;
+		MeshRenderer meshRenderer;
+		CircleRenderer circleRenderer;
+		RoundRectangleRenderer roundRectangleRenderer;
+		LineRenderer lineRenderer;
+		TextRenderer textRenderer;
 
 		Texture2D* defaultTexture = nullptr;
 	};

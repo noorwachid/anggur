@@ -11,39 +11,39 @@
 
 namespace Anggur
 {
-	struct RRVertex 
+	struct CircleVertex 
 	{
 		Vector2 position;
-		Vector2 size;
 		Vector2 quadrant;
-		float radius = 0.0f;
+		float radius = 0.5f;
 		float thickness = 0.5f;
 		float sharpness = 0.01f;
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	};
 
-	class RRPipeline
+	class CircleRenderer
 	{
 	public:
-		RRPipeline() 
+		CircleRenderer() 
 		{
-			vertices.assign(batchVertex, RRVertex{});
+			vertices.assign(
+				batchVertex, CircleVertex{}
+			);
 
 			indices.assign(batchVertex * batchIndexMultiplier, 0);
 
 			vertexArray.Bind();
 			vertexArray.SetLayout({ 
-				{ 2, VertexDataType::Float },
-				{ 2, VertexDataType::Float },
-				{ 2, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 1, VertexDataType::Float },
-				{ 4, VertexDataType::Float },
+				{ VertexDataType::Float, 2, "aPosition" },
+				{ VertexDataType::Float, 2, "aQuadrant" },
+				{ VertexDataType::Float, 1, "aRadius" },
+				{ VertexDataType::Float, 1, "aThickness" },
+				{ VertexDataType::Float, 1, "aSharpness" },
+				{ VertexDataType::Float, 4, "aColor" },
 			});
 
 			vertexBuffer.Bind();
-			vertexBuffer.SetCapacity(vertexArray.GetStride() * vertices.size());
+			vertexBuffer.SetCapacity(sizeof(CircleVertex) * vertices.size());
 
 			indexBuffer.Bind();
 			indexBuffer.SetCapacity(sizeof(uint) * indices.size());
@@ -53,14 +53,12 @@ namespace Anggur
 				#version 330 core
 
 				layout (location = 0) in vec2 aPosition;
-				layout (location = 1) in vec2 aSize;
-				layout (location = 2) in vec2 aQuadrant;
-				layout (location = 3) in float aRadius;
-				layout (location = 4) in float aThickness;
-				layout (location = 5) in float aSharpness;
-				layout (location = 6) in vec4 aColor;
+				layout (location = 1) in vec2 aQuadrant;
+				layout (location = 2) in float aRadius;
+				layout (location = 3) in float aThickness;
+				layout (location = 4) in float aSharpness;
+				layout (location = 5) in vec4 aColor;
 
-				out vec2 vSize;
 				out vec2 vQuadrant;
 				out float vRadius;
 				out float vThickness;
@@ -69,11 +67,11 @@ namespace Anggur
 
 				uniform mat3 uView;
 
-				void main() {
+				void main() 
+				{
 					gl_Position.xyz = uView * vec3(aPosition, 1.0f);
 					gl_Position.w = 1.0f;
 
-					vSize = aSize;
 					vQuadrant = aQuadrant;
 					vRadius = aRadius;
 					vThickness = aThickness;
@@ -84,7 +82,6 @@ namespace Anggur
 			shader.SetFragmentSource(R"(
 				#version 330 core
 				
-				in vec2 vSize;
 				in vec2 vQuadrant;
 				in float vRadius;
 				in float vThickness;
@@ -92,36 +89,24 @@ namespace Anggur
 				in vec4 vColor;
 
 				out vec4 fColor;
-
-				float CalculateRR(vec2 position, vec2 size, float radius)
-				{
-					vec2 edge = abs(position) - size + radius;
-					float outside = length(max(edge, 0.0f));
-					float inside = min(max(edge.x, edge.y), 0.0f);
-
-					return inside + outside - radius;
-				}
 				
 				void main() 
 				{
-					float scale = 0.5f / max(vSize.x, vSize.y);
-
+					float scale = 1.0f / (vRadius + vSharpness);
+					float radius = scale * vRadius;
 					float sharpness = scale * vSharpness;
-					float thickness = scale * 2.0f * vThickness;
-					float radius = scale * 2.0f * vRadius;
-
-					vec2 size = scale * vSize;
-
-					float distance = CalculateRR(vQuadrant + vec2(0.5f) - size, size, radius);
+					float thickness = scale * vThickness;
+					float distance = length(vQuadrant) - radius;
 
 					float outerCircumference = 1.0f - smoothstep(0.0f, sharpness, distance);
 					float innerCircumference = 1.0f - smoothstep(thickness, thickness + sharpness, abs(distance));
-					float mask = min(innerCircumference, outerCircumference);
+					float mask = min(outerCircumference, innerCircumference);
 
 					fColor = vColor;
 					fColor.w *= mask;
 
-					if (fColor.w == 0.0f) {
+					if (fColor.w == 0.0f) 
+					{
 						discard;
 					}
 				}
@@ -134,25 +119,19 @@ namespace Anggur
 			view = newView;
 		}
 
-		void Add(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
+		void Add(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
 		{
 			if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
 			{
 				Draw();
 			}
 
-			float maxSize = Math::Max(size.x, size.y);
-			float halfMaxSize = maxSize * 0.5;
+			float spread = radius + sharpness;
 
-			vertices[vertexOffset + 0].position = Vector2(position.x - halfMaxSize,           position.y - halfMaxSize);
-			vertices[vertexOffset + 1].position = Vector2(position.x + maxSize + halfMaxSize, position.y - halfMaxSize);
-			vertices[vertexOffset + 2].position = Vector2(position.x + maxSize + halfMaxSize, position.y + maxSize + halfMaxSize);
-			vertices[vertexOffset + 3].position = Vector2(position.x - halfMaxSize,           position.y + maxSize + halfMaxSize);
-
-			vertices[vertexOffset + 0].size = size;
-			vertices[vertexOffset + 1].size = size;
-			vertices[vertexOffset + 2].size = size;
-			vertices[vertexOffset + 3].size = size;
+			vertices[vertexOffset + 0].position = Vector2(position.x - spread, position.y - spread);
+			vertices[vertexOffset + 1].position = Vector2(position.x + spread, position.y - spread);
+			vertices[vertexOffset + 2].position = Vector2(position.x + spread, position.y + spread);
+			vertices[vertexOffset + 3].position = Vector2(position.x - spread, position.y + spread);
 
 			vertices[vertexOffset + 0].quadrant.Set(-1, -1);
 			vertices[vertexOffset + 1].quadrant.Set(+1, -1);
@@ -193,17 +172,13 @@ namespace Anggur
 
 		void Draw()
 		{
-			// Early exit if no vertices to draw
-			if (vertexOffset == 0)
-				return;
-
 			shader.Bind();
 			shader.SetUniformMatrix3("uView", view);
 
 			vertexArray.Bind();
 
 			vertexBuffer.Bind();
-			vertexBuffer.SetData(sizeof(RRPipeline) * vertexOffset, vertices.data());
+			vertexBuffer.SetData(sizeof(CircleVertex) * vertexOffset, vertices.data());
 
 			indexBuffer.Bind();
 			indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());
@@ -224,7 +199,7 @@ namespace Anggur
 
 		Matrix3 view;
 
-		std::vector<RRVertex> vertices;
+		std::vector<CircleVertex> vertices;
 		std::vector<uint> indices;
 
 		usize vertexOffset = 0;
@@ -236,4 +211,3 @@ namespace Anggur
 		usize batchIndexMultiplier = 2;
 	};
 }
-
