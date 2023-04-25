@@ -2,6 +2,7 @@
 
 #include "Anggur/Integral.h"
 #include <vector>
+#include <string>
 
 namespace Anggur
 {
@@ -68,7 +69,7 @@ namespace Anggur
 		void Bind();
 		void Unbind();
 		void SetAttribute(usize index, usize size, VertexDataType type, usize byteStride, usize byteOffset);
-		void SetLayout(const std::vector<std::tuple<usize, VertexDataType>>& layout);
+		void SetLayout(const std::vector<std::tuple<VertexDataType, usize, std::string>>& layout);
 
 	private:
 		uint id = 0;

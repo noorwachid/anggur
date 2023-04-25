@@ -111,13 +111,13 @@ namespace Anggur
 		glEnableVertexAttribArray(index);
 	}
 
-	void VertexArray::SetLayout(const std::vector<std::tuple<usize, VertexDataType>>& layout)
+	void VertexArray::SetLayout(const std::vector<std::tuple<VertexDataType, usize, std::string>>& layout)
 	{
 		stride = 0;
 
 		for (usize i = 0; i < layout.size(); ++i) 
 		{
-			auto [size, type] = layout[i];
+			auto [type, size, name] = layout[i];
 			stride += size * GetVertexDataTypeByteSize(type);
 		}
 
@@ -125,7 +125,7 @@ namespace Anggur
 
 		for (usize i = 0; i < layout.size(); ++i) 
 		{
-			auto [size, type] = layout[i];
+			auto [type, size, name] = layout[i];
 			usize byteCount = size * GetVertexDataTypeByteSize(type);
 
 			SetAttribute(i, size, type, stride, offset);
