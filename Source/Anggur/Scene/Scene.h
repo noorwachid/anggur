@@ -2,7 +2,6 @@
 
 #include "Anggur/Event.h"
 #include "Anggur/Graphics/Render/Renderer.h"
-#include "Anggur/Graphics/Render/FontSystem.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/IO/WindowEvent.h"
 #include "Anggur/Scene/Node.h"
@@ -12,9 +11,6 @@ namespace Anggur
 {
 	class Scene : public NotificationEventListener, public WindowEventListener
 	{
-	public:
-		FontSystem fontSystem;
-
 	public:
 		virtual void Initialize();
 

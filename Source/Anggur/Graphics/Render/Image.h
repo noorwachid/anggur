@@ -80,6 +80,11 @@ namespace Anggur
 			channels = newChannels;
 		}
 
+		void Reset()
+		{
+			bytes.assign(GetVolume(), 0);
+		}
+
 		void Resize()
 		{
 			bytes.resize(GetVolume());

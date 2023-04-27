@@ -18,7 +18,6 @@ add_subdirectory("Vendor/GLAD/GLAD")
 add_subdirectory("Vendor/GLFW/GLFW")
 add_subdirectory("Vendor/STB/Image")
 add_subdirectory("Vendor/STB/TrueType")
-add_subdirectory("Vendor/Chlumsky/MSDFGen")
 
 target_include_directories(Anggur PUBLIC "Source")
 target_link_libraries(Anggur
@@ -27,8 +26,6 @@ target_link_libraries(Anggur
 
 	STBImage
 	STBTrueType
-
-	msdfgen::msdfgen
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

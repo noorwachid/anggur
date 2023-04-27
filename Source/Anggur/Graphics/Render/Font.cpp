@@ -1,3 +1,4 @@
+#include "Anggur/Math/Math.h"
 #include "Anggur/Graphics/Render/Font.h"
 
 #include <stb_image_write.h>
@@ -22,23 +23,34 @@ namespace Anggur
 			throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
 	}
 
-	void Font::SetSample(const std::string& newPath, uint newGlyphSamplingSize, uint newGlyphAtlasSize)
+	void Font::SetSample(uint newContainerSize, uint newSampleSize, uint newSamplePadding, float newSampleRange)
 	{
-		Read(newPath);
-		glyphSamplingSize = newGlyphSamplingSize;
-		glyphAtlasSize = newGlyphAtlasSize;
-
-		if (glyphAtlasSize < glyphSamplingSize)
+		if (newContainerSize < newSampleSize)
 		{
 			throw std::runtime_error("Glyph atlas size must be greater than sampling size");
 		}
+
+		containerSize = newContainerSize;
+		sampleSize = newSampleSize;
+		samplePadding = newSamplePadding;
+		sampleRange = newSampleRange;
+
+		textureIndex = 0;
+		
+		for (Texture2D* texture : textures)
+			delete texture;
+		
+		textures.clear();
+
+		imagePacker.Reset();
+		imagePacker.SetSize(containerSize);
 	}
 
 	float Font::GetKerning(uint codePoint, uint nextCodePoint) {
 		float kerning = stbtt_GetCodepointKernAdvance(context, codePoint, nextCodePoint);
-		float scale = stbtt_ScaleForPixelHeight(context, glyphSamplingSize);
+		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
 
-		return kerning * scale * glyphNormal;
+		return kerning * scale / sampleSize;
 	}
 
 	std::string Font::GetName() 
@@ -49,12 +61,9 @@ namespace Anggur
 		return std::string(name, length);
 	}
 
-	void Font::Generate(uint newCodePoint, uint next)
+	void Font::Generate(uint from, uint to)
 	{
-		if (glyphBuffers.empty() || glyphBuffers.back().occupied)
-			glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
-
-		float scale = stbtt_ScaleForPixelHeight(context, glyphSamplingSize);
+		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
 
 		int ascent, descent, lineGap;
 		stbtt_GetFontVMetrics(context, &ascent, &descent, &lineGap);
@@ -62,78 +71,59 @@ namespace Anggur
 		ascent = roundf(ascent * scale);
 		descent = roundf(descent * scale);
 
-		float pixelDistanceScale = 32.0; // trades off precision w/ ability to handle *smaller* sizes
-		int edgeValue = 206;
-		int padding = 6; // not used in shade
-		float normal = 1.0f / glyphSamplingSize;
-		float textureNormal = 1.0f / glyphAtlasSize;
+		int edgeValue = 255;
+		float sampleInverseScale = 1.0f / sampleSize;
+		float containerInverseScale = 1.0f / containerSize;
 
-		glyphSamplingPaddingSize = padding;
-		glyphNormal = normal;
-		glyphPadding = padding * normal;
-
-		for (uint i = 0; i < next; ++i)
+		for (uint i = 0; i < to; ++i)
 		{
-			int codePoint = i + newCodePoint;
+			int codePoint = i + from;
 			int glyphWidth;
 			int glyphHeight;
 			int glyphX;
 			int glyphY;
 
 			uchar* buffer = stbtt_GetCodepointSDF(
-				context, scale, codePoint, padding, edgeValue, pixelDistanceScale, &glyphWidth, &glyphHeight,
+				context, scale, codePoint, samplePadding, edgeValue, sampleRange, 
+				&glyphWidth, &glyphHeight,
 				&glyphX, &glyphY
 			);
 
-			if (glyphMaxHeight < glyphHeight)
-				glyphMaxHeight = glyphHeight;
-
-			if (glyphBuffers.back().pointerX + glyphWidth > glyphBuffers.back().image.GetWidth())
+			if (!imagePacker.IsFit(glyphWidth, glyphHeight))
 			{
-				glyphBuffers.back().pointerX = 0;
-				glyphBuffers.back().pointerY += glyphMaxHeight;
-
-				glyphMaxHeight = 0;
+				++textureIndex;
+				textures.push_back(new Texture2D(imagePacker.image.GetBytes(), imagePacker.image.GetWidth(), imagePacker.image.GetHeight(), imagePacker.image.GetChannels()));
+				imagePacker.Reset();
 			}
 
-			if (glyphBuffers.back().pointerY + glyphHeight > glyphBuffers.back().image.GetHeight())
-			{
-				glyphBuffers.back().occupied = true;
+			// Draw Bounding Box
+			// for (uint x = 0; x < glyphWidth; ++x) 
+			// {
+			// 	buffer[x] = 255;
+			// 	buffer[(glyphHeight - 1) * glyphWidth + x] = 255;
+			// }
+			//
+			// for (uint y = 0; y < glyphHeight; ++y) 
+			// {
+			// 	buffer[y * glyphWidth] = 255;
+			// 	buffer[y * glyphWidth + glyphWidth - 1] = 255;
+			// }
+			
+			FontGlyph glyph;
+			glyph.position.Set(0, sampleInverseScale * (glyphY + ascent));
+			glyph.size.Set(sampleInverseScale * glyphWidth, sampleInverseScale * glyphHeight);
+			glyph.textureIndex = textureIndex;
+			glyph.texturePosition = containerInverseScale * imagePacker.GetPointer();
+			glyph.textureSize.Set(containerInverseScale * glyphWidth, containerInverseScale * glyphHeight);
 
-				if (glyphBuffers.back().dirty)
-				{
-					Image& image = glyphBuffers.back().image;
-					glyphBuffers.back().texture = new Texture2D(image.GetBytes(), image.GetWidth(), image.GetHeight(), image.GetChannels());
-					glyphBuffers.back().dirty = false;
-				}
-
-				glyphBuffers.push_back(GlyphBuffer(glyphAtlasSize));
-			}
-
-			Glyph glyph;
-
-			glyph.size.Set(glyphWidth * normal, glyphHeight * normal);
-			glyph.ascent = (ascent + glyphY) * normal;
-			glyph.descent = -descent * normal;
-			glyph.bufferIndex = glyphBuffers.size() - 1;
-
-			glyph.texturePosition.Set((glyphBuffers.back().pointerX) * textureNormal, glyphBuffers.back().pointerY * textureNormal);
-			glyph.textureSize.Set(glyphWidth * textureNormal, glyphHeight * textureNormal);
+			std::cout << glyph.position.ToString() << std::endl;
 
 			glyphMap[codePoint] = glyph;
 
-			for (int x = 0; x < glyphWidth; ++x)
-				for (int y = 0; y < glyphHeight; ++y)
-					glyphBuffers.back().image.SetByte(
-						x + glyphBuffers.back().pointerX, y + glyphBuffers.back().pointerY,
-						buffer[y * glyphWidth + x]
-					);
-
-			glyphBuffers.back().pointerX += glyphWidth;
+			imagePacker.SetGlyph(buffer, glyphWidth, glyphHeight);
 		}
 
-		Image& image = glyphBuffers.back().image;
-		glyphBuffers.back().texture = new Texture2D(image.GetBytes(), image.GetWidth(), image.GetHeight(), image.GetChannels());
+		textures.push_back(new Texture2D(imagePacker.image.GetBytes(), imagePacker.image.GetWidth(), imagePacker.image.GetHeight(), imagePacker.image.GetChannels()));
 	}
 
 	void Font::GenerateASCII()

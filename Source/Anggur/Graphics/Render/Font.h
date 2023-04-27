@@ -2,6 +2,7 @@
 
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/Render/Image.h"
+#include "Anggur/Math/Math.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/IO/File.h"
 #include <iostream>
@@ -18,66 +19,115 @@ namespace Anggur
 {
 	using FontContext = stbtt_fontinfo;
 
-	struct Glyph
+	class FontImagePacker
 	{
-		Vector2 size;
+	public:
+		Vector2 GetPointer()
+		{
+			return Vector2(pointerX, pointerY);
+		}
 
-		float ascent;
-		float descent;
+		bool IsFit(usize width, usize height)
+		{
+			if (pointerX + width > image.GetWidth()) 
+			{
+				pointerX = 0;
+				pointerY += maxY;
+			}
 
-		size_t bufferIndex = 0;
+			if (pointerY + height > image.GetHeight())
+			{
+				pointerX = 0;
+				pointerY = 0;
 
-		Vector2 texturePosition;
-		Vector2 textureSize;
-	};
+				return false;
+			}
 
-	struct GlyphBuffer
-	{
-		uint pointerX = 0;
-		uint pointerY = 0;
+			return true;
+		}
 
-		bool occupied = false;
-		bool dirty = true;
+		void SetGlyph(uchar* bytes, usize width, usize height)
+		{
+			for (usize x = 0; x < width; ++x) 
+			{
+				for (usize y = 0; y < height; ++y) 
+				{
+					usize glyphIndex = (y * width) + x;
+					usize containerIndex = ((y + pointerY) * image.GetWidth()) + x + pointerX;
+					image.SetByte(containerIndex, bytes[glyphIndex]);
+				}
+			}
 
-		Image image;
-		Texture2D* texture;
+			pointerX += width;
+			maxY = Math::Max(maxY, height);
+		}
 
-		GlyphBuffer(uint size)
+		void SetSize(uint size)
 		{
 			image.SetSize(size, size);
 			image.SetChannels(1);
 			image.Resize();
 		}
+
+		void Reset()
+		{
+			maxY = 0;
+			pointerX = 0;
+			pointerY = 0;
+			image.Reset();
+		}
+
+	public:
+		uint maxY = 0;
+		uint pointerX = 0;
+		uint pointerY = 0;
+
+		Image image;
+
+	};
+
+	struct FontGlyph
+	{
+		Vector2 position;
+		Vector2 size;
+
+		usize textureIndex = 0;
+
+		Vector2 texturePosition;
+		Vector2 textureSize;
 	};
 
 	class Font
 	{
 	public:
+		std::vector<Texture2D*> textures;
+		usize textureIndex = 0;
+
 		FontContext* context;
 		std::vector<uchar> data;
 
-		float glyphNormal;
-		float glyphPadding;
+		std::unordered_map<uint, FontGlyph> glyphMap;
 
-		uint glyphSamplingPaddingSize;
-		uint glyphSamplingSize;
-		uint glyphAtlasSize;
-		uint glyphMaxHeight = 0;
+		FontImagePacker imagePacker;
 
-		std::vector<GlyphBuffer> glyphBuffers;
-		std::unordered_map<uint, Glyph> glyphMap;
+		uint containerSize;
+		uint sampleSize;
+		uint samplePadding;
+		float sampleRange;
+
+		float sampleScale;
 
 		void Read(const std::string& path);
 
 		void Initialize();
 
-		void SetSample(const std::string& newPath, uint newGlyphSamplingSize, uint newGlyphAtlasSize);
+		void SetSample(uint newContainerSize, uint newSampleSize, uint newSamplePadding, float newSampleRange);
 
 		float GetKerning(uint codePoint, uint nextCodePoint);
 
 		std::string GetName();
 
-		void Generate(uint newCodePoint = 'F', uint next = 1);
+		void Generate(uint from = 'F', uint to = 1);
 
 		void GenerateASCII();
 	};

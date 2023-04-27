@@ -8,8 +8,6 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
 #include "Anggur/Graphics/Function.h"
-#include "msdfgen.h"
-#include "msdfgen-ext.h"
 
 namespace Anggur
 {
@@ -30,162 +28,14 @@ namespace Anggur
 	class TextFont
 	{
 	public:
-		usize atlasPx = 128;
-		usize characterPx = 24;
-		usize marginPx = 2;
-
-		float edgeColoringAngle = 8.0f;
-		float distanceRange = 2.0f;
-
-		float padding = 0.0f;
-		float scale = 0.0f;
-
 		usize hotTextureIndex = 0;
 		std::vector<Texture2D*> textures;
 		std::vector<uchar> hotBytes;
 
 		std::unordered_map<uint, TextCharacterInformation> characterInformationMap;
 
-		msdfgen::FontHandle* handle;
-
-		const TextCharacterInformation& GetCharacterInformation(uint character)
-		{
-			return characterInformationMap[character];
-		}
-
-		float GetKerning(uint a, uint b)
-		{
-			double kerning = 0;
-
-			msdfgen::getKerning(kerning, handle, a, b);
-
-			return kerning * scale;
-		}
-
 		void Load(const std::string& path)
 		{
-			msdfgen::FreetypeHandle *ft = msdfgen::initializeFreetype();
-			if (ft) {
-				handle = msdfgen::loadFont(ft, path.c_str());
-				msdfgen::FontMetrics metrics;
-				msdfgen::getFontMetrics(metrics, handle);
-
-				float pixelScale = 1.0f / metrics.emSize;
-
-				padding = pixelScale * distanceRange;
-
-				if (handle) 
-				{
-					int channels = 3;
-					std::vector<char> characters = 
-					{ 
-						'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', ':', ';', '?', '!', '-', '(', ')', '{', '}', '[', ']', '<', '>',
-						'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-						'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-					};
-					hotBytes.assign(channels * atlasPx * atlasPx, 0);
-
-					usize yOffsetMaxPx = 0;
-					usize xOffsetPx = marginPx;
-					usize yOffsetPx = marginPx;
-
-					for (usize i = 0; i < characters.size(); ++i) 
-					{
-						msdfgen::Shape shape;
-
-						char character = characters[i];
-						
-						if (!msdfgen::loadGlyph(shape, handle, character)) 
-						{
-							continue;
-						}
-
-						// shape.inverseYAxis = true;
-						shape.normalize();
-
-						auto bounds = shape.getBounds();
-
-						Vector2 size(
-							Math::Abs(bounds.l - bounds.r) + distanceRange,
-							Math::Abs(bounds.b - bounds.t) + distanceRange
-						);
-
-						Vector2 subbytesSize = size * characterPx * pixelScale;
-
-						msdfgen::Bitmap<float, 3> subbytes(subbytesSize.x, subbytesSize.y);
-
-						msdfgen::edgeColoringSimple(shape, edgeColoringAngle);
-
-						msdfgen::generateMSDF(subbytes, shape, distanceRange, 
-							msdfgen::Vector2(characterPx * pixelScale, characterPx * pixelScale),
-							msdfgen::Vector2(
-								((distanceRange * 0.5) - bounds.l),
-								((distanceRange * 0.5) - bounds.b)
-								// 0
-							)
-						);
-
-						float* rawSubbytes = static_cast<float*>(subbytes);
-
-						if (xOffsetPx + subbytes.width() > atlasPx)
-						{
-							xOffsetPx = marginPx;
-							yOffsetPx += yOffsetMaxPx + marginPx;
-							yOffsetMaxPx = 0;
-						}
-
-						if (yOffsetPx + subbytes.height() > atlasPx)
-						{
-							Texture2D* texture = new Texture2D();
-							texture->Read(hotBytes, atlasPx, atlasPx, channels, SamplerFilter::Linear);
-							textures.push_back(texture);
-							++hotTextureIndex;
-
-							hotBytes.assign(atlasPx * atlasPx * channels, 0);
-
-							xOffsetPx = marginPx;
-							yOffsetPx = marginPx;
-							yOffsetMaxPx = 0;
-						}
-
-						for (usize y = 0; y < subbytes.height(); ++y) 
-						{
-							for (usize x = 0; x < subbytes.width(); ++x)
-							{
-								for (usize c = 0; c < channels; ++c)
-								{
-									float hdr = rawSubbytes[y * subbytes.width() * channels + x * channels + c];
-									char normal = Math::Clamp(255 * hdr, 0, 255);
-									hotBytes[(y + yOffsetPx) * atlasPx * channels + (x + xOffsetPx) * channels + c] = normal;
-								}
-							}
-						}
-
-						scale = 1.0f / metrics.emSize;
-						float atlasScale = 1.0f / atlasPx;
-
-						TextCharacterInformation info;
-
-						info.position.x = 0;
-						info.position.y = scale * (bounds.b);
-						// info.position.y = scale * (metrics.lineHeight - bounds.t);
-						info.size = scale * size;
-
-						info.textureIndex = hotTextureIndex;
-						info.texturePosition = atlasScale * Vector2(xOffsetPx, yOffsetPx);
-						info.textureSize = atlasScale * subbytesSize;
-
-						xOffsetPx += subbytes.width() + marginPx;
-						yOffsetMaxPx = Math::Max(yOffsetMaxPx, subbytes.height());
-
-						characterInformationMap[character] = info;
-					}
-
-					Texture2D* texture = new Texture2D();
-					texture->Read(hotBytes, atlasPx, atlasPx, channels, SamplerFilter::Linear);
-					textures.push_back(texture);
-				}
-			}
 		}
 	};
 
@@ -282,22 +132,14 @@ namespace Anggur
 
 				uniform sampler2D uTextures[)" + std::to_string(TextureSpecification::GetMaxSlot()) + R"(];
 
-				float Median(float r, float g, float b) 
-				{
-					return max(min(r, g), min(max(r, g), b));
-				}
-
-
 				void main() 
 				{
 					int textureIndex = int(vTextureIndex);
-					vec4 sample = texture(uTextures[textureIndex], vTexturePosition);
-					float distance = Median(sample.r, sample.g, sample.b);
-					float screenPxDistance = vScale * (distance - 0.5);
-					float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
+					float sample = texture(uTextures[textureIndex], vTexturePosition).r;
+					float thickness = 0.95;
 
 					fColor = vColor;
-					fColor.w *= opacity;
+					fColor.w *= smoothstep(thickness - vSharpness, thickness, sample);
 
 					if (fColor.w == 0.0f) 
 					{
@@ -313,31 +155,24 @@ namespace Anggur
 			view = newView;
 		}
 
-		void AddLine(const Vector2& position, const std::string& content, TextFont* font, float size, float thickness, float sharpness, const Vector4& color)
+		void AddLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 		{
-			Vector2 offset(size * -font->padding * 0.5, size * -font->padding * 0.5);
-			float scale = size / font->characterPx * font->distanceRange;
+			float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+
+			Vector2 pointer(-padding, 0);
 
 			for (usize i = 0; i < content.size(); ++i)
 			{
-				char character = content[i];
-
-				if (character == ' ' || character == '\n') 
-				{
-					offset.x += size * 0.25;
+				if (content[i] == ' ')
 					continue;
-				}
 
-				TextCharacterInformation& info = font->characterInformationMap[character];
+				const FontGlyph& glyph = font->glyphMap[content[i]];
 
-				Vector2 localPosition = size * info.position;
-				Vector2 localSize = size * info.size;
+				Vector2 localSize = size * glyph.size;
 
-				Texture2D* texture = font->textures[info.textureIndex];
+				AddCharacter(position + pointer + (size * glyph.position), localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 
-				AddCharacter(position + localPosition + offset, localSize, thickness, sharpness, scale, color, texture, info.texturePosition, info.textureSize);
-
-				offset.x += localSize.x - (size * font->padding) + (size * font->GetKerning(character, content[i + 1]));
+				pointer.x += localSize.x - (padding * 2) + (size * font->GetKerning(content[i], content[i + 1]));
 			}
 		}
 
