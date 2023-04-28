@@ -11,34 +11,6 @@
 
 namespace Anggur
 {
-	struct TextCharacterInformation
-	{
-		Vector2 position;
-		Vector2 size;
-
-		usize textureIndex = 0;
-		Vector2 texturePosition;
-		Vector2 textureSize;
-	};
-
-	class TextManager
-	{
-	};
-
-	class TextFont
-	{
-	public:
-		usize hotTextureIndex = 0;
-		std::vector<Texture2D*> textures;
-		std::vector<uchar> hotBytes;
-
-		std::unordered_map<uint, TextCharacterInformation> characterInformationMap;
-
-		void Load(const std::string& path)
-		{
-		}
-	};
-
 	struct TextVertex 
 	{
 		Vector2 position;
@@ -164,15 +136,25 @@ namespace Anggur
 			for (usize i = 0; i < content.size(); ++i)
 			{
 				if (content[i] == ' ')
+				{
+					pointer.x += size * font->GetSpaceWidth();
 					continue;
+				}
+
+				if (font->glyphMap.count(content[i]) == 0)
+				{
+					pointer.x += size;
+					continue;
+				}
 
 				const FontGlyph& glyph = font->glyphMap[content[i]];
 
+				Vector2 localPosition = size * glyph.position;
 				Vector2 localSize = size * glyph.size;
 
-				AddCharacter(position + pointer + (size * glyph.position), localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+				AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 
-				pointer.x += localSize.x - (padding * 2) + (size * font->GetKerning(content[i], content[i + 1]));
+				pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(content[i], content[i + 1]));
 			}
 		}
 

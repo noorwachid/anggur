@@ -69,7 +69,7 @@ namespace Anggur
 		Tab = 258,
 		Backspace = 259,
 		Insert = 260,
-		Delete_ = 261,
+		Delete = 261,
 		Right = 262,
 		Left = 263,
 		Down = 264,

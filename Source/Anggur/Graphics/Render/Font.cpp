@@ -42,8 +42,15 @@ namespace Anggur
 		
 		textures.clear();
 
-		imagePacker.Reset();
-		imagePacker.SetSize(containerSize);
+		packer.Reset();
+		packer.SetSize(containerSize);
+
+		int advanceWidth, lsb;
+		stbtt_GetCodepointHMetrics(context, 32, &advanceWidth, &lsb);
+
+		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
+		float sampleInverseScale = 1.0f / sampleSize;
+		spaceWidth = sampleInverseScale * scale * (advanceWidth - lsb);
 	}
 
 	float Font::GetKerning(uint codePoint, uint nextCodePoint) {
@@ -83,17 +90,25 @@ namespace Anggur
 			int glyphX;
 			int glyphY;
 
+			int advanceWidth;
+			int lsb;
+
+			stbtt_GetCodepointHMetrics(context, codePoint, &advanceWidth, &lsb);
+
 			uchar* buffer = stbtt_GetCodepointSDF(
 				context, scale, codePoint, samplePadding, edgeValue, sampleRange, 
 				&glyphWidth, &glyphHeight,
 				&glyphX, &glyphY
 			);
 
-			if (!imagePacker.IsFit(glyphWidth, glyphHeight))
+			if (buffer == nullptr)
+				continue;
+
+			if (!packer.IsFit(glyphWidth, glyphHeight))
 			{
 				++textureIndex;
-				textures.push_back(new Texture2D(imagePacker.image.GetBytes(), imagePacker.image.GetWidth(), imagePacker.image.GetHeight(), imagePacker.image.GetChannels()));
-				imagePacker.Reset();
+				textures.push_back(new Texture2D(packer.image.GetBytes(), packer.image.GetWidth(), packer.image.GetHeight(), packer.image.GetChannels()));
+				packer.Reset();
 			}
 
 			// Draw Bounding Box
@@ -110,20 +125,18 @@ namespace Anggur
 			// }
 			
 			FontGlyph glyph;
-			glyph.position.Set(0, sampleInverseScale * (glyphY + ascent));
+			glyph.position.Set(sampleInverseScale * scale * lsb, sampleInverseScale * (glyphY + ascent));
 			glyph.size.Set(sampleInverseScale * glyphWidth, sampleInverseScale * glyphHeight);
 			glyph.textureIndex = textureIndex;
-			glyph.texturePosition = containerInverseScale * imagePacker.GetPointer();
+			glyph.texturePosition = containerInverseScale * packer.GetPointer();
 			glyph.textureSize.Set(containerInverseScale * glyphWidth, containerInverseScale * glyphHeight);
-
-			std::cout << glyph.position.ToString() << std::endl;
 
 			glyphMap[codePoint] = glyph;
 
-			imagePacker.SetGlyph(buffer, glyphWidth, glyphHeight);
+			packer.SetGlyph(buffer, glyphWidth, glyphHeight);
 		}
 
-		textures.push_back(new Texture2D(imagePacker.image.GetBytes(), imagePacker.image.GetWidth(), imagePacker.image.GetHeight(), imagePacker.image.GetChannels()));
+		textures.push_back(new Texture2D(packer.image.GetBytes(), packer.image.GetWidth(), packer.image.GetHeight(), packer.image.GetChannels()));
 	}
 
 	void Font::GenerateASCII()
