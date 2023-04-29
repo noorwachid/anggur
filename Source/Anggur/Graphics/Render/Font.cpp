@@ -57,12 +57,6 @@ namespace Anggur
 		spaceWidth = sampleInverseScale * scale * (advanceWidth - lsb);
 		lineHeight = sampleInverseScale * (vMetrics.ascent - vMetrics.descent);
 		lineGap = sampleInverseScale * vMetrics.lineGap;
-
-		std::cout << "LineHeight: " << lineHeight << std::endl;
-		std::cout << "Ascent: " << vMetrics.ascent << std::endl;
-		std::cout << "Descent: " << vMetrics.descent << std::endl;
-		std::cout << "LineGap: " << vMetrics.lineGap << std::endl;
-
 	}
 
 	std::string Font::GetName() 
