@@ -128,6 +128,9 @@ namespace Anggur
 			view = newView;
 		}
 
+		// +----------------------------------------------------------------
+		// | Hello darkness my old friend. I've come to talk with you again. 
+		//
 		void AddLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 		{
 			float padding = 1.0f / font->sampleSize * font->samplePadding * size;
@@ -163,6 +166,10 @@ namespace Anggur
 			}
 		}
 
+		// +----------------------------------
+		// | Hello darkness my old friend.   
+		// | I've come to talk with you again. 
+		// 
 		void AddLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 		{
 			float padding = 1.0f / font->sampleSize * font->samplePadding * size;
@@ -203,6 +210,56 @@ namespace Anggur
 
 				pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, UTF8::Pack(content, i)));
 			}
+		}
+
+
+		// +-----------------+
+		// | Hello darkness m|y
+		// +-----------------+
+		//
+		void AddCapLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+		{
+		}
+
+		// +-----------------+
+		// | Hello darkness  |
+		// | my old friend.  |
+		// | I've come to    |
+		// +-----------------+
+		//   talk with you   
+		//
+		void AddCapLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+		{
+		}
+
+		// +-----------------+
+		// | Hello darkness  |
+		// | my old friend.  |
+		// | I've come to    |
+		// | talk with you   |
+		// | again.          |
+		// +-----------------+
+		//
+		void AddFlowLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+		{
+		}
+
+		// +-----------------+
+		// | Hello darkne... |
+		// +-----------------+
+		//
+		void AddEllipsisLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+		{
+		}
+
+		// +-----------------+
+		// | Hello darkness  |
+		// | my old friend.  |
+		// | I've come to... |
+		// +-----------------+
+		//
+		void AddEllipsisLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+		{
 		}
 
 		void AddCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
