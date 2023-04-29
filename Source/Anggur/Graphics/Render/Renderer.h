@@ -71,6 +71,8 @@ namespace Anggur
 
 		void AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
+		void AddTextLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+
 	private:
 		void SetType(RendererType type);
 

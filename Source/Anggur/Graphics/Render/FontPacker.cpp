@@ -13,12 +13,14 @@ namespace Anggur
 		{
 			pointerX = 0;
 			pointerY += maxY;
+			maxY = 0;
 		}
 
 		if (pointerY + height > image.GetHeight())
 		{
 			pointerX = 0;
 			pointerY = 0;
+			maxY = 0;
 
 			return false;
 		}

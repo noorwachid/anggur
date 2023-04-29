@@ -4,10 +4,11 @@
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
 #include "Anggur/Graphics/Render/Font.h"
+#include "Anggur/Graphics/Function.h"
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
-#include "Anggur/Graphics/Function.h"
+#include "Anggur/Utility/UTF8.h"
 
 namespace Anggur
 {
@@ -131,30 +132,76 @@ namespace Anggur
 		{
 			float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
-			Vector2 pointer(-padding, 0);
+			Vector2 pointer(-padding, -padding);
 
-			for (usize i = 0; i < content.size(); ++i)
+			for (usize i = 0; i < content.size();)
 			{
-				if (content[i] == ' ')
+				uint codepoint = UTF8::PackAndMoveIndex(content, i);
+
+				if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
 				{
 					pointer.x += size * font->GetSpaceWidth();
 					continue;
 				}
 
-				if (font->glyphMap.count(content[i]) == 0)
+				if (font->glyphMap.count(codepoint) == 0)
 				{
-					pointer.x += size;
-					continue;
+					if (!font->Generate(codepoint))
+					{
+						codepoint = 0xFFFD; // RC
+					}
 				}
 
-				const FontGlyph& glyph = font->glyphMap[content[i]];
+				FontGlyph& glyph = font->glyphMap[codepoint];
 
 				Vector2 localPosition = size * glyph.position;
 				Vector2 localSize = size * glyph.size;
 
 				AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 
-				pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(content[i], content[i + 1]));
+				pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, UTF8::Pack(content, i)));
+			}
+		}
+
+		void AddLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+		{
+			float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+
+			Vector2 pointer(-padding, -padding);
+
+			for (usize i = 0; i < content.size();)
+			{
+				uint codepoint = UTF8::PackAndMoveIndex(content, i);
+
+				if (codepoint == ' ')
+				{
+					pointer.x += size * font->GetSpaceWidth();
+					continue;
+				}
+
+				if (codepoint == '\n')
+				{
+					pointer.x = -padding;
+					pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+					continue;
+				}
+
+				if (font->glyphMap.count(codepoint) == 0)
+				{
+					if (!font->Generate(codepoint))
+					{
+						codepoint = 0xFFFD; // RC
+					}
+				}
+
+				FontGlyph& glyph = font->glyphMap[codepoint];
+
+				Vector2 localPosition = size * glyph.position;
+				Vector2 localSize = size * glyph.size;
+
+				AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+
+				pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, UTF8::Pack(content, i)));
 			}
 		}
 

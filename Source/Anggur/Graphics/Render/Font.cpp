@@ -1,5 +1,6 @@
 #include "Anggur/Math/Math.h"
 #include "Anggur/Graphics/Render/Font.h"
+#include "Anggur/Utility/UTF8.h"
 
 #include <stb_image_write.h>
 #include <stb_truetype.h>
@@ -50,14 +51,18 @@ namespace Anggur
 
 		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
 		float sampleInverseScale = 1.0f / sampleSize;
+
+		FontVMetrics vMetrics = GetVMetrics();
+
 		spaceWidth = sampleInverseScale * scale * (advanceWidth - lsb);
-	}
+		lineHeight = sampleInverseScale * (vMetrics.ascent - vMetrics.descent);
+		lineGap = sampleInverseScale * vMetrics.lineGap;
 
-	float Font::GetKerning(uint codePoint, uint nextCodePoint) {
-		float kerning = stbtt_GetCodepointKernAdvance(context, codePoint, nextCodePoint);
-		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
+		std::cout << "LineHeight: " << lineHeight << std::endl;
+		std::cout << "Ascent: " << vMetrics.ascent << std::endl;
+		std::cout << "Descent: " << vMetrics.descent << std::endl;
+		std::cout << "LineGap: " << vMetrics.lineGap << std::endl;
 
-		return kerning * scale / sampleSize;
 	}
 
 	std::string Font::GetName() 
@@ -68,80 +73,158 @@ namespace Anggur
 		return std::string(name, length);
 	}
 
-	void Font::Generate(uint from, uint to)
+	float Font::GetKerning(uint codePoint, uint nextCodePoint) 
 	{
-		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
+		float scale = GetContextScale();
+		float kerning = stbtt_GetCodepointKernAdvance(context, codePoint, nextCodePoint);
+
+		return kerning * scale / sampleSize;
+	}
+
+	FontVMetrics Font::GetVMetrics()
+	{
+		FontVMetrics metrics;
+
+		float scale = GetContextScale();
 
 		int ascent, descent, lineGap;
 		stbtt_GetFontVMetrics(context, &ascent, &descent, &lineGap);
 
-		ascent = roundf(ascent * scale);
-		descent = roundf(descent * scale);
+		metrics.ascent = scale * ascent;
+		metrics.descent = scale * descent;
+		metrics.lineGap = scale * lineGap;
 
-		int edgeValue = 255;
+		return metrics;
+	}
+
+	FontHMetrics Font::GetHMetrics(uint codepoint)
+	{
+		FontHMetrics metrics;
+
+		float scale = GetContextScale();
+
+		int advanceWidth;
+		int leftSideBearing;
+
+		stbtt_GetCodepointHMetrics(context, codepoint, &advanceWidth, &leftSideBearing);
+		
+		metrics.advanceWidth = scale * advanceWidth;
+		metrics.leftSideBearing = scale * leftSideBearing;
+
+		return metrics;
+	}
+
+	bool Font::Generate(uint codepoint)
+	{
+		std::optional<FontBitmap> bitmap = GenerateBitmap(codepoint);
+
+		if (!bitmap.has_value())
+			return false;
+
+		Pack(codepoint, bitmap.value());
+		GenerateTexture();
+
+		return true;
+	}
+
+	bool Font::GenerateRange(uint codepointFrom, uint length)
+	{
+		bool someFailed = false;
+
+		for (uint i = 0; i < length; ++i)
+		{
+			uint codepoint = i + codepointFrom;
+			
+			std::optional<FontBitmap> bitmap = GenerateBitmap(codepoint);
+
+			if (!bitmap.has_value())
+			{
+				someFailed = true;
+			}
+			else
+			{
+				Pack(codepoint, bitmap.value());
+			}
+		}
+		
+		GenerateTexture();
+		
+		return someFailed;
+	}
+
+	std::optional<FontBitmap> Font::GenerateBitmap(uint codepoint)
+	{
+		FontBitmap bitmap;
+
+		float scale = GetContextScale();
+
+		bitmap.data = stbtt_GetCodepointSDF(
+			context, scale, codepoint, samplePadding, 255, sampleRange, 
+			&bitmap.width, &bitmap.height,
+			&bitmap.x, &bitmap.y
+		);
+
+		if (bitmap.data == nullptr)
+			return std::nullopt;
+
+		return bitmap;
+	}
+
+	void Font::Pack(uint codepoint, const FontBitmap& bitmap)
+	{
+		FontVMetrics vMetrics = GetVMetrics();
+		FontHMetrics hMetrics = GetHMetrics(codepoint);
+
 		float sampleInverseScale = 1.0f / sampleSize;
 		float containerInverseScale = 1.0f / containerSize;
 
-		for (uint i = 0; i < to; ++i)
+		if (!packer.IsFit(bitmap.width, bitmap.height))
 		{
-			int codePoint = i + from;
-			int glyphWidth;
-			int glyphHeight;
-			int glyphX;
-			int glyphY;
-
-			int advanceWidth;
-			int lsb;
-
-			stbtt_GetCodepointHMetrics(context, codePoint, &advanceWidth, &lsb);
-
-			uchar* buffer = stbtt_GetCodepointSDF(
-				context, scale, codePoint, samplePadding, edgeValue, sampleRange, 
-				&glyphWidth, &glyphHeight,
-				&glyphX, &glyphY
-			);
-
-			if (buffer == nullptr)
-				continue;
-
-			if (!packer.IsFit(glyphWidth, glyphHeight))
-			{
-				++textureIndex;
-				textures.push_back(new Texture2D(packer.image.GetBytes(), packer.image.GetWidth(), packer.image.GetHeight(), packer.image.GetChannels()));
-				packer.Reset();
-			}
-
-			// Draw Bounding Box
-			// for (uint x = 0; x < glyphWidth; ++x) 
-			// {
-			// 	buffer[x] = 255;
-			// 	buffer[(glyphHeight - 1) * glyphWidth + x] = 255;
-			// }
-			//
-			// for (uint y = 0; y < glyphHeight; ++y) 
-			// {
-			// 	buffer[y * glyphWidth] = 255;
-			// 	buffer[y * glyphWidth + glyphWidth - 1] = 255;
-			// }
-			
-			FontGlyph glyph;
-			glyph.position.Set(sampleInverseScale * scale * lsb, sampleInverseScale * (glyphY + ascent));
-			glyph.size.Set(sampleInverseScale * glyphWidth, sampleInverseScale * glyphHeight);
-			glyph.textureIndex = textureIndex;
-			glyph.texturePosition = containerInverseScale * packer.GetPointer();
-			glyph.textureSize.Set(containerInverseScale * glyphWidth, containerInverseScale * glyphHeight);
-
-			glyphMap[codePoint] = glyph;
-
-			packer.SetGlyph(buffer, glyphWidth, glyphHeight);
+			GenerateTexture();
+			++textureIndex;
+			packer.Reset();
 		}
+		
+		FontGlyph glyph;
 
-		textures.push_back(new Texture2D(packer.image.GetBytes(), packer.image.GetWidth(), packer.image.GetHeight(), packer.image.GetChannels()));
+		glyph.position.Set(sampleInverseScale * hMetrics.leftSideBearing, sampleInverseScale * (vMetrics.ascent + bitmap.y));
+		glyph.size.Set(sampleInverseScale * bitmap.width, sampleInverseScale * bitmap.height);
+		glyph.textureIndex = textureIndex;
+		glyph.texturePosition = containerInverseScale * packer.GetPointer();
+		glyph.textureSize.Set(containerInverseScale * bitmap.width, containerInverseScale * bitmap.height);
+
+		glyphMap[codepoint] = glyph;
+
+		packer.SetGlyph(bitmap.data, bitmap.width, bitmap.height);
 	}
 
-	void Font::GenerateASCII()
+	void Font::GenerateTexture()
 	{
-		Generate(33, 94);
+		// Replace last texture
+		if (textureIndex + 1 == textures.size()) 
+		{
+			delete textures.back();
+			textures.back() = new Texture2D(packer.image.GetBytes(), packer.image.GetWidth(), packer.image.GetHeight(), packer.image.GetChannels());
+		}
+		else
+		{
+			textures.push_back(new Texture2D(packer.image.GetBytes(), packer.image.GetWidth(), packer.image.GetHeight(), packer.image.GetChannels()));
+		}
+	}
+
+	bool Font::GenerateRC()
+	{
+		return Generate(0xFFFD);
+	}
+
+	bool Font::GenerateASCII()
+	{
+		return GenerateRange(33, 94);
+	}
+
+	float Font::GetContextScale()
+	{
+		return stbtt_ScaleForPixelHeight(context, sampleSize);
 	}
 }
 

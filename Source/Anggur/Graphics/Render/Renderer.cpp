@@ -227,4 +227,11 @@ namespace Anggur
 
 		textRenderer.AddLine(position, content, font, size, thickness, sharpness, color);
 	}
+
+	void Renderer::AddTextLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	{
+		SetType(RendererType::Text);
+
+		textRenderer.AddLines(position, content, font, size, thickness, sharpness, color);
+	}
 }

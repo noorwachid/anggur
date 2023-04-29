@@ -6,6 +6,7 @@
 #include "Anggur/Graphics/Render/FontPacker.h"
 #include "Anggur/IO/File.h"
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +19,28 @@ struct stbtt_fontinfo;
 namespace Anggur
 {
 	using FontContext = stbtt_fontinfo;
+
+	struct FontVMetrics
+	{
+		float ascent;
+		float descent;
+		float lineGap;
+	};
+
+	struct FontHMetrics
+	{
+		float advanceWidth;
+		float leftSideBearing;
+	};
+
+	struct FontBitmap
+	{
+		uchar* data;
+		int x;
+		int y;
+		int width;
+		int height;
+	};
 
 	class Font
 	{
@@ -32,14 +55,39 @@ namespace Anggur
 
 		float GetSpaceWidth() { return spaceWidth; }
 
+		float GetLineHeight() { return lineHeight; }
+
+		float GetLineGap() { return lineGap; }
+
+		FontVMetrics GetVMetrics();
+
+		FontHMetrics GetHMetrics(uint codepoint);
+
+		const std::vector<Texture2D*>& GetTextures() { return textures; }
+
 		std::string GetName();
 
-		void Generate(uint from = 'F', uint to = 1);
+		bool Generate(uint codepoint);
 
-		void GenerateASCII();
+		bool GenerateRange(uint codepointFrom = 'F', uint length = 1);
+
+		bool GenerateRC();
+
+		bool GenerateASCII();
+
+	private:
+		void Pack(uint codepoint, const FontBitmap& bitmap);
+
+		std::optional<FontBitmap> GenerateBitmap(uint codepoint);
+
+		void GenerateTexture();
+
+		float GetContextScale();
 
 	private:
 		float spaceWidth;
+		float lineHeight;
+		float lineGap;
 
 		std::vector<Texture2D*> textures;
 		usize textureIndex = 0;
