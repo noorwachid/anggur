@@ -73,6 +73,10 @@ namespace Anggur
 
 		bool GenerateRC();
 
+		bool GenerateQuotationMark();
+
+		bool GenerateEllipsis();
+
 		bool GenerateASCII();
 
 	private:

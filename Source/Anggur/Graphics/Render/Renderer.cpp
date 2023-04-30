@@ -213,12 +213,11 @@ namespace Anggur
 		roundRectangleRenderer.Add(position, size, radius, thickness, sharpness, color);
 	}
 
-
-	void Renderer::AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+	void Renderer::AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
-		textRenderer.AddCharacter(position, size, thickness, sharpness, scale, color, texture, texturePosition, textureSize);
+		textRenderer.Add(position, content, font, size, thickness, sharpness, color);
 	}
 
 	void Renderer::AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
@@ -228,10 +227,24 @@ namespace Anggur
 		textRenderer.AddLine(position, content, font, size, thickness, sharpness, color);
 	}
 
-	void Renderer::AddTextLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	void Renderer::AddTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
-		textRenderer.AddLines(position, content, font, size, thickness, sharpness, color);
+		textRenderer.AddLineCut(position, content, font, size, thickness, sharpness, limit, color);
+	}
+
+	void Renderer::AddTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
+	{
+		SetType(RendererType::Text);
+
+		textRenderer.AddFlow(position, content, font, size, thickness, sharpness, limit, color);
+	}
+
+	void Renderer::AddTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color)
+	{
+		SetType(RendererType::Text);
+
+		textRenderer.AddFlowCut(position, content, font, size, thickness, sharpness, limit, color);
 	}
 }

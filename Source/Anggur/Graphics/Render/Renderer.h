@@ -67,11 +67,15 @@ namespace Anggur
 
 		void AddRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void AddTextCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
+		void AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
 		void AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
-		void AddTextLines(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+		void AddTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
+
+		void AddTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
+
+		void AddTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color);
 
 	private:
 		void SetType(RendererType type);

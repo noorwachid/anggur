@@ -211,6 +211,47 @@ namespace Anggur
 		return Generate(0xFFFD);
 	}
 
+	bool Font::GenerateEllipsis()
+	{
+		bool failed = false;
+
+		if (!Generate(0x2026))
+			failed = true;
+
+		if (!Generate(0x22EE))
+			failed = true;
+
+		if (!Generate(0x22EF))
+			failed = true;
+
+		if (!Generate(0x22F0))
+			failed = true;
+
+		if (!Generate(0x22F1))
+			failed = true;
+
+		return !failed;
+	}
+
+	bool Font::GenerateQuotationMark()
+	{
+		bool failed = false;
+
+		if (!Generate(0x2018))
+			failed = true;
+
+		if (!Generate(0x2019))
+			failed = true;
+
+		if (!Generate(0x201C))
+			failed = true;
+
+		if (!Generate(0x201D))
+			failed = true;
+
+		return !failed;
+	}
+
 	bool Font::GenerateASCII()
 	{
 		return GenerateRange(33, 94);
