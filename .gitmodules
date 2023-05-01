@@ -4,3 +4,9 @@
 [submodule "vendor/msdf-atlas-gen"]
 	path = vendor/msdf-atlas-gen
 	url = https://github.com/Chlumsky/msdf-atlas-gen
+[submodule "vendor/anggur/math"]
+	path = vendor/anggur/math
+	url = git@github.com:noorwachid/anggurmath
+[submodule "vendor/anggur/utility"]
+	path = vendor/anggur/utility
+	url = git@github.com:noorwachid/anggurutility
