@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 set(CMAKE_CXX_STANDARD 20)
 
-project(anggur)
+project(june)
 
 file(GLOB anggur_source
 	"src/Anggur/*/*/*.cpp"
@@ -19,10 +19,14 @@ add_subdirectory("vendor/glfw/glfw")
 add_subdirectory("vendor/stb/image")
 add_subdirectory("vendor/stb/truetype")
 
+add_subdirectory("vendor/anggur/math")
+
 target_include_directories(anggur PUBLIC "src")
 target_link_libraries(anggur
 	glfw
 	glad
+
+	anggurmath
 
 	stbimage
 	stbtruetype
