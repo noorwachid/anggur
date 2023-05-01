@@ -1,9 +1,12 @@
-# Anggur: Rendering Library
+# AnggurCore
 
 > ###### NOTE
 > Do not use for serious project unless you know what are you doing.
 
 # Changelog
+2023/05/01
+- Split modules to repositories
+
 2023/03/27
 - Add input system
 - Add scene system
