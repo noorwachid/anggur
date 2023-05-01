@@ -19,8 +19,8 @@ add_subdirectory("vendor/glfw/glfw")
 add_subdirectory("vendor/stb/image")
 add_subdirectory("vendor/stb/truetype")
 
+add_subdirectory("vendor/anggur/common")
 add_subdirectory("vendor/anggur/math")
-add_subdirectory("vendor/anggur/utility")
 
 target_include_directories(anggur PUBLIC "src")
 target_link_libraries(anggur
@@ -28,7 +28,7 @@ target_link_libraries(anggur
 	glad
 
 	anggurmath
-	anggurutility
+	anggurcommon
 
 	stbimage
 	stbtruetype

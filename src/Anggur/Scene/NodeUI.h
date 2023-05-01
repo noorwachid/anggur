@@ -1,7 +1,7 @@
 #pragma once 
 
 #include "Anggur/Graphics/Render/Renderer.h"
-#include "Anggur/Integral.h"
+#include "Anggur/Common/Integral.h"
 #include "Anggur/IO/Window.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Scene/Node.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Utility/Enum.h"
+#include "Anggur/Common/Enum.h"
 
 namespace Anggur
 {

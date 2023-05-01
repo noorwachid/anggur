@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Integral.h"
+#include "Anggur/Common/Integral.h"
 #include "Anggur/Graphics/TextureSpecification.h"
 #include <vector>
 

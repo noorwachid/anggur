@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Anggur/Event.h"
-#include "Anggur/Integral.h"
+#include "Anggur/Common/Event.h"
+#include "Anggur/Common/Integral.h"
 #include "Anggur/IO/Key.h"
 #include "Anggur/IO/MouseButton.h"
 #include "Anggur/Math/Vector2.h"

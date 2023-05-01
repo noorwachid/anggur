@@ -1,5 +1,5 @@
 #include "Anggur/IO/File.h"
-#include "Anggur/Integral.h"
+#include "Anggur/Common/Integral.h"
 #include <fstream>
 
 namespace Anggur::File

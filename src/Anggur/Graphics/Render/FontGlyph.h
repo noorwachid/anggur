@@ -1,4 +1,4 @@
-#include "Anggur/Integral.h"
+#include "Anggur/Common/Integral.h"
 #include "Anggur/Math/Vector2.h"
 
 namespace Anggur

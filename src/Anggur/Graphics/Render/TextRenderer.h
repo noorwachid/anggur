@@ -8,7 +8,7 @@
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
-#include "Anggur/Utility/UTF8.h"
+#include "Anggur/Common/UTF8.h"
 
 namespace Anggur
 {
