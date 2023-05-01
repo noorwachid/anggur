@@ -1,31 +1,31 @@
 cmake_minimum_required(VERSION 3.3)
 set(CMAKE_CXX_STANDARD 20)
 
-project(Anggur)
+project(anggur)
 
-file(GLOB Anggur_Source
-	"Source/Anggur/*/*/*.cpp"
-	"Source/Anggur/*/*.cpp"
-	"Source/Anggur/*.cpp"
+file(GLOB anggur_source
+	"src/Anggur/*/*/*.cpp"
+	"src/Anggur/*/*.cpp"
+	"src/Anggur/*.cpp"
 )
 
-add_library(Anggur STATIC
-	${Anggur_Source}
+add_library(anggur STATIC
+	${anggur_source}
 )
 
 # Local libraries
-add_subdirectory("Vendor/GLAD/GLAD")
-add_subdirectory("Vendor/GLFW/GLFW")
-add_subdirectory("Vendor/STB/Image")
-add_subdirectory("Vendor/STB/TrueType")
+add_subdirectory("vendor/glad/glad")
+add_subdirectory("vendor/glfw/glfw")
+add_subdirectory("vendor/stb/image")
+add_subdirectory("vendor/stb/truetype")
 
-target_include_directories(Anggur PUBLIC "Source")
-target_link_libraries(Anggur
+target_include_directories(anggur PUBLIC "src")
+target_link_libraries(anggur
 	glfw
-	GLAD
+	glad
 
-	STBImage
-	STBTrueType
+	stbimage
+	stbtruetype
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

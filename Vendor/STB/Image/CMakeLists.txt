@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.3)
 
-project(STB::Image)
+project(stb::image)
 
-add_library(STBImage STATIC
-	Source/stb_image.c
-    Source/stb_image_write.c
+add_library(stbimage STATIC
+	"src/stb_image.c"
+    "src/stb_image_write.c"
 )
 
-target_include_directories(STBImage PUBLIC Source)
+target_include_directories(stbimage PUBLIC "src")
