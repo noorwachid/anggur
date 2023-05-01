@@ -10,3 +10,6 @@
 [submodule "vendor/anggur/utility"]
 	path = vendor/anggur/utility
 	url = git@github.com:noorwachid/anggurutility
+[submodule "vendor/anggur/common"]
+	path = vendor/anggur/common
+	url = git@github.com:noorwachid/anggurcommon
