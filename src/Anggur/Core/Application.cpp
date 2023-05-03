@@ -12,9 +12,6 @@ namespace Anggur
 
 		renderer = new Renderer();
 
-		std::cout << "WindowAddress: " << window << std::endl;
-		std::cout << "RendererAddress: " << renderer << std::endl;
-
 		sceneSystem.SetWindow(window);
 		sceneSystem.SetRenderer(renderer);
 	}

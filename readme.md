@@ -5,6 +5,9 @@
 
 # Changelog
 2023/05/01
+- Join modules to single repository, because its faster to update (as as single person)
+
+2023/05/01
 - Split modules to repositories
 
 2023/03/27

@@ -4,25 +4,25 @@ set(CMAKE_CXX_STANDARD 20)
 project(anggurcore)
 
 file(GLOB anggurcore_source
-	"src/Anggur/Core/*/*.cpp"
-	"src/Anggur/Core/*.cpp"
+	"src/Anggur/*/*/*.cpp"
+	"src/Anggur/*/*.cpp"
 )
 
 add_library(anggurcore STATIC
 	${anggurcore_source}
 )
 
-add_subdirectory("vendor/anggur/common")
-add_subdirectory("vendor/anggur/math")
-add_subdirectory("vendor/anggur/os")
-add_subdirectory("vendor/anggur/graphics")
+add_subdirectory("vendor/glfw/glfw")
+add_subdirectory("vendor/glad/glad")
+add_subdirectory("vendor/stb/truetype")
+add_subdirectory("vendor/stb/image")
 
 target_include_directories(anggurcore PUBLIC "src")
 target_link_libraries(anggurcore
-	anggurmath
-	anggurcommon
-	angguros
-	anggurgraphics
+	glfw
+	glad
+	stbtruetype
+	stbimage
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
