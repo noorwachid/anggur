@@ -46,7 +46,8 @@ namespace Anggur
 
 			uniform mat3 uView;
 
-			void main() {
+			void main() 
+			{
 				gl_Position.xyz = uView * vec3(aPosition, 1.0f);
 				gl_Position.w = 1.0f;
 
@@ -108,7 +109,7 @@ namespace Anggur
 
 	void LineRenderer::Add(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color)
 	{
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
+		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size())
 		{
 			Draw();
 		}
@@ -181,7 +182,7 @@ namespace Anggur
 		vertexArray.Bind();
 
 		vertexBuffer.Bind();
-		vertexBuffer.SetData(sizeof(LineRenderer) * vertexOffset, vertices.data());
+		vertexBuffer.SetData(sizeof(LineVertex) * vertexOffset, vertices.data());
 
 		indexBuffer.Bind();
 		indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());
