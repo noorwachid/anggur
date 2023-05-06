@@ -155,6 +155,61 @@ namespace Anggur
 		}
 	}
 
+	Vector2 TextRenderer::Measure(const std::string& content, Font* font, float size, float thickness, float sharpness)
+	{
+		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+
+		Vector2 pointer(0, 0);
+
+		float maxX = 0;
+
+		bool startOfLine = true;
+
+		for (usize i = 0; i < content.size();)
+		{
+			uint codepoint = UTF8::CollapseAndMoveIndex(content, i);
+
+			if (codepoint == ' ')
+			{
+				pointer.x += size * font->GetSpaceWidth();
+				continue;
+			}
+
+			if (codepoint == '\n')
+			{
+				startOfLine = true;
+				maxX = Math::Max(pointer.x, maxX);
+				pointer.x = 0;
+				continue;
+			}
+
+			if (font->glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
+					codepoint = 0xFFFD; // RC
+				}
+			}
+
+			FontGlyph& glyph = font->glyphMap[codepoint];
+
+			Vector2 localPosition = size * glyph.position;
+			Vector2 localSize = size * glyph.size;
+
+			if (startOfLine)
+			{
+				startOfLine = false;
+				localPosition.x = 0;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+			}
+
+			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, UTF8::Collapse(content, i)));
+		}
+
+		pointer.x = Math::Max(pointer.x, maxX);
+
+		return pointer;
+	}
 
 	void TextRenderer::AddLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{

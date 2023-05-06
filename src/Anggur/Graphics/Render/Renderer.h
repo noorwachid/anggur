@@ -69,6 +69,8 @@ namespace Anggur
 
 		void AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
+		Vector2 MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness);
+
 		void AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
 		void AddTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);

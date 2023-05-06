@@ -36,6 +36,8 @@ namespace Anggur
 		// 
 		void Add(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
+		Vector2 Measure(const std::string& content, Font* font, float size, float thickness, float sharpness);
+
 
 		// +----------------------------------------------------------------
 		// | Hello darkness my old friend. I've come to talk with you again. 

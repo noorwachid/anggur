@@ -220,6 +220,11 @@ namespace Anggur
 		textRenderer.Add(position, content, font, size, thickness, sharpness, color);
 	}
 
+	Vector2 Renderer::MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness)
+	{
+		return textRenderer.Measure(content, font, size, thickness, sharpness);
+	}
+
 	void Renderer::AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Text);
