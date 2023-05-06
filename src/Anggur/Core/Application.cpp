@@ -12,7 +12,7 @@ namespace Anggur
 
 		renderer = new Renderer();
 
-		sceneSystem.SetWindow(window);
-		sceneSystem.SetRenderer(renderer);
+		sceneManager.SetWindow(window);
+		sceneManager.SetRenderer(renderer);
 	}
 }

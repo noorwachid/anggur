@@ -13,13 +13,13 @@ namespace Anggur
 	class Application
 	{
 	public:
-		WindowManager windowSystem;
+		WindowManager windowManager;
 		Window* window;
 
 		Renderer* renderer;
 		Clock clock;
 
-		SceneManager sceneSystem;
+		SceneManager sceneManager;
 
 	public:
 		Application();
@@ -30,10 +30,10 @@ namespace Anggur
 
 			while (window->IsOpen())
 			{
-				windowSystem.PollEvents();
+				windowManager.PollEvents();
 
-				sceneSystem.Update(clock.Tick());
-				sceneSystem.Draw();
+				sceneManager.Update(clock.Tick());
+				sceneManager.Draw();
 				
 				window->Update();
 
