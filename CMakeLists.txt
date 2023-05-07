@@ -16,6 +16,8 @@ add_subdirectory("vendor/glfw/glfw")
 add_subdirectory("vendor/glad/glad")
 add_subdirectory("vendor/stb/truetype")
 add_subdirectory("vendor/stb/image")
+add_subdirectory("vendor/portaudio/portaudio")
+add_subdirectory("vendor/mackron/drlibs")
 
 target_include_directories(anggurcore PUBLIC "src")
 target_link_libraries(anggurcore
@@ -23,6 +25,8 @@ target_link_libraries(anggurcore
 	glad
 	stbtruetype
 	stbimage
+	portaudio
+    drlibs
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

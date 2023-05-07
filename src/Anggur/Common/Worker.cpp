@@ -42,7 +42,7 @@ namespace Anggur
         }
     }
 
-    ~Worker::Worker() 
+    Worker::~Worker() 
 	{
         {
             std::lock_guard<std::mutex> lock(mutex);
