@@ -11,8 +11,5 @@ namespace Anggur
 		});
 
 		renderer = new Renderer();
-
-		sceneManager.SetWindow(window);
-		sceneManager.SetRenderer(renderer);
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Common/Event.h"
+#include "Anggur/Common/Observer.h"
 #include "Anggur/Common/Integral.h"
 #include "Anggur/OS/Key.h"
 #include "Anggur/OS/MouseButton.h"
@@ -23,12 +23,12 @@ namespace Anggur
 		Key key = Key::Unknown;
 	};
 
-	struct KeyboardTypedEvent : public Event
+	struct KeyboardTypedEvent : Event
 	{
 		uint codepoint;
 	};
 
-	struct MouseMovedEvent : public Event
+	struct MouseMovedEvent : Event
 	{
 		Vector2 position;
 	};
@@ -48,12 +48,12 @@ namespace Anggur
 		MouseButton button = MouseButton::Unknown;
 	};
 
-	struct MouseScrolledEvent : public Event
+	struct MouseScrolledEvent : Event
 	{
 		Vector2 direction;
 	};
 
-	class InputEventListener 
+	class InputObserver 
 	{
 	public:
 		virtual void OnKeyboardPress(KeyboardPressedEvent& event) {}

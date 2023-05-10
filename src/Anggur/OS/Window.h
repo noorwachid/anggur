@@ -2,7 +2,7 @@
 
 #include "Anggur/OS/Input.h"
 #include "Anggur/OS/WindowContext.h"
-#include "Anggur/OS/WindowEvent.h"
+#include "Anggur/OS/WindowObserver.h"
 #include <functional>
 
 namespace Anggur
@@ -45,9 +45,9 @@ namespace Anggur
 
 		void Update();
 
-        void SetListener(WindowEventListener* newListener)
+        void SetObserver(WindowObserver* observer)
         {
-            listener = newListener;
+            this->observer = observer;
         }
 
 	private:
@@ -67,7 +67,7 @@ namespace Anggur
 
 		Vector2 frameBufferSize;
 
-        WindowEventListener* listener = nullptr;
+        WindowObserver* observer = nullptr;
 
 		friend class Input;
 	};

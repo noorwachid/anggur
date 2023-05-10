@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Anggur/Common/Event.h"
 #include "Anggur/Math/Vector2.h"
-#include "Anggur/OS/InputEvent.h"
+#include "Anggur/OS/InputObserver.h"
 
 namespace Anggur
 {
@@ -16,7 +15,7 @@ namespace Anggur
 		Vector2 size;
 	};
 
-	class WindowEventListener : public InputEventListener
+	class WindowObserver : public InputObserver
 	{
 	public:
 		virtual void OnWindowMove(WindowMovedEvent& event) {}

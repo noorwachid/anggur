@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/OS/InputEvent.h"
+#include "Anggur/OS/InputObserver.h"
 #include "Anggur/OS/WindowContext.h"
 #include <array>
 

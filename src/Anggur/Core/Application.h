@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Anggur/Core/Scene/Scene.h"
 #include "Anggur/OS/Clock.h"
 #include "Anggur/OS/Input.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/OS/WindowManager.h"
 #include "Anggur/Graphics/Render/Renderer.h"
-#include "Anggur/Core/Scene/SceneManager.h"
 #include <thread>
 
 namespace Anggur
@@ -19,21 +19,26 @@ namespace Anggur
 		Renderer* renderer;
 		Clock clock;
 
-		SceneManager sceneManager;
-
 	public:
 		Application();
 
-		void Run()
+		void Run(Scene* scene)
 		{
+			scene->window = window;
+			scene->renderer = renderer;
+
+			scene->Initialize();
+
+			window->SetObserver(scene);
+
 			clock.Tick();
 
 			while (window->IsOpen())
 			{
 				windowManager.PollEvents();
 
-				sceneManager.Update(clock.Tick());
-				sceneManager.Draw();
+				scene->Update(clock.Tick());
+				scene->Draw();
 				
 				window->Update();
 

@@ -22,7 +22,7 @@ namespace Anggur
 			{
 				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-				if (window.listener == nullptr)
+				if (window.observer == nullptr)
 					return;
 
 				Key key = static_cast<Key>(vkeyCode);
@@ -33,7 +33,7 @@ namespace Anggur
 					{
 						KeyboardPressedEvent event;
 						event.key = key;
-						window.listener->OnKeyboardPress(event);
+						window.observer->OnKeyboardPress(event);
 						break;
 					}
 
@@ -41,7 +41,7 @@ namespace Anggur
 					{
 						KeyboardHeldEvent event;
 						event.key = key;
-						window.listener->OnKeyboardHold(event);
+						window.observer->OnKeyboardHold(event);
 						break;
 					}
 
@@ -49,7 +49,7 @@ namespace Anggur
 					{
 						KeyboardReleasedEvent event;
 						event.key = key;
-						window.listener->OnKeyboardRelease(event);
+						window.observer->OnKeyboardRelease(event);
 						break;
 					}
 
@@ -62,12 +62,12 @@ namespace Anggur
 		glfwSetCharCallback(context, [](GLFWwindow* context, uint codepoint) {
 			Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-			if (window.listener == nullptr)
+			if (window.observer == nullptr)
 				return;
 
 			KeyboardTypedEvent event;
 			event.codepoint = codepoint;
-			window.listener->OnKeyboardType(event);
+			window.observer->OnKeyboardType(event);
 		});
 	}
 
@@ -81,7 +81,7 @@ namespace Anggur
 				MouseMovedEvent event;
 				event.position.Set(x, y);
 				window.input.mousePosition.Set(x, y);
-				window.listener->OnMouseMove(event);
+				window.observer->OnMouseMove(event);
 			}
 		);
 
@@ -98,7 +98,7 @@ namespace Anggur
 					{
 						MousePressedEvent event;
 						event.button = button;
-						window.listener->OnMousePress(event);
+						window.observer->OnMousePress(event);
 						break;
 					}
 
@@ -106,7 +106,7 @@ namespace Anggur
 					{
 						MouseHeldEvent event;
 						event.button = button;
-						window.listener->OnMouseHold(event);
+						window.observer->OnMouseHold(event);
 						break;
 					}
 
@@ -114,7 +114,7 @@ namespace Anggur
 					{
 						MouseReleasedEvent event;
 						event.button = button;
-						window.listener->OnMouseRelease(event);
+						window.observer->OnMouseRelease(event);
 						break;
 					}
 

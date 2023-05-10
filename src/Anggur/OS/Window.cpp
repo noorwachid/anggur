@@ -39,8 +39,8 @@ namespace Anggur
 				WindowResizedEvent event;
 				event.size = size;
 
-				if (window->listener)
-					window->listener->OnWindowResize(event);
+				if (window->observer)
+					window->observer->OnWindowResize(event);
 				
 				window->size = size;
 			}
@@ -68,8 +68,8 @@ namespace Anggur
 				WindowMovedEvent event;
 				event.position = position;
 
-				if (window->listener)
-					window->listener->OnWindowMove(event);
+				if (window->observer)
+					window->observer->OnWindowMove(event);
 				
 				window->position = position;
 			}
@@ -154,12 +154,6 @@ namespace Anggur
 		BindGraphicsAPI();
 		SwapFrameBuffers();
 	}
-
-	// void Window::InitializeGraphicsAPI()
-	// {
-	// 	bool result =
-	// 	assert(result && "[Window] Failed to load graphic functions");
-	// }
 
 	void Window::BindGraphicsAPI()
 	{
