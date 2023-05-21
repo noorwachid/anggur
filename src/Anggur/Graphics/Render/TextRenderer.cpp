@@ -104,6 +104,33 @@ namespace Anggur
 		view = newView;
 	}
 
+	void TextRenderer::Add(const Vector2& position, uint codepoint, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	{
+		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+
+		Vector2 pointer(-padding, -padding);
+
+		if (codepoint == ' ' || codepoint == '\n')
+		{
+			return;
+		}
+
+		if (font->glyphMap.count(codepoint) == 0)
+		{
+			if (!font->Generate(codepoint))
+			{
+				codepoint = 0xFFFD; // RC
+			}
+		}
+
+		FontGlyph& glyph = font->glyphMap[codepoint];
+
+		Vector2 localPosition = size * glyph.position;
+		Vector2 localSize = size * glyph.size;
+
+		AddCharacter(pointer + position + localPosition, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+	}
+
 	void TextRenderer::Add(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
@@ -126,7 +153,7 @@ namespace Anggur
 			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
@@ -149,7 +176,7 @@ namespace Anggur
 				localPosition.x = 0;
 			}
 
-			AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			AddCharacter(pointer + position + localPosition, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, UTF8::Collapse(content, i)));
 		}
@@ -200,7 +227,7 @@ namespace Anggur
 			{
 				startOfLine = false;
 				localPosition.x = 0;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, UTF8::Collapse(content, i)));
@@ -340,7 +367,7 @@ namespace Anggur
 			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
@@ -361,7 +388,7 @@ namespace Anggur
 			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
 			if (startOfLine)
@@ -398,7 +425,7 @@ namespace Anggur
 			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
@@ -419,12 +446,12 @@ namespace Anggur
 			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
 			if (startOfLine)
 			{
-				float lineHeight = size * (font->GetLineHeight() + font->GetLineGap()) - padding;
+				float lineHeight = size * (font->GetLineHeight() + font->GetLineGap());
 
 				if (pointer.y + (2.0f * lineHeight) > limit.y)
 				{

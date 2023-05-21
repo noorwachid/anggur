@@ -1,6 +1,7 @@
 #include "Anggur/OS/Input.h"
 #include "Anggur/OS/Internal.h"
 #include "Anggur/OS/Window.h"
+#include "GLFW/glfw3.h"
 #include <array>
 #include <iostream>
 
@@ -121,6 +122,18 @@ namespace Anggur
 					default:
 						break;
 				}
+			}
+		);
+
+		glfwSetScrollCallback(
+			context, 
+			[](GLFWwindow* context, double xOffset, double yOffset)
+			{
+				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
+				
+				MouseScrolledEvent event;
+				event.direction.Set(xOffset, yOffset);
+				window.observer->OnMouseScroll(event);
 			}
 		);
 	}

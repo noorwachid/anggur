@@ -67,6 +67,8 @@ namespace Anggur
 
 		void AddRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
+		void AddText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+
 		void AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
 		Vector2 MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness);

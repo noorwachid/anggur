@@ -213,6 +213,13 @@ namespace Anggur
 		roundRectangleRenderer.Add(position, size, radius, thickness, sharpness, color);
 	}
 
+	void Renderer::AddText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	{
+		SetType(RendererType::Text);
+
+		textRenderer.Add(position, character, font, size, thickness, sharpness, color);
+	}
+
 	void Renderer::AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Text);

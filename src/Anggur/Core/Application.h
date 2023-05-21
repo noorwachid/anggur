@@ -15,8 +15,8 @@ namespace Anggur
 	public:
 		WindowManager windowManager;
 		Window* window;
-
 		Renderer* renderer;
+		Scene* scene;
 		Clock clock;
 
 	public:
@@ -24,9 +24,10 @@ namespace Anggur
 
 		void Run(Scene* scene)
 		{
+			this->scene = scene;
+
 			scene->window = window;
 			scene->renderer = renderer;
-
 			scene->Initialize();
 
 			window->SetObserver(scene);

@@ -30,6 +30,11 @@ namespace Anggur
 
 		void SetView(const Matrix3& newView);
 
+		// +--
+		// | H
+		// 
+		void Add(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+
 		// +----------------------------------
 		// | Hello darkness my old friend.   
 		// | I've come to talk with you again. 

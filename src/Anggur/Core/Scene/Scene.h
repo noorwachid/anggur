@@ -4,7 +4,6 @@
 #include "Anggur/Graphics/Render/Renderer.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/OS/WindowObserver.h"
-#include "Anggur/Core/Scene/Node.h"
 #include <vector>
 
 namespace Anggur
