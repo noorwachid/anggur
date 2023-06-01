@@ -34,7 +34,7 @@ namespace Anggur
 
 		~Renderer();
 
-		void Draw();
+		void Flush();
 
 		void Clear();
 
@@ -52,34 +52,34 @@ namespace Anggur
 		void EndEraseMask();
 		void EndMask();
 
-		void AddTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color);
-		void AddTriangleTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2);
+		void DrawTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color);
+		void DrawTriangleTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2);
 
-		void AddQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color);
-		void AddQuadTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3);
+		void DrawQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color);
+		void DrawQuadTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3);
 
-		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color);
-		void AddRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
+		void DrawRectangle(const Vector2& position, const Vector2& size, const Vector4& color);
+		void DrawRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
 
-		void AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
+		void DrawCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void AddLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color);
+		void DrawLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color);
 
-		void AddRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
+		void DrawRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void AddText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+		void DrawText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
-		void AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+		void DrawText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
 		Vector2 MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness);
 
-		void AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+		void DrawTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
-		void AddTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
+		void DrawTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
 
-		void AddTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
+		void DrawTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
 
-		void AddTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color);
+		void DrawTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color);
 
 	private:
 		void SetType(RendererType type);

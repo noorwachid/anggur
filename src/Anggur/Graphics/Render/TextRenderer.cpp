@@ -473,7 +473,7 @@ namespace Anggur
 	{
 		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size() || textureOffset + 1 > textures.size())
 		{
-			Draw();
+			Flush();
 		}
 
 		vertices[vertexOffset + 0].position.Set(position.x,          position.y);
@@ -538,7 +538,7 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void TextRenderer::Draw()
+	void TextRenderer::Flush()
 	{
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)

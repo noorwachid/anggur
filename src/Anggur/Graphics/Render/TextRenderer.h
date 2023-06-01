@@ -76,7 +76,7 @@ namespace Anggur
 
 		void AddCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
 
-		void Draw();
+		void Flush();
 
 	private:
 		void AddPartialLineCut(const Vector2& position, const std::string& content, usize contentOffset, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);

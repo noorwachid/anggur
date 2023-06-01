@@ -20,24 +20,24 @@ namespace Anggur
 	{
 	}
 
-	void Renderer::Draw()
+	void Renderer::Flush()
 	{
 		switch (type) 
 		{
 			case RendererType::Mesh:
-				return meshRenderer.Draw();
+				return meshRenderer.Flush();
 
 			case RendererType::Circle:
-				return circleRenderer.Draw();
+				return circleRenderer.Flush();
 
 			case RendererType::RoundRectangle:
-				return roundRectangleRenderer.Draw();
+				return roundRectangleRenderer.Flush();
 
 			case RendererType::Line:
-				return lineRenderer.Draw();
+				return lineRenderer.Flush();
 
 			case RendererType::Text:
-				return textRenderer.Draw();
+				return textRenderer.Flush();
 		}
 
 		++drawCount;
@@ -81,12 +81,12 @@ namespace Anggur
 
 	void Renderer::EndScene()
 	{
-		Draw();
+		Flush();
 	}
 
 	void Renderer::BeginMask()
 	{
-		Draw();
+		Flush();
 
 		if (stencilDepth == 0)
 			glEnable(GL_STENCIL_TEST);
@@ -104,7 +104,7 @@ namespace Anggur
 
 	void Renderer::EndWriteMask()
 	{
-		Draw();
+		Flush();
 
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		glDepthMask(GL_TRUE);
@@ -114,7 +114,7 @@ namespace Anggur
 
 	void Renderer::BeginEraseMask()
 	{
-		Draw();
+		Flush();
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDepthMask(GL_FALSE);
@@ -124,7 +124,7 @@ namespace Anggur
 
 	void Renderer::EndEraseMask()
 	{
-		Draw();
+		Flush();
 
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		glDepthMask(GL_TRUE);
@@ -132,7 +132,7 @@ namespace Anggur
 
 	void Renderer::EndMask()
 	{
-		Draw();
+		Flush();
 
 		--stencilDepth;
 
@@ -144,47 +144,47 @@ namespace Anggur
 	{
 		if (type != newType)
 		{
-			Draw();
+			Flush();
 			type = newType;
 		}
 	}
 
-	void Renderer::AddTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color)
+	void Renderer::DrawTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color)
 	{
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddTriangle(position0, position1, position2, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 
-	void Renderer::AddTriangleTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2)
+	void Renderer::DrawTriangleTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2)
 	{
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddTriangle(position0, position1, position2, color, texture, texturePosition0, texturePosition1, texturePosition2);
 	}
 
-	void Renderer::AddQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color)
+	void Renderer::DrawQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color)
 	{
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddQuad(position0, position1, position2, position3, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f), Vector2(0.0f, 1.0f));
 	}
 
-	void Renderer::AddQuadTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3)
+	void Renderer::DrawQuadTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3)
 	{
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddQuad(position0, position1, position2, position3, color, texture, texturePosition0, texturePosition1, texturePosition2, texturePosition3);
 	}
 
-	void Renderer::AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
+	void Renderer::DrawRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
 	{
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddRectangle(position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 
-	void Renderer::AddRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
+	void Renderer::DrawRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 	{
 		SetType(RendererType::Mesh);
 
@@ -192,35 +192,35 @@ namespace Anggur
 	}
 
 
-	void Renderer::AddCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Circle);
 
 		circleRenderer.Add(position, radius, thickness, sharpness, color);
 	}
 
-	void Renderer::AddLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Line);
 
 		lineRenderer.Add(positionA, positionB, thickness, sharpness, color);
 	}
 
-	void Renderer::AddRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::RoundRectangle);
 
 		roundRectangleRenderer.Add(position, size, radius, thickness, sharpness, color);
 	}
 
-	void Renderer::AddText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
 		textRenderer.Add(position, character, font, size, thickness, sharpness, color);
 	}
 
-	void Renderer::AddText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
@@ -232,28 +232,28 @@ namespace Anggur
 		return textRenderer.Measure(content, font, size, thickness, sharpness);
 	}
 
-	void Renderer::AddTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
 		textRenderer.AddLine(position, content, font, size, thickness, sharpness, color);
 	}
 
-	void Renderer::AddTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
+	void Renderer::DrawTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
 		textRenderer.AddLineCut(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
-	void Renderer::AddTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
+	void Renderer::DrawTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 
 		textRenderer.AddFlow(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
-	void Renderer::AddTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color)
+	void Renderer::DrawTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color)
 	{
 		SetType(RendererType::Text);
 

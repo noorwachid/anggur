@@ -32,7 +32,7 @@ namespace Anggur
 
 		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
 
-		void Draw();
+		void Flush();
 
 	private:
 		VertexArray vertexArray;

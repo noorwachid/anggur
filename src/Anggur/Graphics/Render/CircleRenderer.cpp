@@ -101,7 +101,7 @@ namespace Anggur
 	{
 		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
 		{
-			Draw();
+			Flush();
 		}
 
 		float spread = radius + sharpness;
@@ -148,7 +148,7 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void CircleRenderer::Draw()
+	void CircleRenderer::Flush()
 	{
 		shader.Bind();
 		shader.SetUniformMatrix3("uView", view);

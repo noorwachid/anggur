@@ -118,7 +118,7 @@ namespace Anggur
 	{
 		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
 		{
-			Draw();
+			Flush();
 		}
 
 		float doubleSharpness = 2.0f * sharpness;
@@ -173,7 +173,7 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void RoundRectangleRenderer::Draw()
+	void RoundRectangleRenderer::Flush()
 	{
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)

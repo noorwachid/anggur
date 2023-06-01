@@ -90,7 +90,7 @@ namespace Anggur
 	{
 		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
 		{
-			Draw();
+			Flush();
 		}
 
 		usize textureIndex = 0;
@@ -137,7 +137,7 @@ namespace Anggur
 	{
 		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
 		{
-			Draw();
+			Flush();
 		}
 
 		usize textureIndex = 0;
@@ -203,7 +203,7 @@ namespace Anggur
 		);
 	}
 
-	void MeshRenderer::Draw()
+	void MeshRenderer::Flush()
 	{
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)

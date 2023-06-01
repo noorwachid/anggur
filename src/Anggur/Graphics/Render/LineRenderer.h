@@ -31,7 +31,7 @@ namespace Anggur
 
 		void Add(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color);
 
-		void Draw();
+		void Flush();
 
 	private:
 		VertexArray vertexArray;

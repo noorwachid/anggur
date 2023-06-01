@@ -111,7 +111,7 @@ namespace Anggur
 	{
 		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size())
 		{
-			Draw();
+			Flush();
 		}
 
 		Vector2 position(Math::Min(positionA.x, positionB.x), Math::Min(positionA.y, positionB.y));
@@ -170,7 +170,7 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void LineRenderer::Draw()
+	void LineRenderer::Flush()
 	{
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)

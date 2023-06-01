@@ -1,32 +1,28 @@
 cmake_minimum_required(VERSION 3.3)
 set(CMAKE_CXX_STANDARD 20)
 
-project(anggurcore)
+project(anggur)
 
-file(GLOB anggurcore_source
+file(GLOB anggur_source
 	"src/Anggur/*/*/*.cpp"
 	"src/Anggur/*/*.cpp"
 )
 
-add_library(anggurcore STATIC
-	${anggurcore_source}
+add_library(anggur STATIC
+	${anggur_source}
 )
 
 add_subdirectory("vendor/glfw/glfw")
 add_subdirectory("vendor/glad/glad")
 add_subdirectory("vendor/stb/truetype")
 add_subdirectory("vendor/stb/image")
-add_subdirectory("vendor/portaudio/portaudio")
-add_subdirectory("vendor/mackron/drlibs")
 
-target_include_directories(anggurcore PUBLIC "src")
-target_link_libraries(anggurcore
+target_include_directories(anggur PUBLIC "src")
+target_link_libraries(anggur
 	glfw
 	glad
 	stbtruetype
 	stbimage
-	portaudio
-    drlibs
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
