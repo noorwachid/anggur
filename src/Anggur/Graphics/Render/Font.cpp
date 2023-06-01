@@ -46,15 +46,12 @@ namespace Anggur
 		packer.Reset();
 		packer.SetSize(containerSize);
 
-		int advanceWidth, lsb;
-		stbtt_GetCodepointHMetrics(context, 32, &advanceWidth, &lsb);
-
-		float scale = stbtt_ScaleForPixelHeight(context, sampleSize);
 		float sampleInverseScale = 1.0f / sampleSize;
 
+		FontHMetrics hMetrics = GetHMetrics(32);
 		FontVMetrics vMetrics = GetVMetrics();
 
-		spaceWidth = sampleInverseScale * scale * (advanceWidth - lsb);
+		spaceWidth = sampleInverseScale * (hMetrics.advanceWidth - hMetrics.leftSideBearing);
 		lineHeight = sampleInverseScale * (vMetrics.ascent - vMetrics.descent);
 		lineGap = sampleInverseScale * vMetrics.lineGap;
 	}
@@ -181,7 +178,7 @@ namespace Anggur
 		
 		FontGlyph glyph;
 
-		glyph.position.Set(sampleInverseScale * hMetrics.leftSideBearing, sampleInverseScale * (vMetrics.ascent + bitmap.y));
+		glyph.position.Set(sampleInverseScale * hMetrics.leftSideBearing, sampleInverseScale * (vMetrics.ascent + bitmap.y + samplePadding));
 		glyph.size.Set(sampleInverseScale * bitmap.width, sampleInverseScale * bitmap.height);
 		glyph.textureIndex = textureIndex;
 		glyph.texturePosition = containerInverseScale * packer.GetPointer();
