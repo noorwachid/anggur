@@ -2,8 +2,6 @@
 
 namespace Anggur
 {
-	constexpr int maxMouseButtonValue = 8;
-
 	enum class MouseButton : int
 	{
 		Unknown = -1,

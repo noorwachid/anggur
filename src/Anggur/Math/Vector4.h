@@ -67,7 +67,7 @@ namespace Anggur
 
 		// 2d class initializer
 
-		static Vector4 createHex(uint64_t hex);
+		static Vector4 CreateHex(uint64_t hex);
 
 		// Casters
 

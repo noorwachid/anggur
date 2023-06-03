@@ -85,10 +85,12 @@ namespace Anggur
 			{
 				int textureIndex = int(vTextureIndex);
 				float sample = texture(uTextures[textureIndex], vTexturePosition).r;
-				float thickness = 0.95;
+				float thickness = 0.5f;
 
 				fColor = vColor;
-				fColor.w *= smoothstep(thickness - vSharpness, thickness, sample);
+				float aa = fwidth(sample);
+				fColor.w *= smoothstep(thickness - aa, thickness + aa, sample);
+				// fColor.w *= sample;
 
 				if (fColor.w == 0.0f) 
 				{
@@ -127,6 +129,8 @@ namespace Anggur
 
 		Vector2 localPosition = size * glyph.position;
 		Vector2 localSize = size * glyph.size;
+
+		// sharpness = 1.0f / font->sampleSize * size * 0.1;
 
 		AddCharacter(pointer + position + localPosition, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 	}

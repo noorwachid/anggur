@@ -150,7 +150,7 @@ namespace Anggur
 		float scale = GetContextScale();
 
 		bitmap.data = stbtt_GetCodepointSDF(
-			context, scale, codepoint, samplePadding, 255, sampleRange, 
+			context, scale, codepoint, samplePadding, 128, sampleRange, 
 			&bitmap.width, &bitmap.height,
 			&bitmap.x, &bitmap.y
 		);

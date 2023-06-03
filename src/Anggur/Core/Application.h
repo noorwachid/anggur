@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/Core/Process.h"
 #include "Anggur/Core/Scene/Scene.h"
 #include "Anggur/OS/Clock.h"
 #include "Anggur/OS/Input.h"
@@ -19,13 +20,18 @@ namespace Anggur
 		Scene* scene;
 		Clock clock;
 
+		Process process;
+
 	public:
 		Application();
 
-		void Run(Scene* scene)
+		void Run(Scene* scene, const std::vector<std::string>& arguments)
 		{
+			process.arguments = arguments;
+
 			this->scene = scene;
 
+			scene->process = &process;
 			scene->window = window;
 			scene->renderer = renderer;
 			scene->Initialize();

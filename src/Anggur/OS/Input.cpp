@@ -19,40 +19,30 @@ namespace Anggur
 	{
 		glfwSetKeyCallback(
 			context,
-			[](GLFWwindow* context, int vkeyCode, int scanCode, int state, int modifierKey)
+			[](GLFWwindow* context, int vkeyCode, int scanCode, int state, int modifierKeyCode)
 			{
 				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 
 				if (window.observer == nullptr)
 					return;
 
-				Key key = static_cast<Key>(vkeyCode);
+				KeyEvent event; 
+				event.modifierKey = static_cast<ModifierKey>(modifierKeyCode);
+				event.key = static_cast<Key>(vkeyCode);
 
 				switch (state)
 				{
 					case GLFW_PRESS:
-					{
-						KeyboardPressedEvent event;
-						event.key = key;
-						window.observer->OnKeyboardPress(event);
+						window.observer->OnKeyPress(event);
 						break;
-					}
 
 					case GLFW_REPEAT:
-					{
-						KeyboardHeldEvent event;
-						event.key = key;
-						window.observer->OnKeyboardHold(event);
+						window.observer->OnKeyHold(event);
 						break;
-					}
 
 					case GLFW_RELEASE:
-					{
-						KeyboardReleasedEvent event;
-						event.key = key;
-						window.observer->OnKeyboardRelease(event);
+						window.observer->OnKeyRelease(event);
 						break;
-					}
 
 					default:
 						break;
@@ -66,9 +56,9 @@ namespace Anggur
 			if (window.observer == nullptr)
 				return;
 
-			KeyboardTypedEvent event;
+			TextEvent event;
 			event.codepoint = codepoint;
-			window.observer->OnKeyboardType(event);
+			window.observer->OnText(event);
 		});
 	}
 
@@ -79,10 +69,10 @@ namespace Anggur
 			[](GLFWwindow* context, double x, double y)
 			{
 				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
-				MouseMovedEvent event;
+				MousePointerEvent event;
 				event.position.Set(x, y);
-				window.input.mousePosition.Set(x, y);
-				window.observer->OnMouseMove(event);
+				window.input.mousePointer.Set(x, y);
+				window.observer->OnMousePointerMove(event);
 			}
 		);
 
@@ -91,33 +81,22 @@ namespace Anggur
 			[](GLFWwindow* context, int buttonCode, int state, int mods)
 			{
 				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
-				MouseButton button = static_cast<MouseButton>(buttonCode);
+				MouseButtonEvent event;
+				event.button = static_cast<MouseButton>(buttonCode);
 
 				switch (state)
 				{
 					case GLFW_PRESS:
-					{
-						MousePressedEvent event;
-						event.button = button;
-						window.observer->OnMousePress(event);
+						window.observer->OnMouseButtonPress(event);
 						break;
-					}
 
 					case GLFW_REPEAT:
-					{
-						MouseHeldEvent event;
-						event.button = button;
-						window.observer->OnMouseHold(event);
+						window.observer->OnMouseButtonHold(event);
 						break;
-					}
 
 					case GLFW_RELEASE:
-					{
-						MouseReleasedEvent event;
-						event.button = button;
-						window.observer->OnMouseRelease(event);
+						window.observer->OnMouseButtonRelease(event);
 						break;
-					}
 
 					default:
 						break;
@@ -131,9 +110,9 @@ namespace Anggur
 			{
 				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 				
-				MouseScrolledEvent event;
+				ScrollEvent event;
 				event.direction.Set(xOffset, yOffset);
-				window.observer->OnMouseScroll(event);
+				window.observer->OnScroll(event);
 			}
 		);
 	}
@@ -160,8 +139,8 @@ namespace Anggur
 		return glfwGetKey(context, index) == GLFW_RELEASE;
 	}
 
-	const Vector2& Input::GetMousePosition() const
+	const Vector2& Input::GetMousePointer() const
 	{
-		return mousePosition;
+		return mousePointer;
 	}
 }

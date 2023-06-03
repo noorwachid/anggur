@@ -31,7 +31,7 @@ namespace Anggur
 
 		bool IsKeyboardReleased(Key key) const;
 
-		const Vector2& GetMousePosition() const;
+		const Vector2& GetMousePointer() const;
 
 	private:
 		void SetKeyCallbacks();
@@ -39,7 +39,7 @@ namespace Anggur
 		void SetMouseCallbacks();
 
 	private:
-		Vector2 mousePosition;
+		Vector2 mousePointer;
 
 		WindowContext* context;
 	};

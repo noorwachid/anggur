@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/Core/Process.h"
 #include "Anggur/Common/Observer.h"
 #include "Anggur/Graphics/Render/Renderer.h"
 #include "Anggur/OS/Window.h"
@@ -20,6 +21,7 @@ namespace Anggur
 	protected:
 		Window* window;
 		Renderer* renderer;
+		Process* process;
 
 		friend class Application;
 	};

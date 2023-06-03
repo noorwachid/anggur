@@ -3,52 +3,33 @@
 #include "Anggur/Common/Observer.h"
 #include "Anggur/Common/Integral.h"
 #include "Anggur/OS/Key.h"
-#include "Anggur/OS/MouseButton.h"
+#include "Anggur/OS/Mouse.h"
 #include "Anggur/Math/Vector2.h"
 
 namespace Anggur
 {
-	struct KeyboardPressedEvent : Event
+	struct KeyEvent : Event
 	{
+		ModifierKey modifierKey = ModifierKey::None;
 		Key key = Key::Unknown;
 	};
 
-	struct KeyboardHeldEvent : Event
-	{
-		Key key = Key::Unknown;
-	};
-
-	struct KeyboardReleasedEvent : Event
-	{
-		Key key = Key::Unknown;
-	};
-
-	struct KeyboardTypedEvent : Event
+	struct TextEvent : Event
 	{
 		uint codepoint;
 	};
 
-	struct MouseMovedEvent : Event
+	struct MouseButtonEvent : Event
+	{
+		MouseButton button = MouseButton::Unknown;
+	};
+
+	struct MousePointerEvent : Event
 	{
 		Vector2 position;
 	};
 
-	struct MousePressedEvent : Event
-	{
-		MouseButton button = MouseButton::Unknown;
-	};
-
-	struct MouseHeldEvent : Event
-	{
-		MouseButton button = MouseButton::Unknown;
-	};
-
-	struct MouseReleasedEvent : Event
-	{
-		MouseButton button = MouseButton::Unknown;
-	};
-
-	struct MouseScrolledEvent : Event
+	struct ScrollEvent : Event
 	{
 		Vector2 direction;
 	};
@@ -56,22 +37,22 @@ namespace Anggur
 	class InputObserver 
 	{
 	public:
-		virtual void OnKeyboardPress(KeyboardPressedEvent& event) {}
+		virtual void OnKeyPress(KeyEvent& event) {}
 
-		virtual void OnKeyboardHold(KeyboardHeldEvent& event) {}
+		virtual void OnKeyHold(KeyEvent& event) {}
 
-		virtual void OnKeyboardRelease(KeyboardReleasedEvent& event) {}
+		virtual void OnKeyRelease(KeyEvent& event) {}
 
-		virtual void OnKeyboardType(KeyboardTypedEvent& event) {}
+		virtual void OnText(TextEvent& event) {}
 
-		virtual void OnMousePress(MousePressedEvent& event) {}
+		virtual void OnMouseButtonPress(MouseButtonEvent& event) {}
 
-		virtual void OnMouseHold(MouseHeldEvent& event) {}
+		virtual void OnMouseButtonHold(MouseButtonEvent& event) {}
 
-		virtual void OnMouseRelease(MouseReleasedEvent& event) {}
+		virtual void OnMouseButtonRelease(MouseButtonEvent& event) {}
 
-		virtual void OnMouseMove(MouseMovedEvent& event) {}
+		virtual void OnMousePointerMove(MousePointerEvent& event) {}
 
-		virtual void OnMouseScroll(MouseScrolledEvent& event) {}
+		virtual void OnScroll(ScrollEvent& event) {}
 	};
 }

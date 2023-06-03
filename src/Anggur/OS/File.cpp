@@ -23,15 +23,19 @@ namespace Anggur::File
 
 	std::string ReadText(const std::string& path)
 	{
-		std::ifstream file(path, std::ios::in | std::ios::binary);
-		std::string text;
+		std::vector<uchar> bytes;
 
-		if (!file.is_open()) {
-			throw std::runtime_error(path + " cannot be read");
-		}
+		FILE* fontFile = fopen(path.c_str(), "r");
 
-		text.insert(text.begin(), std::istream_iterator<uchar>(file), std::istream_iterator<uchar>());
+		fseek(fontFile, 0, SEEK_END);
+		size_t byteSize = ftell(fontFile);
+		fseek(fontFile, 0, SEEK_SET);
 
-		return text;
+		bytes.resize(byteSize);
+
+		fread(bytes.data(), byteSize, 1, fontFile);
+		fclose(fontFile);
+
+		return std::string(bytes.data(), bytes.data() + bytes.size());
 	}
 }

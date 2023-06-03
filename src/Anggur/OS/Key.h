@@ -4,8 +4,6 @@
 
 namespace Anggur
 {
-	constexpr int maxKeyValue = 349;
-
 	enum class Key : int
 	{
 		Unknown = -1,
