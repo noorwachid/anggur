@@ -97,8 +97,6 @@ namespace Anggur
 
 		static Vector4 Normalize(const Vector4& a);
 
-		static Vector4 Lerp(const Vector4& a, const Vector4& b, float amount);
-
 		// 3rd class manipulations
 
 		friend Vector4 operator+(const Vector4& a, const Vector4& b);
@@ -125,4 +123,10 @@ namespace Anggur
 
 		friend Vector4& operator*=(Vector4& a, float b);
 	};
+
+	namespace Math
+	{
+		Vector4 Lerp(const Vector4& a, const Vector4& b, float amount);
+	}
 }
+

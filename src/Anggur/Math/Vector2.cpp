@@ -132,11 +132,6 @@ namespace Anggur
 		return Vector2(a.x / length, a.y / length);
 	}
 
-	Vector2 Vector2::Lerp(const Vector2& a, const Vector2& b, float amount)
-	{
-		return Vector2(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount));
-	}
-
 	// 3rd class manipulations
 
 	Vector2 operator-(const Vector2& a)
@@ -209,4 +204,10 @@ namespace Anggur
 		a = b * a;
 		return a;
 	}
+
+	Vector2 Math::Lerp(const Vector2& a, const Vector2& b, float amount)
+	{
+		return Vector2(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount));
+	}
+
 }

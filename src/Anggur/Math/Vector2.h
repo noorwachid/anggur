@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Math.h"
 
 namespace Anggur
 {
@@ -73,8 +74,6 @@ namespace Anggur
 
 		static Vector2 Normalize(const Vector2& a);
 
-		static Vector2 Lerp(const Vector2& a, const Vector2& b, float amount);
-
 		// 3rd class manipulations
 
 		friend Vector2 operator-(const Vector2& a);
@@ -103,4 +102,9 @@ namespace Anggur
 
 		friend Vector2& operator*=(Vector2& a, float b);
 	};
+
+	namespace Math
+	{
+		Vector2 Lerp(const Vector2& a, const Vector2& b, float amount);
+	}
 }

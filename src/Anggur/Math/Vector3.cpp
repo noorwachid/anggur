@@ -94,11 +94,6 @@ namespace Anggur
 		return Vector3(a.x / length, a.y / length, a.z / length);
 	}
 
-	Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float amount)
-	{
-		return Vector3(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount), Math::Lerp(a.z, b.z, amount));
-	}
-
 	// 3rd class manipulations
 
 	Vector3 operator+(const Vector3& a, const Vector3& b)
@@ -165,5 +160,10 @@ namespace Anggur
 	{
 		a = b * a;
 		return a;
+	}
+
+	Vector3 Math::Lerp(const Vector3& a, const Vector3& b, float amount)
+	{
+		return Vector3(Math::Lerp(a.x, b.x, amount), Math::Lerp(a.y, b.y, amount), Math::Lerp(a.z, b.z, amount));
 	}
 }

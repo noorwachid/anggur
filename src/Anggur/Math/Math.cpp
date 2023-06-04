@@ -3,13 +3,6 @@
 
 namespace Anggur
 {
-	// Constants
-
-	const float Math::pi = 3.1415926535f;
-	const float Math::twoPi = pi * 2;
-	const float Math::infinity = INFINITY;
-	const float Math::epsilon = 0.0001f;
-
 	// Casters
 
 	float Math::DegreeToRadian(float x)
