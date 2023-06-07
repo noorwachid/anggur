@@ -67,7 +67,7 @@ namespace Anggur
 
 		void DrawRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void DrawText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+		void DrawText(const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
 		void DrawText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
@@ -84,9 +84,9 @@ namespace Anggur
 	private:
 		void SetType(RendererType type);
 
-		uchar stencilDepth = 0;
+		unsigned char stencilDepth = 0;
 
-		usize drawCount = 0;
+		size_t drawCount = 0;
 
 		RendererType type;
 

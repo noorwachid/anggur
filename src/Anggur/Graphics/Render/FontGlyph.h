@@ -1,4 +1,3 @@
-#include "Anggur/Common/Integral.h"
 #include "Anggur/Math/Vector2.h"
 
 namespace Anggur
@@ -8,7 +7,7 @@ namespace Anggur
 		Vector2 position;
 		Vector2 size;
 
-		usize textureIndex = 0;
+		size_t textureIndex = 0;
 
 		Vector2 texturePosition;
 		Vector2 textureSize;

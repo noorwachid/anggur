@@ -2,20 +2,20 @@
 
 #include <type_traits>
 
-#define ANGGUR_ENUM_UNARY(sym, op)                                                                                     \
+#define ANGGUR_ENUMERATION_UNARY(sym, op)                                                                              \
 	inline sym operator op(sym lhs)                                                                                    \
 	{                                                                                                                  \
 		return static_cast<sym>(op static_cast<std::underlying_type<sym>::type>(lhs));                                 \
 	}
 
-#define ANGGUR_ENUM_BINARY(sym, op)                                                                                    \
+#define ANGGUR_ENUMERATION_BINARY(sym, op)                                                                             \
 	inline sym operator op(sym lhs, sym rhs)                                                                           \
 	{                                                                                                                  \
 		using ut = std::underlying_type<sym>::type;                                                                    \
 		return static_cast<sym>(static_cast<ut>(lhs) op static_cast<ut>(rhs));                                         \
 	}
 
-#define ANGGUR_ENUM_ASSIGNMENT(sym, op)                                                                                \
+#define ANGGUR_ENUMERATION_ASSIGNMENT(sym, op)                                                                         \
 	inline sym operator op(sym& lhs, sym rhs)                                                                          \
 	{                                                                                                                  \
 		using ut = std::underlying_type<sym>::type;                                                                    \
@@ -26,20 +26,20 @@
 		return lhs;                                                                                                    \
 	}
 
-#define ANGGUR_ENUM_COMPARISON(sym, op)                                                                                \
+#define ANGGUR_ENUMERATION_COMPARISON(sym, op)                                                                         \
 	inline bool operator op(sym lhs, sym rhs)                                                                          \
 	{                                                                                                                  \
 		using ut = std::underlying_type<sym>::type;                                                                    \
 		return static_cast<ut>(lhs) op static_cast<ut>(rhs);                                                           \
 	}
 
-#define ANGGUR_ENUM(sym)                                                                                               \
-	ANGGUR_ENUM_UNARY(sym, ~)                                                                                          \
-	ANGGUR_ENUM_BINARY(sym, &)                                                                                         \
-	ANGGUR_ENUM_BINARY(sym, |)                                                                                         \
-	ANGGUR_ENUM_BINARY(sym, ^)                                                                                         \
-	ANGGUR_ENUM_ASSIGNMENT(sym, &=)                                                                                    \
-	ANGGUR_ENUM_ASSIGNMENT(sym, |=)                                                                                    \
-	ANGGUR_ENUM_ASSIGNMENT(sym, ^=)                                                                                    \
-	ANGGUR_ENUM_COMPARISON(sym, ==)                                                                                    \
-	ANGGUR_ENUM_COMPARISON(sym, !=)
+#define ANGGUR_ENUMERATION(sym)                                                                                        \
+	ANGGUR_ENUMERATION_UNARY(sym, ~)                                                                                   \
+	ANGGUR_ENUMERATION_BINARY(sym, &)                                                                                  \
+	ANGGUR_ENUMERATION_BINARY(sym, |)                                                                                  \
+	ANGGUR_ENUMERATION_BINARY(sym, ^)                                                                                  \
+	ANGGUR_ENUMERATION_ASSIGNMENT(sym, &=)                                                                             \
+	ANGGUR_ENUMERATION_ASSIGNMENT(sym, |=)                                                                             \
+	ANGGUR_ENUMERATION_ASSIGNMENT(sym, ^=)                                                                             \
+	ANGGUR_ENUMERATION_COMPARISON(sym, ==)                                                                             \
+	ANGGUR_ENUMERATION_COMPARISON(sym, !=)

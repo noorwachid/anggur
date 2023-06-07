@@ -1,3 +1,4 @@
+#include "Anggur/Core/Instrumentation.h"
 #include "Anggur/OS/WindowManager.h"
 #include "Anggur/OS/Internal.h"
 #include <cassert>
@@ -21,6 +22,8 @@ namespace Anggur
 
 	void WindowManager::PollEvents()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		glfwPollEvents();
 	}
 }

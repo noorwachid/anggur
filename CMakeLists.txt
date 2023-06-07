@@ -6,6 +6,7 @@ project(anggur)
 file(GLOB anggur_source
 	"src/Anggur/*/*/*.cpp"
 	"src/Anggur/*/*.cpp"
+	"src/Anggur/*.cpp"
 )
 
 add_library(anggur STATIC

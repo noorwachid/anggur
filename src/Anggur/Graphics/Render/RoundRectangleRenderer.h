@@ -43,15 +43,15 @@ namespace Anggur
 		Matrix3 view;
 
 		std::vector<RRVertex> vertices;
-		std::vector<uint> indices;
+		std::vector<unsigned int> indices;
 
-		usize vertexOffset = 0;
-		usize indexOffset = 0;
+		size_t vertexOffset = 0;
+		size_t indexOffset = 0;
 
-		usize drawCount = 0;
+		size_t drawCount = 0;
 
-		usize batchVertex = 512;
-		usize batchIndexMultiplier = 2;
+		size_t batchVertex = 512;
+		size_t batchIndexMultiplier = 2;
 	};
 }
 

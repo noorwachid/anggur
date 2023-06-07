@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Anggur/Core/Instrumentation.h"
 #include "Anggur/Core/Process.h"
-#include "Anggur/Core/Scene/Scene.h"
 #include "Anggur/OS/Clock.h"
 #include "Anggur/OS/Input.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/OS/WindowManager.h"
 #include "Anggur/Graphics/Render/Renderer.h"
+#include "Anggur/Studio/Scene.h"
 #include <thread>
 
 namespace Anggur
@@ -27,6 +28,8 @@ namespace Anggur
 
 		void Run(Scene* scene, const std::vector<std::string>& arguments)
 		{
+			ANGGUR_INSTRUMENTATION_SESSION_BEGIN("Anggur::Application::Run");
+
 			process.arguments = arguments;
 
 			this->scene = scene;
@@ -42,15 +45,28 @@ namespace Anggur
 
 			while (window->IsOpen())
 			{
-				windowManager.PollEvents();
+				ANGGUR_INSTRUMENTATION_PROFILE("Anggur::Scene::Run::Loop");
 
-				scene->Update(clock.Tick());
-				scene->Draw();
+				float deltaTime = clock.Tick();
+
+				{
+					ANGGUR_INSTRUMENTATION_PROFILE("Anggur::Scene::Update");
+					scene->Update(deltaTime);
+				}
+
+				{
+					ANGGUR_INSTRUMENTATION_PROFILE("Anggur::Scene::Draw");
+					scene->Draw();
+				}
 				
 				window->Update();
 
-				// std::this_thread::sleep_for(std::chrono::milliseconds(16));
+				windowManager.PollEvents();
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
+
+			ANGGUR_INSTRUMENTATION_SESSION_END;
 		}
 	};
 }

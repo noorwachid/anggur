@@ -1,3 +1,4 @@
+#include "Anggur/Core/Instrumentation.h"
 #include "Anggur/Graphics/Function.h"
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/VertexBuffer.h"
@@ -10,9 +11,11 @@ namespace Anggur
 {
 	Renderer::Renderer()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		type = RendererType::Circle;
 
-		std::vector<uchar> pixels = { 0xFF, 0xFF, 0xFF };
+		std::vector<unsigned char> pixels = { 0xFF, 0xFF, 0xFF };
 		defaultTexture = new Texture2D(pixels, 1, 1, 3);
 	}
 
@@ -22,6 +25,8 @@ namespace Anggur
 
 	void Renderer::Flush()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		switch (type) 
 		{
 			case RendererType::Mesh:
@@ -45,6 +50,8 @@ namespace Anggur
 
 	void Renderer::Clear()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
@@ -71,6 +78,8 @@ namespace Anggur
 
 	void Renderer::BeginScene()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
@@ -151,6 +160,8 @@ namespace Anggur
 
 	void Renderer::DrawTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddTriangle(position0, position1, position2, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f));
@@ -158,6 +169,8 @@ namespace Anggur
 
 	void Renderer::DrawTriangleTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddTriangle(position0, position1, position2, color, texture, texturePosition0, texturePosition1, texturePosition2);
@@ -165,6 +178,8 @@ namespace Anggur
 
 	void Renderer::DrawQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddQuad(position0, position1, position2, position3, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f), Vector2(0.0f, 1.0f));
@@ -172,6 +187,8 @@ namespace Anggur
 
 	void Renderer::DrawQuadTexture(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddQuad(position0, position1, position2, position3, color, texture, texturePosition0, texturePosition1, texturePosition2, texturePosition3);
@@ -179,6 +196,8 @@ namespace Anggur
 
 	void Renderer::DrawRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddRectangle(position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
@@ -186,6 +205,8 @@ namespace Anggur
 
 	void Renderer::DrawRectangleTexture(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Mesh);
 
 		meshRenderer.AddRectangle(position, size, color, texture, texturePosition, textureSize);
@@ -194,6 +215,8 @@ namespace Anggur
 
 	void Renderer::DrawCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Circle);
 
 		circleRenderer.Add(position, radius, thickness, sharpness, color);
@@ -201,6 +224,8 @@ namespace Anggur
 
 	void Renderer::DrawLine(const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Line);
 
 		lineRenderer.Add(positionA, positionB, thickness, sharpness, color);
@@ -208,13 +233,17 @@ namespace Anggur
 
 	void Renderer::DrawRoundRectangle(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::RoundRectangle);
 
 		roundRectangleRenderer.Add(position, size, radius, thickness, sharpness, color);
 	}
 
-	void Renderer::DrawText(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color)
+	void Renderer::DrawText(const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Text);
 
 		textRenderer.Add(position, character, font, size, thickness, sharpness, color);
@@ -222,6 +251,8 @@ namespace Anggur
 
 	void Renderer::DrawText(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Text);
 
 		textRenderer.Add(position, content, font, size, thickness, sharpness, color);
@@ -229,11 +260,15 @@ namespace Anggur
 
 	Vector2 Renderer::MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		return textRenderer.Measure(content, font, size, thickness, sharpness);
 	}
 
 	void Renderer::DrawTextLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Text);
 
 		textRenderer.AddLine(position, content, font, size, thickness, sharpness, color);
@@ -241,6 +276,8 @@ namespace Anggur
 
 	void Renderer::DrawTextLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Text);
 
 		textRenderer.AddLineCut(position, content, font, size, thickness, sharpness, limit, color);
@@ -248,6 +285,8 @@ namespace Anggur
 
 	void Renderer::DrawTextFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Text);
 
 		textRenderer.AddFlow(position, content, font, size, thickness, sharpness, limit, color);
@@ -255,6 +294,8 @@ namespace Anggur
 
 	void Renderer::DrawTextFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color)
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		SetType(RendererType::Text);
 
 		textRenderer.AddFlowCut(position, content, font, size, thickness, sharpness, limit, color);

@@ -1,4 +1,4 @@
-#include "Anggur/Core/Scene/Scene.h"
+#include "Anggur/Studio/Scene.h"
 
 namespace Anggur
 {

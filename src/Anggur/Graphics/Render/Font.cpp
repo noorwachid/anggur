@@ -1,13 +1,13 @@
+#include "Anggur/Core/Text.h"
 #include "Anggur/Math/Math.h"
 #include "Anggur/Graphics/Render/Font.h"
-#include "Anggur/Common/UTF8.h"
 
 #include <stb_image_write.h>
 #include <stb_truetype.h>
 
 namespace Anggur
 {
-	void Font::Read(const std::vector<uchar>& byteBuffer)
+	void Font::Read(const std::vector<unsigned char>& byteBuffer)
 	{
 		data = byteBuffer;
 
@@ -24,7 +24,7 @@ namespace Anggur
 			throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
 	}
 
-	void Font::SetSample(uint newContainerSize, uint newSampleSize, uint newSamplePadding, float newSampleRange)
+	void Font::SetSample(unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding, float newSampleRange)
 	{
 		if (newContainerSize < newSampleSize)
 		{
@@ -64,7 +64,7 @@ namespace Anggur
 		return std::string(name, length);
 	}
 
-	float Font::GetKerning(uint codePoint, uint nextCodePoint) 
+	float Font::GetKerning(unsigned int codePoint, unsigned int nextCodePoint) 
 	{
 		float scale = GetContextScale();
 		float kerning = stbtt_GetCodepointKernAdvance(context, codePoint, nextCodePoint);
@@ -88,7 +88,7 @@ namespace Anggur
 		return metrics;
 	}
 
-	FontHMetrics Font::GetHMetrics(uint codepoint)
+	FontHMetrics Font::GetHMetrics(unsigned int codepoint)
 	{
 		FontHMetrics metrics;
 
@@ -105,7 +105,7 @@ namespace Anggur
 		return metrics;
 	}
 
-	bool Font::Generate(uint codepoint)
+	bool Font::Generate(unsigned int codepoint)
 	{
 		std::optional<FontBitmap> bitmap = GenerateBitmap(codepoint);
 
@@ -118,13 +118,13 @@ namespace Anggur
 		return true;
 	}
 
-	bool Font::GenerateRange(uint codepointFrom, uint length)
+	bool Font::GenerateRange(unsigned int codepointFrom, unsigned int length)
 	{
 		bool someFailed = false;
 
-		for (uint i = 0; i < length; ++i)
+		for (unsigned int i = 0; i < length; ++i)
 		{
-			uint codepoint = i + codepointFrom;
+			unsigned int codepoint = i + codepointFrom;
 			
 			std::optional<FontBitmap> bitmap = GenerateBitmap(codepoint);
 
@@ -143,7 +143,7 @@ namespace Anggur
 		return someFailed;
 	}
 
-	std::optional<FontBitmap> Font::GenerateBitmap(uint codepoint)
+	std::optional<FontBitmap> Font::GenerateBitmap(unsigned int codepoint)
 	{
 		FontBitmap bitmap;
 
@@ -161,7 +161,7 @@ namespace Anggur
 		return bitmap;
 	}
 
-	void Font::Pack(uint codepoint, const FontBitmap& bitmap)
+	void Font::Pack(unsigned int codepoint, const FontBitmap& bitmap)
 	{
 		FontVMetrics vMetrics = GetVMetrics();
 		FontHMetrics hMetrics = GetHMetrics(codepoint);

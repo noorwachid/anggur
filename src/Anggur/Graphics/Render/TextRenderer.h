@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/Core/Text.h"
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
@@ -8,7 +9,6 @@
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
-#include "Anggur/Common/UTF8.h"
 
 namespace Anggur
 {
@@ -33,7 +33,7 @@ namespace Anggur
 		// +--
 		// | H
 		// 
-		void Add(const Vector2& position, uint character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
+		void Add(const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness, const Vector4& color);
 
 		// +----------------------------------
 		// | Hello darkness my old friend.   
@@ -79,7 +79,7 @@ namespace Anggur
 		void Flush();
 
 	private:
-		void AddPartialLineCut(const Vector2& position, const std::string& content, usize contentOffset, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
+		void AddPartialLineCut(const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color);
 
 	private:
 		VertexArray vertexArray;
@@ -91,20 +91,20 @@ namespace Anggur
 		Matrix3 view;
 
 		std::vector<TextVertex> vertices;
-		std::vector<uint> indices;
+		std::vector<unsigned int> indices;
 		std::vector<Texture2D*> textures;
 		std::vector<int> textureIndices;
 
-		std::unordered_map<uint, usize> textureIndexMap;
+		std::unordered_map<unsigned int, size_t> textureIndexMap;
 
-		usize vertexOffset = 0;
-		usize indexOffset = 0;
-		usize textureOffset = 0;
+		size_t vertexOffset = 0;
+		size_t indexOffset = 0;
+		size_t textureOffset = 0;
 
-		usize drawCount = 0;
+		size_t drawCount = 0;
 
-		usize batchVertex = 512;
-		usize batchIndexMultiplier = 2;
+		size_t batchVertex = 512;
+		size_t batchIndexMultiplier = 2;
 	};
 }
 

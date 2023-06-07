@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Anggur/Common/Observer.h"
-#include "Anggur/Common/Integral.h"
+#include "Anggur/Core/Observer.h"
 #include "Anggur/OS/Key.h"
 #include "Anggur/OS/Mouse.h"
 #include "Anggur/Math/Vector2.h"
@@ -16,7 +15,7 @@ namespace Anggur
 
 	struct TextEvent : Event
 	{
-		uint codepoint;
+		unsigned int codepoint;
 	};
 
 	struct MouseButtonEvent : Event

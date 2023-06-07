@@ -1,3 +1,4 @@
+#include "Anggur/Core/Instrumentation.h"
 #include "Anggur/OS/Internal.h"
 #include "Anggur/OS/Window.h"
 #include <cassert>
@@ -24,6 +25,9 @@ namespace Anggur
 		assert(context && "[Window] Failed to create a window");
 
 		BindContext();
+
+		glfwSwapInterval(1);
+
 		BindGraphicsAPI();
 
 		assert(contextLoader && "Context loader is empty");
@@ -151,17 +155,23 @@ namespace Anggur
 
 	void Window::Update()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		BindGraphicsAPI();
 		SwapFrameBuffers();
 	}
 
 	void Window::BindGraphicsAPI()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		glfwMakeContextCurrent(context);
 	}
 
 	void Window::SwapFrameBuffers()
 	{
+		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
+
 		glfwSwapBuffers(context);
 	}
 

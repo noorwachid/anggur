@@ -10,7 +10,7 @@ namespace Anggur
 		id = 0;
 	}
 
-	Texture2D::Texture2D(const std::vector<uchar>& bytes, uint width, uint height, uint channels, SamplerFilter filter)
+	Texture2D::Texture2D(const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels, SamplerFilter filter)
 	{
 		id = 0;
 		Read(bytes, width, height, channels, filter);
@@ -21,7 +21,7 @@ namespace Anggur
 		Close();
 	}
 
-	void Texture2D::Read(const std::vector<uchar>& bytes, uint width, uint height, uint channels, SamplerFilter filter)
+	void Texture2D::Read(const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels, SamplerFilter filter)
 	{
 		Close();
 		glEnable(GL_TEXTURE_2D);
@@ -80,7 +80,7 @@ namespace Anggur
 			glDeleteTextures(1, &id);
 	}
 
-	void Texture2D::Bind(uint slot)
+	void Texture2D::Bind(unsigned int slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, id);

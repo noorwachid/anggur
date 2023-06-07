@@ -24,7 +24,7 @@ namespace Anggur
 		vertexBuffer.SetCapacity(sizeof(CircleVertex) * vertices.size());
 
 		indexBuffer.Bind();
-		indexBuffer.SetCapacity(sizeof(uint) * indices.size());
+		indexBuffer.SetCapacity(sizeof(unsigned int) * indices.size());
 
 		shader.Bind();
 		shader.SetVertexSource(R"(
@@ -159,7 +159,7 @@ namespace Anggur
 		vertexBuffer.SetData(sizeof(CircleVertex) * vertexOffset, vertices.data());
 
 		indexBuffer.Bind();
-		indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());
+		indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
 
 		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 

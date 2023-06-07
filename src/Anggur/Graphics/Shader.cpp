@@ -36,7 +36,7 @@ namespace Anggur
 		int isSucceed;
 		char message[512];
 
-		uint vertexId = glCreateShader(GL_VERTEX_SHADER);
+		unsigned int vertexId = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexId, 1, &cVertexSource, NULL);
 		glCompileShader(vertexId);
 
@@ -48,7 +48,7 @@ namespace Anggur
 			throw std::runtime_error(std::string("Failed to compile vertex shader: ") + message);
 		}
 
-		uint fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+		unsigned int fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragmentId, 1, &cFragmentSource, NULL);
 		glCompileShader(fragmentId);
 
@@ -125,17 +125,17 @@ namespace Anggur
 		glUniform1i(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformInt(const std::string& name, usize size, int* values)
+	void Shader::SetUniformInt(const std::string& name, size_t size, int* values)
 	{
 		glUniform1iv(GetLocation(name), size, values);
 	}
 
-	void Shader::SetUniformUint(const std::string& name, uint value)
+	void Shader::SetUniformUnsignedInt(const std::string& name, unsigned int value)
 	{
 		glUniform1ui(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformUint(const std::string& name, usize size, uint* values)
+	void Shader::SetUniformUnsignedInt(const std::string& name, size_t size, unsigned int* values)
 	{
 		glUniform1uiv(GetLocation(name), size, values);
 	}
@@ -145,7 +145,7 @@ namespace Anggur
 		glUniform1f(GetLocation(name), value);
 	}
 
-	void Shader::SetUniformFloat(const std::string& name, usize size, float* values)
+	void Shader::SetUniformFloat(const std::string& name, size_t size, float* values)
 	{
 		glUniform1fv(GetLocation(name), size, values);
 	}

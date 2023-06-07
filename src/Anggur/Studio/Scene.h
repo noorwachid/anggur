@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Anggur/Core/Observer.h"
 #include "Anggur/Core/Process.h"
-#include "Anggur/Common/Observer.h"
-#include "Anggur/Graphics/Render/Renderer.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/OS/WindowObserver.h"
+#include "Anggur/Graphics/Render/Renderer.h"
 #include <vector>
 
 namespace Anggur

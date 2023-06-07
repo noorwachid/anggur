@@ -25,12 +25,12 @@ namespace Anggur
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void VertexBuffer::SetCapacity(usize byteSize)
+	void VertexBuffer::SetCapacity(size_t byteSize)
 	{
 		glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void VertexBuffer::SetData(usize byteSize, void* byteData)
+	void VertexBuffer::SetData(size_t byteSize, void* byteData)
 	{
 		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
@@ -56,17 +56,17 @@ namespace Anggur
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void IndexBuffer::SetCapacity(usize byteSize)
+	void IndexBuffer::SetCapacity(size_t byteSize)
 	{
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void IndexBuffer::SetData(usize byteSize, void* byteData)
+	void IndexBuffer::SetData(size_t byteSize, void* byteData)
 	{
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	usize GetVertexDataTypeByteSize(VertexDataType type)
+	size_t GetVertexDataTypeByteSize(VertexDataType type)
 	{
 		switch (type) 
 		{
@@ -96,7 +96,7 @@ namespace Anggur
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::SetAttribute(usize index, usize size, VertexDataType type, usize byteStride, usize byteOffset)
+	void VertexArray::SetAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset)
 	{
 		int glType = 0;
 
@@ -111,22 +111,22 @@ namespace Anggur
 		glEnableVertexAttribArray(index);
 	}
 
-	void VertexArray::SetLayout(const std::vector<std::tuple<VertexDataType, usize, std::string>>& layout)
+	void VertexArray::SetLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout)
 	{
 		stride = 0;
 
-		for (usize i = 0; i < layout.size(); ++i) 
+		for (size_t i = 0; i < layout.size(); ++i) 
 		{
 			auto [type, size, name] = layout[i];
 			stride += size * GetVertexDataTypeByteSize(type);
 		}
 
-		usize offset = 0;
+		size_t offset = 0;
 
-		for (usize i = 0; i < layout.size(); ++i) 
+		for (size_t i = 0; i < layout.size(); ++i) 
 		{
 			auto [type, size, name] = layout[i];
-			usize byteCount = size * GetVertexDataTypeByteSize(type);
+			size_t byteCount = size * GetVertexDataTypeByteSize(type);
 
 			SetAttribute(i, size, type, stride, offset);
 

@@ -7,7 +7,7 @@ namespace Anggur
 		return Vector2(pointerX, pointerY);
 	}
 
-	bool FontPacker::IsFit(usize width, usize height)
+	bool FontPacker::IsFit(size_t width, size_t height)
 	{
 		if (pointerX + width > image.GetWidth()) 
 		{
@@ -28,14 +28,14 @@ namespace Anggur
 		return true;
 	}
 
-	void FontPacker::SetGlyph(uchar* bytes, usize width, usize height)
+	void FontPacker::SetGlyph(unsigned char* bytes, size_t width, size_t height)
 	{
-		for (usize x = 0; x < width; ++x) 
+		for (size_t x = 0; x < width; ++x) 
 		{
-			for (usize y = 0; y < height; ++y) 
+			for (size_t y = 0; y < height; ++y) 
 			{
-				usize glyphIndex = (y * width) + x;
-				usize containerIndex = ((y + pointerY) * image.GetWidth()) + x + pointerX;
+				size_t glyphIndex = (y * width) + x;
+				size_t containerIndex = ((y + pointerY) * image.GetWidth()) + x + pointerX;
 				image.SetByte(containerIndex, bytes[glyphIndex]);
 			}
 		}
@@ -44,7 +44,7 @@ namespace Anggur
 		maxY = Math::Max(maxY, height);
 	}
 
-	void FontPacker::SetSize(uint size)
+	void FontPacker::SetSize(unsigned int size)
 	{
 		image.SetSize(size, size);
 		image.SetChannels(1);

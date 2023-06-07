@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/Common/Integral.h"
 #include "Anggur/Graphics/Render/Image.h"
 #include "Anggur/Math/Math.h"
 #include "Anggur/Math/Vector2.h"
@@ -14,18 +13,18 @@ namespace Anggur
 	public:
 		Vector2 GetPointer();
 
-		bool IsFit(usize width, usize height);
+		bool IsFit(size_t width, size_t height);
 
-		void SetGlyph(uchar* bytes, usize width, usize height);
+		void SetGlyph(unsigned char* bytes, size_t width, size_t height);
 
-		void SetSize(uint size);
+		void SetSize(unsigned int size);
 
 		void Reset();
 
 	public:
-		uint maxY = 0;
-		uint pointerX = 0;
-		uint pointerY = 0;
+		unsigned int maxY = 0;
+		unsigned int pointerX = 0;
+		unsigned int pointerY = 0;
 
 		Image image;
 	};

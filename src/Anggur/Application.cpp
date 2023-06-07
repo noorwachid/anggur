@@ -1,4 +1,4 @@
-#include "Anggur/Core/Application.h"
+#include "Anggur/Application.h"
 #include "Anggur/Graphics/Function.h"
 
 namespace Anggur

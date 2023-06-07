@@ -9,7 +9,7 @@ namespace Anggur
 		Initialize();
 	}
 
-	FrameBuffer::FrameBuffer(uint width, uint height)
+	FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
 	{
 		Initialize();
 		Recreate(width, height);
@@ -32,7 +32,7 @@ namespace Anggur
 		texture = new Texture2D();
 	}
 
-	void FrameBuffer::Recreate(uint width, uint height)
+	void FrameBuffer::Recreate(unsigned int width, unsigned int height)
 	{
 		this->width = width;
 		this->height = height;

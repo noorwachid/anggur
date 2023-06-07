@@ -29,7 +29,7 @@ namespace Anggur
 
 		// stbi_set_flip_vertically_on_load(true);
 
-		uchar* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
+		unsigned char* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
 		assert(rawData && "Failed to load image");
 
 		bytes.resize(newWidth * newHeight * newChannels);

@@ -1,12 +1,11 @@
 #include "Anggur/OS/File.h"
-#include "Anggur/Common/Integral.h"
 #include <fstream>
 
 namespace Anggur::File
 {
-	std::vector<uchar> Read(const std::string& path)
+	std::vector<unsigned char> Read(const std::string& path)
 	{
-		std::vector<uchar> bytes;
+		std::vector<unsigned char> bytes;
 		FILE* fontFile = fopen(path.c_str(), "rb");
 
 		fseek(fontFile, 0, SEEK_END);
@@ -23,7 +22,7 @@ namespace Anggur::File
 
 	std::string ReadText(const std::string& path)
 	{
-		std::vector<uchar> bytes;
+		std::vector<unsigned char> bytes;
 
 		FILE* fontFile = fopen(path.c_str(), "r");
 

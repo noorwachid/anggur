@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/Common/Integral.h"
 #include "Anggur/Graphics/TextureSpecification.h"
 #include <vector>
 
@@ -11,48 +10,48 @@ namespace Anggur
 	public:
 		Texture2D();
 		Texture2D(
-			const std::vector<uchar>& bytes, uint width, uint height, uint channels = 8,
+			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
 			SamplerFilter filter = SamplerFilter::Linear
 		);
 
 		~Texture2D();
 
-		inline uint GetID() const
+		inline unsigned int GetID() const
 		{
 			return id;
 		}
 
-		inline uint GetWidth() const
+		inline unsigned int GetWidth() const
 		{
 			return width;
 		}
 
-		inline uint GetHeight() const
+		inline unsigned int GetHeight() const
 		{
 			return height;
 		}
 
-		inline uint GetChannels() const
+		inline unsigned int GetChannels() const
 		{
 			return channels;
 		}
 
 		void Read(
-			const std::vector<uchar>& bytes, uint width, uint height, uint channels = 8,
+			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
 			SamplerFilter filter = SamplerFilter::Linear
 		);
 
 		void Close();
 
-		void Bind(uint slot = 0);
+		void Bind(unsigned int slot = 0);
 
 		friend bool operator==(const Texture2D& a, const Texture2D& b);
 		friend class FrameBuffer;
 
 	private:
-		uint id;
-		uint width;
-		uint height;
-		uint channels;
+		unsigned int id;
+		unsigned int width;
+		unsigned int height;
+		unsigned int channels;
 	};
 }

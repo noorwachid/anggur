@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/Common/Integral.h"
 #include "Anggur/Math/Math.h"
 #include <string>
 
@@ -12,7 +11,7 @@ namespace Anggur
 		Shader();
 		~Shader();
 
-		inline uint GetID() const
+		inline unsigned int GetID() const
 		{
 			return id;
 		}
@@ -34,16 +33,16 @@ namespace Anggur
 		void SetUniformVector4(const std::string& name, const Vector4& vector);
 
 		void SetUniformInt(const std::string& name, int value);
-		void SetUniformInt(const std::string& name, usize size, int* values);
+		void SetUniformInt(const std::string& name, size_t size, int* values);
 
-		void SetUniformUint(const std::string& name, uint value);
-		void SetUniformUint(const std::string& name, usize size, uint* values);
+		void SetUniformUnsignedInt(const std::string& name, unsigned int value);
+		void SetUniformUnsignedInt(const std::string& name, size_t size, unsigned int* values);
 
 		void SetUniformFloat(const std::string& name, float value);
-		void SetUniformFloat(const std::string& name, usize size, float* values);
+		void SetUniformFloat(const std::string& name, size_t size, float* values);
 
 	private:
-		uint id;
+		unsigned int id;
 		std::string vertexSource;
 		std::string fragmentSource;
 	};

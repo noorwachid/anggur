@@ -1,8 +1,8 @@
-#include "Anggur/Common/UTF8.h"
+#include "Anggur/Core/Text.h"
 
-namespace Anggur::UTF8
+namespace Anggur::Text::UTF8
 {
-	std::string Expand(uint codepoint) 
+	std::string Expand(unsigned int codepoint) 
 	{
 		std::string result;
 
@@ -36,10 +36,10 @@ namespace Anggur::UTF8
 		return result;
 	}
 
-	uint Collapse(const std::string& text, size_t index) 
+	unsigned int Collapse(const std::string& text, size_t index) 
 	{
 		// std::string text = "Hello, 🌎!";
-		uint codepoint = 0;
+		unsigned int codepoint = 0;
 
 		if ((text[index] & 0b10000000) == 0b00000000) 
 		{
@@ -65,10 +65,10 @@ namespace Anggur::UTF8
 		return codepoint;
 	}
 
-	uint CollapseAndMoveIndex(const std::string& text, size_t& index) 
+	unsigned int CollapseAndMoveIndex(const std::string& text, size_t& index) 
 	{
 		// std::string text = "Hello, 🌎!";
-		uint codepoint = 0;
+		unsigned int codepoint = 0;
 
 		if ((text[index] & 0b10000000) == 0b00000000) 
 		{

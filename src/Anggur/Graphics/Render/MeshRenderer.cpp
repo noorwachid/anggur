@@ -13,7 +13,7 @@ namespace Anggur
 		textures.assign(TextureSpecification::GetMaxSlot(), nullptr);
 		textureIndices.reserve(TextureSpecification::GetMaxSlot());
 
-		for (usize i = 0; i < TextureSpecification::GetMaxSlot(); ++i)
+		for (size_t i = 0; i < TextureSpecification::GetMaxSlot(); ++i)
 		{
 			textureIndices.push_back(i);
 		}
@@ -30,7 +30,7 @@ namespace Anggur
 		vertexBuffer.SetCapacity(sizeof(MeshVertex) * vertices.size());
 
 		indexBuffer.Bind();
-		indexBuffer.SetCapacity(sizeof(uint) * indices.size());
+		indexBuffer.SetCapacity(sizeof(unsigned int) * indices.size());
 
 		shader.Bind();
 		shader.SetVertexSource(R"(
@@ -93,7 +93,7 @@ namespace Anggur
 			Flush();
 		}
 
-		usize textureIndex = 0;
+		size_t textureIndex = 0;
 
 		if (textureIndexMap.count(texture->GetID()))
 		{
@@ -140,7 +140,7 @@ namespace Anggur
 			Flush();
 		}
 
-		usize textureIndex = 0;
+		size_t textureIndex = 0;
 
 		if (textureIndexMap.count(texture->GetID()))
 		{
@@ -209,7 +209,7 @@ namespace Anggur
 		if (vertexOffset == 0)
 			return;
 
-		for (usize textureIndex = 0; textureIndex < textureOffset; ++textureIndex)
+		for (size_t textureIndex = 0; textureIndex < textureOffset; ++textureIndex)
 			textures[textureIndex]->Bind(textureIndex);
 
 		shader.Bind();
@@ -222,7 +222,7 @@ namespace Anggur
 		vertexBuffer.SetData(sizeof(MeshVertex) * vertexOffset, vertices.data());
 
 		indexBuffer.Bind();
-		indexBuffer.SetData(sizeof(uint) * indexOffset, indices.data());
+		indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
 
 		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 

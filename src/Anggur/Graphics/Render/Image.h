@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anggur/Common/Integral.h"
 #include <string>
 #include <vector>
 
@@ -14,68 +13,68 @@ namespace Anggur
 
 		~Image();
 
-		inline uint GetWidth() const
+		inline unsigned int GetWidth() const
 		{
 			return width;
 		}
 
-		inline uint GetHeight() const
+		inline unsigned int GetHeight() const
 		{
 			return height;
 		}
 
-		inline uint GetChannels() const
+		inline unsigned int GetChannels() const
 		{
 			return channels;
 		}
 
-		inline uint GetVolume() const
+		inline unsigned int GetVolume() const
 		{
 			return width * height * channels;
 		}
 
-		inline const std::vector<uchar>& GetBytes() const
+		inline const std::vector<unsigned char>& GetBytes() const
 		{
 			return bytes;
 		}
 
-		inline std::vector<uchar>& GetBytes()
+		inline std::vector<unsigned char>& GetBytes()
 		{
 			return bytes;
 		}
 
-		inline uchar* ToPointer()
+		inline unsigned char* ToPointer()
 		{
 			return bytes.data();
 		}
 
-		inline void SetByte(uint index, uchar value)
+		inline void SetByte(unsigned int index, unsigned char value)
 		{
 			bytes[index] = value;
 		}
 
-		inline void SetByte(uint x, uint y, uchar value)
+		inline void SetByte(unsigned int x, unsigned int y, unsigned char value)
 		{
 			bytes[y * width + x] = value;
 		}
 
-		inline void SetWidth(uint newWidth)
+		inline void SetWidth(unsigned int newWidth)
 		{
 			width = newWidth;
 		}
 
-		inline void SetHeight(uint newHeight)
+		inline void SetHeight(unsigned int newHeight)
 		{
 			height = newHeight;
 		}
 
-		inline void SetSize(uint newWidth, uint newHeight)
+		inline void SetSize(unsigned int newWidth, unsigned int newHeight)
 		{
 			width = newWidth;
 			height = newHeight;
 		}
 
-		inline void SetChannels(uint newChannels)
+		inline void SetChannels(unsigned int newChannels)
 		{
 			channels = newChannels;
 		}
@@ -96,9 +95,9 @@ namespace Anggur
 		void Write(const std::string& path);
 
 	private:
-		uint width;
-		uint height;
-		uint channels;
-		std::vector<uchar> bytes;
+		unsigned int width;
+		unsigned int height;
+		unsigned int channels;
+		std::vector<unsigned char> bytes;
 	};
 }

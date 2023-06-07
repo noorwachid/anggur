@@ -34,7 +34,7 @@ namespace Anggur
 
 	struct FontBitmap
 	{
-		uchar* data;
+		unsigned char* data;
 		int x;
 		int y;
 		int width;
@@ -44,13 +44,13 @@ namespace Anggur
 	class Font
 	{
 	public:
-		void Read(const std::vector<uchar>& byteBuffer);
+		void Read(const std::vector<unsigned char>& byteBuffer);
 
 		void Initialize();
 
-		void SetSample(uint newContainerSize, uint newSampleSize, uint newSamplePadding, float newSampleRange);
+		void SetSample(unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding, float newSampleRange);
 
-		float GetKerning(uint codePoint, uint nextCodePoint);
+		float GetKerning(unsigned int codePoint, unsigned int nextCodePoint);
 
 		float GetSpaceWidth() { return spaceWidth; }
 
@@ -60,15 +60,15 @@ namespace Anggur
 
 		FontVMetrics GetVMetrics();
 
-		FontHMetrics GetHMetrics(uint codepoint);
+		FontHMetrics GetHMetrics(unsigned int codepoint);
 
 		const std::vector<Texture2D*>& GetTextures() { return textures; }
 
 		std::string GetName();
 
-		bool Generate(uint codepoint);
+		bool Generate(unsigned int codepoint);
 
-		bool GenerateRange(uint codepointFrom = 'F', uint length = 1);
+		bool GenerateRange(unsigned int codepointFrom = 'F', unsigned int length = 1);
 
 		bool GenerateRC();
 
@@ -79,9 +79,9 @@ namespace Anggur
 		bool GenerateASCII();
 
 	private:
-		void Pack(uint codepoint, const FontBitmap& bitmap);
+		void Pack(unsigned int codepoint, const FontBitmap& bitmap);
 
-		std::optional<FontBitmap> GenerateBitmap(uint codepoint);
+		std::optional<FontBitmap> GenerateBitmap(unsigned int codepoint);
 
 		void GenerateTexture();
 
@@ -93,18 +93,18 @@ namespace Anggur
 		float lineGap;
 
 		std::vector<Texture2D*> textures;
-		usize textureIndex = 0;
+		size_t textureIndex = 0;
 
 		FontContext* context;
-		std::vector<uchar> data;
+		std::vector<unsigned char> data;
 
-		std::unordered_map<uint, FontGlyph> glyphMap;
+		std::unordered_map<unsigned int, FontGlyph> glyphMap;
 
 		FontPacker packer;
 
-		uint containerSize;
-		uint sampleSize;
-		uint samplePadding;
+		unsigned int containerSize;
+		unsigned int sampleSize;
+		unsigned int samplePadding;
 		float sampleRange;
 
 		float sampleScale;
