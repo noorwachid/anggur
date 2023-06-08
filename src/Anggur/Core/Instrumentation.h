@@ -75,7 +75,7 @@ namespace Anggur::Instrumentation
 	};
 }
 
-#if 1
+#if 0
 #define ANGGUR_INSTRUMENTATION_SESSION_BEGIN(name) Anggur::Instrumentation::Watcher::GetInstance().BeginSession(name)
 #define ANGGUR_INSTRUMENTATION_PROFILE(name) Anggur::Instrumentation::Timer timer ## __LINE__ (name)
 #define ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION Anggur::Instrumentation::Timer timer ## __LINE__ (__FUNCTION__)

@@ -26,6 +26,7 @@ namespace Anggur
 
 		void SetTo(const T& to)
 		{
+			this->inBetween = to;
 			this->to = to;
 		}
 
@@ -50,7 +51,10 @@ namespace Anggur
 		void Update(float deltaTime)
 		{
 			if (elapsedTime > durationTime || function == nullptr)
+			{
+				inBetween = to;
 				return;
+			}
 
 			elapsedTime += deltaTime;
 
