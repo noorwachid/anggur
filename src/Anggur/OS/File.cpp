@@ -35,6 +35,6 @@ namespace Anggur::File
 		fread(bytes.data(), byteSize, 1, fontFile);
 		fclose(fontFile);
 
-		return std::string(bytes.data(), bytes.data() + bytes.size());
+		return std::string(bytes.data(), bytes.data() + bytes.size() - 1);
 	}
 }

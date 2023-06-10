@@ -78,10 +78,11 @@ namespace Anggur
 
 		glfwSetMouseButtonCallback(
 			context,
-			[](GLFWwindow* context, int buttonCode, int state, int mods)
+			[](GLFWwindow* context, int buttonCode, int state, int modifierKeyCode)
 			{
 				Window& window = *static_cast<Window*>(glfwGetWindowUserPointer(context));
 				MouseButtonEvent event;
+				event.modifierKey = static_cast<ModifierKey>(modifierKeyCode);
 				event.button = static_cast<MouseButton>(buttonCode);
 
 				switch (state)

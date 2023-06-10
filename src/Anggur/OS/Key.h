@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Anggur/Core/Enumeration.h"
+#include "Anggur/Core/EnumerationFlag.h"
 
 namespace Anggur
 {
@@ -151,5 +151,5 @@ namespace Anggur
 		NumLock = 0x0020,
 	};
 
-	ANGGUR_ENUMERATION(ModifierKey);
+	ANGGUR_ENUMERATIONFLAG(ModifierKey);
 }

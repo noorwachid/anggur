@@ -20,6 +20,7 @@ namespace Anggur
 
 	struct MouseButtonEvent : Event
 	{
+		ModifierKey modifierKey = ModifierKey::None;
 		MouseButton button = MouseButton::Unknown;
 	};
 
