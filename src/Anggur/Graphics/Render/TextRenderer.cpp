@@ -108,6 +108,8 @@ namespace Anggur
 
 	void TextRenderer::Add(const Vector2& position, unsigned int codepoint, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
+		if (!font) return;
+
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
@@ -137,6 +139,8 @@ namespace Anggur
 
 	void TextRenderer::Add(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
+		if (!font) return;
+
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
@@ -188,6 +192,8 @@ namespace Anggur
 
 	Vector2 TextRenderer::Measure(const std::string& content, Font* font, float size, float thickness, float sharpness)
 	{
+		if (!font) return Vector2(0, 0);
+
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(0, 0);
@@ -244,6 +250,8 @@ namespace Anggur
 
 	void TextRenderer::AddLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
 	{
+		if (!font) return;
+
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
@@ -292,6 +300,8 @@ namespace Anggur
 
 	void TextRenderer::AddPartialLineCut(const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
+		if (!font) return;
+
 		FontGlyph ellipsisGlyph = font->glyphMap[0x2026];
 		Vector2 ellipsisLocalPosition = size * ellipsisGlyph.position;
 		Vector2 ellipsisLocalSize = size * ellipsisGlyph.size;
@@ -351,6 +361,8 @@ namespace Anggur
 
 	void TextRenderer::AddFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
 	{
+		if (!font) return;
+
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
@@ -409,6 +421,8 @@ namespace Anggur
 
 	void TextRenderer::AddFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color)
 	{
+		if (!font) return;
+
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);

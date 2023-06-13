@@ -21,6 +21,7 @@ namespace Anggur
 
 	Renderer::~Renderer()
 	{
+		delete defaultTexture;
 	}
 
 	void Renderer::Flush()

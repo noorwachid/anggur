@@ -9,6 +9,7 @@ namespace Anggur
 	{
 	public:
 		Shader();
+
 		~Shader();
 
 		inline unsigned int GetID() const

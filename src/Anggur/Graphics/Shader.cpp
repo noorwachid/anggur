@@ -86,8 +86,7 @@ namespace Anggur
 
 	void Shader::Terminate()
 	{
-		if (id > 0)
-			glDeleteProgram(id);
+		glDeleteProgram(id);
 	}
 
 	int Shader::GetLocation(const std::string& name)

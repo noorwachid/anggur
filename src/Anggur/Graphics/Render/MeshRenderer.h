@@ -50,6 +50,8 @@ namespace Anggur
 
 		std::unordered_map<unsigned int, size_t> textureIndexMap;
 
+		size_t previousVertexOffset = 0;
+		size_t previousIndexOffset = 0;
 		size_t vertexOffset = 0;
 		size_t indexOffset = 0;
 		size_t textureOffset = 0;

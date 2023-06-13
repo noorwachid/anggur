@@ -7,11 +7,19 @@
 
 namespace Anggur
 {
-	void Font::Read(const std::vector<unsigned char>& byteBuffer)
+	Font::Font(const std::vector<unsigned char>& byteBuffer)
 	{
 		data = byteBuffer;
 
 		Initialize();
+	}
+
+	Font::~Font()
+	{
+		for (Texture2D* texture : textures)
+			delete texture;
+
+		delete context;
 	}
 
 	void Font::Initialize()
@@ -187,6 +195,8 @@ namespace Anggur
 		glyphMap[codepoint] = glyph;
 
 		packer.SetGlyph(bitmap.data, bitmap.width, bitmap.height);
+
+		stbtt_FreeSDF(bitmap.data, nullptr);
 	}
 
 	void Font::GenerateTexture()

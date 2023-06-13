@@ -27,6 +27,8 @@ namespace Anggur
 	public:
 		Application();
 
+		~Application();
+
 		void Run(Scene* scene, const std::vector<std::string>& arguments);
 	};
 }

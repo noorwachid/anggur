@@ -44,9 +44,9 @@ namespace Anggur
 	class Font
 	{
 	public:
-		void Read(const std::vector<unsigned char>& byteBuffer);
+		Font(const std::vector<unsigned char>& byteBuffer);
 
-		void Initialize();
+		~Font();
 
 		void SetSample(unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding, float newSampleRange);
 
@@ -79,6 +79,8 @@ namespace Anggur
 		bool GenerateASCII();
 
 	private:
+		void Initialize();
+
 		void Pack(unsigned int codepoint, const FontBitmap& bitmap);
 
 		std::optional<FontBitmap> GenerateBitmap(unsigned int codepoint);

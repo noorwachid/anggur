@@ -1,5 +1,6 @@
 #include "Anggur/Application.h"
 #include "Anggur/Graphics/Function.h"
+#include "Anggur/IO/Loop.h"
 #include <thread>
 
 namespace Anggur
@@ -12,6 +13,12 @@ namespace Anggur
 		});
 
 		renderer = new Renderer();
+	}
+
+	Application::~Application()
+	{
+		delete renderer;
+		delete window;
 	}
 
 	void Application::Run(Scene* scene, const std::vector<std::string>& arguments)
@@ -52,6 +59,8 @@ namespace Anggur
 			window->Update();
 
 			windowManager.PollEvents();
+
+			IO::Run(IO::RunMode::NoWait);
 
 			float sleepTime = sleepClock.Tick();
 			int sleepMiliseconds = Math::Max(1, 16 - int(sleepTime * 1000));
