@@ -9,15 +9,15 @@ namespace Anggur::IO
 	{
 		struct Data
 		{
+			uv_fs_t context;
 			FileCallback callback;
 		};
 
-		auto request = new uv_fs_t();
 		auto data = new Data();
-		request->data = data;
+		data->context.data = data;
 		data->callback = callback;
 
-		uv_fs_open(uv_default_loop(), request, path.c_str(), flags, mode, [](uv_fs_t* request)
+		uv_fs_open(uv_default_loop(), &data->context, path.c_str(), flags, mode, [](uv_fs_t* request)
 		{
 			auto data = static_cast<Data*>(request->data);
 
@@ -32,7 +32,6 @@ namespace Anggur::IO
 			uv_fs_req_cleanup(request);
 
 			delete data;
-			delete request;
 		});
 	}
 
@@ -40,17 +39,17 @@ namespace Anggur::IO
 	{
 		struct Data
 		{
+			uv_fs_t context;
 			int descriptor;
 			FileCallback callback;
 		};
 
-		auto request = new uv_fs_t();
 		auto data = new Data();
-		request->data = data;
+		data->context.data = data;
 		data->descriptor = descriptor;
 		data->callback = callback;
 
-		uv_fs_close(uv_default_loop(), request, descriptor, [](uv_fs_t* request)
+		uv_fs_close(uv_default_loop(), &data->context, descriptor, [](uv_fs_t* request)
 		{
 			auto data = static_cast<Data*>(request->data);
 
@@ -65,7 +64,6 @@ namespace Anggur::IO
 			uv_fs_req_cleanup(request);
 
 			delete data;
-			delete request;
 		});
 	}
 
@@ -73,17 +71,17 @@ namespace Anggur::IO
 	{
 		struct Data
 		{
+			uv_fs_t context;
 			int descriptor;
 			FileStatisticCallback callback;
 		};
 
-		auto request = new uv_fs_t();
 		auto data = new Data();
-		request->data = data;
+		data->context.data = data;
 		data->descriptor = descriptor;
 		data->callback = callback;
 
-		uv_fs_fstat(uv_default_loop(), request, descriptor, [](uv_fs_t* request)
+		uv_fs_fstat(uv_default_loop(), &data->context, descriptor, [](uv_fs_t* request)
 		{
 			auto data = static_cast<Data*>(request->data);
 
@@ -102,7 +100,6 @@ namespace Anggur::IO
 			uv_fs_req_cleanup(request);
 
 			delete data;
-			delete request;
 		});
 	}
 
@@ -110,6 +107,7 @@ namespace Anggur::IO
 	{
 		struct Data
 		{
+			uv_fs_t context;
 			int descriptor;
 			FileContentCallback callback;
 			std::vector<unsigned char> buffer;
@@ -147,7 +145,6 @@ namespace Anggur::IO
 				uv_fs_req_cleanup(request);
 
 				delete data;
-				delete request;
 				
 				return;
 			}
@@ -189,7 +186,6 @@ namespace Anggur::IO
 				uv_fs_req_cleanup(request);
 
 				delete data;
-				delete request;
 				
 				return;
 			}
@@ -229,40 +225,36 @@ namespace Anggur::IO
 			uv_fs_req_cleanup(request);
 
 			delete data;
-			delete request;
 		}
 	}
 
 	void ReadFile(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback)
 	{
-		auto request = new uv_fs_t();
 		auto data = new FileContentInternal::Data(descriptor, limit);
-		request->data = data;
+		data->context.data = data;
 		data->descriptor = descriptor;
 		data->callback = callback;
 
-		uv_fs_read(uv_default_loop(), request, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnComplete);
+		uv_fs_read(uv_default_loop(), &data->context, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnComplete);
 	}
 
 	void ReadPartialFile(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback)
 	{
-		auto request = new uv_fs_t();
 		auto data = new FileContentInternal::Data(descriptor, limit);
-		request->data = data;
+		data->context.data = data;
 		data->descriptor = descriptor;
 		data->callback = callback;
 
-		uv_fs_read(uv_default_loop(), request, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnPartial);
+		uv_fs_read(uv_default_loop(), &data->context, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnPartial);
 	}
 
 	void ReadPartialFileOnce(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback)
 	{
-		auto request = new uv_fs_t();
 		auto data = new FileContentInternal::Data(descriptor, limit);
-		request->data = data;
+		data->context.data = data;
 		data->descriptor = descriptor;
 		data->callback = callback;
 
-		uv_fs_read(uv_default_loop(), request, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnPartialOnce);
+		uv_fs_read(uv_default_loop(), &data->context, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnPartialOnce);
 	}
 }

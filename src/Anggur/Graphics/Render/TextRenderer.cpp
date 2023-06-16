@@ -184,7 +184,7 @@ namespace Anggur
 				localPosition.x = 0;
 			}
 
-			AddCharacter(pointer + position + localPosition, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			AddCharacter(position + localPosition + pointer, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
 		}

@@ -2,9 +2,12 @@
 
 #include "Anggur/Graphics/Animation/Function.h"
 #include "Anggur/Math/Math.h"
+#include <functional>
 
 namespace Anggur
 {
+	using TweenCallback = std::function<void()>;
+
 	template <typename T>
 	class Tween
 	{
@@ -12,6 +15,11 @@ namespace Anggur
 		void SetFunction(AnimationFunction function)
 		{
 			this->function = function;
+		}
+
+		void SetCallback(const TweenCallback& callback)
+		{
+			this->callback = callback;
 		}
 
 		void SetDuration(float time)
@@ -28,6 +36,8 @@ namespace Anggur
 		{
 			this->inBetween = to;
 			this->to = to;
+			
+			if (callback) callback();
 		}
 
 		const T& GetInBetween() const
@@ -53,6 +63,9 @@ namespace Anggur
 			if (elapsedTime > durationTime || function == nullptr)
 			{
 				inBetween = to;
+
+				if (callback) callback();
+
 				return;
 			}
 
@@ -70,6 +83,6 @@ namespace Anggur
 		float elapsedTime = 0.0f;
 
 		AnimationFunction function = Linear;
-
+		TweenCallback callback = nullptr;
 	};
 }

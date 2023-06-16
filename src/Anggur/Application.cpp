@@ -68,6 +68,8 @@ namespace Anggur
 			std::this_thread::sleep_for(std::chrono::milliseconds(sleepMiliseconds));
 		}
 
+		IO::Run(IO::RunMode::Wait);
+
 		ANGGUR_INSTRUMENTATION_SESSION_END;
 	}
 }

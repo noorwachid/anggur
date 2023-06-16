@@ -218,24 +218,11 @@ namespace Anggur
 
 		vertexArray.Bind();
 
-		if (vertexOffset != previousVertexOffset)
-		{
-			vertexBuffer.Bind();
-			vertexBuffer.SetData(sizeof(MeshVertex) * vertexOffset, vertices.data());
+		vertexBuffer.Bind();
+		vertexBuffer.SetData(sizeof(MeshVertex) * vertexOffset, vertices.data());
 
-			indexBuffer.Bind();
-			indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
-			
-			previousVertexOffset = vertexOffset;
-			previousIndexOffset = indexOffset;
-		}
-		else if (indexOffset != previousIndexOffset)
-		{
-			indexBuffer.Bind();
-			indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
-			
-			previousIndexOffset = indexOffset;
-		}
+		indexBuffer.Bind();
+		indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
 
 		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 

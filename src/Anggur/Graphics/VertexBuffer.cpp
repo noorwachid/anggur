@@ -11,8 +11,7 @@ namespace Anggur
 
 	VertexBuffer::~VertexBuffer()
 	{
-		if (id > 0)
-			glDeleteBuffers(1, &id);
+		glDeleteBuffers(1, &id);
 	}
 
 	void VertexBuffer::Bind()

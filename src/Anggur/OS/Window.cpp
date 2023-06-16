@@ -88,8 +88,7 @@ namespace Anggur
 
 	Window::~Window()
 	{
-		if (context)
-			glfwDestroyWindow(context);
+		glfwDestroyWindow(context);
 	}
 
 	WindowContext* Window::GetContext()
