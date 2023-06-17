@@ -60,7 +60,7 @@ namespace Anggur
 
 			windowManager.PollEvents();
 
-			IO::Run(IO::RunMode::NoWait);
+			Anggur::Run(RunMode::NoWait);
 
 			float sleepTime = sleepClock.Tick();
 			int sleepMiliseconds = Math::Max(1, 16 - int(sleepTime * 1000));
@@ -68,7 +68,7 @@ namespace Anggur
 			std::this_thread::sleep_for(std::chrono::milliseconds(sleepMiliseconds));
 		}
 
-		IO::Run(IO::RunMode::Wait);
+		Anggur::Run(RunMode::Wait);
 
 		ANGGUR_INSTRUMENTATION_SESSION_END;
 	}

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Anggur::IO
+namespace Anggur
 {
 	enum class State
 	{

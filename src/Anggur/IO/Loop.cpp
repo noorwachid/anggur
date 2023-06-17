@@ -1,7 +1,7 @@
 #include "Anggur/IO/Loop.h"
 #include "Anggur/IO/Internal.h"
 
-namespace Anggur::IO
+namespace Anggur
 {
 	bool Run(RunMode mode)
 	{

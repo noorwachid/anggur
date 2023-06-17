@@ -44,9 +44,13 @@ namespace Anggur
 	class Font
 	{
 	public:
-		Font(const std::vector<unsigned char>& byteBuffer);
+		Font();
+
+		Font(const std::vector<unsigned char>& data);
 
 		~Font();
+
+		void SetData(const std::vector<unsigned char>& data);
 
 		void SetSample(unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding, float newSampleRange);
 

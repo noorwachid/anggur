@@ -3,7 +3,7 @@
 #include <memory>
 #include <iostream>
 
-namespace Anggur::IO
+namespace Anggur
 {
 	void OpenFile(const std::string& path, int flags, int mode, const FileCallback& callback)
 	{

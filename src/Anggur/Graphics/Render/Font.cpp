@@ -7,9 +7,13 @@
 
 namespace Anggur
 {
-	Font::Font(const std::vector<unsigned char>& byteBuffer)
+	Font::Font()
 	{
-		data = byteBuffer;
+	}
+
+	Font::Font(const std::vector<unsigned char>& data)
+	{
+		this->data = data;
 
 		Initialize();
 	}
@@ -20,6 +24,13 @@ namespace Anggur
 			delete texture;
 
 		delete context;
+	}
+
+	void Font::SetData(const std::vector<unsigned char>& data)
+	{
+		this->data = data;
+
+		Initialize();
 	}
 
 	void Font::Initialize()

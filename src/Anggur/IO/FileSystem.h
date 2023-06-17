@@ -4,7 +4,7 @@
 #include <string>
 #include <functional>
 
-namespace Anggur::IO
+namespace Anggur
 {
 	struct FileResult : Result
 	{
