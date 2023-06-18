@@ -257,4 +257,46 @@ namespace Anggur
 
 		uv_fs_read(uv_default_loop(), &data->context, descriptor, &data->bufferContainer, 1, offset, FileContentInternal::OnPartialOnce);
 	}
+
+	void WriteFile(int descriptor, size_t offset, std::vector<unsigned char> content, const FileCallback& callback)
+	{
+		struct Data
+		{
+			uv_fs_t context;
+			int descriptor;
+			FileCallback callback;
+			std::vector<unsigned char> buffer;
+			uv_buf_t bufferContainer;
+
+			Data(int descriptor, const std::vector<unsigned char>& buffer)
+			{
+				this->descriptor = descriptor;
+				this->buffer = buffer;
+				bufferContainer.base = reinterpret_cast<char*>(this->buffer.data());
+				bufferContainer.len = this->buffer.size();
+			}
+		};
+
+		auto data = new Data(descriptor, content);
+		data->context.data = data;
+		data->descriptor = descriptor;
+		data->callback = callback;
+
+		uv_fs_write(uv_default_loop(), &data->context, descriptor, &data->bufferContainer, 1, offset, [](uv_fs_t* request)
+		{
+			auto data = static_cast<Data*>(request->data);
+
+			if (data->callback)
+			{
+				FileResult result;
+				result.state = request->result < 0 ? State::Error : State::Done;
+				result.descriptor = data->descriptor;
+				data->callback(result);
+			}
+
+			uv_fs_req_cleanup(request);
+
+			delete data;
+		});
+	}
 }

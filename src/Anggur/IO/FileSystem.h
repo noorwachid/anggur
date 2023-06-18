@@ -48,4 +48,6 @@ namespace Anggur
 	 * The buffer will stay the same as limit only executed once
 	 */
 	void ReadPartialFileOnce(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr);
+
+	void WriteFile(int descriptor, size_t offset, std::vector<unsigned char> content, const FileCallback& callback = nullptr);
 }
