@@ -3,47 +3,41 @@
 #include "Anggur/Graphics/TextureSpecification.h"
 #include <vector>
 
-namespace Anggur
-{
-	class Texture2D
-	{
+namespace Anggur {
+	class Texture2D {
 	public:
 		Texture2D();
 		Texture2D(
 			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
-			SamplerFilter filter = SamplerFilter::Linear
+			SamplerFilter filter = SamplerFilter::linear
 		);
 
 		~Texture2D();
 
-		inline unsigned int GetID() const
-		{
+		inline unsigned int getID() const {
 			return id;
 		}
 
-		inline unsigned int GetWidth() const
-		{
+		inline unsigned int getWidth() const {
 			return width;
 		}
 
-		inline unsigned int GetHeight() const
-		{
+		inline unsigned int getHeight() const {
 			return height;
 		}
 
-		inline unsigned int GetChannels() const
-		{
+		inline unsigned int getChannels() const {
 			return channels;
 		}
 
-		void Read(
+		void read(
 			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
-			SamplerFilter filter = SamplerFilter::Linear
+			SamplerFilter filter = SamplerFilter::linear
 		);
 
-		void Close();
+		void close();
 
-		void Bind(unsigned int slot = 0);
+		void bind(unsigned int slot = 0);
 
 		friend bool operator==(const Texture2D& a, const Texture2D& b);
 		friend class FrameBuffer;

@@ -1,15 +1,13 @@
-#include <iostream>
+#include <chrono>
+#include <condition_variable>
 #include <functional>
+#include <iostream>
+#include <mutex>
 #include <queue>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <chrono>
 
-namespace Anggur
-{
-	class Worker 
-	{
+namespace Anggur {
+	class Worker {
 	public:
 		using Task = std::function<void()>;
 
@@ -17,7 +15,7 @@ namespace Anggur
 
 		~Worker();
 
-		void Add(Task task);
+		void add(Task task);
 
 	private:
 		std::vector<std::thread> threads;

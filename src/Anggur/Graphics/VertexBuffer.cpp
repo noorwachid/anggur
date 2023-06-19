@@ -1,107 +1,88 @@
 #include "Anggur/Graphics/VertexBuffer.h"
 #include "Anggur/Graphics/Function.h"
 
-namespace Anggur
-{
-	VertexBuffer::VertexBuffer()
-	{
+namespace Anggur {
+	VertexBuffer::VertexBuffer() {
 		glGenBuffers(1, &id);
-		Bind();
+		bind();
 	}
 
-	VertexBuffer::~VertexBuffer()
-	{
+	VertexBuffer::~VertexBuffer() {
 		glDeleteBuffers(1, &id);
 	}
 
-	void VertexBuffer::Bind()
-	{
+	void VertexBuffer::bind() {
 		glBindBuffer(GL_ARRAY_BUFFER, id);
 	}
 
-	void VertexBuffer::Unbind()
-	{
+	void VertexBuffer::unbind() {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void VertexBuffer::SetCapacity(size_t byteSize)
-	{
+	void VertexBuffer::setCapacity(size_t byteSize) {
 		glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void VertexBuffer::SetData(size_t byteSize, void* byteData)
-	{
+	void VertexBuffer::setData(size_t byteSize, void* byteData) {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	IndexBuffer::IndexBuffer()
-	{
+	IndexBuffer::IndexBuffer() {
 		glGenBuffers(1, &id);
-		Bind();
+		bind();
 	}
 
-	IndexBuffer::~IndexBuffer()
-	{
+	IndexBuffer::~IndexBuffer() {
 		glDeleteBuffers(1, &id);
 	}
 
-	void IndexBuffer::Bind()
-	{
+	void IndexBuffer::bind() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 
-	void IndexBuffer::Unbind()
-	{
+	void IndexBuffer::unbind() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void IndexBuffer::SetCapacity(size_t byteSize)
-	{
+	void IndexBuffer::setCapacity(size_t byteSize) {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void IndexBuffer::SetData(size_t byteSize, void* byteData)
-	{
+	void IndexBuffer::setData(size_t byteSize, void* byteData) {
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	size_t GetVertexDataTypeByteSize(VertexDataType type)
-	{
-		switch (type) 
-		{
-			case VertexDataType::Float:
+	size_t getVertexDataTypeByteSize(VertexDataType type) {
+		switch (type) {
+			case VertexDataType::float_:
 				return 4;
 		}
 	}
 
-	VertexArray::VertexArray()
-	{
+	VertexArray::VertexArray() {
 		glGenVertexArrays(1, &id);
-		Bind();
+		bind();
 	}
 
-	VertexArray::~VertexArray()
-	{
+	VertexArray::~VertexArray() {
 		glDeleteVertexArrays(1, &id);
 	}
 
-	void VertexArray::Bind()
-	{
+	void VertexArray::bind() {
 		glBindVertexArray(id);
 	}
 
-	void VertexArray::Unbind()
-	{
+	void VertexArray::unbind() {
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::SetAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset)
-	{
+	void VertexArray::setAttribute(
+		size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset
+	) {
 		int glType = 0;
 
-		switch (type) 
-		{
-			case VertexDataType::Float:
+		switch (type) {
+			case VertexDataType::float_:
 				glType = GL_FLOAT;
 				break;
 		}
@@ -110,24 +91,21 @@ namespace Anggur
 		glEnableVertexAttribArray(index);
 	}
 
-	void VertexArray::SetLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout)
-	{
+	void VertexArray::setLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout) {
 		stride = 0;
 
-		for (size_t i = 0; i < layout.size(); ++i) 
-		{
+		for (size_t i = 0; i < layout.size(); ++i) {
 			auto [type, size, name] = layout[i];
-			stride += size * GetVertexDataTypeByteSize(type);
+			stride += size * getVertexDataTypeByteSize(type);
 		}
 
 		size_t offset = 0;
 
-		for (size_t i = 0; i < layout.size(); ++i) 
-		{
+		for (size_t i = 0; i < layout.size(); ++i) {
 			auto [type, size, name] = layout[i];
-			size_t byteCount = size * GetVertexDataTypeByteSize(type);
+			size_t byteCount = size * getVertexDataTypeByteSize(type);
 
-			SetAttribute(i, size, type, stride, offset);
+			setAttribute(i, size, type, stride, offset);
 
 			offset += byteCount;
 		}

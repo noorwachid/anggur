@@ -2,10 +2,10 @@
 
 namespace Anggur
 {
-	void Scene::Initialize() {}
+	void Scene::initialize() {}
 
-	void Scene::Update(float deltaTime) {}
+	void Scene::update(float deltaTime) {}
 
-	void Scene::Draw() {}
+	void Scene::draw() {}
 }
 

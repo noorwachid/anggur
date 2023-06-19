@@ -2,17 +2,15 @@
 
 #include "Anggur/Core/Instrumentation.h"
 #include "Anggur/Core/Process.h"
+#include "Anggur/Graphics/Render/Renderer.h"
 #include "Anggur/OS/Clock.h"
 #include "Anggur/OS/Input.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/OS/WindowManager.h"
-#include "Anggur/Graphics/Render/Renderer.h"
 #include "Anggur/Studio/Scene.h"
 
-namespace Anggur
-{
-	class Application
-	{
+namespace Anggur {
+	class Application {
 	public:
 		WindowManager windowManager;
 		Window* window;
@@ -29,6 +27,6 @@ namespace Anggur
 
 		~Application();
 
-		void Run(Scene* scene, const std::vector<std::string>& arguments);
+		void run(Scene* scene, const std::vector<std::string>& arguments);
 	};
 }

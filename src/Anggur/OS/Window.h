@@ -5,59 +5,56 @@
 #include "Anggur/OS/WindowObserver.h"
 #include <functional>
 
-namespace Anggur
-{
-	using WindowContextLoader = std::function<bool (void*)>;
+namespace Anggur {
+	using WindowContextLoader = std::function<bool(void*)>;
 
-	class Window
-	{
+	class Window {
 	public:
-        Input input;
+		Input input;
 
 	public:
 		Window(const Vector2& size, const std::string& title, const WindowContextLoader& contextLoader);
 
 		~Window();
 
-		WindowContext* GetContext();
+		WindowContext* getContext();
 
-		float GetAspectRatio();
+		float getAspectRatio();
 
-		float GetScale();
+		float getScale();
 
-		const Vector2& GetPosition();
+		const Vector2& getPosition();
 
-		const Vector2& GetSize();
+		const Vector2& getSize();
 
-		const Vector2& GetFrameBufferSize();
+		const Vector2& getFrameBufferSize();
 
-		const std::string& GetTitle();
+		const std::string& getTitle();
 
-		void SetPosition(const Vector2& pos);
+		void setPosition(const Vector2& pos);
 
-		void SetSize(const Vector2& size);
+		void setSize(const Vector2& size);
 
-		void SetTitle(const std::string& title);
+		void setTitle(const std::string& title);
 
-		bool IsOpen();
+		bool isOpen();
 
-		void Close();
+		void close();
 
-		void Update();
+		void update();
 
-        void SetObserver(WindowObserver* observer)
-        {
-            this->observer = observer;
-        }
+		void setObserver(WindowObserver* observer) {
+			this->observer = observer;
+		}
 
 	private:
-		void InitializeGraphicsAPI();
+		void initializeGraphicsAPI();
 
-		void BindGraphicsAPI();
+		void bindGraphicsAPI();
 
-		void BindContext();
+		void bindGraphicsContext();
 
-		void SwapFrameBuffers();
+		void swapFrameBuffers();
 
 	private:
 		WindowContext* context;
@@ -67,7 +64,7 @@ namespace Anggur
 
 		Vector2 frameBufferSize;
 
-        WindowObserver* observer = nullptr;
+		WindowObserver* observer = nullptr;
 
 		friend class Input;
 	};

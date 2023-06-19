@@ -4,7 +4,7 @@ BasedOnStyle: Microsoft
 
 UseTab: Always
 
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Attach
 IndentWidth: 4
 AlignAfterOpenBracket: BlockIndent
 PointerAlignment: Left

@@ -1,69 +1,57 @@
 #include "Anggur/Core/Worker.h"
 
-namespace Anggur
-{
-	Worker::Worker(std::size_t numThreads) : stop(false) 
-	{
-        threads.reserve(numThreads);
+namespace Anggur {
+	Worker::Worker(std::size_t numThreads) : stop(false) {
+		threads.reserve(numThreads);
 
-        for (std::size_t i = 0; i < numThreads; ++i) 
-		{
-            threads.emplace_back([this] 
-			{
-                while (true) 
-				{
-                    Task task;
+		for (std::size_t i = 0; i < numThreads; ++i) {
+			threads.emplace_back([this] {
+				while (true) {
+					Task task;
 
-                    {
-                        std::unique_lock<std::mutex> lock(mutex);
-                        if (!stop && tasks.empty()) 
-						{
-                            condition.wait_for(lock, std::chrono::milliseconds(10));
-                        }
-
-                        if (stop && tasks.empty()) 
-						{
-                            return;
-                        }
-
-                        if (!tasks.empty()) 
-						{
-                            task = std::move(tasks.front());
-                            tasks.pop();
-                        }
-                    }
-
-                    if (task) 
 					{
-                        task();
-                    }
-                }
-            });
-        }
-    }
+						std::unique_lock<std::mutex> lock(mutex);
+						if (!stop && tasks.empty()) {
+							condition.wait_for(lock, std::chrono::milliseconds(10));
+						}
 
-    Worker::~Worker() 
-	{
-        {
-            std::lock_guard<std::mutex> lock(mutex);
-            stop = true;
-        }
+						if (stop && tasks.empty()) {
+							return;
+						}
 
-        condition.notify_all();
+						if (!tasks.empty()) {
+							task = std::move(tasks.front());
+							tasks.pop();
+						}
+					}
 
-        for (std::thread& thread : threads) 
+					if (task) {
+						task();
+					}
+				}
+			});
+		}
+	}
+
+	Worker::~Worker() {
 		{
-            thread.join();
-        }
-    }
+			std::lock_guard<std::mutex> lock(mutex);
+			stop = true;
+		}
 
-    void Worker::Add(Task task) 
-	{
-        {
-            std::lock_guard<std::mutex> lock(mutex);
-            tasks.push(std::move(task));
-        }
+		condition.notify_all();
 
-        condition.notify_one();
-    }
+		for (std::thread& thread : threads) {
+			thread.join();
+		}
+	}
+
+	void Worker::add(Task task) {
+		{
+			std::lock_guard<std::mutex> lock(mutex);
+			tasks.push(std::move(task));
+		}
+
+		condition.notify_one();
+	}
 }

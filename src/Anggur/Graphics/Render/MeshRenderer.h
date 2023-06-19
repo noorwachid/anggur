@@ -1,38 +1,46 @@
 #pragma once
 
+#include "Anggur/Graphics/Function.h"
+#include "Anggur/Graphics/Render/Font.h"
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture2D.h"
 #include "Anggur/Graphics/VertexBuffer.h"
-#include "Anggur/Graphics/Render/Font.h"
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
-#include "Anggur/Graphics/Function.h"
 
-namespace Anggur
-{
-	struct MeshVertex 
-	{
+namespace Anggur {
+	struct MeshVertex {
 		Vector2 position;
-		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 		float textureIndex;
 		Vector2 texturePosition;
 	};
 
-	class MeshRenderer
-	{
+	class MeshRenderer {
 	public:
-		MeshRenderer(); 
+		MeshRenderer();
 
-		void SetView(const Matrix3& newView);
+		void setView(const Matrix3& newView);
 
-		void AddTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2);
+		void addTriangle(
+			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
+			Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
+			const Vector2& texturePosition2
+		);
 
-		void AddQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3);
+		void addQuad(
+			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
+			const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
+			const Vector2& texturePosition2, const Vector2& texturePosition3
+		);
 
-		void AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize);
+		void addRectangle(
+			const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture,
+			const Vector2& texturePosition, const Vector2& textureSize
+		);
 
-		void Flush();
+		void flush();
 
 	private:
 		VertexArray vertexArray;
@@ -62,5 +70,3 @@ namespace Anggur
 		size_t batchIndexMultiplier = 2;
 	};
 }
-
-

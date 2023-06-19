@@ -2,10 +2,8 @@
 
 #include "Anggur/Math/Vector3.h"
 
-namespace Anggur
-{
-	struct Quaternion
-	{
+namespace Anggur {
+	struct Quaternion {
 		// Fields
 
 		float x;
@@ -23,30 +21,30 @@ namespace Anggur
 
 		// Getters
 
-		float GetLengthSquared() const;
+		float getLengthSquared() const;
 
-		float GetLength() const;
+		float getLength() const;
 
 		// Setters
 
-		void Set(float inX, float inY, float inZ, float inW);
+		void set(float inX, float inY, float inZ, float inW);
 
-		void Set(const Vector3& axis, float angle);
+		void set(const Vector3& axis, float angle);
 
 		// 1st class manipulations
 
-		void Conjugate();
+		void conjugate();
 
 		// 2nd class manipulations
 
-		static float Dot(const Quaternion& a, const Quaternion& b);
+		static float dot(const Quaternion& a, const Quaternion& b);
 
-		static Quaternion Normalize(const Quaternion& a);
+		static Quaternion normalize(const Quaternion& a);
 
-		static Quaternion Lerp(const Quaternion& a, const Quaternion& b, float amount);
+		static Quaternion lerp(const Quaternion& a, const Quaternion& b, float amount);
 
-		static Quaternion Slerp(const Quaternion& a, const Quaternion& b, float amount);
+		static Quaternion slerp(const Quaternion& a, const Quaternion& b, float amount);
 
-		static Quaternion Concatenate(const Quaternion& a, const Quaternion& b);
+		static Quaternion concatenate(const Quaternion& a, const Quaternion& b);
 	};
 }

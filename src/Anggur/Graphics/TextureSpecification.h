@@ -1,16 +1,13 @@
 #pragma once
 
-namespace Anggur
-{
-	enum class SamplerFilter
-	{
-		Nearest = 0x2600,
-		Linear = 0x2601
+namespace Anggur {
+	enum class SamplerFilter {
+		nearest,
+		linear
 	};
 
-	class TextureSpecification
-	{
+	class TextureSpecification {
 	public:
-		static int GetMaxSlot();
+		static int getMaxSlot();
 	};
 }

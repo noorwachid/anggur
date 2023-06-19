@@ -1,13 +1,11 @@
 #pragma once
 
-namespace Anggur
-{
-	enum class RunMode
-	{
-		Wait = 0,
-		WaitOnce,
-		NoWait,
+namespace Anggur {
+	enum class RunMode {
+		wait = 0,
+		waitOnce,
+		noWait,
 	};
 
-	bool Run(RunMode mode);
+	bool run(RunMode mode);
 }

@@ -2,24 +2,20 @@
 
 #include <chrono>
 
-namespace Anggur
-{
+namespace Anggur {
 	using ClockContext = std::chrono::high_resolution_clock;
 	using TimePoint = std::chrono::time_point<ClockContext>;
 
-	class Clock
-	{
+	class Clock {
 	public:
-		Clock()
-		{
+		Clock() {
 			started = ClockContext::now();
 		}
 
 		/**
 		 * Get elapsed time on call
 		 */
-		float GetElapsed() const
-		{
+		float getElapsedTime() const {
 			TimePoint current = ClockContext::now();
 			return std::chrono::duration_cast<std::chrono::milliseconds>(current - started).count() * 0.001;
 		}
@@ -27,9 +23,8 @@ namespace Anggur
 		/**
 		 * Get distance between previous tick
 		 */
-		float Tick()
-		{
-			float currentTime = GetElapsed();
+		float getDeltaTime() {
+			float currentTime = getElapsedTime();
 			float deltaTime = currentTime - previousTime;
 
 			previousTime = currentTime;

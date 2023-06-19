@@ -4,6 +4,10 @@
 > Do not use for serious project unless you know what are you doing.
 
 # Changelog
+2023/06/19
+- Add libuv for async IO management
+- Change naming confention from Unity to Swift
+
 2023/05/01
 - Join modules to single repository, because its faster to update (as as single person)
 

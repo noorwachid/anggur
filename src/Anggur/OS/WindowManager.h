@@ -1,9 +1,7 @@
 #pragma once
 
-namespace Anggur
-{
-	class WindowManager
-	{
+namespace Anggur {
+	class WindowManager {
 	public:
 		WindowManager();
 
@@ -12,6 +10,6 @@ namespace Anggur
 		/**
 		 * Poll event of each devices
 		 */
-		void PollEvents();
+		void pollEvents();
 	};
 }

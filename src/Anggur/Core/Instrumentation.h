@@ -1,17 +1,15 @@
 #pragma once
 
+#include <algorithm>
+#include <chrono>
+#include <fstream>
 #include <stack>
 #include <string>
-#include <chrono>
-#include <algorithm>
-#include <fstream>
 
 #include <thread>
 
-namespace Anggur::Instrumentation 
-{
-	struct Profile
-	{
+namespace Anggur::Instrumentation {
+	struct Profile {
 		uint32_t threadID;
 
 		std::string name;
@@ -20,19 +18,18 @@ namespace Anggur::Instrumentation
 		long long endTime;
 	};
 
-	struct Session
-	{
+	struct Session {
 	public:
 		Session(const std::string& name, const std::string& path);
 
 		~Session();
 
-		void WriteProfile(const Profile& result);
+		void writeProfile(const Profile& result);
 
 	private:
-		void WriteOpening();
+		void writeOpening();
 
-		void WriteClosing();
+		void writeClosing();
 
 	private:
 		std::string name;
@@ -43,27 +40,25 @@ namespace Anggur::Instrumentation
 		int profileCount = 0;
 	};
 
-	class Watcher
-	{
+	class Watcher {
 	private:
 		std::stack<Session> sessions;
 
 	public:
 		Watcher();
 
-		void BeginSession(const std::string& name, const std::string& filepath = "results.json");
+		void beginSession(const std::string& name, const std::string& filepath = "results.json");
 
-		void EndSession();
+		void endSession();
 
-		bool HasActiveSession();
+		bool hasActiveSession();
 
-		Session& GetActiveSession();
+		Session& getActiveSession();
 
-		static Watcher& GetInstance();
+		static Watcher& getInstance();
 	};
 
-	class Timer
-	{
+	class Timer {
 	public:
 		Timer(const char* name);
 
@@ -77,8 +72,8 @@ namespace Anggur::Instrumentation
 
 #if 0
 #define ANGGUR_INSTRUMENTATION_SESSION_BEGIN(name) Anggur::Instrumentation::Watcher::GetInstance().BeginSession(name)
-#define ANGGUR_INSTRUMENTATION_PROFILE(name) Anggur::Instrumentation::Timer timer ## __LINE__ (name)
-#define ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION Anggur::Instrumentation::Timer timer ## __LINE__ (__FUNCTION__)
+#define ANGGUR_INSTRUMENTATION_PROFILE(name) Anggur::Instrumentation::Timer timer##__LINE__(name)
+#define ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION Anggur::Instrumentation::Timer timer##__LINE__(__FUNCTION__)
 #define ANGGUR_INSTRUMENTATION_SESSION_END Anggur::Instrumentation::Watcher::GetInstance().EndSession()
 #else
 #define ANGGUR_INSTRUMENTATION_SESSION_BEGIN(name)

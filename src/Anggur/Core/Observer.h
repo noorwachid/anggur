@@ -2,16 +2,14 @@
 
 #include <string>
 
-namespace Anggur
-{
-	struct Event
-	{
+namespace Anggur {
+	struct Event {
 		bool used = false;
 	};
 
-	class Observer
-	{
+	class Observer {
 	public:
-		virtual void OnNotify(Event& event) {}
+		virtual void onNotify(Event& event) {
+		}
 	};
 }

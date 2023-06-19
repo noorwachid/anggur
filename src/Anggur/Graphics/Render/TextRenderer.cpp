@@ -1,40 +1,37 @@
 #include "Anggur/Graphics/Render/TextRenderer.h"
 
-namespace Anggur
-{
-	TextRenderer::TextRenderer() 
-	{
+namespace Anggur {
+	TextRenderer::TextRenderer() {
 		vertices.assign(batchVertex, TextVertex{});
 
 		indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-		textures.assign(TextureSpecification::GetMaxSlot(), nullptr);
-		textureIndices.reserve(TextureSpecification::GetMaxSlot());
+		textures.assign(TextureSpecification::getMaxSlot(), nullptr);
+		textureIndices.reserve(TextureSpecification::getMaxSlot());
 
-		for (size_t i = 0; i < TextureSpecification::GetMaxSlot(); ++i)
-		{
+		for (size_t i = 0; i < TextureSpecification::getMaxSlot(); ++i) {
 			textureIndices.push_back(i);
 		}
 
-		vertexArray.Bind();
-		vertexArray.SetLayout({ 
-			{ VertexDataType::Float, 2, "aPosition" },
-			{ VertexDataType::Float, 2, "aTexturePosition" },
-			{ VertexDataType::Float, 1, "aTextureIndex" },
-			{ VertexDataType::Float, 1, "aThickness" },
-			{ VertexDataType::Float, 1, "aSharpness" },
-			{ VertexDataType::Float, 1, "aScale" },
-			{ VertexDataType::Float, 4, "aColor" },
+		vertexArray.bind();
+		vertexArray.setLayout({
+			{VertexDataType::float_, 2, "aPosition"},
+			{VertexDataType::float_, 2, "aTexturePosition"},
+			{VertexDataType::float_, 1, "aTextureIndex"},
+			{VertexDataType::float_, 1, "aThickness"},
+			{VertexDataType::float_, 1, "aSharpness"},
+			{VertexDataType::float_, 1, "aScale"},
+			{VertexDataType::float_, 4, "aColor"},
 		});
 
-		vertexBuffer.Bind();
-		vertexBuffer.SetCapacity(vertexArray.GetStride() * vertices.size());
+		vertexBuffer.bind();
+		vertexBuffer.setCapacity(vertexArray.getStride() * vertices.size());
 
-		indexBuffer.Bind();
-		indexBuffer.SetCapacity(sizeof(unsigned int) * indices.size());
+		indexBuffer.bind();
+		indexBuffer.setCapacity(sizeof(unsigned int) * indices.size());
 
-		shader.Bind();
-		shader.SetVertexSource(R"(
+		shader.bind();
+		shader.setVertexSource(R"(
 			#version 330 core
 
 			layout (location = 0) in vec2 aPosition;
@@ -67,7 +64,8 @@ namespace Anggur
 				vColor = aColor;
 			}
 		)");
-		shader.SetFragmentSource(R"(
+		shader.setFragmentSource(
+			R"(
 			#version 330 core
 			
 			in vec2 vTexturePosition;
@@ -79,7 +77,8 @@ namespace Anggur
 
 			out vec4 fColor;
 
-			uniform sampler2D uTextures[)" + std::to_string(TextureSpecification::GetMaxSlot()) + R"(];
+			uniform sampler2D uTextures[)" +
+			std::to_string(TextureSpecification::getMaxSlot()) + R"(];
 
 			void main() 
 			{
@@ -97,32 +96,32 @@ namespace Anggur
 					discard;
 				}
 			}
-		)");
-		shader.Compile();
+		)"
+		);
+		shader.compile();
 	}
 
-	void TextRenderer::SetView(const Matrix3& newView)
-	{
+	void TextRenderer::setView(const Matrix3& newView) {
 		view = newView;
 	}
 
-	void TextRenderer::Add(const Vector2& position, unsigned int codepoint, Font* font, float size, float thickness, float sharpness, const Vector4& color)
-	{
-		if (!font) return;
+	void TextRenderer::add(
+		const Vector2& position, unsigned int codepoint, Font* font, float size, float thickness, float sharpness,
+		const Vector4& color
+	) {
+		if (!font)
+			return;
 
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
-		if (codepoint == ' ' || codepoint == '\n')
-		{
+		if (codepoint == ' ' || codepoint == '\n') {
 			return;
 		}
 
-		if (font->glyphMap.count(codepoint) == 0)
-		{
-			if (!font->Generate(codepoint))
-			{
+		if (font->glyphMap.count(codepoint) == 0) {
+			if (!font->generate(codepoint)) {
 				codepoint = 0xFFFD; // RC
 			}
 		}
@@ -134,12 +133,18 @@ namespace Anggur
 
 		// sharpness = 1.0f / font->sampleSize * size * 0.1;
 
-		AddCharacter(pointer + position + localPosition, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+		addCharacter(
+			pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
+			font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+		);
 	}
 
-	void TextRenderer::Add(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
-	{
-		if (!font) return;
+	void TextRenderer::add(
+		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
+		const Vector4& color
+	) {
+		if (!font)
+			return;
 
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
@@ -147,28 +152,23 @@ namespace Anggur
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();)
-		{
-			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();) {
+			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ')
-			{
-				pointer.x += size * font->GetSpaceWidth();
+			if (codepoint == ' ') {
+				pointer.x += size * font->getSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n')
-			{
+			if (codepoint == '\n') {
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0)
-			{
-				if (!font->Generate(codepoint))
-				{
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
 					codepoint = 0xFFFD; // RC
 				}
 			}
@@ -178,21 +178,26 @@ namespace Anggur
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (startOfLine)
-			{
+			if (startOfLine) {
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			AddCharacter(position + localPosition + pointer, localSize, thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			addCharacter(
+				position + localPosition + pointer, localSize, thickness, sharpness, 1, color,
+				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+			);
 
-			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, Text::UTF8::collapse(content, i)));
 		}
 	}
 
-	Vector2 TextRenderer::Measure(const std::string& content, Font* font, float size, float thickness, float sharpness)
-	{
-		if (!font) return Vector2(0, 0);
+	Vector2 TextRenderer::measure(
+		const std::string& content, Font* font, float size, float thickness, float sharpness
+	) {
+		if (!font)
+			return Vector2(0, 0);
 
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
@@ -202,28 +207,23 @@ namespace Anggur
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();)
-		{
-			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();) {
+			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ')
-			{
-				pointer.x += size * font->GetSpaceWidth();
+			if (codepoint == ' ') {
+				pointer.x += size * font->getSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n')
-			{
+			if (codepoint == '\n') {
 				startOfLine = true;
-				maxX = Math::Max(pointer.x, maxX);
+				maxX = Math::max(pointer.x, maxX);
 				pointer.x = 0;
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0)
-			{
-				if (!font->Generate(codepoint))
-				{
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
 					codepoint = 0xFFFD; // RC
 				}
 			}
@@ -233,24 +233,27 @@ namespace Anggur
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (startOfLine)
-			{
+			if (startOfLine) {
 				startOfLine = false;
 				localPosition.x = 0;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
 			}
 
-			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, Text::UTF8::collapse(content, i)));
 		}
 
-		pointer.x = Math::Max(pointer.x, maxX);
+		pointer.x = Math::max(pointer.x, maxX);
 
 		return pointer;
 	}
 
-	void TextRenderer::AddLine(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector4& color)
-	{
-		if (!font) return;
+	void TextRenderer::addLine(
+		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
+		const Vector4& color
+	) {
+		if (!font)
+			return;
 
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
@@ -258,20 +261,16 @@ namespace Anggur
 
 		bool startOfLine = true;
 
-		for (size_t index = 0; index < content.size();)
-		{
-			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, index);
+		for (size_t index = 0; index < content.size();) {
+			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, index);
 
-			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
-			{
-				pointer.x += size * font->GetSpaceWidth();
+			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n') {
+				pointer.x += size * font->getSpaceWidth();
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0)
-			{
-				if (!font->Generate(codepoint))
-				{
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
 					codepoint = 0xFFFD; // RC
 				}
 			}
@@ -281,26 +280,34 @@ namespace Anggur
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (startOfLine)
-			{
+			if (startOfLine) {
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			addCharacter(
+				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
+				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+			);
 
-			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, index)));
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, Text::UTF8::collapse(content, index)));
 		}
 	}
 
-	void TextRenderer::AddLineCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
-	{
-		AddPartialLineCut(position, content, 0, font, size, thickness, sharpness, limit, color);
+	void TextRenderer::addLineCut(
+		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
+		float limit, const Vector4& color
+	) {
+		addPartialLineCut(position, content, 0, font, size, thickness, sharpness, limit, color);
 	}
 
-	void TextRenderer::AddPartialLineCut(const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
-	{
-		if (!font) return;
+	void TextRenderer::addPartialLineCut(
+		const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size,
+		float thickness, float sharpness, float limit, const Vector4& color
+	) {
+		if (!font)
+			return;
 
 		FontGlyph ellipsisGlyph = font->glyphMap[0x2026];
 		Vector2 ellipsisLocalPosition = size * ellipsisGlyph.position;
@@ -312,20 +319,16 @@ namespace Anggur
 
 		bool startOfLine = true;
 
-		for (size_t index = contentOffset; index < content.size();)
-		{
-			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, index);
+		for (size_t index = contentOffset; index < content.size();) {
+			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, index);
 
-			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
-			{
-				pointer.x += size * font->GetSpaceWidth();
+			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n') {
+				pointer.x += size * font->getSpaceWidth();
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0)
-			{
-				if (!font->Generate(codepoint))
-				{
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
 					codepoint = 0xFFFD; // RC
 				}
 			}
@@ -335,33 +338,44 @@ namespace Anggur
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			float ellipsisKerning = size * font->GetKerning(codepoint, 0x2026);
+			float ellipsisKerning = size * font->getKerning(codepoint, 0x2026);
 
-			if (pointer.x + localPosition.x + localSize.x + ellipsisLocalPosition.x + ellipsisLocalSize.x + ellipsisKerning > limit)
-			{
-				// AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			if (pointer.x + localPosition.x + localSize.x + ellipsisLocalPosition.x + ellipsisLocalSize.x +
+					ellipsisKerning >
+				limit) {
+				// AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color,
+				// font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 				//
 				// pointer.x += localPosition.x + localSize.x - (padding * 2) + ellipsisKerning;
 
-				AddCharacter(pointer + position + ellipsisLocalPosition, ellipsisLocalSize , thickness, sharpness, 1, color, font->textures[ellipsisGlyph.textureIndex], ellipsisGlyph.texturePosition, ellipsisGlyph.textureSize);
+				addCharacter(
+					pointer + position + ellipsisLocalPosition, ellipsisLocalSize, thickness, sharpness, 1, color,
+					font->textures[ellipsisGlyph.textureIndex], ellipsisGlyph.texturePosition, ellipsisGlyph.textureSize
+				);
 				break;
 			}
 
-			if (startOfLine)
-			{
+			if (startOfLine) {
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			addCharacter(
+				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
+				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+			);
 
-			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, index)));
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, Text::UTF8::collapse(content, index)));
 		}
 	}
 
-	void TextRenderer::AddFlow(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, float limit, const Vector4& color)
-	{
-		if (!font) return;
+	void TextRenderer::addFlow(
+		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
+		float limit, const Vector4& color
+	) {
+		if (!font)
+			return;
 
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
@@ -369,28 +383,23 @@ namespace Anggur
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();)
-		{
-			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();) {
+			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ')
-			{
-				pointer.x += size * font->GetSpaceWidth();
+			if (codepoint == ' ') {
+				pointer.x += size * font->getSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n')
-			{
+			if (codepoint == '\n') {
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0)
-			{
-				if (!font->Generate(codepoint))
-				{
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
 					codepoint = 0xFFFD; // RC
 				}
 			}
@@ -400,28 +409,33 @@ namespace Anggur
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (pointer.x + localPosition.x + localSize.x > limit)
-			{
+			if (pointer.x + localPosition.x + localSize.x > limit) {
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
 			}
 
-			if (startOfLine)
-			{
+			if (startOfLine) {
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			addCharacter(
+				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
+				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+			);
 
-			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, Text::UTF8::collapse(content, i)));
 		}
 	}
 
-	void TextRenderer::AddFlowCut(const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness, const Vector2& limit, const Vector4& color)
-	{
-		if (!font) return;
+	void TextRenderer::addFlowCut(
+		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
+		const Vector2& limit, const Vector4& color
+	) {
+		if (!font)
+			return;
 
 		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
 
@@ -429,28 +443,23 @@ namespace Anggur
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();)
-		{
-			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();) {
+			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ')
-			{
-				pointer.x += size * font->GetSpaceWidth();
+			if (codepoint == ' ') {
+				pointer.x += size * font->getSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n')
-			{
+			if (codepoint == '\n') {
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0)
-			{
-				if (!font->Generate(codepoint))
-				{
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
 					codepoint = 0xFFFD; // RC
 				}
 			}
@@ -460,20 +469,19 @@ namespace Anggur
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (pointer.x + localPosition.x + localSize.x > limit.x)
-			{
+			if (pointer.x + localPosition.x + localSize.x > limit.x) {
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
 			}
 
-			if (startOfLine)
-			{
-				float lineHeight = size * (font->GetLineHeight() + font->GetLineGap());
+			if (startOfLine) {
+				float lineHeight = size * (font->getLineHeight() + font->getLineGap());
 
-				if (pointer.y + (2.0f * lineHeight) > limit.y)
-				{
-					AddPartialLineCut(position + pointer + padding, content, i, font, size, thickness, sharpness, limit.x, color);
+				if (pointer.y + (2.0f * lineHeight) > limit.y) {
+					addPartialLineCut(
+						position + pointer + padding, content, i, font, size, thickness, sharpness, limit.x, color
+					);
 					break;
 				}
 
@@ -481,23 +489,29 @@ namespace Anggur
 				localPosition.x = 0;
 			}
 
-			AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color, font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
+			addCharacter(
+				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
+				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+			);
 
-			pointer.x += localPosition.x + localSize.x - (padding * 2) + (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, Text::UTF8::collapse(content, i)));
 		}
 	}
 
-	void TextRenderer::AddCharacter(const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
-	{
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size() || textureOffset + 1 > textures.size())
-		{
-			Flush();
+	void TextRenderer::addCharacter(
+		const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale,
+		const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize
+	) {
+		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size() ||
+			textureOffset + 1 > textures.size()) {
+			flush();
 		}
 
-		vertices[vertexOffset + 0].position.Set(position.x,          position.y);
-		vertices[vertexOffset + 1].position.Set(position.x + size.x, position.y);
-		vertices[vertexOffset + 2].position.Set(position.x + size.x, position.y + size.y);
-		vertices[vertexOffset + 3].position.Set(position.x,          position.y + size.y);
+		vertices[vertexOffset + 0].position.set(position.x, position.y);
+		vertices[vertexOffset + 1].position.set(position.x + size.x, position.y);
+		vertices[vertexOffset + 2].position.set(position.x + size.x, position.y + size.y);
+		vertices[vertexOffset + 3].position.set(position.x, position.y + size.y);
 
 		vertices[vertexOffset + 0].thickness = thickness;
 		vertices[vertexOffset + 1].thickness = thickness;
@@ -521,14 +535,11 @@ namespace Anggur
 
 		size_t textureIndex = 0;
 
-		if (textureIndexMap.count(texture->GetID())) 
-		{
-			textureIndex = textureIndexMap[texture->GetID()];
-		}
-		else
-		{
+		if (textureIndexMap.count(texture->getID())) {
+			textureIndex = textureIndexMap[texture->getID()];
+		} else {
 			textureIndex = textureOffset;
-			textureIndexMap[texture->GetID()] = textureIndex;
+			textureIndexMap[texture->getID()] = textureIndex;
 			textures[textureIndex] = texture;
 
 			++textureOffset;
@@ -539,16 +550,18 @@ namespace Anggur
 		vertices[vertexOffset + 2].textureIndex = textureIndex;
 		vertices[vertexOffset + 3].textureIndex = textureIndex;
 
-		vertices[vertexOffset + 0].texturePosition.Set(texturePosition.x,                 texturePosition.y);
-		vertices[vertexOffset + 1].texturePosition.Set(texturePosition.x + textureSize.x, texturePosition.y);
-		vertices[vertexOffset + 2].texturePosition.Set(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y);
-		vertices[vertexOffset + 3].texturePosition.Set(texturePosition.x,                 texturePosition.y + textureSize.y);
+		vertices[vertexOffset + 0].texturePosition.set(texturePosition.x, texturePosition.y);
+		vertices[vertexOffset + 1].texturePosition.set(texturePosition.x + textureSize.x, texturePosition.y);
+		vertices[vertexOffset + 2].texturePosition.set(
+			texturePosition.x + textureSize.x, texturePosition.y + textureSize.y
+		);
+		vertices[vertexOffset + 3].texturePosition.set(texturePosition.x, texturePosition.y + textureSize.y);
 
 		indices[indexOffset + 0] = vertexOffset + 0;
-		indices[indexOffset + 1] = vertexOffset + 1; 
-		indices[indexOffset + 2] = vertexOffset + 2; 
-		indices[indexOffset + 3] = vertexOffset + 2; 
-		indices[indexOffset + 4] = vertexOffset + 3; 
+		indices[indexOffset + 1] = vertexOffset + 1;
+		indices[indexOffset + 2] = vertexOffset + 2;
+		indices[indexOffset + 3] = vertexOffset + 2;
+		indices[indexOffset + 4] = vertexOffset + 3;
 		indices[indexOffset + 5] = vertexOffset + 0;
 
 		vertexOffset += 4;
@@ -556,26 +569,25 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void TextRenderer::Flush()
-	{
+	void TextRenderer::flush() {
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)
 			return;
 
 		for (size_t textureIndex = 0; textureIndex < textureOffset; ++textureIndex)
-			textures[textureIndex]->Bind(textureIndex);
+			textures[textureIndex]->bind(textureIndex);
 
-		shader.Bind();
-		shader.SetUniformMatrix3("uView", view);
-		shader.SetUniformInt("uTextures", textureOffset, textureIndices.data());
+		shader.bind();
+		shader.setUniformMatrix3("uView", view);
+		shader.setUniformInt("uTextures", textureOffset, textureIndices.data());
 
-		vertexArray.Bind();
+		vertexArray.bind();
 
-		vertexBuffer.Bind();
-		vertexBuffer.SetData(vertexArray.GetStride() * vertexOffset, vertices.data());
+		vertexBuffer.bind();
+		vertexBuffer.setData(vertexArray.getStride() * vertexOffset, vertices.data());
 
-		indexBuffer.Bind();
-		indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
+		indexBuffer.bind();
+		indexBuffer.setData(sizeof(unsigned int) * indexOffset, indices.data());
 
 		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
@@ -586,6 +598,3 @@ namespace Anggur
 		textureIndexMap.clear();
 	}
 }
-
-
-

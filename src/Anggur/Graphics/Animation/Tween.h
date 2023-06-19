@@ -4,76 +4,66 @@
 #include "Anggur/Math/Math.h"
 #include <functional>
 
-namespace Anggur
-{
+namespace Anggur {
 	using TweenCallback = std::function<void()>;
 
 	template <typename T>
-	class Tween
-	{
+	class Tween {
 	public:
-		void SetFunction(AnimationFunction function)
-		{
+		void setFunction(AnimationFunction function) {
 			this->function = function;
 		}
 
-		void SetCallback(const TweenCallback& callback)
-		{
+		void setCallback(const TweenCallback& callback) {
 			this->callback = callback;
 		}
 
-		void SetDuration(float time)
-		{
+		void setDuration(float time) {
 			durationTime = time;
 		}
 
-		void SetFrom(const T& from)
-		{
+		void setFrom(const T& from) {
 			this->from = from;
 		}
 
-		void SetTo(const T& to)
-		{
+		void setTo(const T& to) {
 			this->inBetween = to;
 			this->to = to;
-			
-			if (callback) callback();
+
+			if (callback)
+				callback();
 		}
 
-		const T& GetInBetween() const
-		{
+		const T& get() const {
 			return this->inBetween;
 		}
 
-		void Reset()
-		{
+		void reset() {
 			elapsedTime = 0.0f;
 		}
 
-		void Interupt(const T& to)
-		{
-			Reset();
+		void interupt(const T& to) {
+			reset();
 
 			this->from = inBetween;
 			this->to = to;
 		}
 
-		void Update(float deltaTime)
-		{
-			if (elapsedTime > durationTime || function == nullptr)
-			{
+		void update(float deltaTime) {
+			if (elapsedTime > durationTime || function == nullptr) {
 				inBetween = to;
 
-				if (callback) callback();
+				if (callback)
+					callback();
 
 				return;
 			}
 
 			elapsedTime += deltaTime;
 
-			inBetween = Math::Lerp(from, to, function(elapsedTime / durationTime));
+			inBetween = Math::lerp(from, to, function(elapsedTime / durationTime));
 		}
-	
+
 	private:
 		T from;
 		T to;
@@ -82,7 +72,7 @@ namespace Anggur
 		float durationTime = 1.0f;
 		float elapsedTime = 0.0f;
 
-		AnimationFunction function = Linear;
+		AnimationFunction function = linear;
 		TweenCallback callback = nullptr;
 	};
 }

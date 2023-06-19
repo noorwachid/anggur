@@ -1,17 +1,13 @@
 #pragma once
 
-namespace Anggur
-{
-	enum class State
-	{
-		Error,
-		InProgress,
-		Done,
+namespace Anggur {
+	enum class State {
+		failed,
+		inProgress,
+		done,
 	};
 
-	struct Result
-	{
+	struct Result {
 		State state;
 	};
 }
-

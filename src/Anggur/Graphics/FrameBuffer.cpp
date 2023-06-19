@@ -2,43 +2,35 @@
 #include "Anggur/Graphics/Function.h"
 #include <cassert>
 
-namespace Anggur
-{
-	FrameBuffer::FrameBuffer()
-	{
+namespace Anggur {
+	FrameBuffer::FrameBuffer() {
 		Initialize();
 	}
 
-	FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
-	{
+	FrameBuffer::FrameBuffer(unsigned int width, unsigned int height) {
 		Initialize();
-		Recreate(width, height);
+		recreate(width, height);
 	}
 
-	FrameBuffer::~FrameBuffer()
-	{
+	FrameBuffer::~FrameBuffer() {
 		glDeleteFramebuffers(1, &id);
 		glDeleteTextures(1, &colorAttachment);
 
-		if (texture)
-		{
+		if (texture) {
 			delete texture;
 			texture = nullptr;
 		}
 	}
 
-	void FrameBuffer::Initialize()
-	{
+	void FrameBuffer::Initialize() {
 		texture = new Texture2D();
 	}
 
-	void FrameBuffer::Recreate(unsigned int width, unsigned int height)
-	{
+	void FrameBuffer::recreate(unsigned int width, unsigned int height) {
 		this->width = width;
 		this->height = height;
 
-		if (id)
-		{
+		if (id) {
 			glDeleteFramebuffers(1, &id);
 			glDeleteTextures(1, &colorAttachment);
 		}
@@ -66,13 +58,11 @@ namespace Anggur
 		texture->height = height;
 	}
 
-	void FrameBuffer::Bind()
-	{
+	void FrameBuffer::bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 	}
 
-	void FrameBuffer::Unbind()
-	{
+	void FrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }

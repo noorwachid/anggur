@@ -3,43 +3,36 @@
 #include "Anggur/Graphics/Texture2D.h"
 #include <memory>
 
-namespace Anggur
-{
-	class FrameBuffer
-	{
+namespace Anggur {
+	class FrameBuffer {
 	public:
 		FrameBuffer();
 		FrameBuffer(unsigned int width, unsigned int height);
 
 		~FrameBuffer();
 
-		inline unsigned int GetID() const
-		{
+		inline unsigned int getID() const {
 			return id;
 		}
 
-		inline unsigned int GetColorAttachment() const
-		{
+		inline unsigned int getColorAttachment() const {
 			return colorAttachment;
 		}
 
-		inline unsigned int GetWidth() const
-		{
+		inline unsigned int getWidth() const {
 			return width;
 		}
 
-		inline unsigned int GetHeight() const
-		{
+		inline unsigned int getHeight() const {
 			return height;
 		}
 
-		void Bind();
-		void Unbind();
+		void bind();
+		void unbind();
 
-		void Recreate(unsigned int width, unsigned int height);
+		void recreate(unsigned int width, unsigned int height);
 
-		Texture2D* GetTexture()
-		{
+		Texture2D* getTexture() {
 			return texture;
 		};
 

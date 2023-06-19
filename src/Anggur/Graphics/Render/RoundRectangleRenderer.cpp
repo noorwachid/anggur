@@ -1,32 +1,30 @@
 #include "Anggur/Graphics/Render/RoundRectangleRenderer.h"
 
-namespace Anggur
-{
-	RoundRectangleRenderer::RoundRectangleRenderer() 
-	{
+namespace Anggur {
+	RoundRectangleRenderer::RoundRectangleRenderer() {
 		vertices.assign(batchVertex, RRVertex{});
 
 		indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-		vertexArray.Bind();
-		vertexArray.SetLayout({ 
-			{ VertexDataType::Float, 2, "aPosition" },
-			{ VertexDataType::Float, 2, "aSize" },
-			{ VertexDataType::Float, 2, "aQuadrant" },
-			{ VertexDataType::Float, 1, "aRadius" },
-			{ VertexDataType::Float, 1, "aThickness" },
-			{ VertexDataType::Float, 1, "aSharpness" },
-			{ VertexDataType::Float, 4, "aColor" },
+		vertexArray.bind();
+		vertexArray.setLayout({
+			{VertexDataType::float_, 2, "aPosition"},
+			{VertexDataType::float_, 2, "aSize"},
+			{VertexDataType::float_, 2, "aQuadrant"},
+			{VertexDataType::float_, 1, "aRadius"},
+			{VertexDataType::float_, 1, "aThickness"},
+			{VertexDataType::float_, 1, "aSharpness"},
+			{VertexDataType::float_, 4, "aColor"},
 		});
 
-		vertexBuffer.Bind();
-		vertexBuffer.SetCapacity(vertexArray.GetStride() * vertices.size());
+		vertexBuffer.bind();
+		vertexBuffer.setCapacity(vertexArray.getStride() * vertices.size());
 
-		indexBuffer.Bind();
-		indexBuffer.SetCapacity(sizeof(unsigned int) * indices.size());
+		indexBuffer.bind();
+		indexBuffer.setCapacity(sizeof(unsigned int) * indices.size());
 
-		shader.Bind();
-		shader.SetVertexSource(R"(
+		shader.bind();
+		shader.setVertexSource(R"(
 			#version 330 core
 
 			layout (location = 0) in vec2 aPosition;
@@ -59,7 +57,7 @@ namespace Anggur
 				vColor = aColor;
 			}
 		)");
-		shader.SetFragmentSource(R"(
+		shader.setFragmentSource(R"(
 			#version 330 core
 			
 			in vec2 vSize;
@@ -106,40 +104,40 @@ namespace Anggur
 				}
 			}
 		)");
-		shader.Compile();
+		shader.compile();
 	}
 
-	void RoundRectangleRenderer::SetView(const Matrix3& newView)
-	{
+	void RoundRectangleRenderer::setView(const Matrix3& newView) {
 		view = newView;
 	}
 
-	void RoundRectangleRenderer::Add(const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness, const Vector4& color)
-	{
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size())
-		{
-			Flush();
+	void RoundRectangleRenderer::add(
+		const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness,
+		const Vector4& color
+	) {
+		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size()) {
+			flush();
 		}
 
 		float doubleSharpness = 2.0f * sharpness;
-		float inverseMax = 1.0f / (Math::Max(size.x, size.y) + doubleSharpness);
+		float inverseMax = 1.0f / (Math::max(size.x, size.y) + doubleSharpness);
 		float xAxis = inverseMax * (size.x + doubleSharpness);
 		float yAxis = inverseMax * (size.y + doubleSharpness);
 
-		vertices[vertexOffset + 0].position = Vector2(position.x - sharpness,          position.y - sharpness);
+		vertices[vertexOffset + 0].position = Vector2(position.x - sharpness, position.y - sharpness);
 		vertices[vertexOffset + 1].position = Vector2(position.x + size.x + sharpness, position.y - sharpness);
 		vertices[vertexOffset + 2].position = Vector2(position.x + size.x + sharpness, position.y + size.y + sharpness);
-		vertices[vertexOffset + 3].position = Vector2(position.x - sharpness,          position.y + size.y + sharpness);
+		vertices[vertexOffset + 3].position = Vector2(position.x - sharpness, position.y + size.y + sharpness);
 
 		vertices[vertexOffset + 0].size = size;
 		vertices[vertexOffset + 1].size = size;
 		vertices[vertexOffset + 2].size = size;
 		vertices[vertexOffset + 3].size = size;
 
-		vertices[vertexOffset + 0].quadrant.Set(-xAxis, -yAxis);
-		vertices[vertexOffset + 1].quadrant.Set(+xAxis, -yAxis);
-		vertices[vertexOffset + 2].quadrant.Set(+xAxis, +yAxis);
-		vertices[vertexOffset + 3].quadrant.Set(-xAxis, +yAxis);
+		vertices[vertexOffset + 0].quadrant.set(-xAxis, -yAxis);
+		vertices[vertexOffset + 1].quadrant.set(+xAxis, -yAxis);
+		vertices[vertexOffset + 2].quadrant.set(+xAxis, +yAxis);
+		vertices[vertexOffset + 3].quadrant.set(-xAxis, +yAxis);
 
 		vertices[vertexOffset + 0].radius = radius;
 		vertices[vertexOffset + 1].radius = radius;
@@ -162,10 +160,10 @@ namespace Anggur
 		vertices[vertexOffset + 3].color = color;
 
 		indices[indexOffset + 0] = vertexOffset + 0;
-		indices[indexOffset + 1] = vertexOffset + 1; 
-		indices[indexOffset + 2] = vertexOffset + 2; 
-		indices[indexOffset + 3] = vertexOffset + 2; 
-		indices[indexOffset + 4] = vertexOffset + 3; 
+		indices[indexOffset + 1] = vertexOffset + 1;
+		indices[indexOffset + 2] = vertexOffset + 2;
+		indices[indexOffset + 3] = vertexOffset + 2;
+		indices[indexOffset + 4] = vertexOffset + 3;
 		indices[indexOffset + 5] = vertexOffset + 0;
 
 		vertexOffset += 4;
@@ -173,22 +171,21 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void RoundRectangleRenderer::Flush()
-	{
+	void RoundRectangleRenderer::flush() {
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)
 			return;
 
-		shader.Bind();
-		shader.SetUniformMatrix3("uView", view);
+		shader.bind();
+		shader.setUniformMatrix3("uView", view);
 
-		vertexArray.Bind();
+		vertexArray.bind();
 
-		vertexBuffer.Bind();
-		vertexBuffer.SetData(sizeof(RoundRectangleRenderer) * vertexOffset, vertices.data());
+		vertexBuffer.bind();
+		vertexBuffer.setData(sizeof(RoundRectangleRenderer) * vertexOffset, vertices.data());
 
-		indexBuffer.Bind();
-		indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
+		indexBuffer.bind();
+		indexBuffer.setData(sizeof(unsigned int) * indexOffset, indices.data());
 
 		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
@@ -196,5 +193,3 @@ namespace Anggur
 		indexOffset = 0;
 	}
 }
-
-

@@ -4,39 +4,36 @@
 #include "Anggur/OS/WindowContext.h"
 #include <array>
 
-namespace Anggur
-{
+namespace Anggur {
 	class Window;
 
 	// Common Devices
 	//
-	enum class MouseShape
-	{
-		Arrow = 0x1,
-		I = 0x2,
-		Crosshair = 0x3,
-		Hand = 0x4,
-		HorizontalResize = 0x5,
-		VerticalResize = 0x6,
+	enum class MouseShape {
+		arrow = 0x1,
+		iBeam = 0x2,
+		crosshair = 0x3,
+		hand = 0x4,
+		hResize = 0x5,
+		vResize = 0x6,
 	};
 
-	class Input
-	{
+	class Input {
 	public:
-		void Initialize(WindowContext* context);
+		void initialize(WindowContext* context);
 
-		bool IsKeyboardPressed(Key key) const;
+		bool isKeyPressed(Key key) const;
 
-		bool IsKeyboardHeld(Key key) const;
+		bool isKeyHeld(Key key) const;
 
-		bool IsKeyboardReleased(Key key) const;
+		bool isKeyReleased(Key key) const;
 
-		const Vector2& GetMousePointer() const;
+		const Vector2& getMousePointer() const;
 
 	private:
-		void SetKeyCallbacks();
+		void setKeyCallbacks();
 
-		void SetMouseCallbacks();
+		void setMouseCallbacks();
 
 	private:
 		Vector2 mousePointer;

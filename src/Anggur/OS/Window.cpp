@@ -1,12 +1,11 @@
+#include "Anggur/OS/Window.h"
 #include "Anggur/Core/Instrumentation.h"
 #include "Anggur/OS/Internal.h"
-#include "Anggur/OS/Window.h"
 #include <cassert>
 
-namespace Anggur
-{
-	Window::Window(const Vector2& newSize, const std::string& newTitle, const WindowContextLoader& contextLoader) : size(newSize), title(newTitle)
-	{
+namespace Anggur {
+	Window::Window(const Vector2& newSize, const std::string& newTitle, const WindowContextLoader& contextLoader)
+		: size(newSize), title(newTitle) {
 #ifdef ANGGUR_OS_X
 		glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, 0);
 #endif
@@ -24,158 +23,129 @@ namespace Anggur
 		context = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
 		assert(context && "[Window] Failed to create a window");
 
-		BindContext();
+		bindGraphicsContext();
 
 		glfwSwapInterval(1);
 
-		BindGraphicsAPI();
+		bindGraphicsAPI();
 
 		assert(contextLoader && "Context loader is empty");
-		bool contextLoaded = contextLoader((void*) glfwGetProcAddress);
+		bool contextLoaded = contextLoader((void*)glfwGetProcAddress);
 		assert(contextLoaded && "Context is failed to load");
 
-		glfwSetWindowSizeCallback(
-			context,
-			[](GLFWwindow* context, int width, int height)
-			{
-				auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-				Vector2 size(width, height);
-				WindowResizedEvent event;
-				event.size = size;
+		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+			Vector2 size(width, height);
+			WindowResizedEvent event;
+			event.size = size;
 
-				if (window->observer)
-					window->observer->OnWindowResize(event);
-				
-				window->size = size;
-			}
-		);
+			if (window->observer)
+				window->observer->onWindowResize(event);
 
-		glfwSetFramebufferSizeCallback(
-			context,
-			[](GLFWwindow* context, int width, int height)
-			{
-				auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-				Vector2 size(width, height);
-				WindowResizedEvent event;
-				event.size = size;
-				
-				window->frameBufferSize = size;
-			}
-		);
+			window->size = size;
+		});
 
-		glfwSetWindowPosCallback(
-			context,
-			[](GLFWwindow* context, int x, int y)
-			{
-				auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-				Vector2 position(x, y);
-				WindowMovedEvent event;
-				event.position = position;
+		glfwSetFramebufferSizeCallback(context, [](GLFWwindow* context, int width, int height) {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+			Vector2 size(width, height);
+			WindowResizedEvent event;
+			event.size = size;
 
-				if (window->observer)
-					window->observer->OnWindowMove(event);
-				
-				window->position = position;
-			}
-		);
+			window->frameBufferSize = size;
+		});
+
+		glfwSetWindowPosCallback(context, [](GLFWwindow* context, int x, int y) {
+			auto window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+			Vector2 position(x, y);
+			WindowMovedEvent event;
+			event.position = position;
+
+			if (window->observer)
+				window->observer->onWindowMove(event);
+
+			window->position = position;
+		});
 
 		int fbx, fby;
 		glfwGetFramebufferSize(context, &fbx, &fby);
-		frameBufferSize.Set(fbx, fby);
+		frameBufferSize.set(fbx, fby);
 
-		input.Initialize(context);
+		input.initialize(context);
 	}
 
-	Window::~Window()
-	{
+	Window::~Window() {
 		glfwDestroyWindow(context);
 	}
 
-	WindowContext* Window::GetContext()
-	{
+	WindowContext* Window::getContext() {
 		return context;
 	}
 
-	float Window::GetAspectRatio()
-	{
+	float Window::getAspectRatio() {
 		return size.x / size.y;
 	}
 
-	float Window::GetScale()
-	{
+	float Window::getScale() {
 		return frameBufferSize.x / size.x;
 	}
 
-	const Vector2& Window::GetPosition()
-	{
+	const Vector2& Window::getPosition() {
 		return position;
 	}
 
-	const Vector2& Window::GetSize()
-	{
+	const Vector2& Window::getSize() {
 		return size;
 	}
 
-	const Vector2& Window::GetFrameBufferSize()
-	{
+	const Vector2& Window::getFrameBufferSize() {
 		return frameBufferSize;
 	}
 
-	const std::string& Window::GetTitle()
-	{
+	const std::string& Window::getTitle() {
 		return title;
 	}
 
-	void Window::SetPosition(const Vector2& position)
-	{
+	void Window::setPosition(const Vector2& position) {
 		glfwSetWindowPos(context, position.x, position.y);
 	}
 
-	void Window::SetSize(const Vector2& size)
-	{
+	void Window::setSize(const Vector2& size) {
 		glfwSetWindowSize(context, size.x, size.y);
 	}
 
-	void Window::SetTitle(const std::string& newTitle)
-	{
+	void Window::setTitle(const std::string& newTitle) {
 		glfwSetWindowTitle(context, newTitle.c_str());
 		title = newTitle;
 	}
 
-	bool Window::IsOpen()
-	{
+	bool Window::isOpen() {
 		return !glfwWindowShouldClose(context);
 	}
 
-	void Window::Close()
-	{
+	void Window::close() {
 		glfwSetWindowShouldClose(context, true);
 	}
 
-	void Window::Update()
-	{
+	void Window::update() {
 		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
 
-		BindGraphicsAPI();
-		SwapFrameBuffers();
+		bindGraphicsAPI();
+		swapFrameBuffers();
 	}
 
-	void Window::BindGraphicsAPI()
-	{
+	void Window::bindGraphicsAPI() {
 		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
 
 		glfwMakeContextCurrent(context);
 	}
 
-	void Window::SwapFrameBuffers()
-	{
+	void Window::swapFrameBuffers() {
 		ANGGUR_INSTRUMENTATION_PROFILE_FUNCTION;
 
 		glfwSwapBuffers(context);
 	}
 
-	void Window::BindContext()
-	{
+	void Window::bindGraphicsContext() {
 		glfwSetWindowUserPointer(context, this);
 	}
 }

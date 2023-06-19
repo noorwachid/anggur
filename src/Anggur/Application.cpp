@@ -3,26 +3,21 @@
 #include "Anggur/IO/Loop.h"
 #include <thread>
 
-namespace Anggur
-{
-	Application::Application()
-	{
-		window = new Window(Vector2(800, 600), "Anggur", [](void* procAddress)
-		{
-			return gladLoadGLLoader((GLADloadproc) procAddress);
+namespace Anggur {
+	Application::Application() {
+		window = new Window(Vector2(800, 600), "Anggur", [](void* procAddress) {
+			return gladLoadGLLoader((GLADloadproc)procAddress);
 		});
 
 		renderer = new Renderer();
 	}
 
-	Application::~Application()
-	{
+	Application::~Application() {
 		delete renderer;
 		delete window;
 	}
 
-	void Application::Run(Scene* scene, const std::vector<std::string>& arguments)
-	{
+	void Application::run(Scene* scene, const std::vector<std::string>& arguments) {
 		ANGGUR_INSTRUMENTATION_SESSION_BEGIN("Anggur::Application::Run");
 
 		process.arguments = arguments;
@@ -32,43 +27,42 @@ namespace Anggur
 		scene->process = &process;
 		scene->window = window;
 		scene->renderer = renderer;
-		scene->Initialize();
+		scene->initialize();
 
-		window->SetObserver(scene);
+		window->setObserver(scene);
 
-		frameClock.Tick();
+		frameClock.getDeltaTime();
 
-		while (window->IsOpen())
-		{
-			sleepClock.Tick();
+		while (window->isOpen()) {
+			sleepClock.getDeltaTime();
 
 			ANGGUR_INSTRUMENTATION_PROFILE("Anggur::Scene::Run::Loop");
 
-			float deltaTime = frameClock.Tick();
+			float deltaTime = frameClock.getDeltaTime();
 
 			{
 				ANGGUR_INSTRUMENTATION_PROFILE("Anggur::Scene::Update");
-				scene->Update(deltaTime);
+				scene->update(deltaTime);
 			}
 
 			{
 				ANGGUR_INSTRUMENTATION_PROFILE("Anggur::Scene::Draw");
-				scene->Draw();
+				scene->draw();
 			}
 
-			window->Update();
+			window->update();
 
-			windowManager.PollEvents();
+			windowManager.pollEvents();
 
-			Anggur::Run(RunMode::NoWait);
+			Anggur::run(RunMode::noWait);
 
-			float sleepTime = sleepClock.Tick();
-			int sleepMiliseconds = Math::Max(1, 16 - int(sleepTime * 1000));
+			float sleepTime = sleepClock.getDeltaTime();
+			int sleepMiliseconds = Math::max(1, 16 - int(sleepTime * 1000));
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(sleepMiliseconds));
 		}
 
-		Anggur::Run(RunMode::Wait);
+		Anggur::run(RunMode::wait);
 
 		ANGGUR_INSTRUMENTATION_SESSION_END;
 	}

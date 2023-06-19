@@ -1,20 +1,17 @@
 #pragma once
 
-namespace Anggur
-{
-	using AnimationFunction = float(*)(float step);
+namespace Anggur {
+	using AnimationFunction = float (*)(float step);
 
-	float Linear(float step);
+	float linear(float step);
 
-	float EaseIn(float step);
+	float easeIn(float step);
 
-	float EaseOut(float step);
+	float easeOut(float step);
 
-	float EaseInOut(float step);
+	float easeInOut(float step);
 
-	float Elastic(float step);
+	float elastic(float step);
 
-	float Bounce(float step);
+	float bounce(float step);
 }
-
-

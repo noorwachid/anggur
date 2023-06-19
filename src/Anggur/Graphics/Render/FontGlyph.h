@@ -1,9 +1,7 @@
 #include "Anggur/Math/Vector2.h"
 
-namespace Anggur
-{
-	struct FontGlyph
-	{
+namespace Anggur {
+	struct FontGlyph {
 		Vector2 position;
 		Vector2 size;
 

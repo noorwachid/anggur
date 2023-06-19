@@ -3,116 +3,96 @@
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Vector2.h"
 
-namespace Anggur
-{
-	class CanvasCamera
-	{
+namespace Anggur {
+	class CanvasCamera {
 	public:
-		void Update()
-		{
-			if (!IsDirty())
-			{
+		void update() {
+			if (!isDirty()) {
 				return;
 			}
 
-			Clean();
+			clean();
 
 			viewProjection =
-				Matrix3::CreateTranslation(Vector2(targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y)
+				Matrix3::createTranslation(Vector2(targetPosition.x + targetOffset.x, targetPosition.y + targetOffset.y)
 				) *
-				Matrix3::CreateRotation(viewRotation) *
-				Matrix3::CreateScale(Vector2(2.0f / (viewSize.x * viewScale.x), -2.0f / (viewSize.y * viewScale.y)));
+				Matrix3::createRotation(viewRotation) *
+				Matrix3::createScale(Vector2(2.0f / (viewSize.x * viewScale.x), -2.0f / (viewSize.y * viewScale.y)));
 
-			screen = viewProjection.GetInverse();
+			screen = viewProjection.getInverse();
 		}
 
-		const Matrix3& GetViewProjection() const
-		{
+		const Matrix3& getViewProjection() const {
 			return viewProjection;
 		}
 
-		const Matrix3& GetScreen() const
-		{
+		const Matrix3& getScreen() const {
 			return screen;
 		}
 
-		const Vector2& GetTargetPosition() const
-		{
+		const Vector2& getTargetPosition() const {
 			return targetPosition;
 		}
 
-		Vector2 ToWorldPoint(const Vector2& screenPoint) const
-		{
+		Vector2 toWorldPoint(const Vector2& screenPoint) const {
 			Vector2 normalizedScreenPoint =
 				Vector2(screenPoint.x / screenSize.x * 2 - 1, -screenPoint.y / screenSize.y * 2 + 1);
 			return screen * normalizedScreenPoint;
 		}
 
-		void SetViewSize(const Vector2& size)
-		{
-			MarkDirty();
-			viewSize.Set(Math::Max(Math::epsilon, size.x), Math::Max(Math::epsilon, size.y));
+		void setViewSize(const Vector2& size) {
+			markDirty();
+			viewSize.set(Math::max(Math::epsilon, size.x), Math::max(Math::epsilon, size.y));
 		}
 
-		void SetViewScale(const Vector2& scale)
-		{
-			MarkDirty();
-			viewScale.Set(Math::Max(Math::epsilon, scale.x), Math::Max(Math::epsilon, scale.y));
+		void setViewScale(const Vector2& scale) {
+			markDirty();
+			viewScale.set(Math::max(Math::epsilon, scale.x), Math::max(Math::epsilon, scale.y));
 		}
 
-		void SetViewRotation(float rotation)
-		{
-			MarkDirty();
-			viewRotation = Math::Mod(rotation, Math::twoPi);
+		void setViewRotation(float rotation) {
+			markDirty();
+			viewRotation = Math::mod(rotation, Math::twoPi);
 		}
 
-		void SetTargetPosition(const Vector2& position)
-		{
-			MarkDirty();
-			targetPosition.Set(position.x, position.y);
+		void setTargetPosition(const Vector2& position) {
+			markDirty();
+			targetPosition.set(position.x, position.y);
 		}
 
-		void SetTargetOffset(const Vector2& offset)
-		{
-			MarkDirty();
+		void setTargetOffset(const Vector2& offset) {
+			markDirty();
 		}
 
-		void SetScreenSize(const Vector2& size)
-		{
-			MarkDirty();
-			screenSize.Set(size.x, size.y);
+		void setScreenSize(const Vector2& size) {
+			markDirty();
+			screenSize.set(size.x, size.y);
 		}
 
-		void NudgeViewScale(const Vector2& amount)
-		{
-			MarkDirty();
-			SetViewScale(viewScale + amount);
+		void nudgeViewScale(const Vector2& amount) {
+			markDirty();
+			setViewScale(viewScale + amount);
 		}
 
-		void NudgeViewRotation(float rotation)
-		{
-			MarkDirty();
-			SetViewRotation(viewRotation + rotation);
+		void nudgeViewRotation(float rotation) {
+			markDirty();
+			setViewRotation(viewRotation + rotation);
 		}
 
-		void NudgeTargetPosition(const Vector2& amount)
-		{
-			MarkDirty();
+		void nudgeTargetPosition(const Vector2& amount) {
+			markDirty();
 			targetPosition += amount;
 		}
 
-		bool IsDirty()
-		{
+		bool isDirty() {
 			return dirty;
 		}
 
-		void MarkDirty()
-		{
+		void markDirty() {
 			dirty = true;
 		}
 
-		void Clean()
-		{
+		void clean() {
 			dirty = false;
 		}
 

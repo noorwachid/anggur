@@ -1,39 +1,34 @@
 #include "Anggur/Graphics/Render/MeshRenderer.h"
 
-namespace Anggur
-{
-	MeshRenderer::MeshRenderer() 
-	{
-		vertices.assign(
-			batchVertex, MeshVertex{}
-		);
+namespace Anggur {
+	MeshRenderer::MeshRenderer() {
+		vertices.assign(batchVertex, MeshVertex{});
 
 		indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-		textures.assign(TextureSpecification::GetMaxSlot(), nullptr);
-		textureIndices.reserve(TextureSpecification::GetMaxSlot());
+		textures.assign(TextureSpecification::getMaxSlot(), nullptr);
+		textureIndices.reserve(TextureSpecification::getMaxSlot());
 
-		for (size_t i = 0; i < TextureSpecification::GetMaxSlot(); ++i)
-		{
+		for (size_t i = 0; i < TextureSpecification::getMaxSlot(); ++i) {
 			textureIndices.push_back(i);
 		}
 
-		vertexArray.Bind();
-		vertexArray.SetLayout({ 
-			{ VertexDataType::Float, 2, "aPosition" },
-			{ VertexDataType::Float, 4, "aColor" },
-			{ VertexDataType::Float, 1, "aTextureIndex" },
-			{ VertexDataType::Float, 2, "aTexturePosition" },
+		vertexArray.bind();
+		vertexArray.setLayout({
+			{VertexDataType::float_, 2, "aPosition"},
+			{VertexDataType::float_, 4, "aColor"},
+			{VertexDataType::float_, 1, "aTextureIndex"},
+			{VertexDataType::float_, 2, "aTexturePosition"},
 		});
 
-		vertexBuffer.Bind();
-		vertexBuffer.SetCapacity(sizeof(MeshVertex) * vertices.size());
+		vertexBuffer.bind();
+		vertexBuffer.setCapacity(sizeof(MeshVertex) * vertices.size());
 
-		indexBuffer.Bind();
-		indexBuffer.SetCapacity(sizeof(unsigned int) * indices.size());
+		indexBuffer.bind();
+		indexBuffer.setCapacity(sizeof(unsigned int) * indices.size());
 
-		shader.Bind();
-		shader.SetVertexSource(R"(
+		shader.bind();
+		shader.setVertexSource(R"(
 			#version 330 core
 
 			layout (location = 0) in vec2 aPosition;
@@ -56,14 +51,16 @@ namespace Anggur
 				vTexturePosition = aTexturePosition;
 			}
 		)");
-		shader.SetFragmentSource(R"(
+		shader.setFragmentSource(
+			R"(
 			#version 330 core
 			
 			in vec4 vColor;
 			in float vTextureIndex;
 			in vec2 vTexturePosition;
 
-			uniform sampler2D uTextures[)" + std::to_string(TextureSpecification::GetMaxSlot()) + R"(];
+			uniform sampler2D uTextures[)" +
+			std::to_string(TextureSpecification::getMaxSlot()) + R"(];
 
 			out vec4 fColor;
 
@@ -77,32 +74,32 @@ namespace Anggur
 					discard;
 				}
 			}
-		)");
-		shader.Compile();
+		)"
+		);
+		shader.compile();
 	}
 
-	void MeshRenderer::SetView(const Matrix3& newView)
-	{
+	void MeshRenderer::setView(const Matrix3& newView) {
 		view = newView;
 	}
 
-	void MeshRenderer::AddTriangle(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2)
-	{
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
-		{
-			Flush();
+	void MeshRenderer::addTriangle(
+		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
+		Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
+		const Vector2& texturePosition2
+	) {
+		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() ||
+			textureOffset + 1 > textures.size()) {
+			flush();
 		}
 
 		size_t textureIndex = 0;
 
-		if (textureIndexMap.count(texture->GetID()))
-		{
-			textureIndex = textureIndexMap[texture->GetID()];
-		}
-		else
-		{
+		if (textureIndexMap.count(texture->getID())) {
+			textureIndex = textureIndexMap[texture->getID()];
+		} else {
 			textureIndex = textureOffset;
-			textureIndexMap[texture->GetID()] = textureIndex;
+			textureIndexMap[texture->getID()] = textureIndex;
 			textures[textureIndex] = texture;
 
 			++textureOffset;
@@ -125,31 +122,31 @@ namespace Anggur
 		vertices[vertexOffset + 2].texturePosition = texturePosition2;
 
 		indices[indexOffset + 0] = vertexOffset + 0;
-		indices[indexOffset + 1] = vertexOffset + 1; 
-		indices[indexOffset + 2] = vertexOffset + 2; 
+		indices[indexOffset + 1] = vertexOffset + 1;
+		indices[indexOffset + 2] = vertexOffset + 2;
 
 		vertexOffset += 3;
 
 		indexOffset += 3;
 	}
 
-	void MeshRenderer::AddQuad(const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3, const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1, const Vector2& texturePosition2, const Vector2& texturePosition3)
-	{
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() || textureOffset + 1 > textures.size())
-		{
-			Flush();
+	void MeshRenderer::addQuad(
+		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
+		const Vector4& color, Texture2D* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
+		const Vector2& texturePosition2, const Vector2& texturePosition3
+	) {
+		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size() ||
+			textureOffset + 1 > textures.size()) {
+			flush();
 		}
 
 		size_t textureIndex = 0;
 
-		if (textureIndexMap.count(texture->GetID()))
-		{
-			textureIndex = textureIndexMap[texture->GetID()];
-		}
-		else
-		{
+		if (textureIndexMap.count(texture->getID())) {
+			textureIndex = textureIndexMap[texture->getID()];
+		} else {
 			textureIndex = textureOffset;
-			textureIndexMap[texture->GetID()] = textureIndex;
+			textureIndexMap[texture->getID()] = textureIndex;
 			textures[textureIndex] = texture;
 
 			++textureOffset;
@@ -176,10 +173,10 @@ namespace Anggur
 		vertices[vertexOffset + 3].texturePosition = texturePosition3;
 
 		indices[indexOffset + 0] = vertexOffset + 0;
-		indices[indexOffset + 1] = vertexOffset + 1; 
-		indices[indexOffset + 2] = vertexOffset + 2; 
-		indices[indexOffset + 3] = vertexOffset + 2; 
-		indices[indexOffset + 4] = vertexOffset + 3; 
+		indices[indexOffset + 1] = vertexOffset + 1;
+		indices[indexOffset + 2] = vertexOffset + 2;
+		indices[indexOffset + 3] = vertexOffset + 2;
+		indices[indexOffset + 4] = vertexOffset + 3;
 		indices[indexOffset + 5] = vertexOffset + 0;
 
 		vertexOffset += 4;
@@ -187,42 +184,39 @@ namespace Anggur
 		indexOffset += 6;
 	}
 
-	void MeshRenderer::AddRectangle(const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture, const Vector2& texturePosition, const Vector2& textureSize)
-	{
-		AddQuad(
-			Vector2(position.x,          position.y),
-			Vector2(position.x + size.x, position.y),
-			Vector2(position.x + size.x, position.y + size.y),
-			Vector2(position.x,          position.y + size.y),
-			color,
-			texture,
-			Vector2(texturePosition.x,                 texturePosition.y),
+	void MeshRenderer::addRectangle(
+		const Vector2& position, const Vector2& size, const Vector4& color, Texture2D* texture,
+		const Vector2& texturePosition, const Vector2& textureSize
+	) {
+		addQuad(
+			Vector2(position.x, position.y), Vector2(position.x + size.x, position.y),
+			Vector2(position.x + size.x, position.y + size.y), Vector2(position.x, position.y + size.y), color, texture,
+			Vector2(texturePosition.x, texturePosition.y),
 			Vector2(texturePosition.x + textureSize.x, texturePosition.y),
 			Vector2(texturePosition.x + textureSize.x, texturePosition.y + textureSize.y),
-			Vector2(texturePosition.x,                 texturePosition.y + textureSize.y)
+			Vector2(texturePosition.x, texturePosition.y + textureSize.y)
 		);
 	}
 
-	void MeshRenderer::Flush()
-	{
+	void MeshRenderer::flush() {
 		// Early exit if no vertices to draw
 		if (vertexOffset == 0)
 			return;
 
 		for (size_t textureIndex = 0; textureIndex < textureOffset; ++textureIndex)
-			textures[textureIndex]->Bind(textureIndex);
+			textures[textureIndex]->bind(textureIndex);
 
-		shader.Bind();
-		shader.SetUniformMatrix3("uView", view);
-		shader.SetUniformInt("uTextures", textureOffset, textureIndices.data());
+		shader.bind();
+		shader.setUniformMatrix3("uView", view);
+		shader.setUniformInt("uTextures", textureOffset, textureIndices.data());
 
-		vertexArray.Bind();
+		vertexArray.bind();
 
-		vertexBuffer.Bind();
-		vertexBuffer.SetData(sizeof(MeshVertex) * vertexOffset, vertices.data());
+		vertexBuffer.bind();
+		vertexBuffer.setData(sizeof(MeshVertex) * vertexOffset, vertices.data());
 
-		indexBuffer.Bind();
-		indexBuffer.SetData(sizeof(unsigned int) * indexOffset, indices.data());
+		indexBuffer.bind();
+		indexBuffer.setData(sizeof(unsigned int) * indexOffset, indices.data());
 
 		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
@@ -233,6 +227,3 @@ namespace Anggur
 		textureIndexMap.clear();
 	}
 }
-
-
-

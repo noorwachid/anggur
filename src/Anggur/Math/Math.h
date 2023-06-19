@@ -1,7 +1,6 @@
 #pragma once
 
-namespace Anggur
-{
+namespace Anggur {
 	struct Vector2;
 	struct Vector3;
 	struct Vector4;
@@ -10,8 +9,7 @@ namespace Anggur
 	struct Matrix3;
 	struct Matrix4;
 
-	namespace Math
-	{
+	namespace Math {
 		// Constants
 
 		constexpr float pi = 3.1415926535f;
@@ -20,78 +18,78 @@ namespace Anggur
 
 		// Casters
 
-		float DegreeToRadian(float x);
+		float degreeToRadian(float x);
 
-		float RadianToDegree(float x);
+		float radianToDegree(float x);
 
 		// Conditional manipulations
 
-		float Max(float a, float b);
+		float max(float a, float b);
 
-		float Min(float a, float b);
+		float min(float a, float b);
 
-		float Clamp(float x, float lower = -1, float upper = 1);
+		float clamp(float x, float lower = -1, float upper = 1);
 
-		float Abs(float x);
+		float abs(float x);
 
-		float IsNearZero(float x, float epsilon = ::Anggur::Math::epsilon);
+		float isNearZero(float x, float epsilon = ::Anggur::Math::epsilon);
 
 		// Mapping manipulations
 
-		float Normalize(float x, float lower, float upper);
+		float normalize(float x, float lower, float upper);
 
-		float Lerp(float lower, float upper, float amount);
+		float lerp(float lower, float upper, float amount);
 
-		float Map(float x, float lowerA, float upperA, float lowerB, float upperB);
+		float map(float x, float lowerA, float upperA, float lowerB, float upperB);
 
 		// Floating point manipulations
 
-		float Mod(float x, float d);
+		float mod(float x, float d);
 
-		float Floor(float x);
+		float floor(float x);
 
-		float Ceil(float x);
+		float ceil(float x);
 
-		float Truncate(float x);
+		float truncate(float x);
 
-		float Round(float x);
+		float round(float x);
 
-		float RoundNearest(float x, float step);
+		float roundNearest(float x, float step);
 
 		// Exponent manipulations
 
-		float Pow(float x, float p);
+		float pow(float x, float p);
 
-		float Sqrt(float x);
+		float sqrt(float x);
 
 		// Trigonometry manipulations
 
-		float Sin(float x);
+		float sin(float x);
 
-		float Tan(float x);
+		float tan(float x);
 
-		float Sec(float x);
+		float sec(float x);
 
-		float Cos(float x);
+		float cos(float x);
 
-		float Cot(float x);
+		float cot(float x);
 
-		float Csc(float x);
+		float csc(float x);
 
 		// Trigonometry arc manipulations
 
-		float Asin(float x);
+		float asin(float x);
 
-		float Atan(float x);
+		float atan(float x);
 
-		float Atan(float y, float x);
+		float atan(float y, float x);
 
-		float Asec(float x);
+		float asec(float x);
 
-		float Acos(float x);
+		float acos(float x);
 
-		float Acot(float x);
+		float acot(float x);
 
-		float Acsc(float x);
+		float acsc(float x);
 	}
 }

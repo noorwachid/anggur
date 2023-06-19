@@ -1,38 +1,30 @@
 #include "Anggur/Core/Instrumentation.h"
 #include <iostream>
 
-namespace Anggur::Instrumentation
-{
-	Watcher::Watcher()
-	{
+namespace Anggur::Instrumentation {
+	Watcher::Watcher() {
 	}
 
-	void Watcher::BeginSession(const std::string& name, const std::string& filepath)
-	{
+	void Watcher::beginSession(const std::string& name, const std::string& filepath) {
 		sessions.emplace(name, filepath);
 	}
 
-	void Watcher::EndSession()
-	{
+	void Watcher::endSession() {
 		if (!sessions.empty())
 			sessions.pop();
 	}
 
-	Session::Session(const std::string& name, const std::string& path) : 
-		name{name}, path{path}
-	{
+	Session::Session(const std::string& name, const std::string& path) : name{name}, path{path} {
 		outputStream.open(path);
-		WriteOpening();
+		writeOpening();
 	}
 
-	Session::~Session()
-	{
-		WriteClosing();
+	Session::~Session() {
+		writeClosing();
 		outputStream.close();
 	}
 
-	void Session::WriteProfile(const Profile& result)
-	{
+	void Session::writeProfile(const Profile& result) {
 		if (profileCount > 0)
 			outputStream << ",";
 
@@ -54,31 +46,26 @@ namespace Anggur::Instrumentation
 		outputStream.flush();
 	}
 
-	void Session::WriteOpening()
-	{
+	void Session::writeOpening() {
 		outputStream << "{\"otherData\": {},\"traceEvents\":[";
 		outputStream.flush();
 	}
 
-	void Session::WriteClosing()
-	{
+	void Session::writeClosing() {
 		outputStream << "]}";
 		outputStream.flush();
 	}
 
-	Watcher& Watcher::GetInstance()
-	{
+	Watcher& Watcher::getInstance() {
 		static Watcher instance;
 		return instance;
 	}
 
-	Timer::Timer(const char* name) : name(name)
-	{
+	Timer::Timer(const char* name) : name(name) {
 		beginTimepoint = std::chrono::high_resolution_clock::now();
 	}
 
-	Timer::~Timer()
-	{
+	Timer::~Timer() {
 		auto endTimepoint = std::chrono::high_resolution_clock::now();
 
 		std::hash<std::thread::id> hash;
@@ -86,23 +73,22 @@ namespace Anggur::Instrumentation
 		Profile profile;
 		profile.name = name;
 		profile.threadID = hash(std::this_thread::get_id());
-		profile.beginTime = std::chrono::time_point_cast<std::chrono::microseconds>(beginTimepoint).time_since_epoch().count();
-		profile.endTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
+		profile.beginTime =
+			std::chrono::time_point_cast<std::chrono::microseconds>(beginTimepoint).time_since_epoch().count();
+		profile.endTime =
+			std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
 
-		Watcher& watcher = Watcher::GetInstance();
+		Watcher& watcher = Watcher::getInstance();
 
-		if (watcher.HasActiveSession())
-			watcher.GetActiveSession().WriteProfile(profile);
-
+		if (watcher.hasActiveSession())
+			watcher.getActiveSession().writeProfile(profile);
 	}
 
-	bool Watcher::HasActiveSession()
-	{
+	bool Watcher::hasActiveSession() {
 		return !sessions.empty();
 	}
 
-	Session& Watcher::GetActiveSession()
-	{
+	Session& Watcher::getActiveSession() {
 		return sessions.top();
 	}
 }

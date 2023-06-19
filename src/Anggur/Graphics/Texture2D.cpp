@@ -3,27 +3,36 @@
 #include <stb_image.h>
 #include <vector>
 
-namespace Anggur
-{
-	Texture2D::Texture2D()
-	{
+namespace Anggur {
+	Texture2D::Texture2D() {
 		id = 0;
 	}
 
-	Texture2D::Texture2D(const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels, SamplerFilter filter)
-	{
+	Texture2D::Texture2D(
+		const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels,
+		SamplerFilter filter
+	) {
 		id = 0;
-		Read(bytes, width, height, channels, filter);
+		read(bytes, width, height, channels, filter);
 	}
 
-	Texture2D::~Texture2D()
-	{
-		Close();
+	Texture2D::~Texture2D() {
+		close();
 	}
 
-	void Texture2D::Read(const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels, SamplerFilter filter)
-	{
-		Close();
+	int toGLFilter(SamplerFilter filter) {
+		switch (filter) {
+			case SamplerFilter::linear: return GL_LINEAR;
+			case SamplerFilter::nearest: return GL_NEAREST;
+			default: return 0;
+		}
+	}
+
+	void Texture2D::read(
+		const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels,
+		SamplerFilter filter
+	) {
+		close();
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -38,20 +47,16 @@ namespace Anggur
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(filter));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(filter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, toGLFilter(filter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, toGLFilter(filter));
 
-		if (bytes.empty())
-		{
+		if (bytes.empty()) {
 			assert(false && "Cannot load buffer to texture, data is empty");
-		}
-		else
-		{
+		} else {
 			int iformat;
 			int format;
 
-			switch (channels)
-			{
+			switch (channels) {
 				case 1:
 					iformat = GL_R8;
 					format = GL_RED;
@@ -74,20 +79,17 @@ namespace Anggur
 		}
 	}
 
-	void Texture2D::Close()
-	{
+	void Texture2D::close() {
 		if (id != 0)
 			glDeleteTextures(1, &id);
 	}
 
-	void Texture2D::Bind(unsigned int slot)
-	{
+	void Texture2D::bind(unsigned int slot) {
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	bool operator==(const Texture2D& a, const Texture2D& b)
-	{
-		return a.GetID() == b.GetID();
+	bool operator==(const Texture2D& a, const Texture2D& b) {
+		return a.getID() == b.getID();
 	}
 }

@@ -2,21 +2,19 @@
 
 #include "Anggur/Core/Observer.h"
 #include "Anggur/Core/Process.h"
+#include "Anggur/Graphics/Render/Renderer.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/OS/WindowObserver.h"
-#include "Anggur/Graphics/Render/Renderer.h"
 #include <vector>
 
-namespace Anggur
-{
-	class Scene : public WindowObserver
-	{
+namespace Anggur {
+	class Scene : public WindowObserver {
 	public:
-		virtual void Initialize();
+		virtual void initialize();
 
-		virtual void Update(float deltaTime);
+		virtual void update(float deltaTime);
 
-		virtual void Draw();
+		virtual void draw();
 
 	protected:
 		Window* window;

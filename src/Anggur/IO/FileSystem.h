@@ -1,53 +1,53 @@
 #pragma once
 
 #include "Anggur/IO/Result.h"
-#include <string>
 #include <functional>
+#include <string>
 
-namespace Anggur
-{
-	struct FileResult : Result
-	{
+namespace Anggur {
+	struct FileResult : Result {
 		int descriptor;
 	};
 
-	struct FileStatisticResult : FileResult
-	{
+	struct FileStatisticResult : FileResult {
 		size_t size;
 	};
 
-	struct FileContentResult : FileResult
-	{
+	struct FileContentResult : FileResult {
 		size_t size;
 		std::vector<unsigned char> buffer;
 	};
 
-	using FileCallback = std::function<void (const FileResult& result)>;
+	using FileCallback = std::function<void(const FileResult& result)>;
 
-	using FileStatisticCallback = std::function<void (const FileStatisticResult& result)>;
+	using FileStatisticCallback = std::function<void(const FileStatisticResult& result)>;
 
-	using FileContentCallback = std::function<void (const FileContentResult& result)>;
+	using FileContentCallback = std::function<void(const FileContentResult& result)>;
 
-	void OpenFile(const std::string& path, int flags, int mode, const FileCallback& callback = nullptr);
+	void openFile(const std::string& path, int flags, int mode, const FileCallback& callback = nullptr);
 
-	void CloseFile(int descriptor, const FileCallback& callback = nullptr);
+	void closeFile(int descriptor, const FileCallback& callback = nullptr);
 
-	void GetFileStatistic(int descriptor, const FileStatisticCallback& callback = nullptr);
+	void getFileStatistic(int descriptor, const FileStatisticCallback& callback = nullptr);
 
 	/**
 	 * The buffer will grow until hit EOF
 	 */
-	void ReadFile(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr);
+	void readFile(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr);
 
 	/**
 	 * The buffer will stay the same as limit
 	 */
-	void ReadPartialFile(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr);
+	void readPartialFile(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr);
 
 	/**
 	 * The buffer will stay the same as limit only executed once
 	 */
-	void ReadPartialFileOnce(int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr);
+	void readPartialFileOnce(
+		int descriptor, size_t limit, size_t offset, const FileContentCallback& callback = nullptr
+	);
 
-	void WriteFile(int descriptor, size_t offset, std::vector<unsigned char> content, const FileCallback& callback = nullptr);
+	void writeFile(
+		int descriptor, size_t offset, std::vector<unsigned char> content, const FileCallback& callback = nullptr
+	);
 }
