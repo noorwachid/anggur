@@ -1,0 +1,8 @@
+type: library
+
+includes:
+  - src
+
+sources:
+  - src/stb_truetype.c
+

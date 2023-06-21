@@ -1,0 +1,8 @@
+type: library
+
+includes:
+  - include
+
+sources:
+  - src/glad.c
+

@@ -1,0 +1,10 @@
+type: library
+
+includes:
+  - src
+
+sources:
+  - src/stb_image.c
+  - src/stb_image_write.c
+
+flags:
