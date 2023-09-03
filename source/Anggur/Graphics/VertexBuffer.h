@@ -3,69 +3,91 @@
 #include <string>
 #include <vector>
 
-namespace Anggur {
-	class IndexBuffer {
+namespace Anggur
+{
+	class IndexBuffer
+	{
 	public:
 		IndexBuffer();
+
 		~IndexBuffer();
 
-		unsigned int getID() {
-			return id;
+		unsigned int GetID()
+		{
+			return _id;
 		}
 
-		void bind();
-		void unbind();
-		void setCapacity(size_t byteSize);
-		void setData(size_t byteSize, void* byteData);
+		void Bind();
+
+		void Unbind();
+
+		void SetCapacity(size_t byteSize);
+
+		void SetData(size_t byteSize, void* byteData);
 
 	private:
-		unsigned int id = 0;
+		unsigned int _id = 0;
 	};
 
-	class VertexBuffer {
+	class VertexBuffer
+	{
 	public:
 		VertexBuffer();
+
 		~VertexBuffer();
 
-		unsigned int getID() {
-			return id;
+		unsigned int GetID()
+		{
+			return _id;
 		}
 
-		void bind();
-		void unbind();
-		void setCapacity(size_t byteSize);
-		void setData(size_t byteSize, void* byteData);
+		void Bind();
+
+		void Unbind();
+
+		void SetCapacity(size_t byteSize);
+		
+		void SetData(size_t byteSize, void* byteData);
 
 	private:
-		unsigned int id;
+		unsigned int _id;
 	};
 
-	enum class VertexDataType {
-		float_,
+	enum class VertexDataType
+	{
+		Float,
 	};
 
-	size_t getVertexDataTypeByteSize(VertexDataType type);
+	size_t GetByteSize(VertexDataType type);
 
-	class VertexArray {
+	class VertexArray
+	{
 	public:
 		VertexArray();
+
 		~VertexArray();
 
-		unsigned int getID() {
-			return id;
+		unsigned int getID()
+		{
+			return _id;
 		}
 
-		size_t getStride() {
-			return stride;
+		size_t GetStride()
+		{
+			return _stride;
 		}
 
-		void bind();
-		void unbind();
-		void setAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset);
-		void setLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout);
+		void Bind();
+
+		void Unbind();
+
+		void SetAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset);
+
+		void SetLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout);
 
 	private:
-		unsigned int id = 0;
-		size_t stride = 0;
+		unsigned int _id = 0;
+
+		size_t _stride = 0;
 	};
 }

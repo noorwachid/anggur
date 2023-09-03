@@ -1,88 +1,107 @@
+#include "glad/glad.h"
 #include "Anggur/Graphics/VertexBuffer.h"
-#include "Anggur/Graphics/Function.h"
 
-namespace Anggur {
-	VertexBuffer::VertexBuffer() {
-		glGenBuffers(1, &id);
-		bind();
+namespace Anggur
+{
+	VertexBuffer::VertexBuffer()
+	{
+		glGenBuffers(1, &_id);
+		Bind();
 	}
 
-	VertexBuffer::~VertexBuffer() {
-		glDeleteBuffers(1, &id);
+	VertexBuffer::~VertexBuffer()
+	{
+		glDeleteBuffers(1, &_id);
 	}
 
-	void VertexBuffer::bind() {
-		glBindBuffer(GL_ARRAY_BUFFER, id);
+	void VertexBuffer::Bind()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, _id);
 	}
 
-	void VertexBuffer::unbind() {
+	void VertexBuffer::Unbind()
+	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void VertexBuffer::setCapacity(size_t byteSize) {
+	void VertexBuffer::SetCapacity(size_t byteSize)
+	{
 		glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void VertexBuffer::setData(size_t byteSize, void* byteData) {
+	void VertexBuffer::SetData(size_t byteSize, void* byteData)
+	{
 		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	IndexBuffer::IndexBuffer() {
-		glGenBuffers(1, &id);
-		bind();
+	IndexBuffer::IndexBuffer()
+	{
+		glGenBuffers(1, &_id);
+		Bind();
 	}
 
-	IndexBuffer::~IndexBuffer() {
-		glDeleteBuffers(1, &id);
+	IndexBuffer::~IndexBuffer()
+	{
+		glDeleteBuffers(1, &_id);
 	}
 
-	void IndexBuffer::bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+	void IndexBuffer::Bind()
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _id);
 	}
 
-	void IndexBuffer::unbind() {
+	void IndexBuffer::Unbind()
+	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void IndexBuffer::setCapacity(size_t byteSize) {
+	void IndexBuffer::SetCapacity(size_t byteSize)
+	{
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	void IndexBuffer::setData(size_t byteSize, void* byteData) {
+	void IndexBuffer::SetData(size_t byteSize, void* byteData)
+	{
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, byteSize, byteData);
 	}
 
-	size_t getVertexDataTypeByteSize(VertexDataType type) {
-		switch (type) {
-			case VertexDataType::float_:
+	size_t GetByteSize(VertexDataType type)
+	{
+		switch (type)
+		{
+			case VertexDataType::Float:
 				return 4;
 		}
 	}
 
-	VertexArray::VertexArray() {
-		glGenVertexArrays(1, &id);
-		bind();
+	VertexArray::VertexArray()
+	{
+		glGenVertexArrays(1, &_id);
+		Bind();
 	}
 
-	VertexArray::~VertexArray() {
-		glDeleteVertexArrays(1, &id);
+	VertexArray::~VertexArray()
+	{
+		glDeleteVertexArrays(1, &_id);
 	}
 
-	void VertexArray::bind() {
-		glBindVertexArray(id);
+	void VertexArray::Bind()
+	{
+		glBindVertexArray(_id);
 	}
 
-	void VertexArray::unbind() {
+	void VertexArray::Unbind()
+	{
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::setAttribute(
-		size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset
-	) {
+	void VertexArray::SetAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset)
+	{
 		int glType = 0;
 
-		switch (type) {
-			case VertexDataType::float_:
+		switch (type)
+		{
+			case VertexDataType::Float:
 				glType = GL_FLOAT;
 				break;
 		}
@@ -91,21 +110,24 @@ namespace Anggur {
 		glEnableVertexAttribArray(index);
 	}
 
-	void VertexArray::setLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout) {
-		stride = 0;
+	void VertexArray::SetLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout)
+	{
+		_stride = 0;
 
-		for (size_t i = 0; i < layout.size(); ++i) {
+		for (size_t i = 0; i < layout.size(); ++i)
+		{
 			auto [type, size, name] = layout[i];
-			stride += size * getVertexDataTypeByteSize(type);
+			_stride += size * GetByteSize(type);
 		}
 
 		size_t offset = 0;
 
-		for (size_t i = 0; i < layout.size(); ++i) {
+		for (size_t i = 0; i < layout.size(); ++i)
+		{
 			auto [type, size, name] = layout[i];
-			size_t byteCount = size * getVertexDataTypeByteSize(type);
+			size_t byteCount = size * GetByteSize(type);
 
-			setAttribute(i, size, type, stride, offset);
+			SetAttribute(i, size, type, _stride, offset);
 
 			offset += byteCount;
 		}

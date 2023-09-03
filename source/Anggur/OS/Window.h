@@ -1,71 +1,40 @@
 #pragma once
 
-#include "Anggur/OS/Input.h"
-#include "Anggur/OS/WindowContext.h"
-#include "Anggur/OS/WindowObserver.h"
-#include <functional>
+#include <string>
 
-namespace Anggur {
-	using WindowContextLoader = std::function<bool(void*)>;
+class GLFWwindow;
 
-	class Window {
+namespace Anggur
+{
+	using WindowContext = GLFWwindow;
+
+	class Window
+	{
 	public:
-		Input input;
-
-	public:
-		Window(const Vector2& size, const std::string& title, const WindowContextLoader& contextLoader);
+		Window(uint32_t width, uint32_t height);
 
 		~Window();
 
-		WindowContext* getContext();
+		uint32_t GetWidth() const;
 
-		float getAspectRatio();
+		uint32_t GetHeight() const;
 
-		float getScale();
+		WindowContext* GetContext();
 
-		const Vector2& getPosition();
+		bool ShouldClose() const;
 
-		const Vector2& getSize();
+		void SwapBuffers();
 
-		const Vector2& getFrameBufferSize();
+		void PollEvents();
 
-		const std::string& getTitle();
+		void Connect(std::function<bool(void*)> client);
 
-		void setPosition(const Vector2& pos);
-
-		void setSize(const Vector2& size);
-
-		void setTitle(const std::string& title);
-
-		bool isOpen();
-
-		void close();
-
-		void update();
-
-		void setObserver(WindowObserver* observer) {
-			this->observer = observer;
-		}
+		void Close();
 
 	private:
-		void initializeGraphicsAPI();
+		uint32_t _width;
+		uint32_t _height;
 
-		void bindGraphicsAPI();
-
-		void bindGraphicsContext();
-
-		void swapFrameBuffers();
-
-	private:
-		WindowContext* context;
-		Vector2 position;
-		Vector2 size;
-		std::string title;
-
-		Vector2 frameBufferSize;
-
-		WindowObserver* observer = nullptr;
-
-		friend class Input;
+		WindowContext* _context;
 	};
 }

@@ -1,32 +1,39 @@
+#include "glad/glad.h"
 #include "Anggur/Graphics/Shader.h"
-#include "Anggur/Graphics/Function.h"
 #include "Anggur/Math/Matrix3.h"
 #include "Anggur/Math/Matrix4.h"
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector3.h"
 #include "Anggur/Math/Vector4.h"
+
 #include <cassert>
 #include <stdexcept>
 
-namespace Anggur {
-	Shader::Shader() {
+namespace Anggur
+{
+	Shader::Shader()
+	{
 	}
 
-	Shader::~Shader() {
-		terminate();
+	Shader::~Shader()
+	{
+		Terminate();
 	}
 
-	void Shader::setVertexSource(const std::string& source) {
-		vertexSource = source;
+	void Shader::SetVertexSource(const std::string& source)
+	{
+		_vertexSource = source;
 	}
 
-	void Shader::setFragmentSource(const std::string& source) {
-		fragmentSource = source;
+	void Shader::SetFragmentSource(const std::string& source)
+	{
+		_fragmentSource = source;
 	}
 
-	void Shader::compile() {
-		const char* cVertexSource = vertexSource.c_str();
-		const char* cFragmentSource = fragmentSource.c_str();
+	void Shader::Compile()
+	{
+		const char* cVertexSource = _vertexSource.c_str();
+		const char* cFragmentSource = _fragmentSource.c_str();
 		int isSucceed;
 		char message[512];
 
@@ -35,7 +42,8 @@ namespace Anggur {
 		glCompileShader(vertexId);
 
 		glGetShaderiv(vertexId, GL_COMPILE_STATUS, &isSucceed);
-		if (!isSucceed) {
+		if (!isSucceed)
+		{
 			glGetShaderInfoLog(vertexId, 512, NULL, message);
 
 			throw std::runtime_error(std::string("Failed to compile vertex shader: ") + message);
@@ -46,22 +54,24 @@ namespace Anggur {
 		glCompileShader(fragmentId);
 
 		glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &isSucceed);
-		if (!isSucceed) {
+		if (!isSucceed)
+		{
 			glGetShaderInfoLog(fragmentId, 512, NULL, message);
 
 			throw std::runtime_error(std::string("Failed to compile fragment shader: ") + message);
 		}
 
-		terminate(); // in case shader already created
+		Terminate(); // in case shader already created
 
-		id = glCreateProgram();
-		glAttachShader(id, vertexId);
-		glAttachShader(id, fragmentId);
-		glLinkProgram(id);
+		_id = glCreateProgram();
+		glAttachShader(_id, vertexId);
+		glAttachShader(_id, fragmentId);
+		glLinkProgram(_id);
 
-		glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
-		if (!isSucceed) {
-			glGetProgramInfoLog(id, 512, NULL, message);
+		glGetProgramiv(_id, GL_LINK_STATUS, &isSucceed);
+		if (!isSucceed)
+		{
+			glGetProgramInfoLog(_id, 512, NULL, message);
 
 			throw std::runtime_error(std::string("Failed to link shader program: ") + message);
 		}
@@ -70,59 +80,73 @@ namespace Anggur {
 		glDeleteShader(fragmentId);
 	}
 
-	void Shader::bind() {
-		glUseProgram(id);
+	void Shader::Bind()
+	{
+		glUseProgram(_id);
 	}
 
-	void Shader::terminate() {
-		glDeleteProgram(id);
+	void Shader::Terminate()
+	{
+		glDeleteProgram(_id);
 	}
 
-	int Shader::getLocation(const std::string& name) {
-		return glGetUniformLocation(id, name.c_str());
+	int Shader::GetLocation(const std::string& name)
+	{
+		return glGetUniformLocation(_id, name.c_str());
 	}
 
-	void Shader::setUniformVector2(const std::string& name, const Vector2& vector) {
-		glUniform2f(getLocation(name), vector.x, vector.y);
+	void Shader::SetUniformVector2(const std::string& name, const Vector2& vector)
+	{
+		glUniform2f(GetLocation(name), vector.x, vector.y);
 	}
 
-	void Shader::setUniformVector3(const std::string& name, const Vector3& vector) {
-		glUniform3f(getLocation(name), vector.x, vector.y, vector.z);
+	void Shader::SetUniformVector3(const std::string& name, const Vector3& vector)
+	{
+		glUniform3f(GetLocation(name), vector.x, vector.y, vector.z);
 	}
 
-	void Shader::setUniformVector4(const std::string& name, const Vector4& vector) {
-		glUniform4f(getLocation(name), vector.x, vector.y, vector.z, vector.w);
+	void Shader::SetUniformVector4(const std::string& name, const Vector4& vector)
+	{
+		glUniform4f(GetLocation(name), vector.x, vector.y, vector.z, vector.w);
 	}
 
-	void Shader::setUniformMatrix3(const std::string& name, const Matrix3& matrix) {
-		glUniformMatrix3fv(getLocation(name), 1, GL_FALSE, matrix.toPointer());
+	void Shader::SetUniformMatrix3(const std::string& name, const Matrix3& matrix)
+	{
+		glUniformMatrix3fv(GetLocation(name), 1, GL_FALSE, matrix.ToPointer());
 	}
 
-	void Shader::setUniformMatrix4(const std::string& name, const Matrix4& matrix) {
-		glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, matrix.toPointer());
+	void Shader::SetUniformMatrix4(const std::string& name, const Matrix4& matrix)
+	{
+		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, matrix.ToPointer());
 	}
 
-	void Shader::setUniformInt(const std::string& name, int value) {
-		glUniform1i(getLocation(name), value);
+	void Shader::SetUniformInt(const std::string& name, int value)
+	{
+		glUniform1i(GetLocation(name), value);
 	}
 
-	void Shader::setUniformInt(const std::string& name, size_t size, int* values) {
-		glUniform1iv(getLocation(name), size, values);
+	void Shader::SetUniformInt(const std::string& name, size_t size, int* values)
+	{
+		glUniform1iv(GetLocation(name), size, values);
 	}
 
-	void Shader::setUniformUnsignedInt(const std::string& name, unsigned int value) {
-		glUniform1ui(getLocation(name), value);
+	void Shader::SetUniformUint(const std::string& name, unsigned int value)
+	{
+		glUniform1ui(GetLocation(name), value);
 	}
 
-	void Shader::setUniformUnsignedInt(const std::string& name, size_t size, unsigned int* values) {
-		glUniform1uiv(getLocation(name), size, values);
+	void Shader::SetUniformUint(const std::string& name, size_t size, unsigned int* values)
+	{
+		glUniform1uiv(GetLocation(name), size, values);
 	}
 
-	void Shader::setUniformFloat(const std::string& name, float value) {
-		glUniform1f(getLocation(name), value);
+	void Shader::SetUniformFloat(const std::string& name, float value)
+	{
+		glUniform1f(GetLocation(name), value);
 	}
 
-	void Shader::setUniformFloat(const std::string& name, size_t size, float* values) {
-		glUniform1fv(getLocation(name), size, values);
+	void Shader::SetUniformFloat(const std::string& name, size_t size, float* values)
+	{
+		glUniform1fv(GetLocation(name), size, values);
 	}
 }

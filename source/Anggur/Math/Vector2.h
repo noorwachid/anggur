@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Math.h"
 #include <string>
 
-namespace Anggur {
+namespace Anggur
+{
 	struct Matrix3;
 
-	struct Vector2 {
+	struct Vector2
+	{
 		// Fields
 
 		float x;
@@ -34,41 +35,41 @@ namespace Anggur {
 
 		// Casters
 
-		const float* toPointer() const;
+		const float* ToPointer() const;
 
-		std::string toString() const;
+		std::string ToString() const;
 
 		// Getters
 
-		float getLengthSquared() const;
+		float GetLengthSquared() const;
 
-		float getLength() const;
+		float GetLength() const;
 
-		float getAngle() const;
+		float GetAngle() const;
 
-		Vector2 getPerpendicular() const;
+		Vector2 GetPerpendicular() const;
 
 		// Setters
 
-		void set(float scalar);
+		void Set(float scalar);
 
-		void set(float newX, float newY);
+		void Set(float newX, float newY);
 
-		void setPolar(float length, float angle);
+		void SetPolar(float length, float angle);
 
-		void setLength(float length);
+		void SetLength(float length);
 
-		void setLengthLimit(float length);
+		void SetLengthLimit(float length);
 
-		void setAngle(float angle);
+		void SetAngle(float angle);
 
 		// 2nd class manipulations
 
-		static float dot(const Vector2& a, const Vector2& b);
+		static float Dot(const Vector2& a, const Vector2& b);
 
-		static float cross(const Vector2& a, const Vector2& b);
+		static float Cross(const Vector2& a, const Vector2& b);
 
-		static Vector2 normalize(const Vector2& a);
+		static Vector2 Normalize(const Vector2& a);
 
 		// 3rd class manipulations
 
@@ -99,7 +100,8 @@ namespace Anggur {
 		friend Vector2& operator*=(Vector2& a, float b);
 	};
 
-	namespace Math {
-		Vector2 lerp(const Vector2& a, const Vector2& b, float amount);
+	namespace Math
+	{
+		Vector2 Lerp(const Vector2& a, const Vector2& b, float amount);
 	}
 }

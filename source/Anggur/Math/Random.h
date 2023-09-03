@@ -1,40 +1,42 @@
 #pragma once
 
-#include "Anggur/Math/Math.h"
 #include <random>
 
-namespace Anggur {
-	class Random {
+namespace Anggur
+{
+	class Random
+	{
 	public:
 		// Getters
 
-		static float generate();
+		static float Generate();
 
-		static float range(float lower, float upper);
+		static float Range(float lower, float upper);
 
-		static float getNormal();
+		static float GetNormal();
 
-		static float getSigned();
+		static float GetSigned();
 
-		static float getAngle();
+		static float GetAngle();
 
-		static bool getBoolean();
+		static bool GetBoolean();
 
 		// Setters
 
-		static void setSeed(float n);
+		static void SetSeed(float n);
 
 	private:
 		Random();
 
-		static Random& getInstance() {
+		static Random& GetInstance()
+		{
 			static Random instance;
 
 			return instance;
 		}
 
 	private:
-		std::random_device device;
-		std::mt19937 generator;
+		std::random_device _device;
+		std::mt19937 _generator;
 	};
 }
