@@ -103,7 +103,7 @@ namespace Anggur
 		);
 	}
 
-	Matrix3 Matrix3::GreatePixelPerfect(const Vector2& origin, const Vector2& viewportSize)
+	Matrix3 Matrix3::CreatePixelPerfect(const Vector2& origin, const Vector2& viewportSize)
 	{
 		return Matrix3(
 			2.0f / viewportSize.x, 0.0f, 0.0f, 0.0f, -2.0f / viewportSize.y, 0.0f, origin.x, -origin.y, 1.0f

@@ -39,7 +39,7 @@ namespace Anggur
 
 		static Matrix3 CreateOrthographic(const Vector2& origin, const Vector2& viewportSize, float scale = 1.0f);
 
-		static Matrix3 GreatePixelPerfect(const Vector2& origin, const Vector2& viewportSize);
+		static Matrix3 CreatePixelPerfect(const Vector2& origin, const Vector2& viewportSize);
 
 		static Matrix3 CreateTranslation(const Vector2& translation);
 

@@ -66,9 +66,9 @@ namespace Anggur
 		glfwPollEvents();
 	}
 
-	void Window::Connect(std::function<bool(void*)> client)
+	void Window::Connect(std::function<bool(void*)> connector)
 	{
-		bool result = client(reinterpret_cast<void*>(glfwGetProcAddress));
+		bool result = connector(reinterpret_cast<void*>(glfwGetProcAddress));
 
 		if (!result)
 		{

@@ -6,8 +6,11 @@ project(anggur)
 add_executable(anggur
 	"source/Anggur/Text.cpp"
 	"source/Anggur/Log.cpp"
+	"source/Anggur/Application.cpp"
 
 	"source/Anggur/OS/Window.cpp"
+
+	"source/Anggur/Graphics/Pointer.cpp"
 
 	"source/Anggur/Graphics/VertexBuffer.cpp"
 	"source/Anggur/Graphics/Shader.cpp"
@@ -15,6 +18,7 @@ add_executable(anggur
 	"source/Anggur/Graphics/Image.cpp"
 	"source/Anggur/Graphics/Font.cpp"
 	"source/Anggur/Graphics/Font/Packer.cpp"
+
 	"source/Anggur/Graphics/Renderer.cpp"
 	"source/Anggur/Graphics/Renderer/Circle.cpp"
 	"source/Anggur/Graphics/Renderer/Line.cpp"

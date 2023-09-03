@@ -1,62 +1,37 @@
-#include <functional>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include "Anggur/OS/Window.h"
+#include "Anggur/Application.h"
 #include "Anggur/Graphics/Renderer.h"
+#include "Anggur/OS/Window.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 using namespace Anggur;
 
-class Input
+class TestScene : public Scene
 {
-public:
-	Input(Window& window): _window(window)
+	virtual void Initialize() override
 	{
+		_renderer->SetView(
+			Matrix3::CreatePixelPerfect(Vector2(-1, -1), Vector2(_window->GetWidth(), _window->GetHeight()))
+		);
 	}
 
-	bool IsKeyPressed(int key) const
+	virtual void Update(float deltaTime) override
 	{
-		return glfwGetKey(_window.GetContext(), key) == GLFW_PRESS;
-	}
+		_renderer->BeginScene();
 
-private:
-	Window& _window;
+		_renderer->ClearBackground(Vector4(0.1, 0.1, 0.1, 1.0));
+		_renderer->DrawCircle(Vector2(0, 0), 100, 10, Math::epsilon, Vector4::white);
+
+		_renderer->EndScene();
+	}
 };
 
 int main()
 {
-	Window window(600, 400);
+	Application application(400, 300);
+	application.SetScene<TestScene>();
+	application.Run();
 
-	window.Connect([](void* process) {
-		return gladLoadGLLoader(reinterpret_cast<GLADloadproc>(process));
-	});
-
-	Input input(window);
-
-	Renderer renderer;
-
-    while (!window.ShouldClose())
-    {
-        if (input.IsKeyPressed(GLFW_KEY_ESCAPE))
-		{
-			window.Close();
-			continue;
-		}
-
-		renderer.BeginScene();
-
-		renderer.ClearBackground(Vector4(0.1, 0.1, 0.1, 1.0));
-
-		renderer.DrawCircle(Vector2(0, 0), 0.5, 0.25, Math::epsilon, Vector4::white);
-
-		renderer.EndScene();
- 
-        window.SwapBuffers();
-        window.PollEvents();
-    }
-
-    return 0;
+	return 0;
 }
-

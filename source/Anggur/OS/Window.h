@@ -27,7 +27,7 @@ namespace Anggur
 
 		void PollEvents();
 
-		void Connect(std::function<bool(void*)> client);
+		void Connect(std::function<bool(void*)> connector);
 
 		void Close();
 
