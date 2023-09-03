@@ -42,6 +42,8 @@ add_subdirectory("dependency/glfw")
 add_subdirectory("dependency/glad")
 add_subdirectory("dependency/stbtruetype")
 add_subdirectory("dependency/stbimage")
+add_subdirectory("dependency/openalsoft")
+add_subdirectory("dependency/snd")
 
 target_include_directories(anggur PUBLIC "source")
 target_link_libraries(anggur
@@ -49,6 +51,9 @@ target_link_libraries(anggur
 	glad
 	stbtruetype
 	stbimage
+
+	OpenAL
+	sndfile
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
