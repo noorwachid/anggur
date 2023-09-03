@@ -41,7 +41,7 @@ namespace Anggur
 		Matrix3 _view;
 
 		std::vector<CircleVertex> _vertices;
-		std::vector<uint> _indices;
+		std::vector<unsigned int> _indices;
 
 		size_t _vertexOffset = 0;
 		size_t _indexOffset = 0;

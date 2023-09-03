@@ -1,5 +1,5 @@
 #include "Anggur/Graphics/Texture.h"
-#include "glad/glad.h"
+#include "Anggur/Graphics/API.h"
 #include "stb_image.h"
 #include <vector>
 
@@ -71,7 +71,7 @@ namespace Anggur
 
 		if (bytes.empty())
 		{
-			assert(false && "Cannot load buffer to texture, data is empty");
+			// assert(false && "Cannot load buffer to texture, data is empty");
 		}
 		else
 		{

@@ -1,5 +1,5 @@
 #include "Anggur/Graphics/Renderer/Triangle.h"
-#include "glad/glad.h"
+#include "Anggur/Graphics/API.h"
 
 namespace Anggur
 {
@@ -33,8 +33,6 @@ namespace Anggur
 
 		_shader.Bind();
 		_shader.SetVertexSource(R"(
-			#version 330 core
-
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec4 aColor;
 			layout (location = 2) in float aTextureIndex;
@@ -55,16 +53,12 @@ namespace Anggur
 				vTexturePosition = aTexturePosition;
 			}
 		)");
-		_shader.SetFragmentSource(
-			R"(
-			#version 330 core
-			
+		_shader.SetFragmentSource(R"(
 			in vec4 vColor;
 			in float vTextureIndex;
 			in vec2 vTexturePosition;
 
-			uniform sampler2D uTextures[)" +
-			std::to_string(TextureSpecification::GetMaxSlot()) + R"(];
+			uniform sampler2D uTextures[TEXTURE_SLOT];
 
 			out vec4 fColor;
 
@@ -72,14 +66,15 @@ namespace Anggur
 			{
 				int textureIndex = int(vTextureIndex);
 
-				fColor = texture(uTextures[textureIndex], vTexturePosition) * vColor;
+				TEXTURE_SLOT_INDEXING(fColor, uTextures, textureIndex, vTexturePosition)
+
+				fColor *= vColor;
 
 				if (fColor.w == 0.0f) {
 					discard;
 				}
 			}
-		)"
-		);
+		)");
 		_shader.Compile();
 	}
 

@@ -1,5 +1,5 @@
 #include "Anggur/Graphics/Renderer/Rectangle.h"
-#include "glad/glad.h"
+#include "Anggur/Graphics/API.h"
 
 namespace Anggur
 {
@@ -28,8 +28,6 @@ namespace Anggur
 
 		_shader.Bind();
 		_shader.SetVertexSource(R"(
-			#version 330 core
-
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aSize;
 			layout (location = 2) in vec2 aQuadrant;
@@ -61,8 +59,6 @@ namespace Anggur
 			}
 		)");
 		_shader.SetFragmentSource(R"(
-			#version 330 core
-			
 			in vec2 vSize;
 			in vec2 vQuadrant;
 			in float vRadius;
@@ -132,7 +128,8 @@ namespace Anggur
 
 		_vertices[_vertexOffset + 0].position = Vector2(position.x - sharpness, position.y - sharpness);
 		_vertices[_vertexOffset + 1].position = Vector2(position.x + size.x + sharpness, position.y - sharpness);
-		_vertices[_vertexOffset + 2].position = Vector2(position.x + size.x + sharpness, position.y + size.y + sharpness);
+		_vertices[_vertexOffset + 2].position =
+			Vector2(position.x + size.x + sharpness, position.y + size.y + sharpness);
 		_vertices[_vertexOffset + 3].position = Vector2(position.x - sharpness, position.y + size.y + sharpness);
 
 		_vertices[_vertexOffset + 0].size = size;

@@ -1,5 +1,5 @@
-#include "glad/glad.h"
 #include "Anggur/Graphics/VertexBuffer.h"
+#include "Anggur/Graphics/API.h"
 
 namespace Anggur
 {

@@ -8,7 +8,6 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
 #include "Anggur/Text.h"
-#include "glad/glad.h"
 
 namespace Anggur
 {

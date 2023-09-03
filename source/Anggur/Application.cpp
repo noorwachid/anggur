@@ -1,6 +1,10 @@
 #include "Anggur/Application.h"
 #include "Anggur/Graphics/Pointer.h"
 
+#ifdef EMSCRIPTEN
+#include "emscripten.h"
+#endif
+
 namespace Anggur
 {
 	Application::Application(uint32_t width, uint32_t height) : _window(width, height), _scene(nullptr)
@@ -19,6 +23,12 @@ namespace Anggur
 
 	void Application::Run()
 	{
+		#ifdef EMSCRIPTEN
+		emscripten_set_main_loop_arg([](void* application) {
+			Application& app = *static_cast<Application*>(application);
+			if (app._scene) app._scene->Update(0.01);
+		}, this, -1, 1);
+		#else
 		while (!_window.ShouldClose())
 		{
 			if (_scene) _scene->Update(0.016f);
@@ -26,5 +36,6 @@ namespace Anggur
 			_window.SwapBuffers();
 			_window.PollEvents();
 		}
+		#endif
 	}
 }

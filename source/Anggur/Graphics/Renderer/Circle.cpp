@@ -1,5 +1,5 @@
 #include "Anggur/Graphics/Renderer/Circle.h"
-#include "glad/glad.h"
+#include "Anggur/Graphics/API.h"
 
 namespace Anggur {
 	CircleRenderer::CircleRenderer() {
@@ -25,8 +25,6 @@ namespace Anggur {
 
 		_shader.Bind();
 		_shader.SetVertexSource(R"(
-			#version 330 core
-
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aQuadrant;
 			layout (location = 2) in float aRadius;
@@ -55,8 +53,6 @@ namespace Anggur {
 			}
 		)");
 		_shader.SetFragmentSource(R"(
-			#version 330 core
-			
 			in vec2 vQuadrant;
 			in float vRadius;
 			in float vThickness;

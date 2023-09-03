@@ -1,5 +1,5 @@
 #include "Anggur/Graphics/Renderer/Line.h"
-#include "glad/glad.h"
+#include "Anggur/Graphics/API.h"
 
 namespace Anggur
 {
@@ -28,8 +28,6 @@ namespace Anggur
 
 		_shader.Bind();
 		_shader.SetVertexSource(R"(
-			#version 330 core
-
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aPositionA;
 			layout (location = 2) in vec2 aPositionB;
@@ -61,8 +59,6 @@ namespace Anggur
 			}
 		)");
 		_shader.SetFragmentSource(R"(
-			#version 330 core
-			
 			in vec2 vPositionA;
 			in vec2 vPositionB;
 			in vec2 vQuadrant;

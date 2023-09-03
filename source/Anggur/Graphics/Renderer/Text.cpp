@@ -1,4 +1,5 @@
 #include "Anggur/Graphics/Renderer/Text.h"
+#include "Anggur/Graphics/API.h"
 
 namespace Anggur
 {
@@ -35,8 +36,6 @@ namespace Anggur
 
 		_shader.Bind();
 		_shader.SetVertexSource(R"(
-			#version 330 core
-
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aTexturePosition;
 			layout (location = 2) in float aTextureIndex;
@@ -67,10 +66,9 @@ namespace Anggur
 				vColor = aColor;
 			}
 		)");
+
 		_shader.SetFragmentSource(
 			R"(
-			#version 330 core
-			
 			in vec2 vTexturePosition;
 			in float vTextureIndex;
 			in float vThickness;
@@ -80,19 +78,22 @@ namespace Anggur
 
 			out vec4 fColor;
 
-			uniform sampler2D uTextures[)" +
-			std::to_string(TextureSpecification::GetMaxSlot()) + R"(];
+			uniform sampler2D uTextures[TEXTURE_SLOT];
 
 			void main() 
 			{
 				int textureIndex = int(vTextureIndex);
-				float sample = texture(uTextures[textureIndex], vTexturePosition).r;
+
+				vec4 color;
+
+				TEXTURE_SLOT_INDEXING(color, uTextures, textureIndex, vTexturePosition)
+
 				float thickness = 0.5f;
 
 				fColor = vColor;
-				float aa = fwidth(sample);
-				fColor.w *= smoothstep(thickness - aa, thickness + aa, sample);
-				// fColor.w *= sample;
+				float aa = fwidth(color.r);
+				fColor.w *= smoothstep(thickness - aa, thickness + aa, color.r);
+				// fColor.w *= color.r;
 
 				if (fColor.w == 0.0f) 
 				{
@@ -383,7 +384,8 @@ namespace Anggur
 
 				AddCharacter(
 					pointer + position + ellipsisLocalPosition, ellipsisLocalSize, thickness, sharpness, 1, color,
-					font->_textures[ellipsisGlyph.textureIndex], ellipsisGlyph.texturePosition, ellipsisGlyph.textureSize
+					font->_textures[ellipsisGlyph.textureIndex], ellipsisGlyph.texturePosition,
+					ellipsisGlyph.textureSize
 				);
 				break;
 			}
