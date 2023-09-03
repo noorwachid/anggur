@@ -724,7 +724,7 @@ class CppException extends EmscriptenEH {
 }
 // end include: runtime_exceptions.js
 var wasmBinaryFile;
-  wasmBinaryFile = 'anggur.wasm';
+  wasmBinaryFile = 'index.wasm';
   if (!isDataURI(wasmBinaryFile)) {
     wasmBinaryFile = locateFile(wasmBinaryFile);
   }

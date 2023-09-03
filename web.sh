@@ -6,7 +6,8 @@ em++ \
 	-s FULL_ES3=1 \
 	-s USE_GLFW=3 \
 	-s EXCEPTION_CATCHING_ALLOWED=catch \
-	-o "web/anggur.html" \
+	-o "web/index.html" \
+	--shell-file "web/template.html" \
 	"source/Anggur/Text.cpp" \
 	"source/Anggur/Log.cpp" \
 	"source/Anggur/Application.cpp" \
