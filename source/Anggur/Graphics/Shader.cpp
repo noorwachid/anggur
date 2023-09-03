@@ -190,16 +190,12 @@ namespace Anggur
 
 	void Shader::SetUniformUint(const std::string& name, unsigned int value)
 	{
-		#ifndef EMSCRIPTEN
 		glUniform1ui(GetLocation(name), value);
-		#endif
 	}
 
 	void Shader::SetUniformUint(const std::string& name, size_t size, unsigned int* values)
 	{
-		#ifndef EMSCRIPTEN
 		glUniform1uiv(GetLocation(name), size, values);
-		#endif
 	}
 
 	void Shader::SetUniformFloat(const std::string& name, float value)
