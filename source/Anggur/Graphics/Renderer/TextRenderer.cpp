@@ -1,4 +1,4 @@
-#include "Anggur/Graphics/Renderer/Text.h"
+#include "Anggur/Graphics/Renderer/TextRenderer.h"
 #include "Anggur/Graphics/API.h"
 
 namespace Anggur

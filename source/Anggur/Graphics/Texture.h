@@ -19,9 +19,11 @@ namespace Anggur
 	class Texture
 	{
 	public:
-		Texture();
 		Texture(
-			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
+			const std::vector<unsigned char>& bytes, 
+			unsigned int width, 
+			unsigned int height, 
+			unsigned int channels = 8,
 			SamplerFilter filter = SamplerFilter::Linear
 		);
 
@@ -46,13 +48,6 @@ namespace Anggur
 		{
 			return _channels;
 		}
-
-		void Read(
-			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
-			SamplerFilter filter = SamplerFilter::Linear
-		);
-
-		void Close();
 
 		void Bind(unsigned int slot = 0);
 

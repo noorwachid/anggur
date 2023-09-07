@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Anggur/Scene.h"
+#include "Anggur/Audio/AudioDevice.h"
 #include "Anggur/OS/Window.h"
 #include "Anggur/Graphics/Renderer.h"
 
@@ -32,6 +33,7 @@ namespace Anggur
 		Window _window;
 		Renderer* _renderer;
 		Scene* _scene;
+		AudioDevice _audioDevice;
 	};
 }
 

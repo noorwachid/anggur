@@ -55,7 +55,7 @@ namespace Anggur
 
 		sourceSlot += "}\n";
 
-		return std::regex_replace(source, std::regex("TEXTURE_SLOT_INDEXING\\(([a-zA-Z_]+), ([a-zA-Z_]+), ([a-zA-Z_]+), ([a-zA-Z_]+)\\)"), sourceSlot);
+		return std::regex_replace(source, std::regex(R"(TEXTURE_SLOT_INDEXING\(([a-zA-Z_]+), ([a-zA-Z_]+), ([a-zA-Z_]+), ([a-zA-Z_]+)\))"), sourceSlot);
 	}
 
 	void Shader::SetVertexSource(const std::string& source)

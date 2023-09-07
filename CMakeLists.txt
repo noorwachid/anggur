@@ -10,6 +10,10 @@ add_executable(anggur
 
 	"source/Anggur/OS/Window.cpp"
 
+	"source/Anggur/Audio/AudioDevice.cpp"
+	"source/Anggur/Audio/AudioBuffer.cpp"
+	"source/Anggur/Audio/AudioSource.cpp"
+
 	"source/Anggur/Graphics/Pointer.cpp"
 
 	"source/Anggur/Graphics/VertexBuffer.cpp"
@@ -17,14 +21,14 @@ add_executable(anggur
 	"source/Anggur/Graphics/Texture.cpp"
 	"source/Anggur/Graphics/Image.cpp"
 	"source/Anggur/Graphics/Font.cpp"
-	"source/Anggur/Graphics/Font/Packer.cpp"
+	"source/Anggur/Graphics/Font/FontPacker.cpp"
 
 	"source/Anggur/Graphics/Renderer.cpp"
-	"source/Anggur/Graphics/Renderer/Circle.cpp"
-	"source/Anggur/Graphics/Renderer/Line.cpp"
-	"source/Anggur/Graphics/Renderer/Rectangle.cpp"
-	"source/Anggur/Graphics/Renderer/Text.cpp"
-	"source/Anggur/Graphics/Renderer/Triangle.cpp"
+	"source/Anggur/Graphics/Renderer/CircleRenderer.cpp"
+	"source/Anggur/Graphics/Renderer/LineRenderer.cpp"
+	"source/Anggur/Graphics/Renderer/RectangleRenderer.cpp"
+	"source/Anggur/Graphics/Renderer/TextRenderer.cpp"
+	"source/Anggur/Graphics/Renderer/TriangleRenderer.cpp"
 
 	"source/Anggur/Math.cpp"
 	"source/Anggur/Math/Matrix3.cpp"
@@ -43,7 +47,6 @@ add_subdirectory("dependency/glad")
 add_subdirectory("dependency/stbtruetype")
 add_subdirectory("dependency/stbimage")
 add_subdirectory("dependency/openalsoft")
-add_subdirectory("dependency/snd")
 
 target_include_directories(anggur PUBLIC "source")
 target_link_libraries(anggur
@@ -53,7 +56,6 @@ target_link_libraries(anggur
 	stbimage
 
 	OpenAL
-	sndfile
 
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

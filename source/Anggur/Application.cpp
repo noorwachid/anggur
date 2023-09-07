@@ -1,12 +1,32 @@
 #include "Anggur/Application.h"
+#include "Anggur/Audio/AudioBuffer.h"
+#include "Anggur/Audio/AudioSource.h"
 #include "Anggur/Graphics/Pointer.h"
 #include "AL/al.h"
 #include "AL/alc.h"
-#include "sndfile.h"
+#include "GLFW/glfw3.h"
+#include <fstream>
 
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
 #endif
+
+struct WavHeader 
+{
+    char chunkId[4];
+    uint32_t chunkSize;
+    char format[4];
+    char subchunk1Id[4];
+    uint32_t subchunk1Size;
+    uint16_t audioFormat;
+    uint16_t numChannels;
+    uint32_t sampleRate;
+    uint32_t byteRate;
+    uint16_t blockAlign;
+    uint16_t bitsPerSample;
+    char subchunk2Id[4];
+    uint32_t subchunk2Size;
+};
 
 namespace Anggur
 {
@@ -26,51 +46,6 @@ namespace Anggur
 
 	void Application::Run()
 	{
-		ALCdevice* device = alcOpenDevice(NULL);
-		if (!device)
-		{
-			// Handle error
-		}
-
-		ALCcontext* context = alcCreateContext(device, NULL);
-		if (!context)
-		{
-			// Handle error
-		}
-
-		alcMakeContextCurrent(context);
-
-		// Create an OpenAL source and buffer for audio playback
-		ALuint source;
-		ALuint buffer;
-
-		alGenSources(1, &source);
-		alGenBuffers(1, &buffer);
-
-		SF_INFO sfinfo;
-		SNDFILE* sndfile = sf_open("your_wav_file.wav", SFM_READ, &sfinfo);
-
-		if (!sndfile)
-		{
-			std::cerr << "Error opening WAV file" << std::endl;
-		}
-
-		ALsizei num_samples = sfinfo.frames * sfinfo.channels;
-		ALshort* buffer_data = new ALshort[num_samples];
-		sf_readf_short(sndfile, buffer_data, num_samples);
-
-		alBufferData(
-			buffer, (sfinfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, buffer_data,
-			num_samples * sizeof(ALshort), sfinfo.samplerate
-		);
-
-		sf_close(sndfile);
-		delete[] buffer_data;
-
-		alSourcei(source, AL_BUFFER, buffer);
-		alSourcef(source, AL_GAIN, 1.0f);  // Set volume (1.0 = full volume)
-		alSourcef(source, AL_PITCH, 1.0f); // Set pitch (1.0 = normal pitch)
-
 		#ifdef EMSCRIPTEN
 		emscripten_set_main_loop_arg(
 			[](void* application) {
@@ -82,9 +57,6 @@ namespace Anggur
 		);
 		#else
 
-		// Play the audio source
-		alSourcePlay(source);
-
 		while (!_window.ShouldClose())
 		{
 			if (_scene)
@@ -93,14 +65,7 @@ namespace Anggur
 			_window.SwapBuffers();
 			_window.PollEvents();
 		}
+
 		#endif
-
-		// Cleanup OpenAL (placed after the main loop)
-		alDeleteSources(1, &source);
-		alDeleteBuffers(1, &buffer);
-
-		alcMakeContextCurrent(NULL);
-		alcDestroyContext(context);
-		alcCloseDevice(device);
 	}
 }

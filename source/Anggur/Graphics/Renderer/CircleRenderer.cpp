@@ -1,4 +1,4 @@
-#include "Anggur/Graphics/Renderer/Circle.h"
+#include "Anggur/Graphics/Renderer/CircleRenderer.h"
 #include "Anggur/Graphics/API.h"
 
 namespace Anggur {

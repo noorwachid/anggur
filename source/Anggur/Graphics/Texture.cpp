@@ -5,35 +5,7 @@
 
 namespace Anggur
 {
-	int TextureSpecification::GetMaxSlot()
-	{
-		static int maxSlot = 0;
-		if (maxSlot == 0)
-			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
-
-		return maxSlot;
-	}
-
-	Texture::Texture()
-	{
-		_id = 0;
-	}
-
-	Texture::Texture(
-		const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels,
-		SamplerFilter filter
-	)
-	{
-		_id = 0;
-		Read(bytes, width, height, channels, filter);
-	}
-
-	Texture::~Texture()
-	{
-		Close();
-	}
-
-	int toGLFilter(SamplerFilter filter)
+	int ToNativeType(SamplerFilter filter)
 	{
 		switch (filter)
 		{
@@ -46,28 +18,36 @@ namespace Anggur
 		}
 	}
 
-	void Texture::Read(
+	int TextureSpecification::GetMaxSlot()
+	{
+		static int maxSlot = 0;
+		if (maxSlot == 0)
+			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
+
+		return maxSlot;
+	}
+
+	Texture::Texture(
 		const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels,
 		SamplerFilter filter
 	)
 	{
-		Close();
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		this->_width = width;
-		this->_height = height;
-		this->_channels = channels;
+		_width = width;
+		_height = height;
+		_channels = channels;
 
 		glGenTextures(1, &_id);
 		glBindTexture(GL_TEXTURE_2D, _id);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, toGLFilter(filter));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, toGLFilter(filter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToNativeType(filter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToNativeType(filter));
 
 		if (bytes.empty())
 		{
@@ -102,10 +82,9 @@ namespace Anggur
 		}
 	}
 
-	void Texture::Close()
+	Texture::~Texture()
 	{
-		if (_id != 0)
-			glDeleteTextures(1, &_id);
+		glDeleteTextures(1, &_id);
 	}
 
 	void Texture::Bind(unsigned int slot)

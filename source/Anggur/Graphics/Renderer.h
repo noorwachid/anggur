@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Anggur/Graphics/Renderer/Circle.h"
-#include "Anggur/Graphics/Renderer/Line.h"
-#include "Anggur/Graphics/Renderer/Rectangle.h"
-#include "Anggur/Graphics/Renderer/Text.h"
-#include "Anggur/Graphics/Renderer/Triangle.h"
+#include "Anggur/Graphics/Renderer/CircleRenderer.h"
+#include "Anggur/Graphics/Renderer/LineRenderer.h"
+#include "Anggur/Graphics/Renderer/RectangleRenderer.h"
+#include "Anggur/Graphics/Renderer/TextRenderer.h"
+#include "Anggur/Graphics/Renderer/TriangleRenderer.h"
 #include "Anggur/Graphics/Shader.h"
 #include "Anggur/Graphics/Texture.h"
 #include "Anggur/Graphics/VertexBuffer.h"

@@ -5,12 +5,17 @@ em++ \
 	-Idependency/stbtruetype/src \
 	-s FULL_ES3=1 \
 	-s USE_GLFW=3 \
+	-lopenal \
 	-s EXCEPTION_CATCHING_ALLOWED=catch \
+	--preload-file "resource/sample.wav" \
 	-o "web/index.html" \
 	--shell-file "web/template.html" \
 	"source/Anggur/Text.cpp" \
 	"source/Anggur/Log.cpp" \
 	"source/Anggur/Application.cpp" \
+	"source/Anggur/Audio/Device.cpp" \
+	"source/Anggur/Audio/Buffer.cpp" \
+	"source/Anggur/Audio/Source.cpp" \
 	"source/Anggur/OS/Window.cpp" \
 	"source/Anggur/Graphics/Pointer.cpp" \
 	"source/Anggur/Graphics/VertexBuffer.cpp" \

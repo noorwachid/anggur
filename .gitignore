@@ -1,4 +1,3 @@
-/.vscode
-/.idea
 /build
-/Distributions
+/resource
+/web
