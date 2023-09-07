@@ -1,7 +1,7 @@
 #include "Anggur/Application.h"
 #include "Anggur/Audio/AudioBuffer.h"
 #include "Anggur/Audio/AudioSource.h"
-#include "Anggur/Graphics/Pointer.h"
+#include "Anggur/Graphics/Driver.h"
 #include "AL/al.h"
 #include "AL/alc.h"
 #include "GLFW/glfw3.h"
@@ -32,14 +32,17 @@ namespace Anggur
 {
 	Application::Application(uint32_t width, uint32_t height) : _window(width, height), _scene(nullptr)
 	{
-		_window.Connect([](void* address) -> bool { return ConnectPointer(address); });
+		_window.Connect([](void* address) -> bool { return LoadGraphicsDriver(address); });
 		_renderer = new Renderer();
 	}
 
 	Application::~Application()
 	{
 		if (_scene)
+		{
+			_scene->Terminate();
 			delete _scene;
+		}
 
 		delete _renderer;
 	}

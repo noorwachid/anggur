@@ -35,7 +35,16 @@ public:
 		_source4 = new AudioSource();
 		_source4->SetBuffer(_buffer);
 		_source4->SetPitch(1.6f);
+	}
 
+	virtual void Terminate() override
+	{
+
+		delete _source1;
+		delete _source2;
+		delete _source3;
+		delete _source4;
+		delete _buffer;
 	}
 
 	virtual void Update(float deltaTime) override

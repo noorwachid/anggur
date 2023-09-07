@@ -14,7 +14,7 @@ add_executable(anggur
 	"source/Anggur/Audio/AudioBuffer.cpp"
 	"source/Anggur/Audio/AudioSource.cpp"
 
-	"source/Anggur/Graphics/Pointer.cpp"
+	"source/Anggur/Graphics/Driver.cpp"
 
 	"source/Anggur/Graphics/VertexBuffer.cpp"
 	"source/Anggur/Graphics/Shader.cpp"

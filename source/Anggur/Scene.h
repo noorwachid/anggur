@@ -12,6 +12,8 @@ namespace Anggur
 
 		virtual void Update(float deltaTime) {}
 
+		virtual void Terminate() {}
+
 	protected:
 		Window* _window;
 		Renderer* _renderer;
