@@ -2,7 +2,7 @@
 
 namespace Anggur::Text::UTF8
 {
-	std::string expand(unsigned int codepoint)
+	std::string Expand(unsigned int codepoint)
 	{
 		std::string result;
 
@@ -36,7 +36,7 @@ namespace Anggur::Text::UTF8
 		return result;
 	}
 
-	unsigned int collapse(const std::string& text, size_t index)
+	unsigned int Collapse(const std::string& text, size_t index)
 	{
 		// std::string text = "Hello, 🌎!";
 		unsigned int codepoint = 0;
@@ -67,7 +67,7 @@ namespace Anggur::Text::UTF8
 		return codepoint;
 	}
 
-	unsigned int collapseAndMoveIndex(const std::string& text, size_t& index)
+	unsigned int CollapseAndMoveIndex(const std::string& text, size_t& index)
 	{
 		// std::string text = "Hello, 🌎!";
 		unsigned int codepoint = 0;

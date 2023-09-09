@@ -164,7 +164,7 @@ namespace Anggur
 
 		for (size_t i = 0; i < content.size();)
 		{
-			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
+			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
 
 			if (codepoint == ' ')
 			{
@@ -205,7 +205,7 @@ namespace Anggur
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->GetKerning(codepoint, Text::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
 		}
 	}
 
@@ -224,7 +224,7 @@ namespace Anggur
 
 		for (size_t i = 0; i < content.size();)
 		{
-			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
+			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
 
 			if (codepoint == ' ')
 			{
@@ -261,7 +261,7 @@ namespace Anggur
 			}
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->GetKerning(codepoint, Text::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
 		}
 
 		pointer.x = Math::Max(pointer.x, maxX);
@@ -285,7 +285,7 @@ namespace Anggur
 
 		for (size_t index = 0; index < content.size();)
 		{
-			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, index);
+			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, index);
 
 			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
 			{
@@ -318,7 +318,7 @@ namespace Anggur
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->GetKerning(codepoint, Text::UTF8::collapse(content, index)));
+						 (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, index)));
 		}
 	}
 
@@ -350,7 +350,7 @@ namespace Anggur
 
 		for (size_t index = contentOffset; index < content.size();)
 		{
-			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, index);
+			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, index);
 
 			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
 			{
@@ -402,7 +402,7 @@ namespace Anggur
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->GetKerning(codepoint, Text::UTF8::collapse(content, index)));
+						 (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, index)));
 		}
 	}
 
@@ -422,7 +422,7 @@ namespace Anggur
 
 		for (size_t i = 0; i < content.size();)
 		{
-			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
+			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
 
 			if (codepoint == ' ')
 			{
@@ -470,7 +470,7 @@ namespace Anggur
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->GetKerning(codepoint, Text::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
 		}
 	}
 
@@ -490,7 +490,7 @@ namespace Anggur
 
 		for (size_t i = 0; i < content.size();)
 		{
-			unsigned int codepoint = Text::UTF8::collapseAndMoveIndex(content, i);
+			unsigned int codepoint = Text::UTF8::CollapseAndMoveIndex(content, i);
 
 			if (codepoint == ' ')
 			{
@@ -548,7 +548,7 @@ namespace Anggur
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->GetKerning(codepoint, Text::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, Text::UTF8::Collapse(content, i)));
 		}
 	}
 
