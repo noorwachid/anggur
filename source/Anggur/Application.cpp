@@ -30,7 +30,7 @@ struct WavHeader
 
 namespace Anggur
 {
-	Application::Application(uint32_t width, uint32_t height) : _window(width, height), _scene(nullptr)
+	Application::Application(uint32_t width, uint32_t height, const std::string& title) : _window(width, height, title), _scene(nullptr)
 	{
 		_window.Connect([](void* address) -> bool { return LoadGraphicsDriver(address); });
 		_renderer = new Renderer();
@@ -60,10 +60,17 @@ namespace Anggur
 		);
 		#else
 
+		double previousTime = glfwGetTime();
+		_window.PollEvents();
+
 		while (!_window.ShouldClose())
 		{
+			double currentTime = glfwGetTime();
+			float deltaTime = currentTime - previousTime;
+			previousTime = currentTime;
+
 			if (_scene)
-				_scene->Update(0.016f);
+				_scene->Update(deltaTime);
 
 			_window.SwapBuffers();
 			_window.PollEvents();

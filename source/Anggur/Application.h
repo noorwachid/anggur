@@ -10,7 +10,7 @@ namespace Anggur
 	class Application
 	{
 	public:
-		Application(uint32_t width, uint32_t height);
+		Application(uint32_t width, uint32_t height, const std::string& title);
 
 		~Application();
 
@@ -24,8 +24,8 @@ namespace Anggur
 			_scene->_window = &_window;
 			_scene->_renderer = _renderer;
 			_scene->Initialize();
+			_window.SetObserver(_scene);
 		}
-
 
 		void Run();
 

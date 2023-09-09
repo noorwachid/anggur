@@ -14,6 +14,20 @@ namespace Anggur
 		alDeleteSources(1, &_id);
 	}
 
+	float AudioSource::GetGain() const
+	{
+		float value;
+		alGetSourcef(_id, AL_GAIN, &value);
+		return value;
+	}
+
+	float AudioSource::GetPitch() const
+	{
+		float value;
+		alGetSourcef(_id, AL_PITCH, &value);
+		return value;
+	}
+
 	void AudioSource::SetBuffer(AudioBuffer* buffer)
 	{
 		if (buffer)
@@ -35,6 +49,16 @@ namespace Anggur
 	void AudioSource::Play()
 	{
 		alSourcePlay(_id);
+	}
+
+	void AudioSource::Pause()
+	{
+		alSourcePause(_id);
+	}
+
+	void AudioSource::Stop()
+	{
+		alSourceStop(_id);
 	}
 }
 

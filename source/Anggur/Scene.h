@@ -5,7 +5,7 @@
 
 namespace Anggur
 {
-	class Scene
+	class Scene: public WindowObserver
 	{
 	public:
 		virtual void Initialize() {}

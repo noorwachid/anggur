@@ -1,6 +1,7 @@
 #include "Anggur/Audio/AudioBuffer.h"
 #include "AL/al.h"
 #include "AL/alc.h"
+#include "stb_vorbis.c"
 #include <fstream>
 #include <iostream>
 
@@ -31,12 +32,11 @@ namespace Anggur
 
 		if (extension == ".wav") 
 		{
-			const char* wav_filename = "resource/sample.wav";
-			std::ifstream wav_file(wav_filename, std::ios::binary);
+			std::ifstream wav_file(path, std::ios::binary);
 
-			if (!wav_file.is_open()) {
-				std::cerr << "Failed to open WAV file: " << wav_filename << std::endl;
-				return;
+			if (!wav_file.is_open()) 
+			{
+				throw std::runtime_error("Failed to open WAV file: " + path);
 			}
 
 			WavHeader header;
@@ -44,12 +44,12 @@ namespace Anggur
 
 			// Check that the file is a valid WAV file
 			if (std::string(header.chunkId, 4) != "RIFF" ||
-					std::string(header.format, 4) != "WAVE" ||
-					std::string(header.subchunk1Id, 4) != "fmt " ||
-					header.audioFormat != 1 || // PCM format
-					header.bitsPerSample != 16) {
-				std::cerr << "Unsupported or invalid WAV file format." << std::endl;
-				return;
+				std::string(header.format, 4) != "WAVE" ||
+				std::string(header.subchunk1Id, 4) != "fmt " ||
+				header.audioFormat != 1 || // PCM format
+				header.bitsPerSample != 16) 
+			{
+				throw std::runtime_error("Unsupported or invalid WAV file format");
 			}
 
 			// Read audio data
@@ -61,6 +61,33 @@ namespace Anggur
 
 			// Set the audio data in the buffer
 			alBufferData(_id, format, audio_data.data(), audio_data.size() * sizeof(int16_t), header.sampleRate);
+		}
+		else if (extension == ".ogg") 
+		{
+			stb_vorbis* vorbisFile = stb_vorbis_open_filename(path.c_str(), nullptr, nullptr);
+
+			if (!vorbisFile)
+				throw std::runtime_error("failed to open vorbis file: " + path);
+
+			stb_vorbis_info vorbisInfo = stb_vorbis_get_info(vorbisFile);
+			// Determine the size of the Vorbis data
+			int dataSize = stb_vorbis_stream_length_in_samples(vorbisFile) * vorbisInfo.channels * 2; // 16-bit audio
+
+			// Allocate memory for audio data
+			short* audioData = new short[dataSize];
+
+			// Read audio data from the Vorbis file
+			int samplesRead = stb_vorbis_get_samples_short_interleaved(vorbisFile, vorbisInfo.channels, audioData, dataSize);
+			if (samplesRead < 0) 
+			{
+				delete[] audioData;
+				throw std::runtime_error("Failed to read vorbis data");
+			}
+
+			alBufferData(_id, (vorbisInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, audioData, dataSize, vorbisInfo.sample_rate);
+
+			delete[] audioData;
+			stb_vorbis_close(vorbisFile);
 		}
 		else
 		{

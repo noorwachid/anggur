@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/OS/WindowObserver.h"
 #include <string>
 
 class GLFWwindow;
@@ -11,13 +12,15 @@ namespace Anggur
 	class Window
 	{
 	public:
-		Window(uint32_t width, uint32_t height);
+		Window(unsigned int width, unsigned int height, const std::string& title);
 
 		~Window();
 
-		uint32_t GetWidth() const;
+		unsigned int GetWidth() const;
 
-		uint32_t GetHeight() const;
+		unsigned int GetHeight() const;
+
+		const std::string GetTitle() const;
 
 		WindowContext* GetContext();
 
@@ -31,9 +34,12 @@ namespace Anggur
 
 		void Close();
 
+		void SetObserver(WindowObserver* observer);
+
 	private:
-		uint32_t _width;
-		uint32_t _height;
+		unsigned int _width;
+		unsigned int _height;
+		std::string _title;
 
 		WindowContext* _context;
 	};

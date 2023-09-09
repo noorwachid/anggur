@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 
-project(stb::image)
+project(stbimage)
 
 add_library(stbimage STATIC
 	"src/stb_image.c"

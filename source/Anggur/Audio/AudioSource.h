@@ -11,6 +11,10 @@ namespace Anggur
 
 		~AudioSource();
 
+		float GetGain() const;
+
+		float GetPitch() const;
+
 		void SetBuffer(AudioBuffer* buffer);
 
 		void SetGain(float gain);
@@ -18,6 +22,10 @@ namespace Anggur
 		void SetPitch(float pitch);
 
 		void Play();
+
+		void Pause();
+
+		void Stop();
 
 	private:
 		unsigned int _id;

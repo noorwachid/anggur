@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(anggur)
 
-add_executable(anggur
+add_library(anggur SHARED
 	"source/Anggur/Text.cpp"
 	"source/Anggur/Log.cpp"
 	"source/Anggur/Application.cpp"
@@ -38,14 +38,13 @@ add_executable(anggur
 	"source/Anggur/Math/Vector4.cpp"
 	"source/Anggur/Math/Quaternion.cpp"
 	"source/Anggur/Math/Random.cpp"
-
-	"source/main.cpp"
 )
 
 add_subdirectory("dependency/glfw")
 add_subdirectory("dependency/glad")
 add_subdirectory("dependency/stbtruetype")
 add_subdirectory("dependency/stbimage")
+add_subdirectory("dependency/stbvorbis")
 add_subdirectory("dependency/openalsoft")
 
 target_include_directories(anggur PUBLIC "source")
@@ -54,6 +53,7 @@ target_link_libraries(anggur
 	glad
 	stbtruetype
 	stbimage
+	stbvorbis
 
 	OpenAL
 
