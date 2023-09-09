@@ -20,6 +20,10 @@ namespace Anggur
 
 		unsigned int GetHeight() const;
 
+		unsigned int GetFrameBufferWidth() const;
+
+		unsigned int GetFrameBufferHeight() const;
+
 		const std::string GetTitle() const;
 
 		WindowContext* GetContext();
@@ -39,8 +43,13 @@ namespace Anggur
 	private:
 		unsigned int _width;
 		unsigned int _height;
+
+		unsigned int _frameBufferWidth;
+		unsigned int _frameBufferHeight;
+
 		std::string _title;
 
 		WindowContext* _context;
+		WindowObserver* _observer;
 	};
 }
