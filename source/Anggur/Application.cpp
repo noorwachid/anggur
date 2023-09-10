@@ -78,4 +78,49 @@ namespace Anggur
 
 		#endif
 	}
+
+	void Application::StableRun()
+	{
+		#ifdef EMSCRIPTEN
+		emscripten_set_main_loop_arg(
+			[](void* application) {
+				Application& app = *static_cast<Application*>(application);
+				if (app._scene)
+					app._scene->Update(0.01);
+			},
+			this, -1, 1
+		);
+		#else
+
+		const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		float refreshTime = 1.0f / videoMode->refreshRate;
+		double previousTime = glfwGetTime();
+		_window.PollEvents();
+
+		while (!_window.ShouldClose())
+		{
+			double currentTime = glfwGetTime();
+			float deltaTime = currentTime - previousTime;
+			float sleepTime = refreshTime - deltaTime;
+			previousTime = currentTime;
+
+			if (sleepTime > 0.0f)
+			{
+				glfwWaitEventsTimeout(sleepTime);
+				deltaTime = refreshTime;
+			}
+
+			if (_scene)
+				_scene->Update(deltaTime);
+
+			_window.SwapBuffers();
+			_window.PollEvents();
+		}
+
+		#endif
+	}
+
+	void Application::LazyRun()
+	{
+	}
 }

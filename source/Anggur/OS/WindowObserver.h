@@ -30,6 +30,8 @@ namespace Anggur
 
 		virtual void OnKeyRelease(Key key) {}
 
+		virtual void OnType(unsigned int codepoint) {}
+
 		virtual void OnMousePress(MouseButton button) {}
 
 		virtual void OnMouseHold(MouseButton button) {}

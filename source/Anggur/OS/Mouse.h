@@ -4,14 +4,14 @@ namespace Anggur
 {
 	struct MousePosition
 	{
-		int x;
-		int y;
+		float x;
+		float y;
 	};
 
 	struct MouseScroll
 	{
-		int x;
-		int y;
+		float x;
+		float y;
 	};
 
 	enum class MouseButton

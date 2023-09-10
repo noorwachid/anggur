@@ -27,7 +27,14 @@ namespace Anggur
 			_window.SetObserver(_scene);
 		}
 
+		// No cap
 		void Run();
+
+		// Same update as the framerate
+		void StableRun();
+
+		// Only update on demand
+		void LazyRun();
 
 	private:
 		Window _window;

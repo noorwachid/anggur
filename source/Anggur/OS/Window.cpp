@@ -161,6 +161,16 @@ namespace Anggur
 			}
 		});
 
+		glfwSetCharCallback(_context, [](WindowContext* context, unsigned int codepoint)
+		{
+			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+
+			if (window->_observer)
+			{
+				window->_observer->OnType(codepoint);
+			}
+		});
+
 		glfwSetMouseButtonCallback(_context, [](WindowContext* context, int button, int action, int modKey) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 
