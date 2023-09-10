@@ -73,6 +73,11 @@ namespace Anggur
 		return _context;
 	}
 
+	Input* Window::GetInput()
+	{
+		return &_input;
+	}
+
 	bool Window::ShouldClose() const
 	{
 		return glfwWindowShouldClose(_context);
@@ -151,13 +156,21 @@ namespace Anggur
 			if (window->_observer)
 			{
 				if (action == GLFW_PRESS)
+				{
 					window->_observer->OnKeyPress(static_cast<Key>(key));
+					window->_input._modifierKey = static_cast<ModifierKey>(modKey);
+				}
 
 				if (action == GLFW_REPEAT)
+				{
 					window->_observer->OnKeyHold(static_cast<Key>(key));
+				}
 
 				if (action == GLFW_RELEASE)
+				{
 					window->_observer->OnKeyRelease(static_cast<Key>(key));
+					window->_input._modifierKey = static_cast<ModifierKey>(modKey);
+				}
 			}
 		});
 

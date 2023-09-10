@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Anggur/OS/Input.h"
 #include "Anggur/OS/WindowObserver.h"
 #include <string>
 
@@ -28,6 +29,8 @@ namespace Anggur
 
 		WindowContext* GetContext();
 
+		Input* GetInput();
+
 		bool ShouldClose() const;
 
 		void SwapBuffers();
@@ -51,5 +54,7 @@ namespace Anggur
 
 		WindowContext* _context;
 		WindowObserver* _observer;
+
+		Input _input;
 	};
 }

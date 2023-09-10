@@ -9,6 +9,7 @@ add_library(anggur SHARED
 	"source/Anggur/Application.cpp"
 
 	"source/Anggur/OS/Window.cpp"
+	"source/Anggur/OS/Input.cpp"
 
 	"source/Anggur/Audio/AudioDevice.cpp"
 	"source/Anggur/Audio/AudioBuffer.cpp"
