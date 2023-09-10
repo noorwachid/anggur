@@ -61,7 +61,6 @@ namespace Anggur
 		#else
 
 		double previousTime = glfwGetTime();
-		_window.PollEvents();
 
 		while (!_window.ShouldClose())
 		{
@@ -95,7 +94,6 @@ namespace Anggur
 		const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		float refreshTime = 1.0f / videoMode->refreshRate;
 		double previousTime = glfwGetTime();
-		_window.PollEvents();
 
 		while (!_window.ShouldClose())
 		{

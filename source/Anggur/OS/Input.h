@@ -10,7 +10,7 @@ namespace Anggur
 		ModifierKey GetModifierKey() const;
 
 	private:
-		ModifierKey _modifierKey;
+		ModifierKey _modifierKey = ModifierKey::None;
 
 	private:
 		friend class Window;
