@@ -28,6 +28,12 @@ namespace Anggur
 			_window.SetObserver(_scene);
 		}
 
+		template<class Scene>
+		Scene* GetScene()
+		{
+			return static_cast<Scene*>(_scene);
+		}
+
 		// No cap
 		void Run();
 

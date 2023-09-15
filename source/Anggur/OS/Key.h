@@ -55,7 +55,7 @@ namespace Anggur
 		Y = 89,
 		Z = 90,
 
-		LeftLracket = 91,
+		LeftBracket = 91,
 		Backslash = 92,
 		RightBracket = 93,
 		Backtick = 96,
