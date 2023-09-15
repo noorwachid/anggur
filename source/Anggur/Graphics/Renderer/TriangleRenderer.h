@@ -8,41 +8,38 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
 
-namespace Anggur
-{
-	struct TriangleVertex
-	{
+namespace Anggur {
+	struct TriangleVertex {
 		Vector2 position;
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 		float textureIndex;
 		Vector2 texturePosition;
 	};
 
-	class TriangleRenderer
-	{
+	class TriangleRenderer {
 	public:
 		TriangleRenderer();
 
-		void SetView(const Matrix3& newView);
+		void setView(const Matrix3& newView);
 
-		void AddTriangle(
+		void addTriangle(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
 			Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 			const Vector2& texturePosition2
 		);
 
-		void AddQuad(
+		void addQuad(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 			const Vector4& color, Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 			const Vector2& texturePosition2, const Vector2& texturePosition3
 		);
 
-		void AddRectangle(
+		void addRectangle(
 			const Vector2& position, const Vector2& size, const Vector4& color, Texture* texture,
 			const Vector2& texturePosition, const Vector2& textureSize
 		);
 
-		void Flush();
+		void flush();
 
 	private:
 		VertexArray _vertexArray;

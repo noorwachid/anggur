@@ -3,25 +3,20 @@
 #include "stb_image_write.h"
 #include <cassert>
 
-namespace Anggur
-{
-	Image::Image()
-	{
+namespace Anggur {
+	Image::Image() {
 	}
 
-	Image::Image(const std::string& path)
-	{
-		Read(path);
+	Image::Image(const std::string& path) {
+		read(path);
 	}
 
-	Image::~Image()
-	{
-		Close();
+	Image::~Image() {
+		close();
 	}
 
-	void Image::Read(const std::string& path)
-	{
-		Close();
+	void Image::read(const std::string& path) {
+		close();
 
 		int newWidth;
 		int newHeight;
@@ -42,12 +37,10 @@ namespace Anggur
 		_channels = newChannels;
 	}
 
-	void Image::Close()
-	{
+	void Image::close() {
 	}
 
-	void Image::Write(const std::string& path)
-	{
+	void Image::write(const std::string& path) {
 		stbi_write_png((path + ".png").c_str(), _width, _height, 1, _bytes.data(), _width);
 	}
 }

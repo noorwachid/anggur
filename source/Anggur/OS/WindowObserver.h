@@ -3,43 +3,50 @@
 #include "Anggur/OS/Key.h"
 #include "Anggur/OS/Mouse.h"
 
-namespace Anggur 
-{
-	struct WindowPosition
-	{
+namespace Anggur {
+	struct WindowPosition {
 		int x;
 		int y;
 	};
 
-	struct WindowSize
-	{
+	struct WindowSize {
 		unsigned int width;
 		unsigned int height;
 	};
 
-	class WindowObserver
-	{
+	class WindowObserver {
 	public:
-		virtual void OnWindowMove(WindowPosition position) {}
+		virtual void onWindowMove(WindowPosition position) {
+		}
 
-		virtual void OnWindowResize(WindowSize size) {}
+		virtual void onWindowResize(WindowSize size) {
+		}
 
-		virtual void OnKeyPress(Key key) {}
+		virtual void onKeyPress(Key key) {
+		}
 
-		virtual void OnKeyHold(Key key) {}
+		virtual void onKeyHold(Key key) {
+		}
 
-		virtual void OnKeyRelease(Key key) {}
+		virtual void onKeyRelease(Key key) {
+		}
 
-		virtual void OnType(unsigned int codepoint) {}
+		virtual void onType(unsigned int codepoint) {
+		}
 
-		virtual void OnMousePress(MouseButton button) {}
+		virtual void onMousePress(MouseButton button) {
+		}
 
-		virtual void OnMouseHold(MouseButton button) {}
+		virtual void onMouseHold(MouseButton button) {
+		}
 
-		virtual void OnMouseRelease(MouseButton button) {}
+		virtual void onMouseRelease(MouseButton button) {
+		}
 
-		virtual void OnMouseMove(MousePosition position) {}
+		virtual void onMouseMove(MousePosition position) {
+		}
 
-		virtual void OnMouseScroll(MouseScroll scroll) {}
+		virtual void onMouseScroll(MouseScroll scroll) {
+		}
 	};
 }

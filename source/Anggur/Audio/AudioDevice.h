@@ -11,10 +11,8 @@ class ALCdevice;
 class ALCcontext;
 #endif
 
-namespace Anggur
-{
-	class AudioDevice
-	{
+namespace Anggur {
+	class AudioDevice {
 	public:
 		AudioDevice();
 
@@ -25,4 +23,3 @@ namespace Anggur
 		ALCcontext* _context;
 	};
 }
-

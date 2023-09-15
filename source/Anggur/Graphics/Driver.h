@@ -1,6 +1,5 @@
 #pragma once
 
-namespace Anggur
-{
-	bool LoadGraphicsDriver(void* address);
+namespace Anggur {
+	bool loadGraphicsDriver(void* address);
 }

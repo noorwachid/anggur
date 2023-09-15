@@ -2,54 +2,43 @@
 
 #include <vector>
 
-namespace Anggur
-{
-	enum class SamplerFilter
-	{
-		Nearest,
-		Linear
+namespace Anggur {
+	enum class SamplerFilter {
+		nearest,
+		linear
 	};
 
-	class TextureSpecification
-	{
+	class TextureSpecification {
 	public:
-		static int GetMaxSlot();
+		static int getMaxSlot();
 	};
 
-	class Texture
-	{
+	class Texture {
 	public:
 		Texture(
-			const std::vector<unsigned char>& bytes, 
-			unsigned int width, 
-			unsigned int height, 
-			unsigned int channels = 8,
-			SamplerFilter filter = SamplerFilter::Linear
+			const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels = 8,
+			SamplerFilter filter = SamplerFilter::linear
 		);
 
 		~Texture();
 
-		unsigned int GetID() const
-		{
+		unsigned int getID() const {
 			return _id;
 		}
 
-		unsigned int GetWidth() const
-		{
+		unsigned int getWidth() const {
 			return _width;
 		}
 
-		unsigned int GetHeight() const
-		{
+		unsigned int getHeight() const {
 			return _height;
 		}
 
-		unsigned int GetChannels() const
-		{
+		unsigned int getChannels() const {
 			return _channels;
 		}
 
-		void Bind(unsigned int slot = 0);
+		void bind(unsigned int slot = 0);
 
 		friend bool operator==(const Texture& a, const Texture& b);
 

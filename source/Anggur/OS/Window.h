@@ -6,42 +6,40 @@
 
 class GLFWwindow;
 
-namespace Anggur
-{
+namespace Anggur {
 	using WindowContext = GLFWwindow;
 
-	class Window
-	{
+	class Window {
 	public:
 		Window(unsigned int width, unsigned int height, const std::string& title);
 
 		~Window();
 
-		unsigned int GetWidth() const;
+		unsigned int getWidth() const;
 
-		unsigned int GetHeight() const;
+		unsigned int getHeight() const;
 
-		unsigned int GetFrameBufferWidth() const;
+		unsigned int getFrameBufferWidth() const;
 
-		unsigned int GetFrameBufferHeight() const;
+		unsigned int getFrameBufferHeight() const;
 
-		const std::string GetTitle() const;
+		const std::string getTitle() const;
 
-		WindowContext* GetContext();
+		WindowContext* getContext();
 
-		Input* GetInput();
+		Input* getInput();
 
-		bool ShouldClose() const;
+		bool shouldClose() const;
 
-		void SwapBuffers();
+		void swapBuffers();
 
-		void PollEvents();
+		void pollEvents();
 
-		void Connect(std::function<bool(void*)> connector);
+		void connect(std::function<bool(void*)> connector);
 
-		void Close();
+		void close();
 
-		void SetObserver(WindowObserver* observer);
+		void setObserver(WindowObserver* observer);
 
 	private:
 		unsigned int _width;

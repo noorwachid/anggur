@@ -1,18 +1,19 @@
 #pragma once
 
-#include "Anggur/OS/Window.h"
 #include "Anggur/Graphics/Renderer.h"
+#include "Anggur/OS/Window.h"
 
-namespace Anggur
-{
-	class Scene: public WindowObserver
-	{
+namespace Anggur {
+	class Scene : public WindowObserver {
 	public:
-		virtual void Initialize() {}
+		virtual void initialize() {
+		}
 
-		virtual void Update(float deltaTime) {}
+		virtual void update(float deltaTime) {
+		}
 
-		virtual void Terminate() {}
+		virtual void terminate() {
+		}
 
 	protected:
 		Window* _window;

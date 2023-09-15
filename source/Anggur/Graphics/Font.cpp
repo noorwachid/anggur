@@ -5,36 +5,30 @@
 #include <stb_image_write.h>
 #include <stb_truetype.h>
 
-namespace Anggur
-{
-	Font::Font()
-	{
+namespace Anggur {
+	Font::Font() {
 	}
 
-	Font::Font(const std::vector<unsigned char>& data)
-	{
+	Font::Font(const std::vector<unsigned char>& data) {
 		_data = data;
 
-		Initialize();
+		initialize();
 	}
 
-	Font::~Font()
-	{
+	Font::~Font() {
 		for (Texture* texture : _textures)
 			delete texture;
 
 		delete _context;
 	}
 
-	void Font::SetData(const std::vector<unsigned char>& data)
-	{
+	void Font::setData(const std::vector<unsigned char>& data) {
 		_data = data;
 
-		Initialize();
+		initialize();
 	}
 
-	void Font::Initialize()
-	{
+	void Font::initialize() {
 		_context = new FontContext;
 
 		int result = stbtt_InitFont(_context, _data.data(), 0);
@@ -43,12 +37,10 @@ namespace Anggur
 			throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
 	}
 
-	void Font::SetSample(
+	void Font::setSample(
 		unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding, float newSampleRange
-	)
-	{
-		if (newContainerSize < newSampleSize)
-		{
+	) {
+		if (newContainerSize < newSampleSize) {
 			throw std::runtime_error("Glyph atlas size must be greater than sampling size");
 		}
 
@@ -64,40 +56,37 @@ namespace Anggur
 
 		_textures.clear();
 
-		_packer.Reset();
-		_packer.SetSize(_containerSize);
+		_packer.reset();
+		_packer.setSize(_containerSize);
 
 		float sampleInverseScale = 1.0f / _sampleSize;
 
-		FontHMetrics hMetrics = GetHMetrics(32);
-		FontVMetrics vMetrics = GetVMetrics();
+		FontHMetrics hMetrics = getHMetrics(32);
+		FontVMetrics vMetrics = getVMetrics();
 
 		_spaceWidth = sampleInverseScale * (hMetrics.advanceWidth - hMetrics.leftSideBearing);
 		_lineHeight = sampleInverseScale * (vMetrics.ascent - vMetrics.descent);
 		_lineGap = sampleInverseScale * vMetrics.lineGap;
 	}
 
-	std::string Font::GetName()
-	{
+	std::string Font::getName() {
 		int length = 0;
 		const char* name = stbtt_GetFontNameDefault(_context, &length);
 
 		return std::string(name, length);
 	}
 
-	float Font::GetKerning(unsigned int codePoint, unsigned int nextCodePoint)
-	{
-		float scale = GetContextScale();
+	float Font::getKerning(unsigned int codePoint, unsigned int nextCodePoint) {
+		float scale = getContextScale();
 		float kerning = stbtt_GetCodepointKernAdvance(_context, codePoint, nextCodePoint);
 
 		return kerning * scale / _sampleSize;
 	}
 
-	FontVMetrics Font::GetVMetrics()
-	{
+	FontVMetrics Font::getVMetrics() {
 		FontVMetrics metrics;
 
-		float scale = GetContextScale();
+		float scale = getContextScale();
 
 		int ascent, descent, lineGap;
 		stbtt_GetFontVMetrics(_context, &ascent, &descent, &lineGap);
@@ -109,11 +98,10 @@ namespace Anggur
 		return metrics;
 	}
 
-	FontHMetrics Font::GetHMetrics(unsigned int codepoint)
-	{
+	FontHMetrics Font::getHMetrics(unsigned int codepoint) {
 		FontHMetrics metrics;
 
-		float scale = GetContextScale();
+		float scale = getContextScale();
 
 		int advanceWidth;
 		int leftSideBearing;
@@ -126,49 +114,42 @@ namespace Anggur
 		return metrics;
 	}
 
-	bool Font::Generate(unsigned int codepoint)
-	{
-		std::optional<FontBitmap> bitmap = GenerateBitmap(codepoint);
+	bool Font::generate(unsigned int codepoint) {
+		std::optional<FontBitmap> bitmap = generateBitmap(codepoint);
 
 		if (!bitmap.has_value())
 			return false;
 
-		Pack(codepoint, bitmap.value());
-		GenerateTexture();
+		pack(codepoint, bitmap.value());
+		generateTexture();
 
 		return true;
 	}
 
-	bool Font::GenerateRange(unsigned int codepointFrom, unsigned int length)
-	{
+	bool Font::generateRange(unsigned int codepointFrom, unsigned int length) {
 		bool someFailed = false;
 
-		for (unsigned int i = 0; i < length; ++i)
-		{
+		for (unsigned int i = 0; i < length; ++i) {
 			unsigned int codepoint = i + codepointFrom;
 
-			std::optional<FontBitmap> bitmap = GenerateBitmap(codepoint);
+			std::optional<FontBitmap> bitmap = generateBitmap(codepoint);
 
-			if (!bitmap.has_value())
-			{
+			if (!bitmap.has_value()) {
 				someFailed = true;
-			}
-			else
-			{
-				Pack(codepoint, bitmap.value());
+			} else {
+				pack(codepoint, bitmap.value());
 			}
 		}
 
-		GenerateTexture();
+		generateTexture();
 
 		return someFailed;
 	}
 
-	std::optional<FontBitmap> Font::GenerateBitmap(unsigned int codepoint)
-	{
+	std::optional<FontBitmap> Font::generateBitmap(unsigned int codepoint) {
 		FontBitmap bitmap;
 
-		float scale = GetContextScale();
+		float scale = getContextScale();
 
 		bitmap.data = stbtt_GetCodepointSDF(
 			_context, scale, codepoint, _samplePadding, 128, _sampleRange, &bitmap.width, &bitmap.height, &bitmap.x,
@@ -181,110 +162,101 @@ namespace Anggur
 		return bitmap;
 	}
 
-	void Font::Pack(unsigned int codepoint, const FontBitmap& bitmap)
-	{
-		FontVMetrics vMetrics = GetVMetrics();
-		FontHMetrics hMetrics = GetHMetrics(codepoint);
+	void Font::pack(unsigned int codepoint, const FontBitmap& bitmap) {
+		FontVMetrics vMetrics = getVMetrics();
+		FontHMetrics hMetrics = getHMetrics(codepoint);
 
 		float sampleInverseScale = 1.0f / _sampleSize;
 		float containerInverseScale = 1.0f / _containerSize;
 
-		if (!_packer.IsFit(bitmap.width, bitmap.height))
-		{
-			GenerateTexture();
+		if (!_packer.isFit(bitmap.width, bitmap.height)) {
+			generateTexture();
 			++_textureIndex;
-			_packer.Reset();
+			_packer.reset();
 		}
 
 		FontGlyph glyph;
 
-		glyph.position.Set(
+		glyph.position.set(
 			sampleInverseScale * hMetrics.leftSideBearing,
 			sampleInverseScale * (vMetrics.ascent + bitmap.y + _samplePadding)
 		);
-		glyph.size.Set(sampleInverseScale * bitmap.width, sampleInverseScale * bitmap.height);
+		glyph.size.set(sampleInverseScale * bitmap.width, sampleInverseScale * bitmap.height);
 		glyph.textureIndex = _textureIndex;
-		glyph.texturePosition = containerInverseScale * _packer.GetPointer();
-		glyph.textureSize.Set(containerInverseScale * bitmap.width, containerInverseScale * bitmap.height);
+		glyph.texturePosition = containerInverseScale * _packer.getPointer();
+		glyph.textureSize.set(containerInverseScale * bitmap.width, containerInverseScale * bitmap.height);
 
 		_glyphMap[codepoint] = glyph;
 
-		_packer.SetGlyph(bitmap.data, bitmap.width, bitmap.height);
+		_packer.setGlyph(bitmap.data, bitmap.width, bitmap.height);
 
 		stbtt_FreeSDF(bitmap.data, nullptr);
 	}
 
-	void Font::GenerateTexture()
-	{
+	void Font::generateTexture() {
 		// Replace last texture
-		if (_textureIndex + 1 == _textures.size())
-		{
+		if (_textureIndex + 1 == _textures.size()) {
 			delete _textures.back();
 			_textures.back() = new Texture(
-				_packer.image.GetBytes(), _packer.image.GetWidth(), _packer.image.GetHeight(), _packer.image.GetChannels()
+				_packer.image.getBytes(), _packer.image.getWidth(), _packer.image.getHeight(),
+				_packer.image.getChannels()
 			);
-		}
-		else
-		{
+		} else {
 			_textures.push_back(new Texture(
-				_packer.image.GetBytes(), _packer.image.GetWidth(), _packer.image.GetHeight(), _packer.image.GetChannels()
+				_packer.image.getBytes(), _packer.image.getWidth(), _packer.image.getHeight(),
+				_packer.image.getChannels()
 			));
 		}
 	}
 
-	bool Font::GenerateRC()
-	{
-		return Generate(0xFFFD);
+	bool Font::generateRC() {
+		return generate(0xFFFD);
 	}
 
-	bool Font::GenerateEllipsis()
-	{
+	bool Font::generateEllipsis() {
 		bool failed = false;
 
-		if (!Generate(0x2026))
+		if (!generate(0x2026))
 			failed = true;
 
-		if (!Generate(0x22EE))
+		if (!generate(0x22EE))
 			failed = true;
 
-		if (!Generate(0x22EF))
+		if (!generate(0x22EF))
 			failed = true;
 
-		if (!Generate(0x22F0))
+		if (!generate(0x22F0))
 			failed = true;
 
-		if (!Generate(0x22F1))
+		if (!generate(0x22F1))
 			failed = true;
 
 		return !failed;
 	}
 
-	bool Font::GenerateQuotationMark()
-	{
+	bool Font::generateQuotationMark() {
 		bool failed = false;
 
-		if (!Generate(0x2018))
+		if (!generate(0x2018))
 			failed = true;
 
-		if (!Generate(0x2019))
+		if (!generate(0x2019))
 			failed = true;
 
-		if (!Generate(0x201C))
+		if (!generate(0x201C))
 			failed = true;
 
-		if (!Generate(0x201D))
+		if (!generate(0x201D))
 			failed = true;
 
 		return !failed;
 	}
 
-	bool Font::GenerateASCII()
-	{
-		return GenerateRange(33, 94);
+	bool Font::generateASCII() {
+		return generateRange(33, 94);
 	}
 
-	float Font::GetContextScale()
-	{
+	float Font::getContextScale() {
 		return stbtt_ScaleForPixelHeight(_context, _sampleSize);
 	}
 }

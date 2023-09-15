@@ -2,19 +2,16 @@
 
 #include <string>
 
-namespace Anggur
-{
-	class AudioBuffer
-	{
+namespace Anggur {
+	class AudioBuffer {
 	public:
 		AudioBuffer(const std::string& path);
 
 		~AudioBuffer();
 
-		unsigned int GetID() const;
+		unsigned int getID() const;
 
 	private:
 		unsigned int _id;
 	};
 }
-

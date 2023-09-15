@@ -8,10 +8,8 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
 
-namespace Anggur
-{
-	struct CircleVertex
-	{
+namespace Anggur {
+	struct CircleVertex {
 		Vector2 position;
 		Vector2 quadrant;
 		float radius = 0.5f;
@@ -20,16 +18,15 @@ namespace Anggur
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class CircleRenderer
-	{
+	class CircleRenderer {
 	public:
 		CircleRenderer();
 
-		void SetView(const Matrix3& newView);
+		void setView(const Matrix3& newView);
 
-		void Add(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
+		void add(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void Flush();
+		void flush();
 
 	private:
 		VertexArray _vertexArray;

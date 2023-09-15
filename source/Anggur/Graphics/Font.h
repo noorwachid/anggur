@@ -15,25 +15,21 @@
 
 struct stbtt_fontinfo;
 
-namespace Anggur
-{
+namespace Anggur {
 	using FontContext = stbtt_fontinfo;
 
-	struct FontVMetrics
-	{
+	struct FontVMetrics {
 		float ascent;
 		float descent;
 		float lineGap;
 	};
 
-	struct FontHMetrics
-	{
+	struct FontHMetrics {
 		float advanceWidth;
 		float leftSideBearing;
 	};
 
-	struct FontBitmap
-	{
+	struct FontBitmap {
 		unsigned char* data;
 		int x;
 		int y;
@@ -41,8 +37,7 @@ namespace Anggur
 		int height;
 	};
 
-	class Font
-	{
+	class Font {
 	public:
 		Font();
 
@@ -50,63 +45,59 @@ namespace Anggur
 
 		~Font();
 
-		void SetData(const std::vector<unsigned char>& data);
+		void setData(const std::vector<unsigned char>& data);
 
-		void SetSample(
+		void setSample(
 			unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding,
 			float newSampleRange
 		);
 
-		float GetKerning(unsigned int codePoint, unsigned int nextCodePoint);
+		float getKerning(unsigned int codePoint, unsigned int nextCodePoint);
 
-		float GetSpaceWidth()
-		{
+		float getSpaceWidth() {
 			return _spaceWidth;
 		}
 
-		float GetLineHeight()
-		{
+		float getLineHeight() {
 			return _lineHeight;
 		}
 
-		float GetLineGap()
-		{
+		float getLineGap() {
 			return _lineGap;
 		}
 
-		FontVMetrics GetVMetrics();
+		FontVMetrics getVMetrics();
 
-		FontHMetrics GetHMetrics(unsigned int codepoint);
+		FontHMetrics getHMetrics(unsigned int codepoint);
 
-		const std::vector<Texture*>& GetTextures()
-		{
+		const std::vector<Texture*>& getTextures() {
 			return _textures;
 		}
 
-		std::string GetName();
+		std::string getName();
 
-		bool Generate(unsigned int codepoint);
+		bool generate(unsigned int codepoint);
 
-		bool GenerateRange(unsigned int codepointFrom = 'F', unsigned int length = 1);
+		bool generateRange(unsigned int codepointFrom = 'F', unsigned int length = 1);
 
-		bool GenerateRC();
+		bool generateRC();
 
-		bool GenerateQuotationMark();
+		bool generateQuotationMark();
 
-		bool GenerateEllipsis();
+		bool generateEllipsis();
 
-		bool GenerateASCII();
+		bool generateASCII();
 
 	private:
-		void Initialize();
+		void initialize();
 
-		void Pack(unsigned int codepoint, const FontBitmap& bitmap);
+		void pack(unsigned int codepoint, const FontBitmap& bitmap);
 
-		std::optional<FontBitmap> GenerateBitmap(unsigned int codepoint);
+		std::optional<FontBitmap> generateBitmap(unsigned int codepoint);
 
-		void GenerateTexture();
+		void generateTexture();
 
-		float GetContextScale();
+		float getContextScale();
 
 	private:
 		float _spaceWidth;

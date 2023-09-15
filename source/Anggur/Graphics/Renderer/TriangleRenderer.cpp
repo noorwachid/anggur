@@ -1,38 +1,35 @@
 #include "Anggur/Graphics/Renderer/TriangleRenderer.h"
 #include "Anggur/Graphics/API.h"
 
-namespace Anggur
-{
-	TriangleRenderer::TriangleRenderer()
-	{
+namespace Anggur {
+	TriangleRenderer::TriangleRenderer() {
 		_vertices.assign(_batchVertex, TriangleVertex{});
 
 		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
 
-		_textures.assign(TextureSpecification::GetMaxSlot(), nullptr);
-		_textureIndices.reserve(TextureSpecification::GetMaxSlot());
+		_textures.assign(TextureSpecification::getMaxSlot(), nullptr);
+		_textureIndices.reserve(TextureSpecification::getMaxSlot());
 
-		for (size_t i = 0; i < TextureSpecification::GetMaxSlot(); ++i)
-		{
+		for (size_t i = 0; i < TextureSpecification::getMaxSlot(); ++i) {
 			_textureIndices.push_back(i);
 		}
 
-		_vertexArray.Bind();
-		_vertexArray.SetLayout({
+		_vertexArray.bind();
+		_vertexArray.setLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 4, "aColor"},
 			{VertexDataType::Float, 1, "aTextureIndex"},
 			{VertexDataType::Float, 2, "aTexturePosition"},
 		});
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetCapacity(sizeof(TriangleVertex) * _vertices.size());
+		_vertexBuffer.bind();
+		_vertexBuffer.setCapacity(sizeof(TriangleVertex) * _vertices.size());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetCapacity(sizeof(unsigned int) * _indices.size());
+		_indexBuffer.bind();
+		_indexBuffer.setCapacity(sizeof(unsigned int) * _indices.size());
 
-		_shader.Bind();
-		_shader.SetVertexSource(R"(
+		_shader.bind();
+		_shader.setVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec4 aColor;
 			layout (location = 2) in float aTextureIndex;
@@ -53,7 +50,7 @@ namespace Anggur
 				vTexturePosition = aTexturePosition;
 			}
 		)");
-		_shader.SetFragmentSource(R"(
+		_shader.setFragmentSource(R"(
 			in vec4 vColor;
 			in float vTextureIndex;
 			in vec2 vTexturePosition;
@@ -75,36 +72,30 @@ namespace Anggur
 				}
 			}
 		)");
-		_shader.Compile();
+		_shader.compile();
 	}
 
-	void TriangleRenderer::SetView(const Matrix3& newView)
-	{
+	void TriangleRenderer::setView(const Matrix3& newView) {
 		_view = newView;
 	}
 
-	void TriangleRenderer::AddTriangle(
+	void TriangleRenderer::addTriangle(
 		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
 		Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 		const Vector2& texturePosition2
-	)
-	{
+	) {
 		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _vertices.size() ||
-			_textureOffset + 1 > _textures.size())
-		{
-			Flush();
+			_textureOffset + 1 > _textures.size()) {
+			flush();
 		}
 
 		size_t textureIndex = 0;
 
-		if (_textureIndexMap.count(texture->GetID()))
-		{
-			textureIndex = _textureIndexMap[texture->GetID()];
-		}
-		else
-		{
+		if (_textureIndexMap.count(texture->getID())) {
+			textureIndex = _textureIndexMap[texture->getID()];
+		} else {
 			textureIndex = _textureOffset;
-			_textureIndexMap[texture->GetID()] = textureIndex;
+			_textureIndexMap[texture->getID()] = textureIndex;
 			_textures[textureIndex] = texture;
 
 			++_textureOffset;
@@ -135,28 +126,23 @@ namespace Anggur
 		_indexOffset += 3;
 	}
 
-	void TriangleRenderer::AddQuad(
+	void TriangleRenderer::addQuad(
 		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 		const Vector4& color, Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 		const Vector2& texturePosition2, const Vector2& texturePosition3
-	)
-	{
+	) {
 		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _vertices.size() ||
-			_textureOffset + 1 > _textures.size())
-		{
-			Flush();
+			_textureOffset + 1 > _textures.size()) {
+			flush();
 		}
 
 		size_t textureIndex = 0;
 
-		if (_textureIndexMap.count(texture->GetID()))
-		{
-			textureIndex = _textureIndexMap[texture->GetID()];
-		}
-		else
-		{
+		if (_textureIndexMap.count(texture->getID())) {
+			textureIndex = _textureIndexMap[texture->getID()];
+		} else {
 			textureIndex = _textureOffset;
-			_textureIndexMap[texture->GetID()] = textureIndex;
+			_textureIndexMap[texture->getID()] = textureIndex;
 			_textures[textureIndex] = texture;
 
 			++_textureOffset;
@@ -194,12 +180,11 @@ namespace Anggur
 		_indexOffset += 6;
 	}
 
-	void TriangleRenderer::AddRectangle(
+	void TriangleRenderer::addRectangle(
 		const Vector2& position, const Vector2& size, const Vector4& color, Texture* texture,
 		const Vector2& texturePosition, const Vector2& textureSize
-	)
-	{
-		AddQuad(
+	) {
+		addQuad(
 			Vector2(position.x, position.y), Vector2(position.x + size.x, position.y),
 			Vector2(position.x + size.x, position.y + size.y), Vector2(position.x, position.y + size.y), color, texture,
 			Vector2(texturePosition.x, texturePosition.y),
@@ -209,26 +194,25 @@ namespace Anggur
 		);
 	}
 
-	void TriangleRenderer::Flush()
-	{
+	void TriangleRenderer::flush() {
 		// Early exit if no vertices to draw
 		if (_vertexOffset == 0)
 			return;
 
 		for (size_t textureIndex = 0; textureIndex < _textureOffset; ++textureIndex)
-			_textures[textureIndex]->Bind(textureIndex);
+			_textures[textureIndex]->bind(textureIndex);
 
-		_shader.Bind();
-		_shader.SetUniformMatrix3("uView", _view);
-		_shader.SetUniformInt("uTextures", _textureOffset, _textureIndices.data());
+		_shader.bind();
+		_shader.setUniformMatrix3("uView", _view);
+		_shader.setUniformInt("uTextures", _textureOffset, _textureIndices.data());
 
-		_vertexArray.Bind();
+		_vertexArray.bind();
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetData(sizeof(TriangleVertex) * _vertexOffset, _vertices.data());
+		_vertexBuffer.bind();
+		_vertexBuffer.setData(sizeof(TriangleVertex) * _vertexOffset, _vertices.data());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetData(sizeof(unsigned int) * _indexOffset, _indices.data());
+		_indexBuffer.bind();
+		_indexBuffer.setData(sizeof(unsigned int) * _indexOffset, _indices.data());
 
 		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
 

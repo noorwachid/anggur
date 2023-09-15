@@ -5,10 +5,8 @@
 #include <fstream>
 #include <iostream>
 
-namespace Anggur
-{
-	struct WavHeader 
-	{
+namespace Anggur {
+	struct WavHeader {
 		char chunkId[4];
 		uint32_t chunkSize;
 		char format[4];
@@ -24,18 +22,15 @@ namespace Anggur
 		uint32_t subchunk2Size;
 	};
 
-	AudioBuffer::AudioBuffer(const std::string& path)
-	{
+	AudioBuffer::AudioBuffer(const std::string& path) {
 		alGenBuffers(1, &_id);
 
 		std::string extension = std::filesystem::path(path).extension().string();
 
-		if (extension == ".wav") 
-		{
+		if (extension == ".wav") {
 			std::ifstream wav_file(path, std::ios::binary);
 
-			if (!wav_file.is_open()) 
-			{
+			if (!wav_file.is_open()) {
 				throw std::runtime_error("Failed to open WAV file: " + path);
 			}
 
@@ -43,12 +38,9 @@ namespace Anggur
 			wav_file.read(reinterpret_cast<char*>(&header), sizeof(WavHeader));
 
 			// Check that the file is a valid WAV file
-			if (std::string(header.chunkId, 4) != "RIFF" ||
-				std::string(header.format, 4) != "WAVE" ||
-				std::string(header.subchunk1Id, 4) != "fmt " ||
-				header.audioFormat != 1 || // PCM format
-				header.bitsPerSample != 16) 
-			{
+			if (std::string(header.chunkId, 4) != "RIFF" || std::string(header.format, 4) != "WAVE" ||
+				std::string(header.subchunk1Id, 4) != "fmt " || header.audioFormat != 1 || // PCM format
+				header.bitsPerSample != 16) {
 				throw std::runtime_error("Unsupported or invalid WAV file format");
 			}
 
@@ -61,9 +53,7 @@ namespace Anggur
 
 			// Set the audio data in the buffer
 			alBufferData(_id, format, audio_data.data(), audio_data.size() * sizeof(int16_t), header.sampleRate);
-		}
-		else if (extension == ".ogg") 
-		{
+		} else if (extension == ".ogg") {
 			stb_vorbis* vorbisFile = stb_vorbis_open_filename(path.c_str(), nullptr, nullptr);
 
 			if (!vorbisFile)
@@ -77,33 +67,30 @@ namespace Anggur
 			short* audioData = new short[dataSize];
 
 			// Read audio data from the Vorbis file
-			int samplesRead = stb_vorbis_get_samples_short_interleaved(vorbisFile, vorbisInfo.channels, audioData, dataSize);
-			if (samplesRead < 0) 
-			{
+			int samplesRead =
+				stb_vorbis_get_samples_short_interleaved(vorbisFile, vorbisInfo.channels, audioData, dataSize);
+			if (samplesRead < 0) {
 				delete[] audioData;
 				throw std::runtime_error("Failed to read vorbis data");
 			}
 
-			alBufferData(_id, (vorbisInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, audioData, dataSize, vorbisInfo.sample_rate);
+			alBufferData(
+				_id, (vorbisInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, audioData, dataSize,
+				vorbisInfo.sample_rate
+			);
 
 			delete[] audioData;
 			stb_vorbis_close(vorbisFile);
-		}
-		else
-		{
+		} else {
 			throw std::runtime_error("Unsupported audio extension");
 		}
 	}
 
-	AudioBuffer::~AudioBuffer()
-	{
+	AudioBuffer::~AudioBuffer() {
 		alDeleteBuffers(1, &_id);
 	}
 
-	unsigned int AudioBuffer::GetID() const
-	{
+	unsigned int AudioBuffer::getID() const {
 		return _id;
 	}
 }
-
-

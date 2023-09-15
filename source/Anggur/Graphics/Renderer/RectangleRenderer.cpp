@@ -1,16 +1,14 @@
 #include "Anggur/Graphics/Renderer/RectangleRenderer.h"
 #include "Anggur/Graphics/API.h"
 
-namespace Anggur
-{
-	RectangleRenderer::RectangleRenderer()
-	{
+namespace Anggur {
+	RoundedRectangleRenderer::RoundedRectangleRenderer() {
 		_vertices.assign(_batchVertex, RectangleVertex{});
 
 		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
 
-		_vertexArray.Bind();
-		_vertexArray.SetLayout({
+		_vertexArray.bind();
+		_vertexArray.setLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 2, "aSize"},
 			{VertexDataType::Float, 2, "aQuadrant"},
@@ -20,14 +18,14 @@ namespace Anggur
 			{VertexDataType::Float, 4, "aColor"},
 		});
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetCapacity(_vertexArray.GetStride() * _vertices.size());
+		_vertexBuffer.bind();
+		_vertexBuffer.setCapacity(_vertexArray.getStride() * _vertices.size());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetCapacity(sizeof(unsigned int) * _indices.size());
+		_indexBuffer.bind();
+		_indexBuffer.setCapacity(sizeof(unsigned int) * _indices.size());
 
-		_shader.Bind();
-		_shader.SetVertexSource(R"(
+		_shader.bind();
+		_shader.setVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aSize;
 			layout (location = 2) in vec2 aQuadrant;
@@ -58,7 +56,7 @@ namespace Anggur
 				vColor = aColor;
 			}
 		)");
-		_shader.SetFragmentSource(R"(
+		_shader.setFragmentSource(R"(
 			in vec2 vSize;
 			in vec2 vQuadrant;
 			in float vRadius;
@@ -103,26 +101,23 @@ namespace Anggur
 				}
 			}
 		)");
-		_shader.Compile();
+		_shader.compile();
 	}
 
-	void RectangleRenderer::SetView(const Matrix3& newView)
-	{
+	void RoundedRectangleRenderer::setView(const Matrix3& newView) {
 		_view = newView;
 	}
 
-	void RectangleRenderer::Add(
+	void RoundedRectangleRenderer::add(
 		const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness,
 		const Vector4& color
-	)
-	{
-		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _vertices.size())
-		{
-			Flush();
+	) {
+		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _vertices.size()) {
+			flush();
 		}
 
 		float doubleSharpness = 2.0f * sharpness;
-		float inverseMax = 1.0f / (Math::Max(size.x, size.y) + doubleSharpness);
+		float inverseMax = 1.0f / (Math::max(size.x, size.y) + doubleSharpness);
 		float xAxis = inverseMax * (size.x + doubleSharpness);
 		float yAxis = inverseMax * (size.y + doubleSharpness);
 
@@ -137,10 +132,10 @@ namespace Anggur
 		_vertices[_vertexOffset + 2].size = size;
 		_vertices[_vertexOffset + 3].size = size;
 
-		_vertices[_vertexOffset + 0].quadrant.Set(-xAxis, -yAxis);
-		_vertices[_vertexOffset + 1].quadrant.Set(+xAxis, -yAxis);
-		_vertices[_vertexOffset + 2].quadrant.Set(+xAxis, +yAxis);
-		_vertices[_vertexOffset + 3].quadrant.Set(-xAxis, +yAxis);
+		_vertices[_vertexOffset + 0].quadrant.set(-xAxis, -yAxis);
+		_vertices[_vertexOffset + 1].quadrant.set(+xAxis, -yAxis);
+		_vertices[_vertexOffset + 2].quadrant.set(+xAxis, +yAxis);
+		_vertices[_vertexOffset + 3].quadrant.set(-xAxis, +yAxis);
 
 		_vertices[_vertexOffset + 0].radius = radius;
 		_vertices[_vertexOffset + 1].radius = radius;
@@ -174,22 +169,21 @@ namespace Anggur
 		_indexOffset += 6;
 	}
 
-	void RectangleRenderer::Flush()
-	{
+	void RoundedRectangleRenderer::flush() {
 		// Early exit if no vertices to draw
 		if (_vertexOffset == 0)
 			return;
 
-		_shader.Bind();
-		_shader.SetUniformMatrix3("uView", _view);
+		_shader.bind();
+		_shader.setUniformMatrix3("uView", _view);
 
-		_vertexArray.Bind();
+		_vertexArray.bind();
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetData(sizeof(RectangleRenderer) * _vertexOffset, _vertices.data());
+		_vertexBuffer.bind();
+		_vertexBuffer.setData(sizeof(RoundedRectangleRenderer) * _vertexOffset, _vertices.data());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetData(sizeof(unsigned int) * _indexOffset, _indices.data());
+		_indexBuffer.bind();
+		_indexBuffer.setData(sizeof(unsigned int) * _indexOffset, _indices.data());
 
 		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
 

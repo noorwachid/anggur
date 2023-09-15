@@ -2,34 +2,31 @@
 
 #include <random>
 
-namespace Anggur
-{
-	class Random
-	{
+namespace Anggur {
+	class Random {
 	public:
 		// Getters
 
-		static float Generate();
+		static float generate();
 
-		static float Range(float lower, float upper);
+		static float range(float lower, float upper);
 
-		static float GetNormal();
+		static float getNormal();
 
-		static float GetSigned();
+		static float getSigned();
 
-		static float GetAngle();
+		static float getAngle();
 
-		static bool GetBoolean();
+		static bool getBoolean();
 
 		// Setters
 
-		static void SetSeed(float n);
+		static void setSeed(float n);
 
 	private:
 		Random();
 
-		static Random& GetInstance()
-		{
+		static Random& getInstance() {
 			static Random instance;
 
 			return instance;

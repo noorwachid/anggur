@@ -2,12 +2,10 @@
 
 #include <string>
 
-namespace Anggur
-{
+namespace Anggur {
 	struct Matrix4;
 
-	struct Vector3
-	{
+	struct Vector3 {
 		// Fields
 
 		float x;
@@ -33,29 +31,29 @@ namespace Anggur
 
 		// Casters
 
-		const float* ToPointer() const;
+		const float* toPointer() const;
 
-		std::string ToString() const;
+		std::string toString() const;
 
 		// Getters
 
-		float GetLengthSquared() const;
+		float getLengthSquared() const;
 
-		float GetLength() const;
+		float getLength() const;
 
 		// Setters
 
-		void Set(float scalar);
+		void set(float scalar);
 
-		void Set(float newX, float newY, float newZ);
+		void set(float newX, float newY, float newZ);
 
 		// 2nd class manipulations
 
-		static float Dot(const Vector3& a, const Vector3& b);
+		static float dot(const Vector3& a, const Vector3& b);
 
-		static Vector3 Cross(const Vector3& a, const Vector3& b);
+		static Vector3 cross(const Vector3& a, const Vector3& b);
 
-		static Vector3 Normalize(const Vector3& a);
+		static Vector3 normalize(const Vector3& a);
 
 		// 3rd class manipulations
 
@@ -84,8 +82,7 @@ namespace Anggur
 		friend Vector3& operator*=(Vector3& a, float b);
 	};
 
-	namespace Math
-	{
-		Vector3 Lerp(const Vector3& a, const Vector3& b, float amount);
+	namespace Math {
+		Vector3 lerp(const Vector3& a, const Vector3& b, float amount);
 	}
 }

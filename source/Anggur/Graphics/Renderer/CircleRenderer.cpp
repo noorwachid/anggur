@@ -7,8 +7,8 @@ namespace Anggur {
 
 		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
 
-		_vertexArray.Bind();
-		_vertexArray.SetLayout({
+		_vertexArray.bind();
+		_vertexArray.setLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 2, "aQuadrant"},
 			{VertexDataType::Float, 1, "aRadius"},
@@ -17,14 +17,14 @@ namespace Anggur {
 			{VertexDataType::Float, 4, "aColor"},
 		});
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetCapacity(sizeof(CircleVertex) * _vertices.size());
+		_vertexBuffer.bind();
+		_vertexBuffer.setCapacity(sizeof(CircleVertex) * _vertices.size());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetCapacity(sizeof(unsigned int) * _indices.size());
+		_indexBuffer.bind();
+		_indexBuffer.setCapacity(sizeof(unsigned int) * _indices.size());
 
-		_shader.Bind();
-		_shader.SetVertexSource(R"(
+		_shader.bind();
+		_shader.setVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aQuadrant;
 			layout (location = 2) in float aRadius;
@@ -52,7 +52,7 @@ namespace Anggur {
 				vColor = aColor;
 			}
 		)");
-		_shader.SetFragmentSource(R"(
+		_shader.setFragmentSource(R"(
 			in vec2 vQuadrant;
 			in float vRadius;
 			in float vThickness;
@@ -82,18 +82,18 @@ namespace Anggur {
 				}
 			}
 		)");
-		_shader.Compile();
+		_shader.compile();
 	}
 
-	void CircleRenderer::SetView(const Matrix3& newView) {
+	void CircleRenderer::setView(const Matrix3& newView) {
 		_view = newView;
 	}
 
-	void CircleRenderer::Add(
+	void CircleRenderer::add(
 		const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color
 	) {
 		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _vertices.size()) {
-			Flush();
+			flush();
 		}
 
 		float spread = radius + sharpness;
@@ -103,10 +103,10 @@ namespace Anggur {
 		_vertices[_vertexOffset + 2].position = Vector2(position.x + spread, position.y + spread);
 		_vertices[_vertexOffset + 3].position = Vector2(position.x - spread, position.y + spread);
 
-		_vertices[_vertexOffset + 0].quadrant.Set(-1, -1);
-		_vertices[_vertexOffset + 1].quadrant.Set(+1, -1);
-		_vertices[_vertexOffset + 2].quadrant.Set(+1, +1);
-		_vertices[_vertexOffset + 3].quadrant.Set(-1, +1);
+		_vertices[_vertexOffset + 0].quadrant.set(-1, -1);
+		_vertices[_vertexOffset + 1].quadrant.set(+1, -1);
+		_vertices[_vertexOffset + 2].quadrant.set(+1, +1);
+		_vertices[_vertexOffset + 3].quadrant.set(-1, +1);
 
 		_vertices[_vertexOffset + 0].radius = radius;
 		_vertices[_vertexOffset + 1].radius = radius;
@@ -140,17 +140,17 @@ namespace Anggur {
 		_indexOffset += 6;
 	}
 
-	void CircleRenderer::Flush() {
-		_shader.Bind();
-		_shader.SetUniformMatrix3("uView", _view);
+	void CircleRenderer::flush() {
+		_shader.bind();
+		_shader.setUniformMatrix3("uView", _view);
 
-		_vertexArray.Bind();
+		_vertexArray.bind();
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetData(sizeof(CircleVertex) * _vertexOffset, _vertices.data());
+		_vertexBuffer.bind();
+		_vertexBuffer.setData(sizeof(CircleVertex) * _vertexOffset, _vertices.data());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetData(sizeof(unsigned int) * _indexOffset, _indices.data());
+		_indexBuffer.bind();
+		_indexBuffer.setData(sizeof(unsigned int) * _indexOffset, _indices.data());
 
 		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
 

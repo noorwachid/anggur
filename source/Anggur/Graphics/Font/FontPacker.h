@@ -4,22 +4,20 @@
 #include "Anggur/Math.h"
 #include "Anggur/Math/Vector2.h"
 
-namespace Anggur
-{
+namespace Anggur {
 	// NOTE: Using shelf rectangle packing algorithm
 	// TODO: Use better algorithm
-	class FontPacker
-	{
+	class FontPacker {
 	public:
-		Vector2 GetPointer();
+		Vector2 getPointer();
 
-		bool IsFit(size_t width, size_t height);
+		bool isFit(size_t width, size_t height);
 
-		void SetGlyph(unsigned char* bytes, size_t width, size_t height);
+		void setGlyph(unsigned char* bytes, size_t width, size_t height);
 
-		void SetSize(unsigned int size);
+		void setSize(unsigned int size);
 
-		void Reset();
+		void reset();
 
 	public:
 		unsigned int maxY = 0;

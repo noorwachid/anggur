@@ -3,23 +3,19 @@
 #include "stb_image.h"
 #include <vector>
 
-namespace Anggur
-{
-	int ToNativeType(SamplerFilter filter)
-	{
-		switch (filter)
-		{
-			case SamplerFilter::Linear:
+namespace Anggur {
+	int ToNativeType(SamplerFilter filter) {
+		switch (filter) {
+			case SamplerFilter::linear:
 				return GL_LINEAR;
-			case SamplerFilter::Nearest:
+			case SamplerFilter::nearest:
 				return GL_NEAREST;
 			default:
 				return 0;
 		}
 	}
 
-	int TextureSpecification::GetMaxSlot()
-	{
+	int TextureSpecification::getMaxSlot() {
 		static int maxSlot = 0;
 		if (maxSlot == 0)
 			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
@@ -30,8 +26,7 @@ namespace Anggur
 	Texture::Texture(
 		const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels,
 		SamplerFilter filter
-	)
-	{
+	) {
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -49,17 +44,13 @@ namespace Anggur
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToNativeType(filter));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToNativeType(filter));
 
-		if (bytes.empty())
-		{
+		if (bytes.empty()) {
 			// assert(false && "Cannot load buffer to texture, data is empty");
-		}
-		else
-		{
+		} else {
 			int iformat;
 			int format;
 
-			switch (channels)
-			{
+			switch (channels) {
 				case 1:
 					iformat = GL_R8;
 					format = GL_RED;
@@ -82,19 +73,16 @@ namespace Anggur
 		}
 	}
 
-	Texture::~Texture()
-	{
+	Texture::~Texture() {
 		glDeleteTextures(1, &_id);
 	}
 
-	void Texture::Bind(unsigned int slot)
-	{
+	void Texture::bind(unsigned int slot) {
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, _id);
 	}
 
-	bool operator==(const Texture& a, const Texture& b)
-	{
-		return a.GetID() == b.GetID();
+	bool operator==(const Texture& a, const Texture& b) {
+		return a.getID() == b.getID();
 	}
 }

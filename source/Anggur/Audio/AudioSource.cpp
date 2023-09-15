@@ -2,63 +2,50 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 
-namespace Anggur
-{
-	AudioSource::AudioSource()
-	{
+namespace Anggur {
+	AudioSource::AudioSource() {
 		alGenSources(1, &_id);
 	}
 
-	AudioSource::~AudioSource()
-	{
+	AudioSource::~AudioSource() {
 		alDeleteSources(1, &_id);
 	}
 
-	float AudioSource::GetGain() const
-	{
+	float AudioSource::getGain() const {
 		float value;
 		alGetSourcef(_id, AL_GAIN, &value);
 		return value;
 	}
 
-	float AudioSource::GetPitch() const
-	{
+	float AudioSource::getPitch() const {
 		float value;
 		alGetSourcef(_id, AL_PITCH, &value);
 		return value;
 	}
 
-	void AudioSource::SetBuffer(AudioBuffer* buffer)
-	{
-		if (buffer)
-		{
-			alSourcei(_id, AL_BUFFER, buffer->GetID());
+	void AudioSource::setBuffer(AudioBuffer* buffer) {
+		if (buffer) {
+			alSourcei(_id, AL_BUFFER, buffer->getID());
 		}
 	}
 
-	void AudioSource::SetGain(float gain)
-	{
+	void AudioSource::setGain(float gain) {
 		alSourcef(_id, AL_GAIN, gain);
 	}
 
-	void AudioSource::SetPitch(float pitch)
-	{
+	void AudioSource::setPitch(float pitch) {
 		alSourcef(_id, AL_PITCH, pitch);
 	}
 
-	void AudioSource::Play()
-	{
+	void AudioSource::play() {
 		alSourcePlay(_id);
 	}
 
-	void AudioSource::Pause()
-	{
+	void AudioSource::pause() {
 		alSourcePause(_id);
 	}
 
-	void AudioSource::Stop()
-	{
+	void AudioSource::stop() {
 		alSourceStop(_id);
 	}
 }
-

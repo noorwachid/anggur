@@ -6,10 +6,8 @@
 #include <iostream>
 #include <string>
 
-namespace Anggur
-{
-	struct Matrix4
-	{
+namespace Anggur {
+	struct Matrix4 {
 		float a, b, c, d;
 		float e, f, g, h;
 		float i, j, k, l;
@@ -22,40 +20,40 @@ namespace Anggur
 			float newJ, float newK, float newL, float newM, float newN, float newO, float newP
 		);
 
-		void Set(
+		void set(
 			float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH, float newI,
 			float newJ, float newK, float newL, float newM, float newN, float newO, float newP
 		);
 
-		const float* ToPointer() const;
+		const float* toPointer() const;
 
-		std::string ToString() const;
+		std::string toString() const;
 
 		// Model Matrices
 
-		static Matrix4 CreateTranslation(const Vector3& translation);
+		static Matrix4 createTranslation(const Vector3& translation);
 
-		static Matrix4 CreateRotation(const Vector3& rotation);
+		static Matrix4 createRotation(const Vector3& rotation);
 
-		static Matrix4 CreateRotation(const Quaternion& q);
+		static Matrix4 createRotation(const Quaternion& q);
 
-		static Matrix4 CreateRotationX(float angle);
+		static Matrix4 createRotationX(float angle);
 
-		static Matrix4 CreateRotationY(float angle);
+		static Matrix4 createRotationY(float angle);
 
-		static Matrix4 CreateRotationZ(float angle);
+		static Matrix4 createRotationZ(float angle);
 
-		static Matrix4 CreateScale(const Vector3& scale);
+		static Matrix4 createScale(const Vector3& scale);
 
 		// View Matrices
 
-		static Matrix4 CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up);
+		static Matrix4 createLookAt(const Vector3& eye, const Vector3& target, const Vector3& up);
 
 		// Projection Matrices
 
-		static Matrix4 CreatePerspective(float fovY, float width, float height, float near, float far);
+		static Matrix4 createPerspective(float fovY, float width, float height, float near, float far);
 
-		static Matrix4 CreateOrthographic(float width, float height, float near, float far);
+		static Matrix4 createOrthographic(float width, float height, float near, float far);
 
 		friend Matrix4 operator*(const Matrix4& a, const Matrix4& b);
 

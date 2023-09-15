@@ -9,10 +9,8 @@
 #include "Anggur/Math/Vector4.h"
 #include "Anggur/Text.h"
 
-namespace Anggur
-{
-	struct TextVertex
-	{
+namespace Anggur {
+	struct TextVertex {
 		Vector2 position;
 		Vector2 texturePosition;
 		float textureIndex = 0.0f;
@@ -22,17 +20,16 @@ namespace Anggur
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class TextRenderer
-	{
+	class TextRenderer {
 	public:
 		TextRenderer();
 
-		void SetView(const Matrix3& newView);
+		void setView(const Matrix3& newView);
 
 		// +--
 		// | H
 		//
-		void Add(
+		void add(
 			const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness,
 			const Vector4& color
 		);
@@ -41,7 +38,7 @@ namespace Anggur
 		// | Hello darkness my old friend.
 		// | I've come to talk with you again.
 		//
-		void Add(
+		void add(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
 		);
@@ -52,7 +49,7 @@ namespace Anggur
 		// | Hello darkness my old friend. I've come to talk with you again.
 		// +----------------------------------------------------------------
 		//
-		void AddLine(
+		void addLine(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
 		);
@@ -61,7 +58,7 @@ namespace Anggur
 		// | Hello darkne... |
 		// +-----------------+
 		//
-		void AddLineCut(
+		void addLineCut(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
 		);
@@ -74,7 +71,7 @@ namespace Anggur
 		// | again.          |
 		// +-----------------+
 		//
-		void AddFlow(
+		void addFlow(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
 		);
@@ -85,20 +82,20 @@ namespace Anggur
 		// | I've come to... |
 		// +-----------------+
 		//
-		void AddFlowCut(
+		void addFlowCut(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector2& limit, const Vector4& color
 		);
 
-		void AddCharacter(
+		void addCharacter(
 			const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale,
 			const Vector4& color, Texture* texture, const Vector2& texturePosition, const Vector2& textureSize
 		);
 
-		void Flush();
+		void flush();
 
 	private:
-		void AddPartialLineCut(
+		void addPartialLineCut(
 			const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size,
 			float thickness, float sharpness, float limit, const Vector4& color
 		);

@@ -1,16 +1,14 @@
 #include "Anggur/Graphics/Renderer/LineRenderer.h"
 #include "Anggur/Graphics/API.h"
 
-namespace Anggur
-{
-	LineRenderer::LineRenderer()
-	{
+namespace Anggur {
+	LineRenderer::LineRenderer() {
 		_vertices.assign(_batchVertex, LineVertex{});
 
 		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
 
-		_vertexArray.Bind();
-		_vertexArray.SetLayout({
+		_vertexArray.bind();
+		_vertexArray.setLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 2, "aPositionA"},
 			{VertexDataType::Float, 2, "aPositionB"},
@@ -20,14 +18,14 @@ namespace Anggur
 			{VertexDataType::Float, 4, "aColor"},
 		});
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetCapacity(_vertexArray.GetStride() * _vertices.size());
+		_vertexBuffer.bind();
+		_vertexBuffer.setCapacity(_vertexArray.getStride() * _vertices.size());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetCapacity(sizeof(unsigned int) * _indices.size());
+		_indexBuffer.bind();
+		_indexBuffer.setCapacity(sizeof(unsigned int) * _indices.size());
 
-		_shader.Bind();
-		_shader.SetVertexSource(R"(
+		_shader.bind();
+		_shader.setVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aPositionA;
 			layout (location = 2) in vec2 aPositionB;
@@ -58,7 +56,7 @@ namespace Anggur
 				vColor = aColor;
 			}
 		)");
-		_shader.SetFragmentSource(R"(
+		_shader.setFragmentSource(R"(
 			in vec2 vPositionA;
 			in vec2 vPositionB;
 			in vec2 vQuadrant;
@@ -96,29 +94,26 @@ namespace Anggur
 				}
 			}
 		)");
-		_shader.Compile();
+		_shader.compile();
 	}
 
-	void LineRenderer::SetView(const Matrix3& newView)
-	{
+	void LineRenderer::setView(const Matrix3& newView) {
 		_view = newView;
 	}
 
-	void LineRenderer::Add(
+	void LineRenderer::add(
 		const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color
-	)
-	{
-		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _indices.size())
-		{
-			Flush();
+	) {
+		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _indices.size()) {
+			flush();
 		}
 
-		Vector2 position(Math::Min(positionA.x, positionB.x), Math::Min(positionA.y, positionB.y));
-		Vector2 size = Vector2(Math::Max(positionA.x, positionB.x), Math::Max(positionA.y, positionB.y)) - position;
+		Vector2 position(Math::min(positionA.x, positionB.x), Math::min(positionA.y, positionB.y));
+		Vector2 size = Vector2(Math::max(positionA.x, positionB.x), Math::max(positionA.y, positionB.y)) - position;
 
 		float edge = 0.5f * thickness + sharpness;
 		float doubleSharpness = 2.0f * sharpness + thickness;
-		float inverseMax = 1.0f / (Math::Max(size.x, size.y) + doubleSharpness);
+		float inverseMax = 1.0f / (Math::max(size.x, size.y) + doubleSharpness);
 		float xAxis = inverseMax * (size.x + doubleSharpness);
 		float yAxis = inverseMax * (size.y + doubleSharpness);
 
@@ -137,10 +132,10 @@ namespace Anggur
 		_vertices[_vertexOffset + 2].positionB = positionB - position;
 		_vertices[_vertexOffset + 3].positionB = positionB - position;
 
-		_vertices[_vertexOffset + 0].quadrant.Set(-xAxis, -yAxis);
-		_vertices[_vertexOffset + 1].quadrant.Set(+xAxis, -yAxis);
-		_vertices[_vertexOffset + 2].quadrant.Set(+xAxis, +yAxis);
-		_vertices[_vertexOffset + 3].quadrant.Set(-xAxis, +yAxis);
+		_vertices[_vertexOffset + 0].quadrant.set(-xAxis, -yAxis);
+		_vertices[_vertexOffset + 1].quadrant.set(+xAxis, -yAxis);
+		_vertices[_vertexOffset + 2].quadrant.set(+xAxis, +yAxis);
+		_vertices[_vertexOffset + 3].quadrant.set(-xAxis, +yAxis);
 
 		_vertices[_vertexOffset + 0].thickness = thickness;
 		_vertices[_vertexOffset + 1].thickness = thickness;
@@ -169,22 +164,21 @@ namespace Anggur
 		_indexOffset += 6;
 	}
 
-	void LineRenderer::Flush()
-	{
+	void LineRenderer::flush() {
 		// Early exit if no vertices to draw
 		if (_vertexOffset == 0)
 			return;
 
-		_shader.Bind();
-		_shader.SetUniformMatrix3("uView", _view);
+		_shader.bind();
+		_shader.setUniformMatrix3("uView", _view);
 
-		_vertexArray.Bind();
+		_vertexArray.bind();
 
-		_vertexBuffer.Bind();
-		_vertexBuffer.SetData(sizeof(LineVertex) * _vertexOffset, _vertices.data());
+		_vertexBuffer.bind();
+		_vertexBuffer.setData(sizeof(LineVertex) * _vertexOffset, _vertices.data());
 
-		_indexBuffer.Bind();
-		_indexBuffer.SetData(sizeof(unsigned int) * _indexOffset, _indices.data());
+		_indexBuffer.bind();
+		_indexBuffer.setData(sizeof(unsigned int) * _indexOffset, _indices.data());
 
 		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
 

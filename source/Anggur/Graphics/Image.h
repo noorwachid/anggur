@@ -3,10 +3,8 @@
 #include <string>
 #include <vector>
 
-namespace Anggur
-{
-	class Image
-	{
+namespace Anggur {
+	class Image {
 	public:
 		Image();
 
@@ -14,87 +12,72 @@ namespace Anggur
 
 		~Image();
 
-		inline unsigned int GetWidth() const
-		{
+		inline unsigned int getWidth() const {
 			return _width;
 		}
 
-		inline unsigned int GetHeight() const
-		{
+		inline unsigned int getHeight() const {
 			return _height;
 		}
 
-		inline unsigned int GetChannels() const
-		{
+		inline unsigned int getChannels() const {
 			return _channels;
 		}
 
-		inline unsigned int GetVolume() const
-		{
+		inline unsigned int getVolume() const {
 			return _width * _height * _channels;
 		}
 
-		inline const std::vector<unsigned char>& GetBytes() const
-		{
+		inline const std::vector<unsigned char>& getBytes() const {
 			return _bytes;
 		}
 
-		inline std::vector<unsigned char>& GetBytes()
-		{
+		inline std::vector<unsigned char>& getBytes() {
 			return _bytes;
 		}
 
-		inline unsigned char* ToPointer()
-		{
+		inline unsigned char* toPointer() {
 			return _bytes.data();
 		}
 
-		inline void SetByte(unsigned int index, unsigned char value)
-		{
+		inline void setByte(unsigned int index, unsigned char value) {
 			_bytes[index] = value;
 		}
 
-		inline void SetByte(unsigned int x, unsigned int y, unsigned char value)
-		{
+		inline void setByte(unsigned int x, unsigned int y, unsigned char value) {
 			_bytes[y * _width + x] = value;
 		}
 
-		inline void SetWidth(unsigned int newWidth)
-		{
+		inline void setWidth(unsigned int newWidth) {
 			_width = newWidth;
 		}
 
-		inline void SetHeight(unsigned int newHeight)
-		{
+		inline void setHeight(unsigned int newHeight) {
 			_height = newHeight;
 		}
 
-		inline void SetSize(unsigned int newWidth, unsigned int newHeight)
-		{
+		inline void setSize(unsigned int newWidth, unsigned int newHeight) {
 			_width = newWidth;
 			_height = newHeight;
 		}
 
-		inline void SetChannels(unsigned int newChannels)
-		{
+		inline void setChannels(unsigned int newChannels) {
 			_channels = newChannels;
 		}
 
-		void Reset()
-		{
-			_bytes.assign(GetVolume(), 0);
+		void reset() {
+			_bytes.assign(getVolume(), 0);
 		}
 
-		void Resize()
-		{
-			_bytes.resize(GetVolume());
+		void resize() {
+			_bytes.resize(getVolume());
 		}
 
-		void Read(const std::string& path);
+		void read(const std::string& path);
 
-		void Close();
+		void close();
 
-		void Write(const std::string& path);
+		void write(const std::string& path);
 
 	private:
 		unsigned int _width;

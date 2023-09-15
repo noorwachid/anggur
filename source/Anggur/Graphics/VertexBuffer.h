@@ -3,87 +3,78 @@
 #include <string>
 #include <vector>
 
-namespace Anggur
-{
-	class IndexBuffer
-	{
+namespace Anggur {
+	class IndexBuffer {
 	public:
 		IndexBuffer();
 
 		~IndexBuffer();
 
-		unsigned int GetID()
-		{
+		unsigned int getID() {
 			return _id;
 		}
 
-		void Bind();
+		void bind();
 
-		void Unbind();
+		void unbind();
 
-		void SetCapacity(size_t byteSize);
+		void setCapacity(size_t byteSize);
 
-		void SetData(size_t byteSize, void* byteData);
+		void setData(size_t byteSize, void* byteData);
 
 	private:
 		unsigned int _id = 0;
 	};
 
-	class VertexBuffer
-	{
+	class VertexBuffer {
 	public:
 		VertexBuffer();
 
 		~VertexBuffer();
 
-		unsigned int GetID()
-		{
+		unsigned int getID() {
 			return _id;
 		}
 
-		void Bind();
+		void bind();
 
-		void Unbind();
+		void unbind();
 
-		void SetCapacity(size_t byteSize);
-		
-		void SetData(size_t byteSize, void* byteData);
+		void setCapacity(size_t byteSize);
+
+		void setData(size_t byteSize, void* byteData);
 
 	private:
 		unsigned int _id;
 	};
 
-	enum class VertexDataType
-	{
+	enum class VertexDataType {
 		Float,
 	};
 
-	size_t GetByteSize(VertexDataType type);
+	size_t getByteSize(VertexDataType type);
 
-	class VertexArray
-	{
+	class VertexArray {
 	public:
 		VertexArray();
 
 		~VertexArray();
 
-		unsigned int getID()
-		{
+		unsigned int getID() {
 			return _id;
 		}
 
-		size_t GetStride()
-		{
+		size_t getStride() {
 			return _stride;
 		}
 
-		void Bind();
+		void bind();
 
-		void Unbind();
+		void unbind();
 
-		void SetAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset);
+		void setAttribute(size_t index, size_t size, VertexDataType type, size_t byteStride, size_t byteOffset);
 
-		void SetLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout);
+		void setLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout);
 
 	private:
 		unsigned int _id = 0;

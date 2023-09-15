@@ -8,10 +8,8 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
 
-namespace Anggur
-{
-	struct LineVertex
-	{
+namespace Anggur {
+	struct LineVertex {
 		Vector2 position;
 		Vector2 positionA;
 		Vector2 positionB;
@@ -21,18 +19,17 @@ namespace Anggur
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class LineRenderer
-	{
+	class LineRenderer {
 	public:
 		LineRenderer();
 
-		void SetView(const Matrix3& newView);
+		void setView(const Matrix3& newView);
 
-		void Add(
+		void add(
 			const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color
 		);
 
-		void Flush();
+		void flush();
 
 	private:
 		VertexArray _vertexArray;

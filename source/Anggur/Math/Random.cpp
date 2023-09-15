@@ -1,45 +1,36 @@
 #include "Anggur/Math/Random.h"
 #include "Anggur/Math.h"
 
-namespace Anggur
-{
-	Random::Random() : _generator(_device())
-	{
+namespace Anggur {
+	Random::Random() : _generator(_device()) {
 	}
 
-	float Random::Generate()
-	{
-		return GetInstance()._generator();
+	float Random::generate() {
+		return getInstance()._generator();
 	}
 
-	float Random::Range(float lower, float upper)
-	{
+	float Random::range(float lower, float upper) {
 		std::uniform_real_distribution<float> distribution(lower, upper);
-		return distribution(GetInstance()._generator);
+		return distribution(getInstance()._generator);
 	}
 
-	float Random::GetNormal()
-	{
-		return Range(0.f, 1.f);
+	float Random::getNormal() {
+		return range(0.f, 1.f);
 	}
 
-	float Random::GetSigned()
-	{
-		return Range(-1.f, 1.f);
+	float Random::getSigned() {
+		return range(-1.f, 1.f);
 	}
 
-	float Random::GetAngle()
-	{
-		return Range(0.f, Math::twoPi);
+	float Random::getAngle() {
+		return range(0.f, Math::twoPi);
 	}
 
-	bool Random::GetBoolean()
-	{
-		return GetNormal() > 0.5;
+	bool Random::getBoolean() {
+		return getNormal() > 0.5;
 	}
 
-	void Random::SetSeed(float n)
-	{
-		GetInstance()._generator.seed(n);
+	void Random::setSeed(float n) {
+		getInstance()._generator.seed(n);
 	}
 }

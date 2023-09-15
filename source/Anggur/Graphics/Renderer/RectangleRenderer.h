@@ -8,10 +8,8 @@
 #include "Anggur/Math/Vector2.h"
 #include "Anggur/Math/Vector4.h"
 
-namespace Anggur
-{
-	struct RectangleVertex
-	{
+namespace Anggur {
+	struct RectangleVertex {
 		Vector2 position;
 		Vector2 size;
 		Vector2 quadrant;
@@ -21,19 +19,18 @@ namespace Anggur
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class RectangleRenderer
-	{
+	class RoundedRectangleRenderer {
 	public:
-		RectangleRenderer();
+		RoundedRectangleRenderer();
 
-		void SetView(const Matrix3& newView);
+		void setView(const Matrix3& newView);
 
-		void Add(
+		void add(
 			const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness,
 			const Vector4& color
 		);
 
-		void Flush();
+		void flush();
 
 	private:
 		VertexArray _vertexArray;

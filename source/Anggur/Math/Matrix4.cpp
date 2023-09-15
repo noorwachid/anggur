@@ -1,12 +1,10 @@
 #include "Anggur/Math/Matrix4.h"
 
-namespace Anggur
-{
+namespace Anggur {
 
 	Matrix4::Matrix4()
 		: a(1.0f), b(0.0f), c(0.0f), d(0.0f), e(0.0f), f(1.0f), g(0.0f), h(0.0f), i(0.0f), j(0.0f), k(1.0f), l(0.0f),
-		  m(0.0f), n(0.0f), o(0.0f), p(1.0f)
-	{
+		  m(0.0f), n(0.0f), o(0.0f), p(1.0f) {
 	}
 
 	Matrix4::Matrix4(
@@ -14,15 +12,13 @@ namespace Anggur
 		float newJ, float newK, float newL, float newM, float newN, float newO, float newP
 	)
 		: a(newA), b(newB), c(newC), d(newD), e(newE), f(newF), g(newG), h(newH), i(newI), j(newJ), k(newK), l(newL),
-		  m(newM), n(newN), o(newO), p(newP)
-	{
+		  m(newM), n(newN), o(newO), p(newP) {
 	}
 
-	void Matrix4::Set(
+	void Matrix4::set(
 		float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH, float newI,
 		float newJ, float newK, float newL, float newM, float newN, float newO, float newP
-	)
-	{
+	) {
 		a = newA;
 		b = newB;
 		c = newC;
@@ -41,13 +37,11 @@ namespace Anggur
 		p = newP;
 	}
 
-	const float* Matrix4::ToPointer() const
-	{
+	const float* Matrix4::toPointer() const {
 		return &a;
 	}
 
-	std::string Matrix4::ToString() const
-	{
+	std::string Matrix4::toString() const {
 		std::string buffer;
 
 		buffer +=
@@ -62,21 +56,18 @@ namespace Anggur
 		return buffer;
 	}
 
-	Matrix4 Matrix4::CreateTranslation(const Vector3& translation)
-	{
+	Matrix4 Matrix4::createTranslation(const Vector3& translation) {
 		return Matrix4(
 			1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, translation.x, translation.y,
 			translation.z, 1.0f
 		);
 	}
 
-	Matrix4 Matrix4::CreateRotation(const Vector3& rotation)
-	{
-		return CreateRotationX(rotation.x) * CreateRotationY(rotation.y) * CreateRotationZ(rotation.z);
+	Matrix4 Matrix4::createRotation(const Vector3& rotation) {
+		return createRotationX(rotation.x) * createRotationY(rotation.y) * createRotationZ(rotation.z);
 	}
 
-	Matrix4 Matrix4::CreateRotation(const Quaternion& q)
-	{
+	Matrix4 Matrix4::createRotation(const Quaternion& q) {
 		return Matrix4(
 			1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z, 2.0f * q.x * q.y + 2.0f * q.w * q.z,
 			2.0f * q.x * q.z - 2.0f * q.w * q.y, 0.0f,
@@ -91,52 +82,46 @@ namespace Anggur
 		);
 	}
 
-	Matrix4 Matrix4::CreateRotationX(float angle)
-	{
+	Matrix4 Matrix4::createRotationX(float angle) {
 		return Matrix4(
-			1.0f, 0.0f, 0.0f, 0.0f, 0.0f, Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f, -Math::Sin(angle),
-			Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+			1.0f, 0.0f, 0.0f, 0.0f, 0.0f, Math::cos(angle), Math::sin(angle), 0.0f, 0.0f, -Math::sin(angle),
+			Math::cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
 		);
 	}
 
-	Matrix4 Matrix4::CreateRotationY(float angle)
-	{
+	Matrix4 Matrix4::createRotationY(float angle) {
 		return Matrix4(
-			Math::Cos(angle), 0.0f, -Math::Sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, Math::Sin(angle), 0.0f,
-			Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+			Math::cos(angle), 0.0f, -Math::sin(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, Math::sin(angle), 0.0f,
+			Math::cos(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
 		);
 	}
 
-	Matrix4 Matrix4::CreateRotationZ(float angle)
-	{
+	Matrix4 Matrix4::createRotationZ(float angle) {
 		return Matrix4(
-			Math::Cos(angle), Math::Sin(angle), 0.0f, 0.0f, -Math::Sin(angle), Math::Cos(angle), 0.0f, 0.0f, 0.0f, 0.0f,
+			Math::cos(angle), Math::sin(angle), 0.0f, 0.0f, -Math::sin(angle), Math::cos(angle), 0.0f, 0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
 		);
 	}
 
-	Matrix4 Matrix4::CreateScale(const Vector3& scale)
-	{
+	Matrix4 Matrix4::createScale(const Vector3& scale) {
 		return Matrix4(
 			scale.x, 0.0f, 0.0f, 0.0f, 0.0f, scale.y, 0.0f, 0.0f, 0.0f, 0.0f, scale.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
 		);
 	}
 
-	Matrix4 Matrix4::CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
-	{
-		Vector3 f = Vector3::Normalize(target - eye);
-		Vector3 s = Vector3::Normalize(Vector3::Cross(f, up));
-		Vector3 u = Vector3::Normalize(Vector3::Cross(s, f));
+	Matrix4 Matrix4::createLookAt(const Vector3& eye, const Vector3& target, const Vector3& up) {
+		Vector3 f = Vector3::normalize(target - eye);
+		Vector3 s = Vector3::normalize(Vector3::cross(f, up));
+		Vector3 u = Vector3::normalize(Vector3::cross(s, f));
 
 		return Matrix4(
-			s.x, u.x, -f.x, 0.0f, s.y, u.y, -f.y, 0.0f, s.z, u.z, -f.z, 0.0f, -Vector3::Dot(s, eye),
-			-Vector3::Dot(u, eye), Vector3::Dot(f, eye), 1.0f
+			s.x, u.x, -f.x, 0.0f, s.y, u.y, -f.y, 0.0f, s.z, u.z, -f.z, 0.0f, -Vector3::dot(s, eye),
+			-Vector3::dot(u, eye), Vector3::dot(f, eye), 1.0f
 		);
 	}
 
-	Matrix4 Matrix4::CreatePerspective(float fovY, float width, float height, float near, float far)
-	{
-		float yScale = Math::Cot(fovY / 2.0f);
+	Matrix4 Matrix4::createPerspective(float fovY, float width, float height, float near, float far) {
+		float yScale = Math::cot(fovY / 2.0f);
 		float xScale = yScale * height / width;
 
 		return Matrix4(
@@ -145,8 +130,7 @@ namespace Anggur
 		);
 	}
 
-	Matrix4 Matrix4::CreateOrthographic(float width, float height, float near, float far)
-	{
+	Matrix4 Matrix4::createOrthographic(float width, float height, float near, float far) {
 		// TODO: find opengl based orthographic matrix
 		return Matrix4(
 			1.0f / width, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f / height, 0.0f, 0.0f, 0.0f, 0.0f, -2.0f / (far - near), 0.0f,
@@ -154,8 +138,7 @@ namespace Anggur
 		);
 	}
 
-	Matrix4 operator*(const Matrix4& a, const Matrix4& b)
-	{
+	Matrix4 operator*(const Matrix4& a, const Matrix4& b) {
 		return Matrix4(
 			a.a * b.a + a.b * b.e + a.c * b.i + a.d * b.m, a.a * b.b + a.b * b.f + a.c * b.j + a.d * b.n,
 			a.a * b.c + a.b * b.g + a.c * b.k + a.d * b.o, a.a * b.d + a.b * b.h + a.c * b.l + a.d * b.p,
@@ -168,8 +151,7 @@ namespace Anggur
 		);
 	}
 
-	Vector3 operator*(const Matrix4& a, const Vector3& b)
-	{
+	Vector3 operator*(const Matrix4& a, const Vector3& b) {
 		return Vector3(
 			a.a * b.x + a.e * b.y + a.i * b.z + a.m * 1.0f, a.b * b.x + a.f * b.y + a.j * b.z + a.n * 1.0f,
 			a.c * b.x + a.g * b.y + a.k * b.z + a.o * 1.0f

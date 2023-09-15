@@ -2,17 +2,14 @@
 #include "Anggur/Graphics/API.h"
 #include <iostream>
 
-namespace Anggur
-{
-	bool LoadGraphicsDriver(void* address)
-	{
-		#ifndef EMSCRIPTEN
+namespace Anggur {
+	bool loadGraphicsDriver(void* address) {
+#ifndef EMSCRIPTEN
 		return gladLoadGLLoader(reinterpret_cast<GLADloadproc>(address));
-		#endif
+#endif
 
 		std::cout << "GL.Version " << glGetString(GL_VERSION) << "\n";
 
 		return true;
 	}
 }
-
