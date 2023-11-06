@@ -63,9 +63,9 @@ namespace Anggur {
 
 		header += "#define TEXTURE_SLOT " + std::to_string(TextureSpecification::getMaxSlot()) + "\n";
 
-		_vertexSource = header + source;
+		vertexSource = header + source;
 
-		_vertexSource = GenerateTextureSlot(_vertexSource);
+		vertexSource = GenerateTextureSlot(vertexSource);
 	}
 
 	void Shader::setFragmentSource(const std::string& source) {
@@ -77,14 +77,14 @@ namespace Anggur {
 
 		header += "#define TEXTURE_SLOT " + std::to_string(TextureSpecification::getMaxSlot()) + "\n";
 
-		_fragmentSource = header + source;
+		fragmentSource = header + source;
 
-		_fragmentSource = GenerateTextureSlot(_fragmentSource);
+		fragmentSource = GenerateTextureSlot(fragmentSource);
 	}
 
 	void Shader::compile() {
-		const char* cVertexSource = _vertexSource.c_str();
-		const char* cFragmentSource = _fragmentSource.c_str();
+		const char* cVertexSource = vertexSource.c_str();
+		const char* cFragmentSource = fragmentSource.c_str();
 		int isSucceed;
 		char message[512];
 
@@ -96,7 +96,7 @@ namespace Anggur {
 		if (!isSucceed) {
 			glGetShaderInfoLog(vertexId, 512, NULL, message);
 
-			throw std::runtime_error(std::string("Failed to compile vertex shader: ") + message + _vertexSource);
+			throw std::runtime_error(std::string("Failed to compile vertex shader: ") + message + vertexSource);
 		}
 
 		unsigned int fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -107,19 +107,19 @@ namespace Anggur {
 		if (!isSucceed) {
 			glGetShaderInfoLog(fragmentId, 512, NULL, message);
 
-			throw std::runtime_error(std::string("Failed to compile fragment shader: ") + message + _fragmentSource);
+			throw std::runtime_error(std::string("Failed to compile fragment shader: ") + message + fragmentSource);
 		}
 
 		terminate(); // in case shader already created
 
-		_id = glCreateProgram();
-		glAttachShader(_id, vertexId);
-		glAttachShader(_id, fragmentId);
-		glLinkProgram(_id);
+		id = glCreateProgram();
+		glAttachShader(id, vertexId);
+		glAttachShader(id, fragmentId);
+		glLinkProgram(id);
 
-		glGetProgramiv(_id, GL_LINK_STATUS, &isSucceed);
+		glGetProgramiv(id, GL_LINK_STATUS, &isSucceed);
 		if (!isSucceed) {
-			glGetProgramInfoLog(_id, 512, NULL, message);
+			glGetProgramInfoLog(id, 512, NULL, message);
 
 			throw std::runtime_error(std::string("Failed to link shader program: ") + message);
 		}
@@ -129,15 +129,15 @@ namespace Anggur {
 	}
 
 	void Shader::bind() {
-		glUseProgram(_id);
+		glUseProgram(id);
 	}
 
 	void Shader::terminate() {
-		glDeleteProgram(_id);
+		glDeleteProgram(id);
 	}
 
 	int Shader::getLocation(const std::string& name) {
-		return glGetUniformLocation(_id, name.c_str());
+		return glGetUniformLocation(id, name.c_str());
 	}
 
 	void Shader::setUniformVector2(const std::string& name, const Vector2& vector) {

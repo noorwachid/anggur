@@ -1,6 +1,6 @@
-#include "anggur/text.h"
+#include "anggur/textencoding.h"
 
-namespace Anggur::Text::UTF8 {
+namespace Anggur::TextEncoding::UTF8 {
 	std::string expand(unsigned int codepoint) {
 		std::string result;
 

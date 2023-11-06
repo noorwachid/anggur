@@ -7,7 +7,7 @@
 #include "anggur/math/matrix3.h"
 #include "anggur/math/vector2.h"
 #include "anggur/math/vector4.h"
-#include "anggur/text.h"
+#include "anggur/textencoding.h"
 
 namespace Anggur {
 	struct TextVertex {
@@ -24,7 +24,7 @@ namespace Anggur {
 	public:
 		TextRenderer();
 
-		void setView(const Matrix3& newView);
+		void setView(const Matrix3& view);
 
 		// +--
 		// | H
@@ -101,28 +101,28 @@ namespace Anggur {
 		);
 
 	private:
-		VertexArray _vertexArray;
-		VertexBuffer _vertexBuffer;
-		IndexBuffer _indexBuffer;
+		VertexArray vertexArray;
+		VertexBuffer vertexBuffer;
+		IndexBuffer indexBuffer;
 
-		Shader _shader;
+		Shader shader;
 
-		Matrix3 _view;
+		Matrix3 view;
 
-		std::vector<TextVertex> _vertices;
-		std::vector<unsigned int> _indices;
-		std::vector<Texture*> _textures;
-		std::vector<int> _textureIndices;
+		std::vector<TextVertex> vertices;
+		std::vector<unsigned int> indices;
+		std::vector<Texture*> textures;
+		std::vector<int> textureIndices;
 
-		std::unordered_map<unsigned int, size_t> _textureIndexMap;
+		std::unordered_map<unsigned int, size_t> textureIndexMap;
 
-		size_t _vertexOffset = 0;
-		size_t _indexOffset = 0;
-		size_t _textureOffset = 0;
+		size_t vertexOffset = 0;
+		size_t indexOffset = 0;
+		size_t textureOffset = 0;
 
-		size_t _drawCount = 0;
+		size_t drawCount = 0;
 
-		size_t _batchVertex = 512;
-		size_t _batchIndexMultiplier = 2;
+		size_t batchVertex = 512;
+		size_t batchIndexMultiplier = 2;
 	};
 }

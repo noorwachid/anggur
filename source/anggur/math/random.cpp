@@ -2,16 +2,16 @@
 #include "anggur/math.h"
 
 namespace Anggur {
-	Random::Random() : _generator(_device()) {
+	Random::Random() : generator(device()) {
 	}
 
 	float Random::generate() {
-		return getInstance()._generator();
+		return getInstance().generator();
 	}
 
 	float Random::range(float lower, float upper) {
 		std::uniform_real_distribution<float> distribution(lower, upper);
-		return distribution(getInstance()._generator);
+		return distribution(getInstance().generator);
 	}
 
 	float Random::getNormal() {
@@ -31,6 +31,6 @@ namespace Anggur {
 	}
 
 	void Random::setSeed(float n) {
-		getInstance()._generator.seed(n);
+		getInstance().generator.seed(n);
 	}
 }

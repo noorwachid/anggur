@@ -33,12 +33,12 @@ namespace Anggur {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		_width = width;
-		_height = height;
-		_channels = channels;
+		width = width;
+		height = height;
+		channels = channels;
 
-		glGenTextures(1, &_id);
-		glBindTexture(GL_TEXTURE_2D, _id);
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToNativeType(filter));
@@ -74,12 +74,12 @@ namespace Anggur {
 	}
 
 	Texture::~Texture() {
-		glDeleteTextures(1, &_id);
+		glDeleteTextures(1, &id);
 	}
 
 	void Texture::bind(unsigned int slot) {
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, _id);
+		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
 	bool operator==(const Texture& a, const Texture& b) {

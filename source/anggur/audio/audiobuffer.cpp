@@ -23,7 +23,7 @@ namespace Anggur {
 	};
 
 	AudioBuffer::AudioBuffer(const std::string& path) {
-		alGenBuffers(1, &_id);
+		alGenBuffers(1, &id);
 
 		std::string extension = std::filesystem::path(path).extension().string();
 
@@ -52,7 +52,7 @@ namespace Anggur {
 			ALenum format = (header.numChannels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 
 			// Set the audio data in the buffer
-			alBufferData(_id, format, audio_data.data(), audio_data.size() * sizeof(int16_t), header.sampleRate);
+			alBufferData(id, format, audio_data.data(), audio_data.size() * sizeof(int16_t), header.sampleRate);
 		} else if (extension == ".ogg") {
 			stb_vorbis* vorbisFile = stb_vorbis_open_filename(path.c_str(), nullptr, nullptr);
 
@@ -75,7 +75,7 @@ namespace Anggur {
 			}
 
 			alBufferData(
-				_id, (vorbisInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, audioData, dataSize,
+				id, (vorbisInfo.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, audioData, dataSize,
 				vorbisInfo.sample_rate
 			);
 
@@ -87,10 +87,10 @@ namespace Anggur {
 	}
 
 	AudioBuffer::~AudioBuffer() {
-		alDeleteBuffers(1, &_id);
+		alDeleteBuffers(1, &id);
 	}
 
 	unsigned int AudioBuffer::getID() const {
-		return _id;
+		return id;
 	}
 }

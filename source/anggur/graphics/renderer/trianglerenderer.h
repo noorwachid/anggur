@@ -20,7 +20,7 @@ namespace Anggur {
 	public:
 		TriangleRenderer();
 
-		void setView(const Matrix3& newView);
+		void setView(const Matrix3& view);
 
 		void addTriangle(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
@@ -42,30 +42,30 @@ namespace Anggur {
 		void flush();
 
 	private:
-		VertexArray _vertexArray;
-		VertexBuffer _vertexBuffer;
-		IndexBuffer _indexBuffer;
+		VertexArray vertexArray;
+		VertexBuffer vertexBuffer;
+		IndexBuffer indexBuffer;
 
-		Shader _shader;
+		Shader shader;
 
-		Matrix3 _view;
+		Matrix3 view;
 
-		std::vector<TriangleVertex> _vertices;
-		std::vector<unsigned int> _indices;
-		std::vector<Texture*> _textures;
-		std::vector<int> _textureIndices;
+		std::vector<TriangleVertex> vertices;
+		std::vector<unsigned int> indices;
+		std::vector<Texture*> textures;
+		std::vector<int> textureIndices;
 
-		std::unordered_map<unsigned int, size_t> _textureIndexMap;
+		std::unordered_map<unsigned int, size_t> textureIndexMap;
 
-		size_t _previousVertexOffset = 0;
-		size_t _previousIndexOffset = 0;
-		size_t _vertexOffset = 0;
-		size_t _indexOffset = 0;
-		size_t _textureOffset = 0;
+		size_t previousVertexOffset = 0;
+		size_t previousIndexOffset = 0;
+		size_t vertexOffset = 0;
+		size_t indexOffset = 0;
+		size_t textureOffset = 0;
 
-		size_t _drawCount = 0;
+		size_t drawCount = 0;
 
-		size_t _batchVertex = 512;
-		size_t _batchIndexMultiplier = 2;
+		size_t batchVertex = 512;
+		size_t batchIndexMultiplier = 2;
 	};
 }

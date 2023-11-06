@@ -13,64 +13,64 @@ namespace Anggur {
 		~Image();
 
 		inline unsigned int getWidth() const {
-			return _width;
+			return width;
 		}
 
 		inline unsigned int getHeight() const {
-			return _height;
+			return height;
 		}
 
 		inline unsigned int getChannels() const {
-			return _channels;
+			return channels;
 		}
 
 		inline unsigned int getVolume() const {
-			return _width * _height * _channels;
+			return width * height * channels;
 		}
 
 		inline const std::vector<unsigned char>& getBytes() const {
-			return _bytes;
+			return bytes;
 		}
 
 		inline std::vector<unsigned char>& getBytes() {
-			return _bytes;
+			return bytes;
 		}
 
 		inline unsigned char* toPointer() {
-			return _bytes.data();
+			return bytes.data();
 		}
 
 		inline void setByte(unsigned int index, unsigned char value) {
-			_bytes[index] = value;
+			bytes[index] = value;
 		}
 
 		inline void setByte(unsigned int x, unsigned int y, unsigned char value) {
-			_bytes[y * _width + x] = value;
+			bytes[y * width + x] = value;
 		}
 
-		inline void setWidth(unsigned int newWidth) {
-			_width = newWidth;
+		inline void setWidth(unsigned int width) {
+			this->width = width;
 		}
 
-		inline void setHeight(unsigned int newHeight) {
-			_height = newHeight;
+		inline void setHeight(unsigned int height) {
+			this->height = height;
 		}
 
-		inline void setSize(unsigned int newWidth, unsigned int newHeight) {
-			_width = newWidth;
-			_height = newHeight;
+		inline void setSize(unsigned int width, unsigned int height) {
+			this->width = width;
+			this->height = height;
 		}
 
-		inline void setChannels(unsigned int newChannels) {
-			_channels = newChannels;
+		inline void setChannels(unsigned int channels) {
+			this->channels = channels;
 		}
 
 		void reset() {
-			_bytes.assign(getVolume(), 0);
+			bytes.assign(getVolume(), 0);
 		}
 
 		void resize() {
-			_bytes.resize(getVolume());
+			bytes.resize(getVolume());
 		}
 
 		void read(const std::string& path);
@@ -80,9 +80,10 @@ namespace Anggur {
 		void write(const std::string& path);
 
 	private:
-		unsigned int _width;
-		unsigned int _height;
-		unsigned int _channels;
-		std::vector<unsigned char> _bytes;
+		unsigned int width;
+		unsigned int height;
+		unsigned int channels;
+
+		std::vector<unsigned char> bytes;
 	};
 }

@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(anggur)
 
 add_library(anggur SHARED
-	"source/anggur/text.cpp"
+	"source/anggur/textencoding.cpp"
 	"source/anggur/log.cpp"
 	"source/anggur/application.cpp"
 

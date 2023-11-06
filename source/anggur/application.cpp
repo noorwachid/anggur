@@ -29,18 +29,18 @@ struct WavHeader {
 
 namespace Anggur {
 	Application::Application(uint32_t width, uint32_t height, const std::string& title)
-		: _window(width, height, title), _scene(nullptr) {
-		_window.connect([](void* address) -> bool { return loadGraphicsDriver(address); });
-		_renderer = new Renderer();
+		: window(width, height, title), scene(nullptr) {
+		window.connect([](void* address) -> bool { return loadGraphicsDriver(address); });
+		renderer = new Renderer();
 	}
 
 	Application::~Application() {
-		if (_scene) {
-			_scene->terminate();
-			delete _scene;
+		if (scene) {
+			scene->terminate();
+			delete scene;
 		}
 
-		delete _renderer;
+		delete renderer;
 	}
 
 	void Application::run() {
@@ -57,16 +57,16 @@ namespace Anggur {
 
 		double previousTime = glfwGetTime();
 
-		while (!_window.shouldClose()) {
+		while (!window.shouldClose()) {
 			double currentTime = glfwGetTime();
 			float deltaTime = currentTime - previousTime;
 			previousTime = currentTime;
 
-			if (_scene)
-				_scene->update(deltaTime);
+			if (scene)
+				scene->update(deltaTime);
 
-			_window.swapBuffers();
-			_window.pollEvents();
+			window.swapBuffers();
+			window.pollEvents();
 		}
 
 #endif
@@ -88,7 +88,7 @@ namespace Anggur {
 		float refreshTime = 1.0f / videoMode->refreshRate;
 		double previousTime = glfwGetTime();
 
-		while (!_window.shouldClose()) {
+		while (!window.shouldClose()) {
 			double currentTime = glfwGetTime();
 			float deltaTime = currentTime - previousTime;
 			float sleepTime = refreshTime - deltaTime;
@@ -99,11 +99,11 @@ namespace Anggur {
 				deltaTime = refreshTime;
 			}
 
-			if (_scene)
-				_scene->update(deltaTime);
+			if (scene)
+				scene->update(deltaTime);
 
-			_window.swapBuffers();
-			_window.pollEvents();
+			window.swapBuffers();
+			window.pollEvents();
 		}
 
 #endif

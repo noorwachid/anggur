@@ -39,7 +39,7 @@ namespace Anggur {
 		++_drawCount;
 	}
 
-	void Renderer::clearBackground(const Vector4& color) {
+	void Renderer::clear(const Vector4& color) {
 		glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}

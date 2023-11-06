@@ -3,12 +3,12 @@
 
 namespace Anggur {
 	CircleRenderer::CircleRenderer() {
-		_vertices.assign(_batchVertex, CircleVertex{});
+		vertices.assign(batchVertex, CircleVertex{});
 
-		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
+		indices.assign(batchVertex * batchIndexMultiplier, 0);
 
-		_vertexArray.bind();
-		_vertexArray.setLayout({
+		vertexArray.bind();
+		vertexArray.setLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 2, "aQuadrant"},
 			{VertexDataType::Float, 1, "aRadius"},
@@ -17,14 +17,14 @@ namespace Anggur {
 			{VertexDataType::Float, 4, "aColor"},
 		});
 
-		_vertexBuffer.bind();
-		_vertexBuffer.setCapacity(sizeof(CircleVertex) * _vertices.size());
+		vertexBuffer.bind();
+		vertexBuffer.setCapacity(sizeof(CircleVertex) * vertices.size());
 
-		_indexBuffer.bind();
-		_indexBuffer.setCapacity(sizeof(unsigned int) * _indices.size());
+		indexBuffer.bind();
+		indexBuffer.setCapacity(sizeof(unsigned int) * indices.size());
 
-		_shader.bind();
-		_shader.setVertexSource(R"(
+		shader.bind();
+		shader.setVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aQuadrant;
 			layout (location = 2) in float aRadius;
@@ -52,7 +52,7 @@ namespace Anggur {
 				vColor = aColor;
 			}
 		)");
-		_shader.setFragmentSource(R"(
+		shader.setFragmentSource(R"(
 			in vec2 vQuadrant;
 			in float vRadius;
 			in float vThickness;
@@ -82,79 +82,79 @@ namespace Anggur {
 				}
 			}
 		)");
-		_shader.compile();
+		shader.compile();
 	}
 
-	void CircleRenderer::setView(const Matrix3& newView) {
-		_view = newView;
+	void CircleRenderer::setView(const Matrix3& view) {
+		this->view = view;
 	}
 
 	void CircleRenderer::add(
 		const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color
 	) {
-		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _vertices.size()) {
+		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > vertices.size()) {
 			flush();
 		}
 
 		float spread = radius + sharpness;
 
-		_vertices[_vertexOffset + 0].position = Vector2(position.x - spread, position.y - spread);
-		_vertices[_vertexOffset + 1].position = Vector2(position.x + spread, position.y - spread);
-		_vertices[_vertexOffset + 2].position = Vector2(position.x + spread, position.y + spread);
-		_vertices[_vertexOffset + 3].position = Vector2(position.x - spread, position.y + spread);
+		vertices[vertexOffset + 0].position = Vector2(position.x - spread, position.y - spread);
+		vertices[vertexOffset + 1].position = Vector2(position.x + spread, position.y - spread);
+		vertices[vertexOffset + 2].position = Vector2(position.x + spread, position.y + spread);
+		vertices[vertexOffset + 3].position = Vector2(position.x - spread, position.y + spread);
 
-		_vertices[_vertexOffset + 0].quadrant.set(-1, -1);
-		_vertices[_vertexOffset + 1].quadrant.set(+1, -1);
-		_vertices[_vertexOffset + 2].quadrant.set(+1, +1);
-		_vertices[_vertexOffset + 3].quadrant.set(-1, +1);
+		vertices[vertexOffset + 0].quadrant.set(-1, -1);
+		vertices[vertexOffset + 1].quadrant.set(+1, -1);
+		vertices[vertexOffset + 2].quadrant.set(+1, +1);
+		vertices[vertexOffset + 3].quadrant.set(-1, +1);
 
-		_vertices[_vertexOffset + 0].radius = radius;
-		_vertices[_vertexOffset + 1].radius = radius;
-		_vertices[_vertexOffset + 2].radius = radius;
-		_vertices[_vertexOffset + 3].radius = radius;
+		vertices[vertexOffset + 0].radius = radius;
+		vertices[vertexOffset + 1].radius = radius;
+		vertices[vertexOffset + 2].radius = radius;
+		vertices[vertexOffset + 3].radius = radius;
 
-		_vertices[_vertexOffset + 0].thickness = thickness;
-		_vertices[_vertexOffset + 1].thickness = thickness;
-		_vertices[_vertexOffset + 2].thickness = thickness;
-		_vertices[_vertexOffset + 3].thickness = thickness;
+		vertices[vertexOffset + 0].thickness = thickness;
+		vertices[vertexOffset + 1].thickness = thickness;
+		vertices[vertexOffset + 2].thickness = thickness;
+		vertices[vertexOffset + 3].thickness = thickness;
 
-		_vertices[_vertexOffset + 0].sharpness = sharpness;
-		_vertices[_vertexOffset + 1].sharpness = sharpness;
-		_vertices[_vertexOffset + 2].sharpness = sharpness;
-		_vertices[_vertexOffset + 3].sharpness = sharpness;
+		vertices[vertexOffset + 0].sharpness = sharpness;
+		vertices[vertexOffset + 1].sharpness = sharpness;
+		vertices[vertexOffset + 2].sharpness = sharpness;
+		vertices[vertexOffset + 3].sharpness = sharpness;
 
-		_vertices[_vertexOffset + 0].color = color;
-		_vertices[_vertexOffset + 1].color = color;
-		_vertices[_vertexOffset + 2].color = color;
-		_vertices[_vertexOffset + 3].color = color;
+		vertices[vertexOffset + 0].color = color;
+		vertices[vertexOffset + 1].color = color;
+		vertices[vertexOffset + 2].color = color;
+		vertices[vertexOffset + 3].color = color;
 
-		_indices[_indexOffset + 0] = _vertexOffset + 0;
-		_indices[_indexOffset + 1] = _vertexOffset + 1;
-		_indices[_indexOffset + 2] = _vertexOffset + 2;
-		_indices[_indexOffset + 3] = _vertexOffset + 2;
-		_indices[_indexOffset + 4] = _vertexOffset + 3;
-		_indices[_indexOffset + 5] = _vertexOffset + 0;
+		indices[indexOffset + 0] = vertexOffset + 0;
+		indices[indexOffset + 1] = vertexOffset + 1;
+		indices[indexOffset + 2] = vertexOffset + 2;
+		indices[indexOffset + 3] = vertexOffset + 2;
+		indices[indexOffset + 4] = vertexOffset + 3;
+		indices[indexOffset + 5] = vertexOffset + 0;
 
-		_vertexOffset += 4;
+		vertexOffset += 4;
 
-		_indexOffset += 6;
+		indexOffset += 6;
 	}
 
 	void CircleRenderer::flush() {
-		_shader.bind();
-		_shader.setUniformMatrix3("uView", _view);
+		shader.bind();
+		shader.setUniformMatrix3("uView", view);
 
-		_vertexArray.bind();
+		vertexArray.bind();
 
-		_vertexBuffer.bind();
-		_vertexBuffer.setData(sizeof(CircleVertex) * _vertexOffset, _vertices.data());
+		vertexBuffer.bind();
+		vertexBuffer.setData(sizeof(CircleVertex) * vertexOffset, vertices.data());
 
-		_indexBuffer.bind();
-		_indexBuffer.setData(sizeof(unsigned int) * _indexOffset, _indices.data());
+		indexBuffer.bind();
+		indexBuffer.setData(sizeof(unsigned int) * indexOffset, indices.data());
 
-		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
 
-		_vertexOffset = 0;
-		_indexOffset = 0;
+		vertexOffset = 0;
+		indexOffset = 0;
 	}
 }

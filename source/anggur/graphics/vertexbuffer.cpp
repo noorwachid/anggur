@@ -3,16 +3,16 @@
 
 namespace Anggur {
 	VertexBuffer::VertexBuffer() {
-		glGenBuffers(1, &_id);
+		glGenBuffers(1, &id);
 		bind();
 	}
 
 	VertexBuffer::~VertexBuffer() {
-		glDeleteBuffers(1, &_id);
+		glDeleteBuffers(1, &id);
 	}
 
 	void VertexBuffer::bind() {
-		glBindBuffer(GL_ARRAY_BUFFER, _id);
+		glBindBuffer(GL_ARRAY_BUFFER, id);
 	}
 
 	void VertexBuffer::unbind() {
@@ -28,16 +28,16 @@ namespace Anggur {
 	}
 
 	IndexBuffer::IndexBuffer() {
-		glGenBuffers(1, &_id);
+		glGenBuffers(1, &id);
 		bind();
 	}
 
 	IndexBuffer::~IndexBuffer() {
-		glDeleteBuffers(1, &_id);
+		glDeleteBuffers(1, &id);
 	}
 
 	void IndexBuffer::bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 
 	void IndexBuffer::unbind() {
@@ -60,16 +60,16 @@ namespace Anggur {
 	}
 
 	VertexArray::VertexArray() {
-		glGenVertexArrays(1, &_id);
+		glGenVertexArrays(1, &id);
 		bind();
 	}
 
 	VertexArray::~VertexArray() {
-		glDeleteVertexArrays(1, &_id);
+		glDeleteVertexArrays(1, &id);
 	}
 
 	void VertexArray::bind() {
-		glBindVertexArray(_id);
+		glBindVertexArray(id);
 	}
 
 	void VertexArray::unbind() {
@@ -92,11 +92,11 @@ namespace Anggur {
 	}
 
 	void VertexArray::setLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout) {
-		_stride = 0;
+		stride = 0;
 
 		for (size_t i = 0; i < layout.size(); ++i) {
 			auto [type, size, name] = layout[i];
-			_stride += size * getByteSize(type);
+			stride += size * getByteSize(type);
 		}
 
 		size_t offset = 0;
@@ -105,7 +105,7 @@ namespace Anggur {
 			auto [type, size, name] = layout[i];
 			size_t byteCount = size * getByteSize(type);
 
-			setAttribute(i, size, type, _stride, offset);
+			setAttribute(i, size, type, stride, offset);
 
 			offset += byteCount;
 		}

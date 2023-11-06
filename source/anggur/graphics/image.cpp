@@ -27,20 +27,20 @@ namespace Anggur {
 		unsigned char* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
 		assert(rawData && "Failed to load image");
 
-		_bytes.resize(newWidth * newHeight * newChannels);
-		std::memcpy(_bytes.data(), rawData, _bytes.size());
+		bytes.resize(newWidth * newHeight * newChannels);
+		std::memcpy(bytes.data(), rawData, bytes.size());
 
 		stbi_image_free(rawData);
 
-		_width = newWidth;
-		_height = newHeight;
-		_channels = newChannels;
+		width = newWidth;
+		height = newHeight;
+		channels = newChannels;
 	}
 
 	void Image::close() {
 	}
 
 	void Image::write(const std::string& path) {
-		stbi_write_png((path + ".png").c_str(), _width, _height, 1, _bytes.data(), _width);
+		stbi_write_png((path + ".png").c_str(), width, height, 1, bytes.data(), width);
 	}
 }

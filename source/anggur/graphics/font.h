@@ -48,22 +48,21 @@ namespace Anggur {
 		void setData(const std::vector<unsigned char>& data);
 
 		void setSample(
-			unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding,
-			float newSampleRange
+			unsigned int containerSize, unsigned int sampleSize, unsigned int samplePadding, float sampleRange
 		);
 
 		float getKerning(unsigned int codePoint, unsigned int nextCodePoint);
 
 		float getSpaceWidth() {
-			return _spaceWidth;
+			return spaceWidth;
 		}
 
 		float getLineHeight() {
-			return _lineHeight;
+			return lineHeight;
 		}
 
 		float getLineGap() {
-			return _lineGap;
+			return lineGap;
 		}
 
 		FontVMetrics getVMetrics();
@@ -71,7 +70,7 @@ namespace Anggur {
 		FontHMetrics getHMetrics(unsigned int codepoint);
 
 		const std::vector<Texture*>& getTextures() {
-			return _textures;
+			return textures;
 		}
 
 		std::string getName();
@@ -100,25 +99,25 @@ namespace Anggur {
 		float getContextScale();
 
 	private:
-		float _spaceWidth;
-		float _lineHeight;
-		float _lineGap;
+		float spaceWidth;
+		float lineHeight;
+		float lineGap;
 
-		std::vector<Texture*> _textures;
-		size_t _textureIndex = 0;
+		std::vector<Texture*> textures;
+		size_t textureIndex = 0;
 
-		FontContext* _context;
-		std::vector<unsigned char> _data;
+		FontContext* context;
+		std::vector<unsigned char> data;
 
-		std::unordered_map<unsigned int, FontGlyph> _glyphMap;
+		std::unordered_map<unsigned int, FontGlyph> glyphMap;
 
-		FontPacker _packer;
+		FontPacker packer;
 
-		unsigned int _containerSize;
-		unsigned int _sampleSize;
-		unsigned int _samplePadding;
-		float _sampleRange;
-		float _sampleScale;
+		unsigned int containerSize;
+		unsigned int sampleSize;
+		unsigned int samplePadding;
+		float sampleRange;
+		float sampleScale;
 
 		friend class TextRenderer;
 	};

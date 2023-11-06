@@ -12,6 +12,6 @@ namespace Anggur {
 		unsigned int getID() const;
 
 	private:
-		unsigned int _id;
+		unsigned int id;
 	};
 }

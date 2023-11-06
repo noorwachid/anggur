@@ -16,9 +16,9 @@ namespace Anggur {
 		}
 
 	protected:
-		Window* _window;
-		Input* _input;
-		Renderer* _renderer;
+		Window* window;
+		Input* input;
+		Renderer* renderer;
 
 		friend class Application;
 	};

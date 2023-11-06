@@ -42,17 +42,17 @@ namespace Anggur {
 		void setObserver(WindowObserver* observer);
 
 	private:
-		unsigned int _width;
-		unsigned int _height;
+		unsigned int width;
+		unsigned int height;
 
-		unsigned int _frameBufferWidth;
-		unsigned int _frameBufferHeight;
+		unsigned int frameBufferWidth;
+		unsigned int frameBufferHeight;
 
-		std::string _title;
+		std::string title;
 
-		WindowContext* _context;
-		WindowObserver* _observer;
+		WindowContext* context;
+		WindowObserver* observer;
 
-		Input _input;
+		Input input;
 	};
 }

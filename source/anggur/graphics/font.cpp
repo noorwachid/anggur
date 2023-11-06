@@ -1,6 +1,5 @@
 #include "anggur/graphics/font.h"
 #include "anggur/math.h"
-#include "anggur/text.h"
 
 #include <stb_image_write.h>
 #include <stb_truetype.h>
@@ -10,77 +9,77 @@ namespace Anggur {
 	}
 
 	Font::Font(const std::vector<unsigned char>& data) {
-		_data = data;
+		this->data = data;
 
 		initialize();
 	}
 
 	Font::~Font() {
-		for (Texture* texture : _textures)
+		for (Texture* texture : textures)
 			delete texture;
 
-		delete _context;
+		delete context;
 	}
 
 	void Font::setData(const std::vector<unsigned char>& data) {
-		_data = data;
+		this->data = data;
 
 		initialize();
 	}
 
 	void Font::initialize() {
-		_context = new FontContext;
+		context = new FontContext;
 
-		int result = stbtt_InitFont(_context, _data.data(), 0);
+		int result = stbtt_InitFont(context, data.data(), 0);
 
 		if (!result)
 			throw std::runtime_error("Failed to initilaze font [" + std::to_string(result) + "]");
 	}
 
 	void Font::setSample(
-		unsigned int newContainerSize, unsigned int newSampleSize, unsigned int newSamplePadding, float newSampleRange
+		unsigned int containerSize, unsigned int sampleSize, unsigned int samplePadding, float sampleRange
 	) {
-		if (newContainerSize < newSampleSize) {
+		if (containerSize < sampleSize) {
 			throw std::runtime_error("Glyph atlas size must be greater than sampling size");
 		}
 
-		_containerSize = newContainerSize;
-		_sampleSize = newSampleSize;
-		_samplePadding = newSamplePadding;
-		_sampleRange = newSampleRange;
+		this->containerSize = containerSize;
+		this->sampleSize = sampleSize;
+		this->samplePadding = samplePadding;
+		this->sampleRange = sampleRange;
 
-		_textureIndex = 0;
+		textureIndex = 0;
 
-		for (Texture* texture : _textures)
+		for (Texture* texture : textures)
 			delete texture;
 
-		_textures.clear();
+		textures.clear();
 
-		_packer.reset();
-		_packer.setSize(_containerSize);
+		packer.reset();
+		packer.setSize(containerSize);
 
-		float sampleInverseScale = 1.0f / _sampleSize;
+		float sampleInverseScale = 1.0f / sampleSize;
 
 		FontHMetrics hMetrics = getHMetrics(32);
 		FontVMetrics vMetrics = getVMetrics();
 
-		_spaceWidth = sampleInverseScale * (hMetrics.advanceWidth - hMetrics.leftSideBearing);
-		_lineHeight = sampleInverseScale * (vMetrics.ascent - vMetrics.descent);
-		_lineGap = sampleInverseScale * vMetrics.lineGap;
+		spaceWidth = sampleInverseScale * (hMetrics.advanceWidth - hMetrics.leftSideBearing);
+		lineHeight = sampleInverseScale * (vMetrics.ascent - vMetrics.descent);
+		lineGap = sampleInverseScale * vMetrics.lineGap;
 	}
 
 	std::string Font::getName() {
 		int length = 0;
-		const char* name = stbtt_GetFontNameDefault(_context, &length);
+		const char* name = stbtt_GetFontNameDefault(context, &length);
 
 		return std::string(name, length);
 	}
 
 	float Font::getKerning(unsigned int codePoint, unsigned int nextCodePoint) {
 		float scale = getContextScale();
-		float kerning = stbtt_GetCodepointKernAdvance(_context, codePoint, nextCodePoint);
+		float kerning = stbtt_GetCodepointKernAdvance(context, codePoint, nextCodePoint);
 
-		return kerning * scale / _sampleSize;
+		return kerning * scale / sampleSize;
 	}
 
 	FontVMetrics Font::getVMetrics() {
@@ -89,7 +88,7 @@ namespace Anggur {
 		float scale = getContextScale();
 
 		int ascent, descent, lineGap;
-		stbtt_GetFontVMetrics(_context, &ascent, &descent, &lineGap);
+		stbtt_GetFontVMetrics(context, &ascent, &descent, &lineGap);
 
 		metrics.ascent = scale * ascent;
 		metrics.descent = scale * descent;
@@ -106,7 +105,7 @@ namespace Anggur {
 		int advanceWidth;
 		int leftSideBearing;
 
-		stbtt_GetCodepointHMetrics(_context, codepoint, &advanceWidth, &leftSideBearing);
+		stbtt_GetCodepointHMetrics(context, codepoint, &advanceWidth, &leftSideBearing);
 
 		metrics.advanceWidth = scale * advanceWidth;
 		metrics.leftSideBearing = scale * leftSideBearing;
@@ -152,7 +151,7 @@ namespace Anggur {
 		float scale = getContextScale();
 
 		bitmap.data = stbtt_GetCodepointSDF(
-			_context, scale, codepoint, _samplePadding, 128, _sampleRange, &bitmap.width, &bitmap.height, &bitmap.x,
+			context, scale, codepoint, samplePadding, 128, sampleRange, &bitmap.width, &bitmap.height, &bitmap.x,
 			&bitmap.y
 		);
 
@@ -166,45 +165,45 @@ namespace Anggur {
 		FontVMetrics vMetrics = getVMetrics();
 		FontHMetrics hMetrics = getHMetrics(codepoint);
 
-		float sampleInverseScale = 1.0f / _sampleSize;
-		float containerInverseScale = 1.0f / _containerSize;
+		float sampleInverseScale = 1.0f / sampleSize;
+		float containerInverseScale = 1.0f / containerSize;
 
-		if (!_packer.isFit(bitmap.width, bitmap.height)) {
+		if (!packer.isFit(bitmap.width, bitmap.height)) {
 			generateTexture();
-			++_textureIndex;
-			_packer.reset();
+			++textureIndex;
+			packer.reset();
 		}
 
 		FontGlyph glyph;
 
 		glyph.position.set(
 			sampleInverseScale * hMetrics.leftSideBearing,
-			sampleInverseScale * (vMetrics.ascent + bitmap.y + _samplePadding)
+			sampleInverseScale * (vMetrics.ascent + bitmap.y + samplePadding)
 		);
 		glyph.size.set(sampleInverseScale * bitmap.width, sampleInverseScale * bitmap.height);
-		glyph.textureIndex = _textureIndex;
-		glyph.texturePosition = containerInverseScale * _packer.getPointer();
+		glyph.textureIndex = textureIndex;
+		glyph.texturePosition = containerInverseScale * packer.getPointer();
 		glyph.textureSize.set(containerInverseScale * bitmap.width, containerInverseScale * bitmap.height);
 
-		_glyphMap[codepoint] = glyph;
+		glyphMap[codepoint] = glyph;
 
-		_packer.setGlyph(bitmap.data, bitmap.width, bitmap.height);
+		packer.setGlyph(bitmap.data, bitmap.width, bitmap.height);
 
 		stbtt_FreeSDF(bitmap.data, nullptr);
 	}
 
 	void Font::generateTexture() {
 		// Replace last texture
-		if (_textureIndex + 1 == _textures.size()) {
-			delete _textures.back();
-			_textures.back() = new Texture(
-				_packer.image.getBytes(), _packer.image.getWidth(), _packer.image.getHeight(),
-				_packer.image.getChannels()
+		if (textureIndex + 1 == textures.size()) {
+			delete textures.back();
+			textures.back() = new Texture(
+				packer.image.getBytes(), packer.image.getWidth(), packer.image.getHeight(),
+				packer.image.getChannels()
 			);
 		} else {
-			_textures.push_back(new Texture(
-				_packer.image.getBytes(), _packer.image.getWidth(), _packer.image.getHeight(),
-				_packer.image.getChannels()
+			textures.push_back(new Texture(
+				packer.image.getBytes(), packer.image.getWidth(), packer.image.getHeight(),
+				packer.image.getChannels()
 			));
 		}
 	}
@@ -257,6 +256,6 @@ namespace Anggur {
 	}
 
 	float Font::getContextScale() {
-		return stbtt_ScaleForPixelHeight(_context, _sampleSize);
+		return stbtt_ScaleForPixelHeight(context, sampleSize);
 	}
 }

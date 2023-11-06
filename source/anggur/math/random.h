@@ -33,7 +33,7 @@ namespace Anggur {
 		}
 
 	private:
-		std::random_device _device;
-		std::mt19937 _generator;
+		std::random_device device;
+		std::mt19937 generator;
 	};
 }

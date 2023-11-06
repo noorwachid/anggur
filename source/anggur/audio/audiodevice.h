@@ -19,7 +19,7 @@ namespace Anggur {
 		~AudioDevice();
 
 	private:
-		ALCdevice* _device;
-		ALCcontext* _context;
+		ALCdevice* device;
+		ALCcontext* context;
 	};
 }

@@ -14,20 +14,20 @@ namespace Anggur {
 
 		template <class Scene>
 		void setScene() {
-			if (_scene)
-				delete _scene;
+			if (scene)
+				delete scene;
 
-			_scene = new Scene();
-			_scene->_window = &_window;
-			_scene->_input = _window.getInput();
-			_scene->_renderer = _renderer;
-			_scene->initialize();
-			_window.setObserver(_scene);
+			scene = new Scene();
+			scene->window = &window;
+			scene->input = window.getInput();
+			scene->renderer = renderer;
+			scene->initialize();
+			window.setObserver(scene);
 		}
 
 		template <class Scene>
 		Scene* getScene() {
-			return static_cast<Scene*>(_scene);
+			return static_cast<Scene*>(scene);
 		}
 
 		// No cap
@@ -40,9 +40,9 @@ namespace Anggur {
 		void lazyRun();
 
 	private:
-		Window _window;
-		Renderer* _renderer;
-		Scene* _scene;
-		AudioDevice _audioDevice;
+		Window window;
+		Renderer* renderer;
+		Scene* scene;
+		AudioDevice audioDevice;
 	};
 }

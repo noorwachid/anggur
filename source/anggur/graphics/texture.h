@@ -23,19 +23,19 @@ namespace Anggur {
 		~Texture();
 
 		unsigned int getID() const {
-			return _id;
+			return id;
 		}
 
 		unsigned int getWidth() const {
-			return _width;
+			return width;
 		}
 
 		unsigned int getHeight() const {
-			return _height;
+			return height;
 		}
 
 		unsigned int getChannels() const {
-			return _channels;
+			return channels;
 		}
 
 		void bind(unsigned int slot = 0);
@@ -43,9 +43,9 @@ namespace Anggur {
 		friend bool operator==(const Texture& a, const Texture& b);
 
 	private:
-		unsigned int _id;
-		unsigned int _width;
-		unsigned int _height;
-		unsigned int _channels;
+		unsigned int id;
+		unsigned int width;
+		unsigned int height;
+		unsigned int channels;
 	};
 }

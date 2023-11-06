@@ -11,7 +11,7 @@ namespace Anggur {
 		~Shader();
 
 		inline unsigned int getID() const {
-			return _id;
+			return id;
 		}
 
 		void setVertexSource(const std::string& source);
@@ -40,8 +40,8 @@ namespace Anggur {
 		void setUniformFloat(const std::string& name, size_t size, float* values);
 
 	private:
-		unsigned int _id;
-		std::string _vertexSource;
-		std::string _fragmentSource;
+		unsigned int id;
+		std::string vertexSource;
+		std::string fragmentSource;
 	};
 }

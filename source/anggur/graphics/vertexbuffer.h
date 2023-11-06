@@ -11,7 +11,7 @@ namespace Anggur {
 		~IndexBuffer();
 
 		unsigned int getID() {
-			return _id;
+			return id;
 		}
 
 		void bind();
@@ -23,7 +23,7 @@ namespace Anggur {
 		void setData(size_t byteSize, void* byteData);
 
 	private:
-		unsigned int _id = 0;
+		unsigned int id = 0;
 	};
 
 	class VertexBuffer {
@@ -33,7 +33,7 @@ namespace Anggur {
 		~VertexBuffer();
 
 		unsigned int getID() {
-			return _id;
+			return id;
 		}
 
 		void bind();
@@ -45,7 +45,7 @@ namespace Anggur {
 		void setData(size_t byteSize, void* byteData);
 
 	private:
-		unsigned int _id;
+		unsigned int id;
 	};
 
 	enum class VertexDataType {
@@ -61,11 +61,11 @@ namespace Anggur {
 		~VertexArray();
 
 		unsigned int getID() {
-			return _id;
+			return id;
 		}
 
 		size_t getStride() {
-			return _stride;
+			return stride;
 		}
 
 		void bind();
@@ -77,8 +77,8 @@ namespace Anggur {
 		void setLayout(const std::vector<std::tuple<VertexDataType, size_t, std::string>>& layout);
 
 	private:
-		unsigned int _id = 0;
+		unsigned int id = 0;
 
-		size_t _stride = 0;
+		size_t stride = 0;
 	};
 }

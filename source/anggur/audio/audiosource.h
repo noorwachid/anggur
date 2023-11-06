@@ -26,6 +26,6 @@ namespace Anggur {
 		void stop();
 
 	private:
-		unsigned int _id;
+		unsigned int id;
 	};
 }

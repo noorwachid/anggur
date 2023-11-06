@@ -33,7 +33,7 @@ namespace Anggur {
 
 		void flush();
 
-		void clearBackground(const Vector4& color = Vector4::black);
+		void clear(const Vector4& color = Vector4::black);
 		void setViewport(const Vector2& position, const Vector2& size);
 		void setView(const Matrix3& newView);
 
