@@ -15,21 +15,25 @@
 
 struct stbtt_fontinfo;
 
-namespace Anggur {
+namespace Anggur
+{
 	using FontContext = stbtt_fontinfo;
 
-	struct FontVMetrics {
+	struct FontVMetrics
+	{
 		float ascent;
 		float descent;
 		float lineGap;
 	};
 
-	struct FontHMetrics {
+	struct FontHMetrics
+	{
 		float advanceWidth;
 		float leftSideBearing;
 	};
 
-	struct FontBitmap {
+	struct FontBitmap
+	{
 		unsigned char* data;
 		int x;
 		int y;
@@ -37,7 +41,8 @@ namespace Anggur {
 		int height;
 	};
 
-	class Font {
+	class Font
+	{
 	public:
 		Font();
 
@@ -45,79 +50,83 @@ namespace Anggur {
 
 		~Font();
 
-		void setData(const std::vector<unsigned char>& data);
+		void SetData(const std::vector<unsigned char>& data);
 
-		void setSample(
+		void SetSample(
 			unsigned int containerSize, unsigned int sampleSize, unsigned int samplePadding, float sampleRange
 		);
 
-		float getKerning(unsigned int codePoint, unsigned int nextCodePoint);
+		float GetKerning(unsigned int codePoint, unsigned int nextCodePoint);
 
-		float getSpaceWidth() {
-			return spaceWidth;
+		float GetSpaceWidth()
+		{
+			return _spaceWidth;
 		}
 
-		float getLineHeight() {
-			return lineHeight;
+		float GetLineHeight()
+		{
+			return _lineHeight;
 		}
 
-		float getLineGap() {
-			return lineGap;
+		float GetLineGap()
+		{
+			return _lineGap;
 		}
 
-		FontVMetrics getVMetrics();
+		FontVMetrics GetVMetrics();
 
-		FontHMetrics getHMetrics(unsigned int codepoint);
+		FontHMetrics GetHMetrics(unsigned int codepoint);
 
-		const std::vector<Texture*>& getTextures() {
-			return textures;
+		const std::vector<Texture*>& GetTextures()
+		{
+			return _textures;
 		}
 
-		std::string getName();
+		std::string GetName();
 
-		bool generate(unsigned int codepoint);
+		bool Generate(unsigned int codepoint);
 
-		bool generateRange(unsigned int codepointFrom = 'F', unsigned int length = 1);
+		bool GenerateRange(unsigned int codepointFrom = 'F', unsigned int length = 1);
 
-		bool generateRC();
+		bool GenerateRC();
 
-		bool generateQuotationMark();
+		bool GenerateQuotationMark();
 
-		bool generateEllipsis();
+		bool GenerateEllipsis();
 
-		bool generateASCII();
+		bool GenerateASCII();
 
 	private:
-		void initialize();
+		void Initialize();
 
-		void pack(unsigned int codepoint, const FontBitmap& bitmap);
+		void Pack(unsigned int codepoint, const FontBitmap& bitmap);
 
-		std::optional<FontBitmap> generateBitmap(unsigned int codepoint);
+		std::optional<FontBitmap> GenerateBitmap(unsigned int codepoint);
 
-		void generateTexture();
+		void GenerateTexture();
 
-		float getContextScale();
+		float GetContextScale();
 
 	private:
-		float spaceWidth;
-		float lineHeight;
-		float lineGap;
+		float _spaceWidth;
+		float _lineHeight;
+		float _lineGap;
 
-		std::vector<Texture*> textures;
-		size_t textureIndex = 0;
+		std::vector<Texture*> _textures;
+		size_t _textureIndex = 0;
 
-		FontContext* context;
-		std::vector<unsigned char> data;
+		FontContext* _context;
+		std::vector<unsigned char> _data;
 
-		std::unordered_map<unsigned int, FontGlyph> glyphMap;
+		std::unordered_map<unsigned int, FontGlyph> _glyphMap;
 
-		FontPacker packer;
+		FontPacker _packer;
 
-		unsigned int containerSize;
-		unsigned int sampleSize;
-		unsigned int samplePadding;
-		float sampleRange;
-		float sampleScale;
+		unsigned int _containerSize;
+		unsigned int _sampleSize;
+		unsigned int _samplePadding;
+		float _sampleRange;
+		float _sampleScale;
 
 		friend class TextRenderer;
 	};

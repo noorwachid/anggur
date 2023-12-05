@@ -1,21 +1,24 @@
 #include "anggur/graphics/renderer/textrenderer.h"
 #include "anggur/graphics/api.h"
 
-namespace Anggur {
-	TextRenderer::TextRenderer() {
-		vertices.assign(batchVertex, TextVertex{});
+namespace Anggur
+{
+	TextRenderer::TextRenderer()
+	{
+		_vertices.assign(_batchVertex, TextVertex{});
 
-		indices.assign(batchVertex * batchIndexMultiplier, 0);
+		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
 
-		textures.assign(TextureSpecification::getMaxSlot(), nullptr);
-		textureIndices.reserve(TextureSpecification::getMaxSlot());
+		_textures.assign(TextureSpecification::GetMaxSlot(), nullptr);
+		_textureIndices.reserve(TextureSpecification::GetMaxSlot());
 
-		for (size_t i = 0; i < TextureSpecification::getMaxSlot(); ++i) {
-			textureIndices.push_back(i);
+		for (size_t i = 0; i < TextureSpecification::GetMaxSlot(); ++i)
+		{
+			_textureIndices.push_back(i);
 		}
 
-		vertexArray.bind();
-		vertexArray.setLayout({
+		_vertexArray.Bind();
+		_vertexArray.SetLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 2, "aTexturePosition"},
 			{VertexDataType::Float, 1, "aTextureIndex"},
@@ -25,14 +28,14 @@ namespace Anggur {
 			{VertexDataType::Float, 4, "aColor"},
 		});
 
-		vertexBuffer.bind();
-		vertexBuffer.setCapacity(vertexArray.getStride() * vertices.size());
+		_vertexBuffer.Bind();
+		_vertexBuffer.SetCapacity(_vertexArray.GetStride() * _vertices.size());
 
-		indexBuffer.bind();
-		indexBuffer.setCapacity(sizeof(unsigned int) * indices.size());
+		_indexBuffer.Bind();
+		_indexBuffer.SetCapacity(sizeof(unsigned int) * _indices.size());
 
-		shader.bind();
-		shader.setVertexSource(R"(
+		_shader.Bind();
+		_shader.SetVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aTexturePosition;
 			layout (location = 2) in float aTextureIndex;
@@ -64,7 +67,7 @@ namespace Anggur {
 			}
 		)");
 
-		shader.setFragmentSource(
+		_shader.SetFragmentSource(
 			R"(
 			in vec2 vTexturePosition;
 			in float vTextureIndex;
@@ -99,108 +102,119 @@ namespace Anggur {
 			}
 		)"
 		);
-		shader.compile();
+		_shader.Compile();
 	}
 
-	void TextRenderer::setView(const Matrix3& newView) {
-		view = newView;
+	void TextRenderer::SetView(const Matrix3& newView)
+	{
+		_view = newView;
 	}
 
-	void TextRenderer::add(
+	void TextRenderer::Add(
 		const Vector2& position, unsigned int codepoint, Font* font, float size, float thickness, float sharpness,
 		const Vector4& color
-	) {
+	)
+	{
 		if (!font)
 			return;
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
-		if (codepoint == ' ' || codepoint == '\n') {
+		if (codepoint == ' ' || codepoint == '\n')
+		{
 			return;
 		}
 
-		if (font->glyphMap.count(codepoint) == 0) {
-			if (!font->generate(codepoint)) {
+		if (font->_glyphMap.count(codepoint) == 0)
+		{
+			if (!font->Generate(codepoint))
+			{
 				codepoint = 0xFFFD; // RC
 			}
 		}
 
-		FontGlyph& glyph = font->glyphMap[codepoint];
+		FontGlyph& glyph = font->_glyphMap[codepoint];
 
 		Vector2 localPosition = size * glyph.position;
 		Vector2 localSize = size * glyph.size;
 
 		// sharpness = 1.0f / font->sampleSize * size * 0.1;
 
-		addCharacter(
+		AddCharacter(
 			pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
-			font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+			font->_textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
 		);
 	}
 
-	void TextRenderer::add(
+	void TextRenderer::Add(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		const Vector4& color
-	) {
+	)
+	{
 		if (!font)
 			return;
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n') {
+			if (codepoint == '\n')
+			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (startOfLine) {
+			if (startOfLine)
+			{
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			addCharacter(
+			AddCharacter(
 				position + localPosition + pointer, localSize, thickness, sharpness, 1, color,
-				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+				font->_textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, i)));
 		}
 	}
 
-	Vector2 TextRenderer::measure(
-		const std::string& content, Font* font, float size, float thickness, float sharpness
-	) {
+	Vector2 TextRenderer::Measure(const std::string& content, Font* font, float size, float thickness, float sharpness)
+	{
 		if (!font)
 			return Vector2(0, 0);
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(0, 0);
 
@@ -208,339 +222,382 @@ namespace Anggur {
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n') {
+			if (codepoint == '\n')
+			{
 				startOfLine = true;
-				maxX = Math::max(pointer.x, maxX);
+				maxX = Math::Max(pointer.x, maxX);
 				pointer.x = 0;
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (startOfLine) {
+			if (startOfLine)
+			{
 				startOfLine = false;
 				localPosition.x = 0;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, i)));
 		}
 
-		pointer.x = Math::max(pointer.x, maxX);
+		pointer.x = Math::Max(pointer.x, maxX);
 
 		return pointer;
 	}
 
-	void TextRenderer::addLine(
+	void TextRenderer::AddLine(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		const Vector4& color
-	) {
+	)
+	{
 		if (!font)
 			return;
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
 		bool startOfLine = true;
 
-		for (size_t index = 0; index < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, index);
+		for (size_t index = 0; index < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, index);
 
-			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (startOfLine) {
+			if (startOfLine)
+			{
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			addCharacter(
+			AddCharacter(
 				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
-				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+				font->_textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, index)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, index)));
 		}
 	}
 
-	void TextRenderer::addLineCut(
+	void TextRenderer::AddLineCut(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		float limit, const Vector4& color
-	) {
-		addPartialLineCut(position, content, 0, font, size, thickness, sharpness, limit, color);
+	)
+	{
+		AddPartialLineCut(position, content, 0, font, size, thickness, sharpness, limit, color);
 	}
 
-	void TextRenderer::addPartialLineCut(
+	void TextRenderer::AddPartialLineCut(
 		const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size,
 		float thickness, float sharpness, float limit, const Vector4& color
-	) {
+	)
+	{
 		if (!font)
 			return;
 
-		FontGlyph ellipsisGlyph = font->glyphMap[0x2026];
+		FontGlyph ellipsisGlyph = font->_glyphMap[0x2026];
 		Vector2 ellipsisLocalPosition = size * ellipsisGlyph.position;
 		Vector2 ellipsisLocalSize = size * ellipsisGlyph.size;
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
 		bool startOfLine = true;
 
-		for (size_t index = contentOffset; index < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, index);
+		for (size_t index = contentOffset; index < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, index);
 
-			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			float ellipsisKerning = size * font->getKerning(codepoint, 0x2026);
+			float ellipsisKerning = size * font->GetKerning(codepoint, 0x2026);
 
 			if (pointer.x + localPosition.x + localSize.x + ellipsisLocalPosition.x + ellipsisLocalSize.x +
 					ellipsisKerning >
-				limit) {
+				limit)
+			{
 				// AddCharacter(pointer + position + localPosition, localSize , thickness, sharpness, 1, color,
 				// font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize);
 				//
 				// pointer.x += localPosition.x + localSize.x - (padding * 2) + ellipsisKerning;
 
-				addCharacter(
+				AddCharacter(
 					pointer + position + ellipsisLocalPosition, ellipsisLocalSize, thickness, sharpness, 1, color,
-					font->textures[ellipsisGlyph.textureIndex], ellipsisGlyph.texturePosition,
-					ellipsisGlyph.textureSize
+					font->_textures[ellipsisGlyph.textureIndex], ellipsisGlyph.texturePosition, ellipsisGlyph.textureSize
 				);
 				break;
 			}
 
-			if (startOfLine) {
+			if (startOfLine)
+			{
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			addCharacter(
+			AddCharacter(
 				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
-				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+				font->_textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, index)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, index)));
 		}
 	}
 
-	void TextRenderer::addFlow(
+	void TextRenderer::AddFlow(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		float limit, const Vector4& color
-	) {
+	)
+	{
 		if (!font)
 			return;
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n') {
+			if (codepoint == '\n')
+			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (pointer.x + localPosition.x + localSize.x > limit) {
+			if (pointer.x + localPosition.x + localSize.x > limit)
+			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
-			if (startOfLine) {
+			if (startOfLine)
+			{
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
-			addCharacter(
+			AddCharacter(
 				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
-				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+				font->_textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, i)));
 		}
 	}
 
-
-	Vector2 TextRenderer::measureFlow(
+	Vector2 TextRenderer::MeasureFlow(
 		const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
-	) {
+	)
+	{
 		if (!font)
 			return Vector2(0, 0);
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(0, 0);
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n') {
+			if (codepoint == '\n')
+			{
 				startOfLine = true;
 				pointer.x = 0;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (pointer.x + localPosition.x + localSize.x > limit) {
+			if (pointer.x + localPosition.x + localSize.x > limit)
+			{
 				startOfLine = true;
 				pointer.x = 0;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
-			if (startOfLine) {
+			if (startOfLine)
+			{
 				startOfLine = false;
 				localPosition.x = 0;
 			}
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, i)));
 		}
 
-		pointer.y += size * (font->getLineHeight() + font->getLineGap());
+		pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 
 		return pointer;
 	}
 
-	void TextRenderer::addFlowCut(
+	void TextRenderer::AddFlowCut(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		const Vector2& limit, const Vector4& color
-	) {
+	)
+	{
 		if (!font)
 			return;
 
-		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+		float padding = 1.0f / font->_sampleSize * font->_samplePadding * size;
 
 		Vector2 pointer(-padding, -padding);
 
 		bool startOfLine = true;
 
-		for (size_t i = 0; i < content.size();) {
-			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, i);
+		for (size_t i = 0; i < content.size();)
+		{
+			unsigned int codepoint = TextEncoding::UTF8::CollapseAndMoveIndex(content, i);
 
-			if (codepoint == ' ') {
-				pointer.x += size * font->getSpaceWidth();
+			if (codepoint == ' ')
+			{
+				pointer.x += size * font->GetSpaceWidth();
 				continue;
 			}
 
-			if (codepoint == '\n') {
+			if (codepoint == '\n')
+			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 				continue;
 			}
 
-			if (font->glyphMap.count(codepoint) == 0) {
-				if (!font->generate(codepoint)) {
+			if (font->_glyphMap.count(codepoint) == 0)
+			{
+				if (!font->Generate(codepoint))
+				{
 					codepoint = 0xFFFD; // RC
 				}
 			}
 
-			FontGlyph& glyph = font->glyphMap[codepoint];
+			FontGlyph& glyph = font->_glyphMap[codepoint];
 
 			Vector2 localPosition = size * glyph.position;
 			Vector2 localSize = size * glyph.size;
 
-			if (pointer.x + localPosition.x + localSize.x > limit.x) {
+			if (pointer.x + localPosition.x + localSize.x > limit.x)
+			{
 				startOfLine = true;
 				pointer.x = -padding;
-				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				pointer.y += size * (font->GetLineHeight() + font->GetLineGap());
 			}
 
-			if (startOfLine) {
-				float lineHeight = size * (font->getLineHeight() + font->getLineGap());
+			if (startOfLine)
+			{
+				float lineHeight = size * (font->GetLineHeight() + font->GetLineGap());
 
-				if (pointer.y + (2.0f * lineHeight) > limit.y) {
-					addPartialLineCut(
+				if (pointer.y + (2.0f * lineHeight) > limit.y)
+				{
+					AddPartialLineCut(
 						position + pointer + padding, content, i, font, size, thickness, sharpness, limit.x, color
 					);
 					break;
@@ -550,112 +607,118 @@ namespace Anggur {
 				localPosition.x = 0;
 			}
 
-			addCharacter(
+			AddCharacter(
 				pointer + position + localPosition, localSize, thickness, sharpness, 1, color,
-				font->textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
+				font->_textures[glyph.textureIndex], glyph.texturePosition, glyph.textureSize
 			);
 
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
-						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
+						 (size * font->GetKerning(codepoint, TextEncoding::UTF8::Collapse(content, i)));
 		}
 	}
 
-	void TextRenderer::addCharacter(
+	void TextRenderer::AddCharacter(
 		const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale,
 		const Vector4& color, Texture* texture, const Vector2& texturePosition, const Vector2& textureSize
-	) {
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size() ||
-			textureOffset + 1 > textures.size()) {
-			flush();
+	)
+	{
+		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _indices.size() ||
+			_textureOffset + 1 > _textures.size())
+		{
+			Flush();
 		}
 
-		vertices[vertexOffset + 0].position.set(position.x, position.y);
-		vertices[vertexOffset + 1].position.set(position.x + size.x, position.y);
-		vertices[vertexOffset + 2].position.set(position.x + size.x, position.y + size.y);
-		vertices[vertexOffset + 3].position.set(position.x, position.y + size.y);
+		_vertices[_vertexOffset + 0].position.Set(position.x, position.y);
+		_vertices[_vertexOffset + 1].position.Set(position.x + size.x, position.y);
+		_vertices[_vertexOffset + 2].position.Set(position.x + size.x, position.y + size.y);
+		_vertices[_vertexOffset + 3].position.Set(position.x, position.y + size.y);
 
-		vertices[vertexOffset + 0].thickness = thickness;
-		vertices[vertexOffset + 1].thickness = thickness;
-		vertices[vertexOffset + 2].thickness = thickness;
-		vertices[vertexOffset + 3].thickness = thickness;
+		_vertices[_vertexOffset + 0].thickness = thickness;
+		_vertices[_vertexOffset + 1].thickness = thickness;
+		_vertices[_vertexOffset + 2].thickness = thickness;
+		_vertices[_vertexOffset + 3].thickness = thickness;
 
-		vertices[vertexOffset + 0].sharpness = sharpness;
-		vertices[vertexOffset + 1].sharpness = sharpness;
-		vertices[vertexOffset + 2].sharpness = sharpness;
-		vertices[vertexOffset + 3].sharpness = sharpness;
+		_vertices[_vertexOffset + 0].sharpness = sharpness;
+		_vertices[_vertexOffset + 1].sharpness = sharpness;
+		_vertices[_vertexOffset + 2].sharpness = sharpness;
+		_vertices[_vertexOffset + 3].sharpness = sharpness;
 
-		vertices[vertexOffset + 0].scale = scale;
-		vertices[vertexOffset + 1].scale = scale;
-		vertices[vertexOffset + 2].scale = scale;
-		vertices[vertexOffset + 3].scale = scale;
+		_vertices[_vertexOffset + 0].scale = scale;
+		_vertices[_vertexOffset + 1].scale = scale;
+		_vertices[_vertexOffset + 2].scale = scale;
+		_vertices[_vertexOffset + 3].scale = scale;
 
-		vertices[vertexOffset + 0].color = color;
-		vertices[vertexOffset + 1].color = color;
-		vertices[vertexOffset + 2].color = color;
-		vertices[vertexOffset + 3].color = color;
+		_vertices[_vertexOffset + 0].color = color;
+		_vertices[_vertexOffset + 1].color = color;
+		_vertices[_vertexOffset + 2].color = color;
+		_vertices[_vertexOffset + 3].color = color;
 
 		size_t textureIndex = 0;
 
-		if (textureIndexMap.count(texture->getID())) {
-			textureIndex = textureIndexMap[texture->getID()];
-		} else {
-			textureIndex = textureOffset;
-			textureIndexMap[texture->getID()] = textureIndex;
-			textures[textureIndex] = texture;
+		if (_textureIndexMap.count(texture->GetID()))
+		{
+			textureIndex = _textureIndexMap[texture->GetID()];
+		}
+		else
+		{
+			textureIndex = _textureOffset;
+			_textureIndexMap[texture->GetID()] = textureIndex;
+			_textures[textureIndex] = texture;
 
-			++textureOffset;
+			++_textureOffset;
 		}
 
-		vertices[vertexOffset + 0].textureIndex = textureIndex;
-		vertices[vertexOffset + 1].textureIndex = textureIndex;
-		vertices[vertexOffset + 2].textureIndex = textureIndex;
-		vertices[vertexOffset + 3].textureIndex = textureIndex;
+		_vertices[_vertexOffset + 0].textureIndex = textureIndex;
+		_vertices[_vertexOffset + 1].textureIndex = textureIndex;
+		_vertices[_vertexOffset + 2].textureIndex = textureIndex;
+		_vertices[_vertexOffset + 3].textureIndex = textureIndex;
 
-		vertices[vertexOffset + 0].texturePosition.set(texturePosition.x, texturePosition.y);
-		vertices[vertexOffset + 1].texturePosition.set(texturePosition.x + textureSize.x, texturePosition.y);
-		vertices[vertexOffset + 2].texturePosition.set(
+		_vertices[_vertexOffset + 0].texturePosition.Set(texturePosition.x, texturePosition.y);
+		_vertices[_vertexOffset + 1].texturePosition.Set(texturePosition.x + textureSize.x, texturePosition.y);
+		_vertices[_vertexOffset + 2].texturePosition.Set(
 			texturePosition.x + textureSize.x, texturePosition.y + textureSize.y
 		);
-		vertices[vertexOffset + 3].texturePosition.set(texturePosition.x, texturePosition.y + textureSize.y);
+		_vertices[_vertexOffset + 3].texturePosition.Set(texturePosition.x, texturePosition.y + textureSize.y);
 
-		indices[indexOffset + 0] = vertexOffset + 0;
-		indices[indexOffset + 1] = vertexOffset + 1;
-		indices[indexOffset + 2] = vertexOffset + 2;
-		indices[indexOffset + 3] = vertexOffset + 2;
-		indices[indexOffset + 4] = vertexOffset + 3;
-		indices[indexOffset + 5] = vertexOffset + 0;
+		_indices[_indexOffset + 0] = _vertexOffset + 0;
+		_indices[_indexOffset + 1] = _vertexOffset + 1;
+		_indices[_indexOffset + 2] = _vertexOffset + 2;
+		_indices[_indexOffset + 3] = _vertexOffset + 2;
+		_indices[_indexOffset + 4] = _vertexOffset + 3;
+		_indices[_indexOffset + 5] = _vertexOffset + 0;
 
-		vertexOffset += 4;
+		_vertexOffset += 4;
 
-		indexOffset += 6;
+		_indexOffset += 6;
 	}
 
-	void TextRenderer::flush() {
+	void TextRenderer::Flush()
+	{
 		// Early exit if no vertices to draw
-		if (vertexOffset == 0)
+		if (_vertexOffset == 0)
 			return;
 
-		for (size_t textureIndex = 0; textureIndex < textureOffset; ++textureIndex)
-			textures[textureIndex]->bind(textureIndex);
+		for (size_t textureIndex = 0; textureIndex < _textureOffset; ++textureIndex)
+			_textures[textureIndex]->Bind(textureIndex);
 
-		shader.bind();
-		shader.setUniformMatrix3("uView", view);
-		shader.setUniformInt("uTextures", textureOffset, textureIndices.data());
+		_shader.Bind();
+		_shader.SetUniformMatrix3("uView", _view);
+		_shader.SetUniformInt("uTextures", _textureOffset, _textureIndices.data());
 
-		vertexArray.bind();
+		_vertexArray.Bind();
 
-		vertexBuffer.bind();
-		vertexBuffer.setData(vertexArray.getStride() * vertexOffset, vertices.data());
+		_vertexBuffer.Bind();
+		_vertexBuffer.SetData(_vertexArray.GetStride() * _vertexOffset, _vertices.data());
 
-		indexBuffer.bind();
-		indexBuffer.setData(sizeof(unsigned int) * indexOffset, indices.data());
+		_indexBuffer.Bind();
+		_indexBuffer.SetData(sizeof(unsigned int) * _indexOffset, _indices.data());
 
-		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
 
-		vertexOffset = 0;
-		indexOffset = 0;
-		textureOffset = 0;
+		_vertexOffset = 0;
+		_indexOffset = 0;
+		_textureOffset = 0;
 
-		textureIndexMap.clear();
+		_textureIndexMap.clear();
 	}
 }

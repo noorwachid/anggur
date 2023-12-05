@@ -5,8 +5,10 @@
 
 #include <string>
 
-namespace Anggur {
-	struct Matrix3 {
+namespace Anggur
+{
+	struct Matrix3
+	{
 		float a, b, c;
 		float d, e, f;
 		float g, h, i;
@@ -17,33 +19,33 @@ namespace Anggur {
 			float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH, float newI
 		);
 
-		void set(
+		void Set(
 			float newA, float newB, float newC, float newD, float newE, float newF, float newG, float newH, float newI
 		);
 
-		const float* toPointer() const;
+		const float* ToPointer() const;
 
-		std::string toString() const;
+		std::string ToString() const;
 
-		float getDeterminant() const;
+		float Determinant() const;
 
-		Matrix3 getCofactor() const;
+		Matrix3 Cofactor() const;
 
-		Matrix3 getAdjugate() const;
+		Matrix3 Adjugate() const;
 
-		Matrix3 getInverse() const;
+		Matrix3 Inverse() const;
 
-		Matrix3 getTranspose() const;
+		Matrix3 Transpose() const;
 
-		static Matrix3 createOrthographic(const Vector2& origin, const Vector2& viewportSize, float scale = 1.0f);
+		static Matrix3 CreateOrthographic(const Vector2& origin, const Vector2& viewportSize, float scale = 1.0f);
 
-		static Matrix3 createPixelPerfect(const Vector2& origin, const Vector2& viewportSize);
+		static Matrix3 CreatePixelPerfect(const Vector2& origin, const Vector2& viewportSize);
 
-		static Matrix3 createTranslation(const Vector2& translation);
+		static Matrix3 CreateTranslation(const Vector2& translation);
 
-		static Matrix3 createRotation(float rotation);
+		static Matrix3 CreateRotation(float rotation);
 
-		static Matrix3 createScale(const Vector2& scale);
+		static Matrix3 CreateScale(const Vector2& scale);
 
 		friend Matrix3 operator*(float a, const Matrix3& b);
 

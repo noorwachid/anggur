@@ -8,8 +8,10 @@
 #include "anggur/math/vector2.h"
 #include "anggur/math/vector4.h"
 
-namespace Anggur {
-	struct LineVertex {
+namespace Anggur
+{
+	struct LineVertex
+	{
 		Vector2 position;
 		Vector2 positionA;
 		Vector2 positionB;
@@ -19,36 +21,37 @@ namespace Anggur {
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class LineRenderer {
+	class LineRenderer
+	{
 	public:
 		LineRenderer();
 
-		void setView(const Matrix3& view);
+		void SetView(const Matrix3& view);
 
-		void add(
+		void Add(
 			const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color
 		);
 
-		void flush();
+		void Flush();
 
 	private:
-		VertexArray vertexArray;
-		VertexBuffer vertexBuffer;
-		IndexBuffer indexBuffer;
+		VertexArray _vertexArray;
+		VertexBuffer _vertexBuffer;
+		IndexBuffer _indexBuffer;
 
-		Shader shader;
+		Shader _shader;
 
-		Matrix3 view;
+		Matrix3 _view;
 
-		std::vector<LineVertex> vertices;
-		std::vector<unsigned int> indices;
+		std::vector<LineVertex> _vertices;
+		std::vector<unsigned int> _indices;
 
-		size_t vertexOffset = 0;
-		size_t indexOffset = 0;
+		size_t _vertexOffset = 0;
+		size_t _indexOffset = 0;
 
-		size_t drawCount = 0;
+		size_t _drawCount = 0;
 
-		size_t batchVertex = 512;
-		size_t batchIndexMultiplier = 2;
+		size_t _batchVertex = 512;
+		size_t _batchIndexMultiplier = 2;
 	};
 }

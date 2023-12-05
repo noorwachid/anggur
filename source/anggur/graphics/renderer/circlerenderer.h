@@ -8,8 +8,10 @@
 #include "anggur/math/vector2.h"
 #include "anggur/math/vector4.h"
 
-namespace Anggur {
-	struct CircleVertex {
+namespace Anggur
+{
+	struct CircleVertex
+	{
 		Vector2 position;
 		Vector2 quadrant;
 		float radius = 0.5f;
@@ -18,34 +20,35 @@ namespace Anggur {
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class CircleRenderer {
+	class CircleRenderer
+	{
 	public:
 		CircleRenderer();
 
-		void setView(const Matrix3& view);
+		void SetView(const Matrix3& view);
 
-		void add(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
+		void Add(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void flush();
+		void Flush();
 
 	private:
-		VertexArray vertexArray;
-		VertexBuffer vertexBuffer;
-		IndexBuffer indexBuffer;
+		VertexArray _vertexArray;
+		VertexBuffer _vertexBuffer;
+		IndexBuffer _indexBuffer;
 
-		Shader shader;
+		Shader _shader;
 
-		Matrix3 view;
+		Matrix3 _view;
 
-		std::vector<CircleVertex> vertices;
-		std::vector<unsigned int> indices;
+		std::vector<CircleVertex> _vertices;
+		std::vector<unsigned int> _indices;
 
-		size_t vertexOffset = 0;
-		size_t indexOffset = 0;
+		size_t _vertexOffset = 0;
+		size_t _indexOffset = 0;
 
-		size_t drawCount = 0;
+		size_t _drawCount = 0;
 
-		size_t batchVertex = 512;
-		size_t batchIndexMultiplier = 2;
+		size_t _batchVertex = 512;
+		size_t _batchIndexMultiplier = 2;
 	};
 }

@@ -1,14 +1,16 @@
 #include "anggur/graphics/renderer/linerenderer.h"
 #include "anggur/graphics/api.h"
 
-namespace Anggur {
-	LineRenderer::LineRenderer() {
-		vertices.assign(batchVertex, LineVertex{});
+namespace Anggur
+{
+	LineRenderer::LineRenderer()
+	{
+		_vertices.assign(_batchVertex, LineVertex{});
 
-		indices.assign(batchVertex * batchIndexMultiplier, 0);
+		_indices.assign(_batchVertex * _batchIndexMultiplier, 0);
 
-		vertexArray.bind();
-		vertexArray.setLayout({
+		_vertexArray.Bind();
+		_vertexArray.SetLayout({
 			{VertexDataType::Float, 2, "aPosition"},
 			{VertexDataType::Float, 2, "aPositionA"},
 			{VertexDataType::Float, 2, "aPositionB"},
@@ -18,14 +20,14 @@ namespace Anggur {
 			{VertexDataType::Float, 4, "aColor"},
 		});
 
-		vertexBuffer.bind();
-		vertexBuffer.setCapacity(vertexArray.getStride() * vertices.size());
+		_vertexBuffer.Bind();
+		_vertexBuffer.SetCapacity(_vertexArray.GetStride() * _vertices.size());
 
-		indexBuffer.bind();
-		indexBuffer.setCapacity(sizeof(unsigned int) * indices.size());
+		_indexBuffer.Bind();
+		_indexBuffer.SetCapacity(sizeof(unsigned int) * _indices.size());
 
-		shader.bind();
-		shader.setVertexSource(R"(
+		_shader.Bind();
+		_shader.SetVertexSource(R"(
 			layout (location = 0) in vec2 aPosition;
 			layout (location = 1) in vec2 aPositionA;
 			layout (location = 2) in vec2 aPositionB;
@@ -56,7 +58,7 @@ namespace Anggur {
 				vColor = aColor;
 			}
 		)");
-		shader.setFragmentSource(R"(
+		_shader.SetFragmentSource(R"(
 			in vec2 vPositionA;
 			in vec2 vPositionB;
 			in vec2 vQuadrant;
@@ -94,95 +96,99 @@ namespace Anggur {
 				}
 			}
 		)");
-		shader.compile();
+		_shader.Compile();
 	}
 
-	void LineRenderer::setView(const Matrix3& view) {
-		this->view = view;
+	void LineRenderer::SetView(const Matrix3& view)
+	{
+		this->_view = view;
 	}
 
-	void LineRenderer::add(
+	void LineRenderer::Add(
 		const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color
-	) {
-		if (vertexOffset + 4 > vertices.size() || indexOffset + 6 > indices.size()) {
-			flush();
+	)
+	{
+		if (_vertexOffset + 4 > _vertices.size() || _indexOffset + 6 > _indices.size())
+		{
+			Flush();
 		}
 
-		Vector2 position(Math::min(positionA.x, positionB.x), Math::min(positionA.y, positionB.y));
-		Vector2 size = Vector2(Math::max(positionA.x, positionB.x), Math::max(positionA.y, positionB.y)) - position;
+		Vector2 position(Math::Min(positionA.x, positionB.x), Math::Min(positionA.y, positionB.y));
+		Vector2 size = Vector2(Math::Max(positionA.x, positionB.x), Math::Max(positionA.y, positionB.y)) - position;
 
 		float edge = 0.5f * thickness + sharpness;
 		float doubleSharpness = 2.0f * sharpness + thickness;
-		float inverseMax = 1.0f / (Math::max(size.x, size.y) + doubleSharpness);
+		float inverseMax = 1.0f / (Math::Max(size.x, size.y) + doubleSharpness);
 		float xAxis = inverseMax * (size.x + doubleSharpness);
 		float yAxis = inverseMax * (size.y + doubleSharpness);
 
-		vertices[vertexOffset + 0].position = Vector2(position.x - edge, position.y - edge);
-		vertices[vertexOffset + 1].position = Vector2(position.x + size.x + edge, position.y - edge);
-		vertices[vertexOffset + 2].position = Vector2(position.x + size.x + edge, position.y + size.y + edge);
-		vertices[vertexOffset + 3].position = Vector2(position.x - edge, position.y + size.y + edge);
+		_vertices[_vertexOffset + 0].position = Vector2(position.x - edge, position.y - edge);
+		_vertices[_vertexOffset + 1].position = Vector2(position.x + size.x + edge, position.y - edge);
+		_vertices[_vertexOffset + 2].position = Vector2(position.x + size.x + edge, position.y + size.y + edge);
+		_vertices[_vertexOffset + 3].position = Vector2(position.x - edge, position.y + size.y + edge);
 
-		vertices[vertexOffset + 0].positionA = positionA - position;
-		vertices[vertexOffset + 1].positionA = positionA - position;
-		vertices[vertexOffset + 2].positionA = positionA - position;
-		vertices[vertexOffset + 3].positionA = positionA - position;
+		_vertices[_vertexOffset + 0].positionA = positionA - position;
+		_vertices[_vertexOffset + 1].positionA = positionA - position;
+		_vertices[_vertexOffset + 2].positionA = positionA - position;
+		_vertices[_vertexOffset + 3].positionA = positionA - position;
 
-		vertices[vertexOffset + 0].positionB = positionB - position;
-		vertices[vertexOffset + 1].positionB = positionB - position;
-		vertices[vertexOffset + 2].positionB = positionB - position;
-		vertices[vertexOffset + 3].positionB = positionB - position;
+		_vertices[_vertexOffset + 0].positionB = positionB - position;
+		_vertices[_vertexOffset + 1].positionB = positionB - position;
+		_vertices[_vertexOffset + 2].positionB = positionB - position;
+		_vertices[_vertexOffset + 3].positionB = positionB - position;
 
-		vertices[vertexOffset + 0].quadrant.set(-xAxis, -yAxis);
-		vertices[vertexOffset + 1].quadrant.set(+xAxis, -yAxis);
-		vertices[vertexOffset + 2].quadrant.set(+xAxis, +yAxis);
-		vertices[vertexOffset + 3].quadrant.set(-xAxis, +yAxis);
+		_vertices[_vertexOffset + 0].quadrant.Set(-xAxis, -yAxis);
+		_vertices[_vertexOffset + 1].quadrant.Set(+xAxis, -yAxis);
+		_vertices[_vertexOffset + 2].quadrant.Set(+xAxis, +yAxis);
+		_vertices[_vertexOffset + 3].quadrant.Set(-xAxis, +yAxis);
 
-		vertices[vertexOffset + 0].thickness = thickness;
-		vertices[vertexOffset + 1].thickness = thickness;
-		vertices[vertexOffset + 2].thickness = thickness;
-		vertices[vertexOffset + 3].thickness = thickness;
+		_vertices[_vertexOffset + 0].thickness = thickness;
+		_vertices[_vertexOffset + 1].thickness = thickness;
+		_vertices[_vertexOffset + 2].thickness = thickness;
+		_vertices[_vertexOffset + 3].thickness = thickness;
 
-		vertices[vertexOffset + 0].sharpness = sharpness;
-		vertices[vertexOffset + 1].sharpness = sharpness;
-		vertices[vertexOffset + 2].sharpness = sharpness;
-		vertices[vertexOffset + 3].sharpness = sharpness;
+		_vertices[_vertexOffset + 0].sharpness = sharpness;
+		_vertices[_vertexOffset + 1].sharpness = sharpness;
+		_vertices[_vertexOffset + 2].sharpness = sharpness;
+		_vertices[_vertexOffset + 3].sharpness = sharpness;
 
-		vertices[vertexOffset + 0].color = color;
-		vertices[vertexOffset + 1].color = color;
-		vertices[vertexOffset + 2].color = color;
-		vertices[vertexOffset + 3].color = color;
+		_vertices[_vertexOffset + 0].color = color;
+		_vertices[_vertexOffset + 1].color = color;
+		_vertices[_vertexOffset + 2].color = color;
+		_vertices[_vertexOffset + 3].color = color;
 
-		indices[indexOffset + 0] = vertexOffset + 0;
-		indices[indexOffset + 1] = vertexOffset + 1;
-		indices[indexOffset + 2] = vertexOffset + 2;
-		indices[indexOffset + 3] = vertexOffset + 2;
-		indices[indexOffset + 4] = vertexOffset + 3;
-		indices[indexOffset + 5] = vertexOffset + 0;
+		_indices[_indexOffset + 0] = _vertexOffset + 0;
+		_indices[_indexOffset + 1] = _vertexOffset + 1;
+		_indices[_indexOffset + 2] = _vertexOffset + 2;
+		_indices[_indexOffset + 3] = _vertexOffset + 2;
+		_indices[_indexOffset + 4] = _vertexOffset + 3;
+		_indices[_indexOffset + 5] = _vertexOffset + 0;
 
-		vertexOffset += 4;
+		_vertexOffset += 4;
 
-		indexOffset += 6;
+		_indexOffset += 6;
 	}
 
-	void LineRenderer::flush() {
+	void LineRenderer::Flush()
+	{
 		// Early exit if no vertices to draw
-		if (vertexOffset == 0)
+		if (_vertexOffset == 0)
 			return;
 
-		shader.bind();
-		shader.setUniformMatrix3("uView", view);
+		_shader.Bind();
+		_shader.SetUniformMatrix3("uView", _view);
 
-		vertexArray.bind();
+		_vertexArray.Bind();
 
-		vertexBuffer.bind();
-		vertexBuffer.setData(sizeof(LineVertex) * vertexOffset, vertices.data());
+		_vertexBuffer.Bind();
+		_vertexBuffer.SetData(sizeof(LineVertex) * _vertexOffset, _vertices.data());
 
-		indexBuffer.bind();
-		indexBuffer.setData(sizeof(unsigned int) * indexOffset, indices.data());
+		_indexBuffer.Bind();
+		_indexBuffer.SetData(sizeof(unsigned int) * _indexOffset, _indices.data());
 
-		glDrawElements(GL_TRIANGLES, indexOffset, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, _indexOffset, GL_UNSIGNED_INT, nullptr);
 
-		vertexOffset = 0;
-		indexOffset = 0;
+		_vertexOffset = 0;
+		_indexOffset = 0;
 	}
 }

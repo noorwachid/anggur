@@ -11,23 +11,28 @@
 #include "emscripten.h"
 #endif
 
-namespace Anggur {
+namespace Anggur
+{
 	Application::Application(uint32_t width, uint32_t height, const std::string& title)
-		: window(width, height, title), scene(nullptr) {
-		window.connect([](void* address) -> bool { return loadGraphicsDriver(address); });
-		renderer = new Renderer();
+		: _window(width, height, title), _scene(nullptr)
+	{
+		_window.Connect([](void* address) -> bool { return LoadGraphicsDriver(address); });
+		_renderer = new Renderer();
 	}
 
-	Application::~Application() {
-		if (scene) {
-			scene->terminate();
-			delete scene;
+	Application::~Application()
+	{
+		if (_scene)
+		{
+			_scene->Terminate();
+			delete _scene;
 		}
 
-		delete renderer;
+		delete _renderer;
 	}
 
-	void Application::run() {
+	void Application::Run()
+	{
 #ifdef EMSCRIPTEN
 		emscripten_set_main_loop_arg(
 			[](void* application) {
@@ -40,21 +45,23 @@ namespace Anggur {
 #else
 		double previousTime = glfwGetTime();
 
-		while (!window.shouldClose()) {
+		while (!_window.ShouldClose())
+		{
 			double currentTime = glfwGetTime();
 			float deltaTime = currentTime - previousTime;
 			previousTime = currentTime;
 
-			if (scene)
-				scene->update(deltaTime);
+			if (_scene)
+				_scene->Update(deltaTime);
 
-			window.swapBuffers();
-			window.pollEvents();
+			_window.SwapBuffers();
+			_window.PollEvents();
 		}
 #endif
 	}
 
-	void Application::stableRun() {
+	void Application::StableRun()
+	{
 #ifdef EMSCRIPTEN
 		emscripten_set_main_loop_arg(
 			[](void* application) {
@@ -69,26 +76,29 @@ namespace Anggur {
 		float refreshTime = 1.0f / videoMode->refreshRate;
 		double previousTime = glfwGetTime();
 
-		while (!window.shouldClose()) {
+		while (!_window.ShouldClose())
+		{
 			double currentTime = glfwGetTime();
 			float deltaTime = currentTime - previousTime;
 			float sleepTime = refreshTime - deltaTime;
 			previousTime = currentTime;
 
-			if (sleepTime > 0.0f) {
+			if (sleepTime > 0.0f)
+			{
 				glfwWaitEventsTimeout(sleepTime);
 				deltaTime = refreshTime;
 			}
 
-			if (scene)
-				scene->update(deltaTime);
+			if (_scene)
+				_scene->Update(deltaTime);
 
-			window.swapBuffers();
-			window.pollEvents();
+			_window.SwapBuffers();
+			_window.PollEvents();
 		}
 #endif
 	}
 
-	void Application::lazyRun() {
+	void Application::LazyRun()
+	{
 	}
 }

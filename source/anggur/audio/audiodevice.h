@@ -11,15 +11,17 @@ class ALCdevice;
 class ALCcontext;
 #endif
 
-namespace Anggur {
-	class AudioDevice {
+namespace Anggur
+{
+	class AudioDevice
+	{
 	public:
 		AudioDevice();
 
 		~AudioDevice();
 
 	private:
-		ALCdevice* device;
-		ALCcontext* context;
+		ALCdevice* _device;
+		ALCcontext* _context;
 	};
 }

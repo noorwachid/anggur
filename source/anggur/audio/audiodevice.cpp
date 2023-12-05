@@ -2,24 +2,29 @@
 #include "AL/alc.h"
 #include <stdexcept>
 
-namespace Anggur {
-	AudioDevice::AudioDevice() {
-		device = alcOpenDevice(nullptr);
-		if (!device) {
+namespace Anggur
+{
+	AudioDevice::AudioDevice()
+	{
+		_device = alcOpenDevice(nullptr);
+		if (!_device)
+		{
 			throw std::runtime_error("failed to open audio device");
 		}
 
-		context = alcCreateContext(device, nullptr);
-		if (!context) {
+		_context = alcCreateContext(_device, nullptr);
+		if (!_context)
+		{
 			throw std::runtime_error("failed to create audio context");
 		}
 
-		alcMakeContextCurrent(context);
+		alcMakeContextCurrent(_context);
 	}
 
-	AudioDevice::~AudioDevice() {
+	AudioDevice::~AudioDevice()
+	{
 		alcMakeContextCurrent(NULL);
-		alcDestroyContext(context);
-		alcCloseDevice(device);
+		alcDestroyContext(_context);
+		alcCloseDevice(_device);
 	}
 }

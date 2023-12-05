@@ -9,8 +9,10 @@
 #include "anggur/math/vector4.h"
 #include "anggur/textencoding.h"
 
-namespace Anggur {
-	struct TextVertex {
+namespace Anggur
+{
+	struct TextVertex
+	{
 		Vector2 position;
 		Vector2 texturePosition;
 		float textureIndex = 0.0f;
@@ -20,16 +22,17 @@ namespace Anggur {
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 	};
 
-	class TextRenderer {
+	class TextRenderer
+	{
 	public:
 		TextRenderer();
 
-		void setView(const Matrix3& view);
+		void SetView(const Matrix3& view);
 
 		// +--
 		// | H
 		//
-		void add(
+		void Add(
 			const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness,
 			const Vector4& color
 		);
@@ -38,18 +41,18 @@ namespace Anggur {
 		// | Hello darkness my old friend.
 		// | I've come to talk with you again.
 		//
-		void add(
+		void Add(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
 		);
 
-		Vector2 measure(const std::string& content, Font* font, float size, float thickness, float sharpness);
+		Vector2 Measure(const std::string& content, Font* font, float size, float thickness, float sharpness);
 
 		// +----------------------------------------------------------------
 		// | Hello darkness my old friend. I've come to talk with you again.
 		// +----------------------------------------------------------------
 		//
-		void addLine(
+		void AddLine(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
 		);
@@ -58,7 +61,7 @@ namespace Anggur {
 		// | Hello darkne... |
 		// +-----------------+
 		//
-		void addLineCut(
+		void AddLineCut(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
 		);
@@ -71,12 +74,12 @@ namespace Anggur {
 		// | again.          |
 		// +-----------------+
 		//
-		void addFlow(
+		void AddFlow(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
 		);
 
-		Vector2 measureFlow(
+		Vector2 MeasureFlow(
 			const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
 		);
 
@@ -86,47 +89,47 @@ namespace Anggur {
 		// | I've come to... |
 		// +-----------------+
 		//
-		void addFlowCut(
+		void AddFlowCut(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector2& limit, const Vector4& color
 		);
 
-		void addCharacter(
+		void AddCharacter(
 			const Vector2& position, const Vector2& size, float thickness, float sharpness, float scale,
 			const Vector4& color, Texture* texture, const Vector2& texturePosition, const Vector2& textureSize
 		);
 
-		void flush();
+		void Flush();
 
 	private:
-		void addPartialLineCut(
+		void AddPartialLineCut(
 			const Vector2& position, const std::string& content, size_t contentOffset, Font* font, float size,
 			float thickness, float sharpness, float limit, const Vector4& color
 		);
 
 	private:
-		VertexArray vertexArray;
-		VertexBuffer vertexBuffer;
-		IndexBuffer indexBuffer;
+		VertexArray _vertexArray;
+		VertexBuffer _vertexBuffer;
+		IndexBuffer _indexBuffer;
 
-		Shader shader;
+		Shader _shader;
 
-		Matrix3 view;
+		Matrix3 _view;
 
-		std::vector<TextVertex> vertices;
-		std::vector<unsigned int> indices;
-		std::vector<Texture*> textures;
-		std::vector<int> textureIndices;
+		std::vector<TextVertex> _vertices;
+		std::vector<unsigned int> _indices;
+		std::vector<Texture*> _textures;
+		std::vector<int> _textureIndices;
 
-		std::unordered_map<unsigned int, size_t> textureIndexMap;
+		std::unordered_map<unsigned int, size_t> _textureIndexMap;
 
-		size_t vertexOffset = 0;
-		size_t indexOffset = 0;
-		size_t textureOffset = 0;
+		size_t _vertexOffset = 0;
+		size_t _indexOffset = 0;
+		size_t _textureOffset = 0;
 
-		size_t drawCount = 0;
+		size_t _drawCount = 0;
 
-		size_t batchVertex = 512;
-		size_t batchIndexMultiplier = 2;
+		size_t _batchVertex = 512;
+		size_t _batchIndexMultiplier = 2;
 	};
 }

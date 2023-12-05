@@ -2,38 +2,41 @@
 
 #include <random>
 
-namespace Anggur {
-	class Random {
+namespace Anggur
+{
+	class Random
+	{
 	public:
 		// Getters
 
-		static float generate();
+		static float Generate();
 
-		static float range(float lower, float upper);
+		static float Range(float lower, float upper);
 
-		static float getNormal();
+		static float Normal();
 
-		static float getSigned();
+		static float Signed();
 
-		static float getAngle();
+		static float Angle();
 
-		static bool getBoolean();
+		static bool Boolean();
 
 		// Setters
 
-		static void setSeed(float n);
+		static void SetSeed(float n);
 
 	private:
 		Random();
 
-		static Random& getInstance() {
+		static Random& GetInstance()
+		{
 			static Random instance;
 
 			return instance;
 		}
 
 	private:
-		std::random_device device;
-		std::mt19937 generator;
+		std::random_device _device;
+		std::mt19937 _generator;
 	};
 }

@@ -1,7 +1,9 @@
 #include "anggur/os/input.h"
 
-namespace Anggur {
-	ModifierKey Input::getModifierKey() const {
-		return modifierKey;
+namespace Anggur
+{
+	ModifierKey Input::GetModifierKey() const
+	{
+		return _modifierKey;
 	}
 }

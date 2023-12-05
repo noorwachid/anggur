@@ -2,30 +2,32 @@
 
 #include "anggur/audio/audiobuffer.h"
 
-namespace Anggur {
-	class AudioSource {
+namespace Anggur
+{
+	class AudioSource
+	{
 	public:
 		AudioSource();
 
 		~AudioSource();
 
-		float getGain() const;
+		float GetGain() const;
 
-		float getPitch() const;
+		float GetPitch() const;
 
-		void setBuffer(AudioBuffer* buffer);
+		void SetBuffer(AudioBuffer* buffer);
 
-		void setGain(float gain);
+		void SetGain(float gain);
 
-		void setPitch(float pitch);
+		void SetPitch(float pitch);
 
-		void play();
+		void Play();
 
-		void pause();
+		void Pause();
 
-		void stop();
+		void Stop();
 
 	private:
-		unsigned int id;
+		unsigned int _id;
 	};
 }

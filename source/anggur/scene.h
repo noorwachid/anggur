@@ -3,22 +3,27 @@
 #include "anggur/graphics/renderer.h"
 #include "anggur/os/window.h"
 
-namespace Anggur {
-	class Scene : public WindowObserver {
+namespace Anggur
+{
+	class Scene : public WindowObserver
+	{
 	public:
-		virtual void initialize() {
+		virtual void Initialize()
+		{
 		}
 
-		virtual void update(float deltaTime) {
+		virtual void Update(float deltaTime)
+		{
 		}
 
-		virtual void terminate() {
+		virtual void Terminate()
+		{
 		}
 
 	protected:
-		Window* window;
-		Input* input;
-		Renderer* renderer;
+		Window* _window;
+		Input* _input;
+		Renderer* _renderer;
 
 		friend class Application;
 	};

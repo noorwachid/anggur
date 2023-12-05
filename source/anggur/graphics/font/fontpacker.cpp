@@ -1,18 +1,23 @@
 #include "anggur/graphics/font/fontpacker.h"
 
-namespace Anggur {
-	Vector2 FontPacker::getPointer() {
+namespace Anggur
+{
+	Vector2 FontPacker::GetPointer()
+	{
 		return Vector2(pointerX, pointerY);
 	}
 
-	bool FontPacker::isFit(size_t width, size_t height) {
-		if (pointerX + width > image.getWidth()) {
+	bool FontPacker::IsFit(size_t width, size_t height)
+	{
+		if (pointerX + width > image.GetWidth())
+		{
 			pointerX = 0;
 			pointerY += maxY;
 			maxY = 0;
 		}
 
-		if (pointerY + height > image.getHeight()) {
+		if (pointerY + height > image.GetHeight())
+		{
 			pointerX = 0;
 			pointerY = 0;
 			maxY = 0;
@@ -23,29 +28,34 @@ namespace Anggur {
 		return true;
 	}
 
-	void FontPacker::setGlyph(unsigned char* bytes, size_t width, size_t height) {
-		for (size_t x = 0; x < width; ++x) {
-			for (size_t y = 0; y < height; ++y) {
+	void FontPacker::SetGlyph(unsigned char* bytes, size_t width, size_t height)
+	{
+		for (size_t x = 0; x < width; ++x)
+		{
+			for (size_t y = 0; y < height; ++y)
+			{
 				size_t glyphIndex = (y * width) + x;
-				size_t containerIndex = ((y + pointerY) * image.getWidth()) + x + pointerX;
-				image.setByte(containerIndex, bytes[glyphIndex]);
+				size_t containerIndex = ((y + pointerY) * image.GetWidth()) + x + pointerX;
+				image.SetByte(containerIndex, bytes[glyphIndex]);
 			}
 		}
 
 		pointerX += width;
-		maxY = Math::max(maxY, height);
+		maxY = Math::Max(maxY, height);
 	}
 
-	void FontPacker::setSize(unsigned int size) {
-		image.setSize(size, size);
-		image.setChannels(1);
-		image.resize();
+	void FontPacker::SetSize(unsigned int size)
+	{
+		image.SetSize(size, size);
+		image.SetChannels(1);
+		image.Resize();
 	}
 
-	void FontPacker::reset() {
+	void FontPacker::Reset()
+	{
 		maxY = 0;
 		pointerX = 0;
 		pointerY = 0;
-		image.reset();
+		image.Reset();
 	}
 }

@@ -2,50 +2,62 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 
-namespace Anggur {
-	AudioSource::AudioSource() {
-		alGenSources(1, &id);
+namespace Anggur
+{
+	AudioSource::AudioSource()
+	{
+		alGenSources(1, &_id);
 	}
 
-	AudioSource::~AudioSource() {
-		alDeleteSources(1, &id);
+	AudioSource::~AudioSource()
+	{
+		alDeleteSources(1, &_id);
 	}
 
-	float AudioSource::getGain() const {
+	float AudioSource::GetGain() const
+	{
 		float value;
-		alGetSourcef(id, AL_GAIN, &value);
+		alGetSourcef(_id, AL_GAIN, &value);
 		return value;
 	}
 
-	float AudioSource::getPitch() const {
+	float AudioSource::GetPitch() const
+	{
 		float value;
-		alGetSourcef(id, AL_PITCH, &value);
+		alGetSourcef(_id, AL_PITCH, &value);
 		return value;
 	}
 
-	void AudioSource::setBuffer(AudioBuffer* buffer) {
-		if (buffer) {
-			alSourcei(id, AL_BUFFER, buffer->getID());
+	void AudioSource::SetBuffer(AudioBuffer* buffer)
+	{
+		if (buffer)
+		{
+			alSourcei(_id, AL_BUFFER, buffer->GetID());
 		}
 	}
 
-	void AudioSource::setGain(float gain) {
-		alSourcef(id, AL_GAIN, gain);
+	void AudioSource::SetGain(float gain)
+	{
+		alSourcef(_id, AL_GAIN, gain);
 	}
 
-	void AudioSource::setPitch(float pitch) {
-		alSourcef(id, AL_PITCH, pitch);
+	void AudioSource::SetPitch(float pitch)
+	{
+		alSourcef(_id, AL_PITCH, pitch);
 	}
 
-	void AudioSource::play() {
-		alSourcePlay(id);
+	void AudioSource::Play()
+	{
+		alSourcePlay(_id);
 	}
 
-	void AudioSource::pause() {
-		alSourcePause(id);
+	void AudioSource::Pause()
+	{
+		alSourcePause(_id);
 	}
 
-	void AudioSource::stop() {
-		alSourceStop(id);
+	void AudioSource::Stop()
+	{
+		alSourceStop(_id);
 	}
 }

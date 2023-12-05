@@ -6,277 +6,308 @@
 #include <iostream>
 #include <vector>
 
-namespace Anggur {
-	Renderer::Renderer() {
-		type = RendererType::circle;
+namespace Anggur
+{
+	Renderer::Renderer()
+	{
+		_type = RendererType::Circle;
 
 		std::vector<unsigned char> pixels = {0xFF, 0xFF, 0xFF};
-		defaultTexture = new Texture(pixels, 1, 1, 3);
+		_defaultTexture = new Texture(pixels, 1, 1, 3);
 	}
 
-	Renderer::~Renderer() {
-		delete defaultTexture;
+	Renderer::~Renderer()
+	{
+		delete _defaultTexture;
 	}
 
-	void Renderer::flush() {
-		switch (type) {
-			case RendererType::triangle:
-				return triangleRenderer.flush();
+	void Renderer::Flush()
+	{
+		switch (_type)
+		{
+			case RendererType::Triangle:
+				return _triangleRenderer.Flush();
 
-			case RendererType::circle:
-				return circleRenderer.flush();
+			case RendererType::Circle:
+				return _circleRenderer.Flush();
 
-			case RendererType::roundedRectangle:
-				return rectangleRenderer.flush();
+			case RendererType::RoundedRectangle:
+				return _rectangleRenderer.Flush();
 
-			case RendererType::line:
-				return lineRenderer.flush();
+			case RendererType::Line:
+				return _lineRenderer.Flush();
 
-			case RendererType::text:
-				return textRenderer.flush();
+			case RendererType::Text:
+				return _textRenderer.Flush();
 		}
 
-		++drawCount;
+		++_drawCount;
 	}
 
-	void Renderer::clear(const Vector4& color) {
+	void Renderer::Clear(const Vector4& color)
+	{
 		glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
-	void Renderer::setViewport(const Vector2& position, const Vector2& size) {
+	void Renderer::SetViewport(const Vector2& position, const Vector2& size)
+	{
 		glViewport(position.x, position.y, size.x, size.y);
 	}
 
-	void Renderer::setView(const Matrix3& newView) {
-		triangleRenderer.setView(newView);
-		rectangleRenderer.setView(newView);
-		circleRenderer.setView(newView);
-		lineRenderer.setView(newView);
-		textRenderer.setView(newView);
+	void Renderer::SetView(const Matrix3& newView)
+	{
+		_triangleRenderer.SetView(newView);
+		_rectangleRenderer.SetView(newView);
+		_circleRenderer.SetView(newView);
+		_lineRenderer.SetView(newView);
+		_textRenderer.SetView(newView);
 	}
 
-	void Renderer::beginScene() {
+	void Renderer::BeginScene()
+	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		drawCount = 0;
+		_drawCount = 0;
 	}
 
-	void Renderer::endScene() {
-		flush();
+	void Renderer::EndScene()
+	{
+		Flush();
 	}
 
-	void Renderer::beginMask() {
-		flush();
+	void Renderer::BeginMask()
+	{
+		Flush();
 
-		if (stencilDepth == 0)
+		if (_stencilDepth == 0)
 			glEnable(GL_STENCIL_TEST);
 
-		++stencilDepth;
+		++_stencilDepth;
 	}
 
-	void Renderer::beginWriteMask() {
+	void Renderer::BeginWriteMask()
+	{
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDepthMask(GL_FALSE);
-		glStencilFunc(GL_ALWAYS, stencilDepth, stencilDepth);
+		glStencilFunc(GL_ALWAYS, _stencilDepth, _stencilDepth);
 		glStencilOp(GL_INCR, GL_INCR, GL_INCR);
 	}
 
-	void Renderer::endWriteMask() {
-		flush();
+	void Renderer::EndWriteMask()
+	{
+		Flush();
 
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		glDepthMask(GL_TRUE);
-		glStencilFunc(GL_EQUAL, stencilDepth, stencilDepth);
+		glStencilFunc(GL_EQUAL, _stencilDepth, _stencilDepth);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	}
 
-	void Renderer::beginEraseMask() {
-		flush();
+	void Renderer::BeginEraseMask()
+	{
+		Flush();
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDepthMask(GL_FALSE);
-		glStencilFunc(GL_ALWAYS, stencilDepth, stencilDepth);
+		glStencilFunc(GL_ALWAYS, _stencilDepth, _stencilDepth);
 		glStencilOp(GL_DECR, GL_DECR, GL_DECR);
 	}
 
-	void Renderer::endEraseMask() {
-		flush();
+	void Renderer::EndEraseMask()
+	{
+		Flush();
 
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		glDepthMask(GL_TRUE);
 	}
 
-	void Renderer::endMask() {
-		flush();
+	void Renderer::EndMask()
+	{
+		Flush();
 
-		--stencilDepth;
+		--_stencilDepth;
 
-		if (stencilDepth == 0)
+		if (_stencilDepth == 0)
 			glDisable(GL_STENCIL_TEST);
 	}
 
-	void Renderer::setType(RendererType newType) {
-		if (type != newType) {
-			flush();
-			type = newType;
+	void Renderer::SetType(RendererType newType)
+	{
+		if (_type != newType)
+		{
+			Flush();
+			_type = newType;
 		}
 	}
 
-	void Renderer::drawTriangle(
+	void Renderer::DrawTriangle(
 		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color
-	) {
-		setType(RendererType::triangle);
+	)
+	{
+		SetType(RendererType::Triangle);
 
-		triangleRenderer.addTriangle(
-			position0, position1, position2, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f),
+		_triangleRenderer.AddTriangle(
+			position0, position1, position2, color, _defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f),
 			Vector2(1.0f, 1.0f)
 		);
 	}
 
-	void Renderer::drawTriangleTexture(
+	void Renderer::DrawTriangleTexture(
 		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
 		Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 		const Vector2& texturePosition2
-	) {
-		setType(RendererType::triangle);
+	)
+	{
+		SetType(RendererType::Triangle);
 
-		triangleRenderer.addTriangle(
+		_triangleRenderer.AddTriangle(
 			position0, position1, position2, color, texture, texturePosition0, texturePosition1, texturePosition2
 		);
 	}
 
-	void Renderer::drawQuad(
+	void Renderer::DrawQuad(
 		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 		const Vector4& color
-	) {
-		setType(RendererType::triangle);
+	)
+	{
+		SetType(RendererType::Triangle);
 
-		triangleRenderer.addQuad(
-			position0, position1, position2, position3, color, defaultTexture, Vector2(0.0f, 0.0f),
-			Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f), Vector2(0.0f, 1.0f)
+		_triangleRenderer.AddQuad(
+			position0, position1, position2, position3, color, _defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f),
+			Vector2(1.0f, 1.0f), Vector2(0.0f, 1.0f)
 		);
 	}
 
-	void Renderer::drawQuadTexture(
+	void Renderer::DrawQuadTexture(
 		const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 		const Vector4& color, Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 		const Vector2& texturePosition2, const Vector2& texturePosition3
-	) {
-		setType(RendererType::triangle);
+	)
+	{
+		SetType(RendererType::Triangle);
 
-		triangleRenderer.addQuad(
+		_triangleRenderer.AddQuad(
 			position0, position1, position2, position3, color, texture, texturePosition0, texturePosition1,
 			texturePosition2, texturePosition3
 		);
 	}
 
-	void Renderer::drawRectangle(const Vector2& position, const Vector2& size, const Vector4& color) {
-		setType(RendererType::triangle);
+	void Renderer::DrawRectangle(const Vector2& position, const Vector2& size, const Vector4& color)
+	{
+		SetType(RendererType::Triangle);
 
-		triangleRenderer.addRectangle(
-			position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f)
-		);
+		_triangleRenderer.AddRectangle(position, size, color, _defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 
-	void Renderer::drawRectangleTexture(
+	void Renderer::DrawRectangleTexture(
 		const Vector2& position, const Vector2& size, const Vector4& color, Texture* texture,
 		const Vector2& texturePosition, const Vector2& textureSize
-	) {
-		setType(RendererType::triangle);
+	)
+	{
+		SetType(RendererType::Triangle);
 
-		triangleRenderer.addRectangle(position, size, color, texture, texturePosition, textureSize);
+		_triangleRenderer.AddRectangle(position, size, color, texture, texturePosition, textureSize);
 	}
 
-	void Renderer::drawRoundedRectangle(
+	void Renderer::DrawRoundedRectangle(
 		const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness,
 		const Vector4& color
-	) {
-		setType(RendererType::roundedRectangle);
+	)
+	{
+		SetType(RendererType::RoundedRectangle);
 
-		rectangleRenderer.add(position, size, radius, thickness, sharpness, color);
+		_rectangleRenderer.Add(position, size, radius, thickness, sharpness, color);
 	}
 
-	void Renderer::drawCircle(
+	void Renderer::DrawCircle(
 		const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color
-	) {
-		setType(RendererType::circle);
+	)
+	{
+		SetType(RendererType::Circle);
 
-		circleRenderer.add(position, radius, thickness, sharpness, color);
+		_circleRenderer.Add(position, radius, thickness, sharpness, color);
 	}
 
-	void Renderer::drawLine(
+	void Renderer::DrawLine(
 		const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color
-	) {
-		setType(RendererType::line);
+	)
+	{
+		SetType(RendererType::Line);
 
-		lineRenderer.add(positionA, positionB, thickness, sharpness, color);
+		_lineRenderer.Add(positionA, positionB, thickness, sharpness, color);
 	}
 
-	void Renderer::drawCharacter(
+	void Renderer::DrawCharacter(
 		const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness,
 		const Vector4& color
-	) {
-		setType(RendererType::text);
+	)
+	{
+		SetType(RendererType::Text);
 
-		textRenderer.add(position, character, font, size, thickness, sharpness, color);
+		_textRenderer.Add(position, character, font, size, thickness, sharpness, color);
 	}
 
-	void Renderer::drawText(
+	void Renderer::DrawText(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		const Vector4& color
-	) {
-		setType(RendererType::text);
+	)
+	{
+		SetType(RendererType::Text);
 
-		textRenderer.add(position, content, font, size, thickness, sharpness, color);
+		_textRenderer.Add(position, content, font, size, thickness, sharpness, color);
 	}
 
-	void Renderer::drawTextLine(
+	void Renderer::DrawTextLine(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		const Vector4& color
-	) {
-		setType(RendererType::text);
+	)
+	{
+		SetType(RendererType::Text);
 
-		textRenderer.addLine(position, content, font, size, thickness, sharpness, color);
+		_textRenderer.AddLine(position, content, font, size, thickness, sharpness, color);
 	}
 
-	void Renderer::drawTextLineCut(
+	void Renderer::DrawTextLineCut(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		float limit, const Vector4& color
-	) {
-		setType(RendererType::text);
+	)
+	{
+		SetType(RendererType::Text);
 
-		textRenderer.addLineCut(position, content, font, size, thickness, sharpness, limit, color);
+		_textRenderer.AddLineCut(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
-	void Renderer::drawTextFlow(
+	void Renderer::DrawTextFlow(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		float limit, const Vector4& color
-	) {
-		setType(RendererType::text);
+	)
+	{
+		SetType(RendererType::Text);
 
-		textRenderer.addFlow(position, content, font, size, thickness, sharpness, limit, color);
+		_textRenderer.AddFlow(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
-	void Renderer::drawTextFlowCut(
+	void Renderer::DrawTextFlowCut(
 		const Vector2& position, const std::string& content, Font* font, float size, float thickness, float sharpness,
 		const Vector2& limit, const Vector4& color
-	) {
-		setType(RendererType::text);
+	)
+	{
+		SetType(RendererType::Text);
 
-		textRenderer.addFlowCut(position, content, font, size, thickness, sharpness, limit, color);
+		_textRenderer.AddFlowCut(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
-	Vector2 Renderer::measureText(
-		const std::string& content, Font* font, float size, float thickness, float sharpness
-	) {
-		return textRenderer.measure(content, font, size, thickness, sharpness);
+	Vector2 Renderer::MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness)
+	{
+		return _textRenderer.Measure(content, font, size, thickness, sharpness);
 	}
 
-	Vector2 Renderer::measureTextFlow(
+	Vector2 Renderer::MeasureTextFlow(
 		const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
-	) {
-		return textRenderer.measureFlow(content, font, size, thickness, sharpness, limit);
+	)
+	{
+		return _textRenderer.MeasureFlow(content, font, size, thickness, sharpness, limit);
 	}
 }

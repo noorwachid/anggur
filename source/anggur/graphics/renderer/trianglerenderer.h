@@ -8,64 +8,67 @@
 #include "anggur/math/vector2.h"
 #include "anggur/math/vector4.h"
 
-namespace Anggur {
-	struct TriangleVertex {
+namespace Anggur
+{
+	struct TriangleVertex
+	{
 		Vector2 position;
 		Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 		float textureIndex;
 		Vector2 texturePosition;
 	};
 
-	class TriangleRenderer {
+	class TriangleRenderer
+	{
 	public:
 		TriangleRenderer();
 
-		void setView(const Matrix3& view);
+		void SetView(const Matrix3& view);
 
-		void addTriangle(
+		void AddTriangle(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
 			Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 			const Vector2& texturePosition2
 		);
 
-		void addQuad(
+		void AddQuad(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 			const Vector4& color, Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 			const Vector2& texturePosition2, const Vector2& texturePosition3
 		);
 
-		void addRectangle(
+		void AddRectangle(
 			const Vector2& position, const Vector2& size, const Vector4& color, Texture* texture,
 			const Vector2& texturePosition, const Vector2& textureSize
 		);
 
-		void flush();
+		void Flush();
 
 	private:
-		VertexArray vertexArray;
-		VertexBuffer vertexBuffer;
-		IndexBuffer indexBuffer;
+		VertexArray _vertexArray;
+		VertexBuffer _vertexBuffer;
+		IndexBuffer _indexBuffer;
 
-		Shader shader;
+		Shader _shader;
 
-		Matrix3 view;
+		Matrix3 _view;
 
-		std::vector<TriangleVertex> vertices;
-		std::vector<unsigned int> indices;
-		std::vector<Texture*> textures;
-		std::vector<int> textureIndices;
+		std::vector<TriangleVertex> _vertices;
+		std::vector<unsigned int> _indices;
+		std::vector<Texture*> _textures;
+		std::vector<int> _textureIndices;
 
-		std::unordered_map<unsigned int, size_t> textureIndexMap;
+		std::unordered_map<unsigned int, size_t> _textureIndexMap;
 
-		size_t previousVertexOffset = 0;
-		size_t previousIndexOffset = 0;
-		size_t vertexOffset = 0;
-		size_t indexOffset = 0;
-		size_t textureOffset = 0;
+		size_t _previousVertexOffset = 0;
+		size_t _previousIndexOffset = 0;
+		size_t _vertexOffset = 0;
+		size_t _indexOffset = 0;
+		size_t _textureOffset = 0;
 
-		size_t drawCount = 0;
+		size_t _drawCount = 0;
 
-		size_t batchVertex = 512;
-		size_t batchIndexMultiplier = 2;
+		size_t _batchVertex = 512;
+		size_t _batchIndexMultiplier = 2;
 	};
 }

@@ -3,8 +3,10 @@
 #include <string>
 #include <vector>
 
-namespace Anggur {
-	class Image {
+namespace Anggur
+{
+	class Image
+	{
 	public:
 		Image();
 
@@ -12,78 +14,93 @@ namespace Anggur {
 
 		~Image();
 
-		inline unsigned int getWidth() const {
-			return width;
+		inline unsigned int GetWidth() const
+		{
+			return _width;
 		}
 
-		inline unsigned int getHeight() const {
-			return height;
+		inline unsigned int GetHeight() const
+		{
+			return _height;
 		}
 
-		inline unsigned int getChannels() const {
-			return channels;
+		inline unsigned int GetChannels() const
+		{
+			return _channels;
 		}
 
-		inline unsigned int getVolume() const {
-			return width * height * channels;
+		inline unsigned int GetVolume() const
+		{
+			return _width * _height * _channels;
 		}
 
-		inline const std::vector<unsigned char>& getBytes() const {
-			return bytes;
+		inline const std::vector<unsigned char>& GetBytes() const
+		{
+			return _bytes;
 		}
 
-		inline std::vector<unsigned char>& getBytes() {
-			return bytes;
+		inline std::vector<unsigned char>& GetBytes()
+		{
+			return _bytes;
 		}
 
-		inline unsigned char* toPointer() {
-			return bytes.data();
+		inline unsigned char* ToPointer()
+		{
+			return _bytes.data();
 		}
 
-		inline void setByte(unsigned int index, unsigned char value) {
-			bytes[index] = value;
+		inline void SetByte(unsigned int index, unsigned char value)
+		{
+			_bytes[index] = value;
 		}
 
-		inline void setByte(unsigned int x, unsigned int y, unsigned char value) {
-			bytes[y * width + x] = value;
+		inline void SetByte(unsigned int x, unsigned int y, unsigned char value)
+		{
+			_bytes[y * _width + x] = value;
 		}
 
-		inline void setWidth(unsigned int width) {
-			this->width = width;
+		inline void SetWidth(unsigned int width)
+		{
+			this->_width = width;
 		}
 
-		inline void setHeight(unsigned int height) {
-			this->height = height;
+		inline void SetHeight(unsigned int height)
+		{
+			this->_height = height;
 		}
 
-		inline void setSize(unsigned int width, unsigned int height) {
-			this->width = width;
-			this->height = height;
+		inline void SetSize(unsigned int width, unsigned int height)
+		{
+			this->_width = width;
+			this->_height = height;
 		}
 
-		inline void setChannels(unsigned int channels) {
-			this->channels = channels;
+		inline void SetChannels(unsigned int channels)
+		{
+			this->_channels = channels;
 		}
 
-		void reset() {
-			bytes.assign(getVolume(), 0);
+		void Reset()
+		{
+			_bytes.assign(GetVolume(), 0);
 		}
 
-		void resize() {
-			bytes.resize(getVolume());
+		void Resize()
+		{
+			_bytes.resize(GetVolume());
 		}
 
-		void read(const std::string& path);
+		void Read(const std::string& path);
 
-		void close();
+		void Close();
 
-		void write(const std::string& path);
+		void Write(const std::string& path);
 
 	private:
-		unsigned int width;
-		unsigned int height;
-		unsigned int channels;
+		unsigned int _width;
+		unsigned int _height;
+		unsigned int _channels;
 
-		std::vector<unsigned char> bytes;
+		std::vector<unsigned char> _bytes;
 	};
 }

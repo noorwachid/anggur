@@ -2,13 +2,15 @@
 
 #include "anggur/os/key.h"
 
-namespace Anggur {
-	class Input {
+namespace Anggur
+{
+	class Input
+	{
 	public:
-		ModifierKey getModifierKey() const;
+		ModifierKey GetModifierKey() const;
 
 	private:
-		ModifierKey modifierKey = ModifierKey::none;
+		ModifierKey _modifierKey = ModifierKey::None;
 
 	private:
 		friend class Window;

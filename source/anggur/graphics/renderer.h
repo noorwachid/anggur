@@ -14,124 +14,129 @@
 #include <memory>
 #include <vector>
 
-namespace Anggur {
-	enum class RendererType {
-		triangle,
-		circle,
-		// arc,
-		roundedRectangle,
-		line,
-		// spline,
-		text,
+namespace Anggur
+{
+	enum class RendererType
+	{
+		Triangle,
+		Circle,
+		// Arc,
+		RoundedRectangle,
+		Line,
+		// Spline,
+		Text,
 	};
 
-	class Renderer {
+	class Renderer
+	{
 	public:
 		Renderer();
 
 		~Renderer();
 
-		void flush();
+		void Flush();
 
-		void clear(const Vector4& color = Vector4::black);
-		void setViewport(const Vector2& position, const Vector2& size);
-		void setView(const Matrix3& newView);
+		void Clear(const Vector4& color = Vector4::black);
+		void SetViewport(const Vector2& position, const Vector2& size);
+		void SetView(const Matrix3& newView);
 
-		void beginScene();
-		void endScene();
+		void BeginScene();
+		void EndScene();
 
-		void beginMask();
-		void beginWriteMask();
-		void endWriteMask();
-		void beginEraseMask();
-		void endEraseMask();
-		void endMask();
+		void BeginMask();
+		void BeginWriteMask();
+		void EndWriteMask();
+		void BeginEraseMask();
+		void EndEraseMask();
+		void EndMask();
 
-		void drawTriangle(
+		void DrawTriangle(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color
 		);
-		void drawTriangleTexture(
+		void DrawTriangleTexture(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector4& color,
 			Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 			const Vector2& texturePosition2
 		);
 
-		void drawQuad(
+		void DrawQuad(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 			const Vector4& color
 		);
-		void drawQuadTexture(
+		void DrawQuadTexture(
 			const Vector2& position0, const Vector2& position1, const Vector2& position2, const Vector2& position3,
 			const Vector4& color, Texture* texture, const Vector2& texturePosition0, const Vector2& texturePosition1,
 			const Vector2& texturePosition2, const Vector2& texturePosition3
 		);
 
-		void drawRectangle(const Vector2& position, const Vector2& size, const Vector4& color);
-		void drawRectangleTexture(
+		void DrawRectangle(const Vector2& position, const Vector2& size, const Vector4& color);
+		void DrawRectangleTexture(
 			const Vector2& position, const Vector2& size, const Vector4& color, Texture* texture,
 			const Vector2& texturePosition, const Vector2& textureSize
 		);
 
-		void drawRoundedRectangle(
+		void DrawRoundedRectangle(
 			const Vector2& position, const Vector2& size, float radius, float thickness, float sharpness,
 			const Vector4& color
 		);
 
-		void drawCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
+		void DrawCircle(const Vector2& position, float radius, float thickness, float sharpness, const Vector4& color);
 
-		void drawLine(
+		void DrawLine(
 			const Vector2& positionA, const Vector2& positionB, float thickness, float sharpness, const Vector4& color
 		);
 
-		void drawCharacter(
+		void DrawCharacter(
 			const Vector2& position, unsigned int character, Font* font, float size, float thickness, float sharpness,
 			const Vector4& color
 		);
 
-		void drawText(
+		void DrawText(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
 		);
 
-		void drawTextLine(
+		void DrawTextLine(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
 		);
 
-		void drawTextLineCut(
+		void DrawTextLineCut(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
 		);
 
-		void drawTextFlow(
+		void DrawTextFlow(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
 		);
 
-		void drawTextFlowCut(
+		void DrawTextFlowCut(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector2& limit, const Vector4& color
 		);
 
-		Vector2 measureText(const std::string& content, Font* font, float size, float thickness, float sharpness);
+		Vector2 MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness);
 
-		Vector2 measureTextFlow(const std::string& content, Font* font, float size, float thickness, float sharpness, float limit);
+		Vector2 MeasureTextFlow(
+			const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
+		);
 
 	private:
-		void setType(RendererType type);
+		void SetType(RendererType type);
 
-		unsigned char stencilDepth = 0;
+		unsigned char _stencilDepth = 0;
 
-		size_t drawCount = 0;
+		size_t _drawCount = 0;
 
-		RendererType type;
+		RendererType _type;
 
-		TriangleRenderer triangleRenderer;
-		CircleRenderer circleRenderer;
-		RoundedRectangleRenderer rectangleRenderer;
-		LineRenderer lineRenderer;
-		TextRenderer textRenderer;
+		TriangleRenderer _triangleRenderer;
+		CircleRenderer _circleRenderer;
+		RoundedRectangleRenderer _rectangleRenderer;
+		LineRenderer _lineRenderer;
+		TextRenderer _textRenderer;
 
-		Texture* defaultTexture = nullptr;
+		Texture* _defaultTexture = nullptr;
 	};
 }

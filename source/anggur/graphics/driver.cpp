@@ -2,8 +2,10 @@
 #include "anggur/graphics/api.h"
 #include <iostream>
 
-namespace Anggur {
-	bool loadGraphicsDriver(void* address) {
+namespace Anggur
+{
+	bool LoadGraphicsDriver(void* address)
+	{
 #ifndef EMSCRIPTEN
 		return gladLoadGLLoader(reinterpret_cast<GLADloadproc>(address));
 #endif

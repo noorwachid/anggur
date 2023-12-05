@@ -3,20 +3,25 @@
 #include "stb_image_write.h"
 #include <cassert>
 
-namespace Anggur {
-	Image::Image() {
+namespace Anggur
+{
+	Image::Image()
+	{
 	}
 
-	Image::Image(const std::string& path) {
-		read(path);
+	Image::Image(const std::string& path)
+	{
+		Read(path);
 	}
 
-	Image::~Image() {
-		close();
+	Image::~Image()
+	{
+		Close();
 	}
 
-	void Image::read(const std::string& path) {
-		close();
+	void Image::Read(const std::string& path)
+	{
+		Close();
 
 		int newWidth;
 		int newHeight;
@@ -27,20 +32,22 @@ namespace Anggur {
 		unsigned char* rawData = stbi_load(path.c_str(), &newWidth, &newHeight, &newChannels, 4);
 		assert(rawData && "Failed to load image");
 
-		bytes.resize(newWidth * newHeight * newChannels);
-		std::memcpy(bytes.data(), rawData, bytes.size());
+		_bytes.resize(newWidth * newHeight * newChannels);
+		std::memcpy(_bytes.data(), rawData, _bytes.size());
 
 		stbi_image_free(rawData);
 
-		width = newWidth;
-		height = newHeight;
-		channels = newChannels;
+		_width = newWidth;
+		_height = newHeight;
+		_channels = newChannels;
 	}
 
-	void Image::close() {
+	void Image::Close()
+	{
 	}
 
-	void Image::write(const std::string& path) {
-		stbi_write_png((path + ".png").c_str(), width, height, 1, bytes.data(), width);
+	void Image::Write(const std::string& path)
+	{
+		stbi_write_png((path + ".png").c_str(), _width, _height, 1, _bytes.data(), _width);
 	}
 }

@@ -3,19 +3,23 @@
 #include "stb_image.h"
 #include <vector>
 
-namespace Anggur {
-	int ToNativeType(SamplerFilter filter) {
-		switch (filter) {
-			case SamplerFilter::linear:
+namespace Anggur
+{
+	int ToNativeType(SamplerFilter filter)
+	{
+		switch (filter)
+		{
+			case SamplerFilter::Linear:
 				return GL_LINEAR;
-			case SamplerFilter::nearest:
+			case SamplerFilter::Nearest:
 				return GL_NEAREST;
 			default:
 				return 0;
 		}
 	}
 
-	int TextureSpecification::getMaxSlot() {
+	int TextureSpecification::GetMaxSlot()
+	{
 		static int maxSlot = 0;
 		if (maxSlot == 0)
 			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxSlot);
@@ -26,7 +30,8 @@ namespace Anggur {
 	Texture::Texture(
 		const std::vector<unsigned char>& bytes, unsigned int width, unsigned int height, unsigned int channels,
 		SamplerFilter filter
-	) {
+	)
+	{
 		glEnable(GL_TEXTURE_2D);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -37,20 +42,24 @@ namespace Anggur {
 		height = height;
 		channels = channels;
 
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_2D, id);
+		glGenTextures(1, &_id);
+		glBindTexture(GL_TEXTURE_2D, _id);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToNativeType(filter));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToNativeType(filter));
 
-		if (bytes.empty()) {
+		if (bytes.empty())
+		{
 			// assert(false && "Cannot load buffer to texture, data is empty");
-		} else {
+		}
+		else
+		{
 			int iformat;
 			int format;
 
-			switch (channels) {
+			switch (channels)
+			{
 				case 1:
 					iformat = GL_R8;
 					format = GL_RED;
@@ -73,16 +82,19 @@ namespace Anggur {
 		}
 	}
 
-	Texture::~Texture() {
-		glDeleteTextures(1, &id);
+	Texture::~Texture()
+	{
+		glDeleteTextures(1, &_id);
 	}
 
-	void Texture::bind(unsigned int slot) {
+	void Texture::Bind(unsigned int slot)
+	{
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, _id);
 	}
 
-	bool operator==(const Texture& a, const Texture& b) {
-		return a.getID() == b.getID();
+	bool operator==(const Texture& a, const Texture& b)
+	{
+		return a.GetID() == b.GetID();
 	}
 }

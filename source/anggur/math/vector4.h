@@ -2,8 +2,10 @@
 
 #include <string>
 
-namespace Anggur {
-	struct Vector4 {
+namespace Anggur
+{
+	struct Vector4
+	{
 		// Fields
 
 		float x;
@@ -65,33 +67,33 @@ namespace Anggur {
 
 		// 2d class initializer
 
-		static Vector4 createHex(uint64_t hex);
+		static Vector4 CreateHex(uint64_t hex);
 
 		// Casters
 
-		const float* toPointer() const;
+		const float* ToPointer() const;
 
-		std::string toString() const;
+		std::string ToString() const;
 
 		// Getter
 
-		float getLengthSquared() const;
+		float LengthSquared() const;
 
-		float getLength() const;
+		float Length() const;
 
 		// Setters
 
-		void set(float scalar);
+		void Set(float scalar);
 
-		void set(float newX, float newY, float newZ, float newW);
+		void Set(float newX, float newY, float newZ, float newW);
 
 		// 2nd class manipulations
 
-		static float dot(const Vector4& a, const Vector4& b);
+		static float Dot(const Vector4& a, const Vector4& b);
 
-		static Vector4 cross(const Vector4& a, const Vector4& b);
+		static Vector4 Cross(const Vector4& a, const Vector4& b);
 
-		static Vector4 normalize(const Vector4& a);
+		static Vector4 Normalize(const Vector4& a);
 
 		// 3rd class manipulations
 
@@ -120,7 +122,8 @@ namespace Anggur {
 		friend Vector4& operator*=(Vector4& a, float b);
 	};
 
-	namespace Math {
-		Vector4 lerp(const Vector4& a, const Vector4& b, float amount);
+	namespace Math
+	{
+		Vector4 Lerp(const Vector4& a, const Vector4& b, float amount);
 	}
 }

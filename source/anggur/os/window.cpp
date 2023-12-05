@@ -1,10 +1,12 @@
 #include "anggur/os/window.h"
-#include "anggur/log.h"
 #include "GLFW/glfw3.h"
+#include "anggur/log.h"
 
-namespace Anggur {
+namespace Anggur
+{
 	Window::Window(uint32_t width, uint32_t height, const std::string& title)
-		: width(width), height(height), title(title) {
+		: _width(width), _height(height), _title(title)
+	{
 		glfwInit();
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -15,9 +17,10 @@ namespace Anggur {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-		context = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+		_context = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 
-		if (context == NULL) {
+		if (_context == NULL)
+		{
 			ANGGUR_LOG("failed to spawn new window")
 
 			glfwTerminate();
@@ -25,172 +28,197 @@ namespace Anggur {
 			return;
 		}
 
-		glfwMakeContextCurrent(context);
-		glfwSetWindowUserPointer(context, this);
+		glfwMakeContextCurrent(_context);
+		glfwSetWindowUserPointer(_context, this);
 
 		int fbWidth;
 		int fbHeight;
-		glfwGetFramebufferSize(context, &fbWidth, &fbHeight);
-		frameBufferWidth = fbWidth;
-		frameBufferHeight = fbHeight;
+		glfwGetFramebufferSize(_context, &fbWidth, &fbHeight);
+		_frameBufferWidth = fbWidth;
+		_frameBufferHeight = fbHeight;
 	}
 
-	Window::~Window() {
-		glfwDestroyWindow(context);
+	Window::~Window()
+	{
+		glfwDestroyWindow(_context);
 		glfwTerminate();
 	}
 
-	unsigned int Window::getWidth() const {
-		return width;
+	unsigned int Window::GetWidth() const
+	{
+		return _width;
 	}
 
-	unsigned int Window::getHeight() const {
-		return height;
+	unsigned int Window::GetHeight() const
+	{
+		return _height;
 	}
 
-	unsigned int Window::getFrameBufferWidth() const {
-		return frameBufferWidth;
+	unsigned int Window::GetFrameBufferWidth() const
+	{
+		return _frameBufferWidth;
 	}
 
-	unsigned int Window::getFrameBufferHeight() const {
-		return frameBufferHeight;
+	unsigned int Window::GetFrameBufferHeight() const
+	{
+		return _frameBufferHeight;
 	}
 
-	const std::string Window::getTitle() const {
-		return title;
+	const std::string Window::GetTitle() const
+	{
+		return _title;
 	}
 
-	WindowContext* Window::getContext() {
-		return context;
+	WindowContext* Window::GetContext()
+	{
+		return _context;
 	}
 
-	Input* Window::getInput() {
-		return &input;
+	Input* Window::GetInput()
+	{
+		return &_input;
 	}
 
-	bool Window::shouldClose() const {
-		return glfwWindowShouldClose(context);
+	bool Window::ShouldClose() const
+	{
+		return glfwWindowShouldClose(_context);
 	}
 
-	void Window::swapBuffers() {
-		return glfwSwapBuffers(context);
+	void Window::SwapBuffers()
+	{
+		return glfwSwapBuffers(_context);
 	}
 
-	void Window::pollEvents() {
+	void Window::PollEvents()
+	{
 		glfwPollEvents();
 	}
 
-	void Window::connect(std::function<bool(void*)> connector) {
+	void Window::Connect(std::function<bool(void*)> connector)
+	{
 		bool result = connector(reinterpret_cast<void*>(glfwGetProcAddress));
 
-		if (!result) {
+		if (!result)
+		{
 			ANGGUR_LOG("failed to connect the graphics API")
 		}
 	}
 
-	void Window::close() {
-		glfwSetWindowShouldClose(context, true);
+	void Window::Close()
+	{
+		glfwSetWindowShouldClose(_context, true);
 	}
 
-	void Window::setObserver(WindowObserver* observer) {
-		this->observer = observer;
+	void Window::SetObserver(WindowObserver* observer)
+	{
+		this->_observer = observer;
 
-		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
+		glfwSetWindowSizeCallback(_context, [](GLFWwindow* context, int width, int height) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-			if (window->observer) {
+			if (window->_observer)
+			{
 				WindowSize size;
 				size.width = width;
 				size.height = height;
 
-				window->width = width;
-				window->height = height;
-				window->observer->onWindowResize(size);
+				window->_width = width;
+				window->_height = height;
+				window->_observer->OnWindowResize(size);
 			}
 		});
 
-		glfwSetFramebufferSizeCallback(context, [](GLFWwindow* context, int width, int height) {
+		glfwSetFramebufferSizeCallback(_context, [](GLFWwindow* context, int width, int height) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-			window->frameBufferWidth = width;
-			window->frameBufferHeight = height;
+			window->_frameBufferWidth = width;
+			window->_frameBufferHeight = height;
 		});
 
-		glfwSetWindowPosCallback(context, [](GLFWwindow* context, int x, int y) {
+		glfwSetWindowPosCallback(_context, [](GLFWwindow* context, int x, int y) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-			if (window->observer) {
+			if (window->_observer)
+			{
 				WindowPosition position;
 				position.x = x;
 				position.y = y;
 
-				window->observer->onWindowMove(position);
+				window->_observer->OnWindowMove(position);
 			}
 		});
 
-		glfwSetKeyCallback(context, [](WindowContext* context, int key, int scancode, int action, int modKey) {
+		glfwSetKeyCallback(_context, [](WindowContext* context, int key, int scancode, int action, int modKey) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-			if (window->observer) {
-				if (action == GLFW_PRESS) {
-					window->observer->onKeyPress(static_cast<Key>(key));
-					window->input.modifierKey = static_cast<ModifierKey>(modKey);
-				}
-
-				if (action == GLFW_REPEAT) {
-					window->observer->onKeyHold(static_cast<Key>(key));
-				}
-
-				if (action == GLFW_RELEASE) {
-					window->observer->onKeyRelease(static_cast<Key>(key));
-					window->input.modifierKey = static_cast<ModifierKey>(modKey);
-				}
-			}
-		});
-
-		glfwSetCharCallback(context, [](WindowContext* context, unsigned int codepoint) {
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-
-			if (window->observer) {
-				window->observer->onType(codepoint);
-			}
-		});
-
-		glfwSetMouseButtonCallback(context, [](WindowContext* context, int button, int action, int modKey) {
-			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
-
-			if (window->observer) {
+			if (window->_observer)
+			{
 				if (action == GLFW_PRESS)
-					window->observer->onMousePress(static_cast<MouseButton>(button));
+				{
+					window->_observer->OnKeyPress(static_cast<Key>(key));
+					window->_input._modifierKey = static_cast<ModifierKey>(modKey);
+				}
 
 				if (action == GLFW_REPEAT)
-					window->observer->onMouseHold(static_cast<MouseButton>(button));
+				{
+					window->_observer->OnKeyHold(static_cast<Key>(key));
+				}
 
 				if (action == GLFW_RELEASE)
-					window->observer->onMouseRelease(static_cast<MouseButton>(button));
+				{
+					window->_observer->OnKeyRelease(static_cast<Key>(key));
+					window->_input._modifierKey = static_cast<ModifierKey>(modKey);
+				}
 			}
 		});
 
-		glfwSetCursorPosCallback(context, [](WindowContext* context, double x, double y) {
+		glfwSetCharCallback(_context, [](WindowContext* context, unsigned int codepoint) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-			if (window->observer) {
+			if (window->_observer)
+			{
+				window->_observer->OnType(codepoint);
+			}
+		});
+
+		glfwSetMouseButtonCallback(_context, [](WindowContext* context, int button, int action, int modKey) {
+			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+
+			if (window->_observer)
+			{
+				if (action == GLFW_PRESS)
+					window->_observer->OnMousePress(static_cast<MouseButton>(button));
+
+				if (action == GLFW_REPEAT)
+					window->_observer->OnMouseHold(static_cast<MouseButton>(button));
+
+				if (action == GLFW_RELEASE)
+					window->_observer->OnMouseRelease(static_cast<MouseButton>(button));
+			}
+		});
+
+		glfwSetCursorPosCallback(_context, [](WindowContext* context, double x, double y) {
+			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
+
+			if (window->_observer)
+			{
 				MousePosition position;
 				position.x = x;
 				position.y = y;
 
-				window->observer->onMouseMove(position);
+				window->_observer->OnMouseMove(position);
 			}
 		});
 
-		glfwSetScrollCallback(context, [](WindowContext* context, double x, double y) {
+		glfwSetScrollCallback(_context, [](WindowContext* context, double x, double y) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));
 
-			if (window->observer) {
+			if (window->_observer)
+			{
 				MouseScroll scroll;
 				scroll.x = x;
 				scroll.y = y;
 
-				window->observer->onMouseScroll(scroll);
+				window->_observer->OnMouseScroll(scroll);
 			}
 		});
 	}
