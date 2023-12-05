@@ -93,8 +93,6 @@ namespace Anggur {
 			float sharpness, const Vector4& color
 		);
 
-		Vector2 MeasureText(const std::string& content, Font* font, float size, float thickness, float sharpness);
-
 		void drawTextLine(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, const Vector4& color
@@ -115,21 +113,25 @@ namespace Anggur {
 			float sharpness, const Vector2& limit, const Vector4& color
 		);
 
+		Vector2 measureText(const std::string& content, Font* font, float size, float thickness, float sharpness);
+
+		Vector2 measureTextFlow(const std::string& content, Font* font, float size, float thickness, float sharpness, float limit);
+
 	private:
 		void setType(RendererType type);
 
-		unsigned char _stencilDepth = 0;
+		unsigned char stencilDepth = 0;
 
-		size_t _drawCount = 0;
+		size_t drawCount = 0;
 
-		RendererType _type;
+		RendererType type;
 
-		TriangleRenderer _triangleRenderer;
-		CircleRenderer _circleRenderer;
-		RoundedRectangleRenderer _rectangleRenderer;
-		LineRenderer _lineRenderer;
-		TextRenderer _textRenderer;
+		TriangleRenderer triangleRenderer;
+		CircleRenderer circleRenderer;
+		RoundedRectangleRenderer rectangleRenderer;
+		LineRenderer lineRenderer;
+		TextRenderer textRenderer;
 
-		Texture* _defaultTexture = nullptr;
+		Texture* defaultTexture = nullptr;
 	};
 }

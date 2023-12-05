@@ -8,35 +8,35 @@
 
 namespace Anggur {
 	Renderer::Renderer() {
-		_type = RendererType::circle;
+		type = RendererType::circle;
 
 		std::vector<unsigned char> pixels = {0xFF, 0xFF, 0xFF};
-		_defaultTexture = new Texture(pixels, 1, 1, 3);
+		defaultTexture = new Texture(pixels, 1, 1, 3);
 	}
 
 	Renderer::~Renderer() {
-		delete _defaultTexture;
+		delete defaultTexture;
 	}
 
 	void Renderer::flush() {
-		switch (_type) {
+		switch (type) {
 			case RendererType::triangle:
-				return _triangleRenderer.flush();
+				return triangleRenderer.flush();
 
 			case RendererType::circle:
-				return _circleRenderer.flush();
+				return circleRenderer.flush();
 
 			case RendererType::roundedRectangle:
-				return _rectangleRenderer.flush();
+				return rectangleRenderer.flush();
 
 			case RendererType::line:
-				return _lineRenderer.flush();
+				return lineRenderer.flush();
 
 			case RendererType::text:
-				return _textRenderer.flush();
+				return textRenderer.flush();
 		}
 
-		++_drawCount;
+		++drawCount;
 	}
 
 	void Renderer::clear(const Vector4& color) {
@@ -49,18 +49,18 @@ namespace Anggur {
 	}
 
 	void Renderer::setView(const Matrix3& newView) {
-		_triangleRenderer.setView(newView);
-		_rectangleRenderer.setView(newView);
-		_circleRenderer.setView(newView);
-		_lineRenderer.setView(newView);
-		_textRenderer.setView(newView);
+		triangleRenderer.setView(newView);
+		rectangleRenderer.setView(newView);
+		circleRenderer.setView(newView);
+		lineRenderer.setView(newView);
+		textRenderer.setView(newView);
 	}
 
 	void Renderer::beginScene() {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		_drawCount = 0;
+		drawCount = 0;
 	}
 
 	void Renderer::endScene() {
@@ -70,16 +70,16 @@ namespace Anggur {
 	void Renderer::beginMask() {
 		flush();
 
-		if (_stencilDepth == 0)
+		if (stencilDepth == 0)
 			glEnable(GL_STENCIL_TEST);
 
-		++_stencilDepth;
+		++stencilDepth;
 	}
 
 	void Renderer::beginWriteMask() {
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDepthMask(GL_FALSE);
-		glStencilFunc(GL_ALWAYS, _stencilDepth, _stencilDepth);
+		glStencilFunc(GL_ALWAYS, stencilDepth, stencilDepth);
 		glStencilOp(GL_INCR, GL_INCR, GL_INCR);
 	}
 
@@ -88,7 +88,7 @@ namespace Anggur {
 
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		glDepthMask(GL_TRUE);
-		glStencilFunc(GL_EQUAL, _stencilDepth, _stencilDepth);
+		glStencilFunc(GL_EQUAL, stencilDepth, stencilDepth);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	}
 
@@ -97,7 +97,7 @@ namespace Anggur {
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDepthMask(GL_FALSE);
-		glStencilFunc(GL_ALWAYS, _stencilDepth, _stencilDepth);
+		glStencilFunc(GL_ALWAYS, stencilDepth, stencilDepth);
 		glStencilOp(GL_DECR, GL_DECR, GL_DECR);
 	}
 
@@ -111,16 +111,16 @@ namespace Anggur {
 	void Renderer::endMask() {
 		flush();
 
-		--_stencilDepth;
+		--stencilDepth;
 
-		if (_stencilDepth == 0)
+		if (stencilDepth == 0)
 			glDisable(GL_STENCIL_TEST);
 	}
 
 	void Renderer::setType(RendererType newType) {
-		if (_type != newType) {
+		if (type != newType) {
 			flush();
-			_type = newType;
+			type = newType;
 		}
 	}
 
@@ -129,8 +129,8 @@ namespace Anggur {
 	) {
 		setType(RendererType::triangle);
 
-		_triangleRenderer.addTriangle(
-			position0, position1, position2, color, _defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f),
+		triangleRenderer.addTriangle(
+			position0, position1, position2, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 0.0f),
 			Vector2(1.0f, 1.0f)
 		);
 	}
@@ -142,7 +142,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::triangle);
 
-		_triangleRenderer.addTriangle(
+		triangleRenderer.addTriangle(
 			position0, position1, position2, color, texture, texturePosition0, texturePosition1, texturePosition2
 		);
 	}
@@ -153,8 +153,8 @@ namespace Anggur {
 	) {
 		setType(RendererType::triangle);
 
-		_triangleRenderer.addQuad(
-			position0, position1, position2, position3, color, _defaultTexture, Vector2(0.0f, 0.0f),
+		triangleRenderer.addQuad(
+			position0, position1, position2, position3, color, defaultTexture, Vector2(0.0f, 0.0f),
 			Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f), Vector2(0.0f, 1.0f)
 		);
 	}
@@ -166,7 +166,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::triangle);
 
-		_triangleRenderer.addQuad(
+		triangleRenderer.addQuad(
 			position0, position1, position2, position3, color, texture, texturePosition0, texturePosition1,
 			texturePosition2, texturePosition3
 		);
@@ -175,8 +175,8 @@ namespace Anggur {
 	void Renderer::drawRectangle(const Vector2& position, const Vector2& size, const Vector4& color) {
 		setType(RendererType::triangle);
 
-		_triangleRenderer.addRectangle(
-			position, size, color, _defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f)
+		triangleRenderer.addRectangle(
+			position, size, color, defaultTexture, Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f)
 		);
 	}
 
@@ -186,7 +186,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::triangle);
 
-		_triangleRenderer.addRectangle(position, size, color, texture, texturePosition, textureSize);
+		triangleRenderer.addRectangle(position, size, color, texture, texturePosition, textureSize);
 	}
 
 	void Renderer::drawRoundedRectangle(
@@ -195,7 +195,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::roundedRectangle);
 
-		_rectangleRenderer.add(position, size, radius, thickness, sharpness, color);
+		rectangleRenderer.add(position, size, radius, thickness, sharpness, color);
 	}
 
 	void Renderer::drawCircle(
@@ -203,7 +203,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::circle);
 
-		_circleRenderer.add(position, radius, thickness, sharpness, color);
+		circleRenderer.add(position, radius, thickness, sharpness, color);
 	}
 
 	void Renderer::drawLine(
@@ -211,7 +211,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::line);
 
-		_lineRenderer.add(positionA, positionB, thickness, sharpness, color);
+		lineRenderer.add(positionA, positionB, thickness, sharpness, color);
 	}
 
 	void Renderer::drawCharacter(
@@ -220,7 +220,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::text);
 
-		_textRenderer.add(position, character, font, size, thickness, sharpness, color);
+		textRenderer.add(position, character, font, size, thickness, sharpness, color);
 	}
 
 	void Renderer::drawText(
@@ -229,13 +229,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::text);
 
-		_textRenderer.add(position, content, font, size, thickness, sharpness, color);
-	}
-
-	Vector2 Renderer::MeasureText(
-		const std::string& content, Font* font, float size, float thickness, float sharpness
-	) {
-		return _textRenderer.Measure(content, font, size, thickness, sharpness);
+		textRenderer.add(position, content, font, size, thickness, sharpness, color);
 	}
 
 	void Renderer::drawTextLine(
@@ -244,7 +238,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::text);
 
-		_textRenderer.addLine(position, content, font, size, thickness, sharpness, color);
+		textRenderer.addLine(position, content, font, size, thickness, sharpness, color);
 	}
 
 	void Renderer::drawTextLineCut(
@@ -253,7 +247,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::text);
 
-		_textRenderer.addLineCut(position, content, font, size, thickness, sharpness, limit, color);
+		textRenderer.addLineCut(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
 	void Renderer::drawTextFlow(
@@ -262,7 +256,7 @@ namespace Anggur {
 	) {
 		setType(RendererType::text);
 
-		_textRenderer.addFlow(position, content, font, size, thickness, sharpness, limit, color);
+		textRenderer.addFlow(position, content, font, size, thickness, sharpness, limit, color);
 	}
 
 	void Renderer::drawTextFlowCut(
@@ -271,6 +265,18 @@ namespace Anggur {
 	) {
 		setType(RendererType::text);
 
-		_textRenderer.addFlowCut(position, content, font, size, thickness, sharpness, limit, color);
+		textRenderer.addFlowCut(position, content, font, size, thickness, sharpness, limit, color);
+	}
+
+	Vector2 Renderer::measureText(
+		const std::string& content, Font* font, float size, float thickness, float sharpness
+	) {
+		return textRenderer.measure(content, font, size, thickness, sharpness);
+	}
+
+	Vector2 Renderer::measureTextFlow(
+		const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
+	) {
+		return textRenderer.measureFlow(content, font, size, thickness, sharpness, limit);
 	}
 }

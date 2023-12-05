@@ -194,7 +194,7 @@ namespace Anggur {
 		}
 	}
 
-	Vector2 TextRenderer::Measure(
+	Vector2 TextRenderer::measure(
 		const std::string& content, Font* font, float size, float thickness, float sharpness
 	) {
 		if (!font)
@@ -430,6 +430,65 @@ namespace Anggur {
 			pointer.x += localPosition.x + localSize.x - (padding * 2) +
 						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
 		}
+	}
+
+
+	Vector2 TextRenderer::measureFlow(
+		const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
+	) {
+		if (!font)
+			return Vector2(0, 0);
+
+		float padding = 1.0f / font->sampleSize * font->samplePadding * size;
+
+		Vector2 pointer(0, 0);
+
+		bool startOfLine = true;
+
+		for (size_t i = 0; i < content.size();) {
+			unsigned int codepoint = TextEncoding::UTF8::collapseAndMoveIndex(content, i);
+
+			if (codepoint == ' ') {
+				pointer.x += size * font->getSpaceWidth();
+				continue;
+			}
+
+			if (codepoint == '\n') {
+				startOfLine = true;
+				pointer.x = 0;
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+				continue;
+			}
+
+			if (font->glyphMap.count(codepoint) == 0) {
+				if (!font->generate(codepoint)) {
+					codepoint = 0xFFFD; // RC
+				}
+			}
+
+			FontGlyph& glyph = font->glyphMap[codepoint];
+
+			Vector2 localPosition = size * glyph.position;
+			Vector2 localSize = size * glyph.size;
+
+			if (pointer.x + localPosition.x + localSize.x > limit) {
+				startOfLine = true;
+				pointer.x = 0;
+				pointer.y += size * (font->getLineHeight() + font->getLineGap());
+			}
+
+			if (startOfLine) {
+				startOfLine = false;
+				localPosition.x = 0;
+			}
+
+			pointer.x += localPosition.x + localSize.x - (padding * 2) +
+						 (size * font->getKerning(codepoint, TextEncoding::UTF8::collapse(content, i)));
+		}
+
+		pointer.y += size * (font->getLineHeight() + font->getLineGap());
+
+		return pointer;
 	}
 
 	void TextRenderer::addFlowCut(

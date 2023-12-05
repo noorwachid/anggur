@@ -93,7 +93,7 @@ namespace Anggur {
 	}
 
 	void Window::setObserver(WindowObserver* observer) {
-		observer = observer;
+		this->observer = observer;
 
 		glfwSetWindowSizeCallback(context, [](GLFWwindow* context, int width, int height) {
 			Window* window = static_cast<Window*>(glfwGetWindowUserPointer(context));

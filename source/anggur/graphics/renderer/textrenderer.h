@@ -43,7 +43,7 @@ namespace Anggur {
 			float sharpness, const Vector4& color
 		);
 
-		Vector2 Measure(const std::string& content, Font* font, float size, float thickness, float sharpness);
+		Vector2 measure(const std::string& content, Font* font, float size, float thickness, float sharpness);
 
 		// +----------------------------------------------------------------
 		// | Hello darkness my old friend. I've come to talk with you again.
@@ -74,6 +74,10 @@ namespace Anggur {
 		void addFlow(
 			const Vector2& position, const std::string& content, Font* font, float size, float thickness,
 			float sharpness, float limit, const Vector4& color
+		);
+
+		Vector2 measureFlow(
+			const std::string& content, Font* font, float size, float thickness, float sharpness, float limit
 		);
 
 		// +-----------------+
