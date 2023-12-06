@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Anggur/Graphics/Font/FontGlyph.h"
-#include "Anggur/Graphics/Font/FontPacker.h"
+#include "Anggur/Graphics/FontGlyph.h"
+#include "Anggur/Graphics/FontPacker.h"
 #include "Anggur/Graphics/Image.h"
 #include "Anggur/Graphics/Texture.h"
 #include <iostream>

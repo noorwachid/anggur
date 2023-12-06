@@ -1,4 +1,4 @@
-#include "Anggur/Graphics/Renderer/TriangleRenderer.h"
+#include "Anggur/Graphics/Renderers/TriangleRenderer.h"
 #include "Anggur/Graphics/API.h"
 
 namespace Anggur
