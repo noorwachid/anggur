@@ -14,34 +14,13 @@ namespace Anggur
 
 		~Application();
 
-		template <class Scene>
-		void SetScene()
-		{
-			if (_scene)
-				delete _scene;
-
-			_scene = new Scene();
-			_scene->_window = &_window;
-			_scene->_input = _window.GetInput();
-			_scene->_renderer = _renderer;
-			_scene->Initialize();
-			_window.SetObserver(_scene);
-		}
-
-		template <class Scene>
-		Scene* GetScene()
-		{
-			return static_cast<Scene*>(_scene);
-		}
+		void SetScene(Scene* scene);
 
 		// No cap
 		void Run();
 
 		// Same update as the framerate
 		void StableRun();
-
-		// Only update on demand
-		void LazyRun();
 
 	private:
 		Window _window;
